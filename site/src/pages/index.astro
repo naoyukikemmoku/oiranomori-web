@@ -1,20 +1,77 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+const pageTitle = "おいらの森";
 ---
+<h1 class="text-3xl font-bold underline">Tailwind OK?</h1>
+<BaseLayout title={pageTitle}>
+  <main class="page-oir">
 
-<BaseLayout title="おいらの森 | トップ">
-  <section class="section-oir">
-    <div class="container-oir">
-      <h1>森で、静かに。深く。</h1>
+    <section id="hero" class="sec sec-hero">
+      <div class="inner">
+        <p class="sec-kicker">SECTION</p>
+        <h1 class="sec-title">Hero</h1>
+        <p class="sec-lead">ここにヒーロー（あとでDaisyUI/Flowbite差し込み）</p>
 
-      <p class="mt-4 max-w-2xl">
-        余白と距離感を大切にした里山のキャンプ場。焚き火と木漏れ日で、脳のキャッシュを削除。
-      </p>
-
-      <div class="mt-6 flex gap-3">
-        <a class="btn-primary" href="/guide/">利用案内</a>
-        <a class="btn-secondary" href="/deep/">Deep Field</a>
+        <!-- DaisyUI導入チェック用：装飾されればOK -->
+        <button class="btn btn-primary">TEST</button>
       </div>
-    </div>
-  </section>
+    </section>
+
+    <section id="news" class="sec sec-news">
+      <div class="inner">
+        <p class="sec-kicker">SECTION</p>
+        <h2 class="sec-title">News</h2>
+        <p class="sec-lead">お知らせ（後でmicroCMS等でも可）</p>
+      </div>
+    </section>
+
+    <section id="concept" class="sec sec-concept">
+      <div class="inner">
+        <p class="sec-kicker">SECTION</p>
+        <h2 class="sec-title">Concept</h2>
+        <p class="sec-lead">世界観の要約（ライトの入口）</p>
+      </div>
+    </section>
+
+    <section id="worlds" class="sec sec-worlds">
+      <div class="inner">
+        <p class="sec-kicker">SECTION</p>
+        <h2 class="sec-title">Worlds</h2>
+        <p class="sec-lead">ライト / ディープの2世界（後でカード化）</p>
+      </div>
+    </section>
+
+    <section id="sites" class="sec sec-sites">
+      <div class="inner">
+        <p class="sec-kicker">SECTION</p>
+        <h2 class="sec-title">Sites</h2>
+        <p class="sec-lead">サイト紹介（後でギャラリー化 → 予約導線）</p>
+      </div>
+    </section>
+
+    <section id="experiences" class="sec sec-experiences">
+      <div class="inner">
+        <p class="sec-kicker">SECTION</p>
+        <h2 class="sec-title">Experiences</h2>
+        <p class="sec-lead">体験・過ごし方（後で差し込み）</p>
+      </div>
+    </section>
+
+    <section id="access" class="sec sec-access">
+      <div class="inner">
+        <p class="sec-kicker">SECTION</p>
+        <h2 class="sec-title">Access</h2>
+        <p class="sec-lead">場内・周辺マップ / アクセス（後でGoogle Maps Platform）</p>
+      </div>
+    </section>
+
+    <section id="cta" class="sec sec-cta">
+      <div class="inner">
+        <p class="sec-kicker">SECTION</p>
+        <h2 class="sec-title">CTA</h2>
+        <p class="sec-lead">予約・導線の最後の一押し</p>
+      </div>
+    </section>
+
+  </main>
 </BaseLayout>

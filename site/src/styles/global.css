@@ -1,12 +1,29 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@plugin "daisyui";
 
 /* ========== おいらの森：最小の型 ========== */
 @layer base {
   body {
     @apply text-zinc-900 bg-white;
   }
+.page {
+  display: block;
+}
+
+.sec {
+  padding: 56px 0;
+}
+
+.inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* 開発中だけ：章が見える化 */
+.sec {
+  outline: 1px dashed rgba(0,0,0,0.15);
+}
 
   h1 {
     @apply text-3xl md:text-4xl font-semibold tracking-tight;
@@ -45,4 +62,45 @@
   .btn-secondary {
     @apply btn bg-zinc-100 text-zinc-900;
   }
+}
+/* =========================
+   DEBUG: section skeleton
+   いらなくなったら、この塊ごと削除OK
+========================= */
+
+.page-oir {
+  /* なんとなく縦のリズム */
+  display: block;
+}
+
+.sec {
+  padding: 56px 0;
+  outline: 1px dashed rgba(0,0,0,.18);
+}
+
+.sec:nth-of-type(odd) {
+  background: rgba(0,0,0,.03);
+}
+
+.inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.sec-kicker {
+  font-size: 12px;
+  letter-spacing: .12em;
+  opacity: .7;
+  margin: 0 0 8px;
+}
+
+.sec-title {
+  font-size: 28px;
+  margin: 0 0 8px;
+}
+
+.sec-lead {
+  margin: 0;
+  opacity: .8;
 }
