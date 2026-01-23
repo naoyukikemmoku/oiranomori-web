@@ -1,0 +1,21 @@
+---
+import { topSwitch } from "../config/nav";
+import HamburgerMenu from "./HamburgerMenu.astro";
+---
+
+<header class="sticky top-0 z-50 bg-base-100/85 backdrop-blur border-b border-base-300">
+  <div class="mx-auto max-w-6xl px-4 h-14 flex items-center justify-between gap-3">
+    <a href="/" class="font-bold tracking-wide">おいらの森</a>
+
+    <nav class="hidden md:flex items-center gap-2">
+      {topSwitch.map((item) => (
+        <a class="btn btn-ghost btn-sm" href={item.href}>{item.label}</a>
+      ))}
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a class="btn btn-ghost btn-sm md:hidden" href="/now/">Now</a>
+      <HamburgerMenu />
+    </div>
+  </div>
+</header>

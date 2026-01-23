@@ -1,0 +1,11 @@
+---
+import { floatingNav } from "../config/nav";
+---
+
+<aside class="fixed right-3 top-1/2 -translate-y-1/2 z-40 hidden lg:block">
+  <div class="flex flex-col gap-2">
+    {floatingNav.map((it) => (
+      <a class="btn btn-sm btn-outline" href={it.href}>{it.label}</a>
+    ))}
+  </div>
+</aside>
