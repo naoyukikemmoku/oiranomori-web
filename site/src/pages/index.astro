@@ -2,56 +2,239 @@
 import LpLayout from "../layouts/LpLayout.astro";
 ---
 
-<LpLayout title="おいらの森 | Light Forest">
-  <section id="hero" class="py-16">
+<LpLayout title="Light Forest | おいらの森">
+  <!-- HERO -->
+  <section id="hero" class="min-h-[86vh] py-10">
     <div class="mx-auto max-w-6xl px-4">
-      <h1 class="text-4xl font-bold">Light Forest</h1>
-      <p class="mt-3 opacity-80">まずは骨組み。あとで部品を差し込む。</p>
-      <div class="mt-6">
-        <button class="btn btn-primary">TEST</button>
+      <div class="hero rounded-3xl bg-base-200/60 min-h-[72vh]">
+        <div class="hero-content py-14">
+          <div class="max-w-2xl">
+            <p class="text-sm opacity-70 tracking-wide">Light Forest</p>
+            <h1 class="mt-2 text-4xl md:text-5xl font-bold leading-tight">
+              100年をかけて描く、森という名の芸術。
+            </h1>
+            <p class="mt-5 opacity-80 leading-relaxed">
+              オーナー自らが100年かけて描く「芸術作品としての森」を歩き、
+              その一部となるための招待状。
+            </p>
+
+            <div class="mt-8 flex flex-wrap gap-3">
+              <a class="btn btn-primary" href="#cta">空室を確認する</a>
+              <a class="btn btn-outline" href="/guide/">ご利用の作法</a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
-  <section id="news" class="py-16 bg-base-200/50">
+  <!-- STATUS（重要情報の帯：最優先） -->
+  <section id="status" class="py-5 bg-base-200/40 border-y border-base-300">
     <div class="mx-auto max-w-6xl px-4">
-      <h2 class="text-2xl font-bold">News</h2>
+      <!-- ここは「重要なお知らせがある時だけ表示」も後で可能 -->
+      <div class="alert">
+        <span class="font-semibold">重要：</span>
+        <span class="opacity-80">（仮）本日の運営状況・注意事項をここに表示</span>
+        <a class="link ml-auto" href="/now/">Nowへ</a>
+      </div>
     </div>
   </section>
 
-  <section id="concept" class="py-16">
+  <!-- SCENES（創作の断片） -->
+  <section id="scenes" class="py-16">
     <div class="mx-auto max-w-6xl px-4">
-      <h2 class="text-2xl font-bold">Concept</h2>
+      <h2 class="text-2xl font-bold">Scenes</h2>
+      <p class="mt-3 opacity-75 max-w-3xl">
+        作品の筆跡を感じる、視覚的なストーリー。
+      </p>
+
+      <div class="mt-10 grid gap-10">
+        <!-- scene-01 -->
+        <article class="grid md:grid-cols-2 gap-6 items-center" data-scene="01">
+          <div class="rounded-2xl bg-base-200/70 aspect-[4/3] flex items-center justify-center">
+            <span class="opacity-60 text-sm">IMAGE placeholder</span>
+          </div>
+          <div>
+            <p class="text-sm opacity-70">scene-01</p>
+            <h3 class="mt-1 text-xl font-bold">朝の呼吸</h3>
+            <p class="mt-3 font-semibold opacity-90">100年の森が目覚める瞬間。</p>
+            <p class="mt-3 opacity-80 leading-relaxed">
+              丁寧に間伐された木々の間から降り注ぐ斜光。ここにあるのは、
+              計算された自然と、無垢な静寂。
+            </p>
+          </div>
+        </article>
+
+        <!-- scene-02 -->
+        <article class="grid md:grid-cols-2 gap-6 items-center" data-scene="02">
+          <div class="rounded-2xl bg-base-200/70 aspect-[4/3] flex items-center justify-center md:order-2">
+            <span class="opacity-60 text-sm">IMAGE placeholder</span>
+          </div>
+          <div class="md:order-1">
+            <p class="text-sm opacity-70">scene-02</p>
+            <h3 class="mt-1 text-xl font-bold">柔らかな境界線</h3>
+            <p class="mt-3 font-semibold opacity-90">誰もが森の住人になれる場所。</p>
+            <p class="mt-3 opacity-80 leading-relaxed">
+              木漏れ日が揺れる平坦なフィールド。森の懐に抱かれる、
+              安心という名の時間。
+            </p>
+          </div>
+        </article>
+
+        <!-- scene-03 -->
+        <article class="grid md:grid-cols-2 gap-6 items-center" data-scene="03">
+          <div class="rounded-2xl bg-base-200/70 aspect-[4/3] flex items-center justify-center">
+            <span class="opacity-60 text-sm">IMAGE placeholder</span>
+          </div>
+          <div>
+            <p class="text-sm opacity-70">scene-03</p>
+            <h3 class="mt-1 text-xl font-bold">創作の筆跡</h3>
+            <p class="mt-3 font-semibold opacity-90">土をいじり、木を育て、景色を描く。</p>
+            <p class="mt-3 opacity-80 leading-relaxed">
+              キャンプ場を「作る」のではなく、森を「表現」する。
+              一歩踏み出すごとに、作り手の意思が宿る作品の感触。
+            </p>
+          </div>
+        </article>
+      </div>
     </div>
   </section>
 
-  <section id="worlds" class="py-16 bg-base-200/50">
+  <!-- NEWS（森の鼓動） -->
+  <section id="news" class="py-16 bg-base-200/40">
     <div class="mx-auto max-w-6xl px-4">
-      <h2 class="text-2xl font-bold">Worlds</h2>
+      <div class="flex items-end justify-between gap-4">
+        <h2 class="text-2xl font-bold">News</h2>
+        <a class="link opacity-70" href="/news/">一覧へ</a>
+      </div>
+
+      <ul class="mt-8 grid gap-3">
+        <li class="p-4 rounded-2xl bg-base-100 border border-base-300 flex gap-4">
+          <span class="text-sm opacity-60 shrink-0">2026-01-23</span>
+          <span class="font-medium">（仮）重要なお知らせを最優先で表示</span>
+        </li>
+        <li class="p-4 rounded-2xl bg-base-100 border border-base-300 flex gap-4">
+          <span class="text-sm opacity-60 shrink-0">2026-01-20</span>
+          <span class="opacity-80">（仮）森の記録：短いタイトルのみ</span>
+        </li>
+        <li class="p-4 rounded-2xl bg-base-100 border border-base-300 flex gap-4">
+          <span class="text-sm opacity-60 shrink-0">2026-01-15</span>
+          <span class="opacity-80">（仮）森の記録：短いタイトルのみ</span>
+        </li>
+      </ul>
     </div>
   </section>
 
-  <section id="sites" class="py-16">
+  <!-- CAMPSITES（居場所を、選ぶ） -->
+  <section id="campsites" class="py-16">
     <div class="mx-auto max-w-6xl px-4">
-      <h2 class="text-2xl font-bold">Sites</h2>
+      <h2 class="text-2xl font-bold">CampSite</h2>
+      <p class="mt-3 opacity-80 max-w-3xl">
+        すべてを等価な「風景」として扱い、整然と一覧表示。居場所を選ぶ。
+      </p>
+
+      <div class="mt-10 grid gap-6 md:grid-cols-5">
+        {["SS","S","M","L","XL"].map((size) => (
+          <a class="card bg-base-100 border border-base-300 hover:shadow transition" href={`/sites/#${size.toLowerCase()}`}>
+            <div class="card-body p-5">
+              <p class="text-sm opacity-60">Site</p>
+              <h3 class="text-xl font-bold">{size}</h3>
+              <p class="mt-2 text-sm opacity-75">（仮）特徴ひとこと</p>
+              <div class="mt-4">
+                <span class="link">空気感を見る</span>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+
+      <div class="mt-8 opacity-70 text-sm">
+        ※ モーダル展開は次のフェーズで実装（まずは“型”を完成させる）
+      </div>
     </div>
   </section>
 
-  <section id="experiences" class="py-16 bg-base-200/50">
+  <!-- LOCATION（陽光と安らぎの地） -->
+  <section id="location" class="py-16 bg-base-200/40">
     <div class="mx-auto max-w-6xl px-4">
-      <h2 class="text-2xl font-bold">Experiences</h2>
+      <h2 class="text-2xl font-bold">Location</h2>
+      <p class="mt-3 font-semibold opacity-90">Light Forest - 陽光と安らぎの森</p>
+      <p class="mt-4 opacity-80 leading-relaxed max-w-3xl">
+        オーナーが筆を振るい、人が最も安らげる風景として切り出したLocation。
+        計算された光と風の循環、100年の歳月が編み出す心地よさ。
+      </p>
     </div>
   </section>
 
-  <section id="access" class="py-16">
+  <!-- MEMBERS（森の住人） -->
+  <section id="members" class="py-16">
+    <div class="mx-auto max-w-6xl px-4">
+      <h2 class="text-2xl font-bold">Members</h2>
+
+      <div class="mt-8 grid md:grid-cols-2 gap-6">
+        <article class="card bg-base-100 border border-base-300">
+          <div class="card-body">
+            <h3 class="card-title">おいら（Oira）</h3>
+            <p class="opacity-80">
+              100年後の森を描き、日々土と木に向き合う作り手。その手から生まれる景色の物語。
+            </p>
+          </div>
+        </article>
+
+        <article class="card bg-base-100 border border-base-300">
+          <div class="card-body">
+            <h3 class="card-title">おかみ（Okami）</h3>
+            <p class="opacity-80">
+              訪れる人を柔らかな空気で包み、森の時間を支える。
+            </p>
+          </div>
+        </article>
+      </div>
+
+      <div class="mt-8">
+        <a class="btn btn-outline" href="/note/">二人の日々（Note）へ</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACCESS（アプローチ） -->
+  <section id="access" class="py-16 bg-base-200/40">
     <div class="mx-auto max-w-6xl px-4">
       <h2 class="text-2xl font-bold">Access</h2>
+
+      <div class="mt-8 grid md:grid-cols-2 gap-6 items-center">
+        <div class="rounded-2xl bg-base-200/70 aspect-[4/3] flex items-center justify-center">
+          <span class="opacity-60 text-sm">IMAGE placeholder</span>
+        </div>
+        <div>
+          <p class="opacity-80 leading-relaxed">
+            都内から約2時間半。その距離が、心を森へとチューニングする。
+          </p>
+          <div class="mt-6">
+            <a class="btn btn-outline" href="/access/">アクセス詳細へ</a>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <section id="cta" class="py-16 bg-base-200/50">
+  <!-- CTA（招待） -->
+  <section id="cta" class="py-16">
     <div class="mx-auto max-w-6xl px-4">
-      <h2 class="text-2xl font-bold">CTA</h2>
+      <div class="card bg-base-100 border border-base-300 shadow">
+        <div class="card-body">
+          <h2 class="card-title text-2xl">招待</h2>
+          <p class="mt-2 opacity-80">
+            この森の一部として、静かな週末を。
+          </p>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <a class="btn btn-primary" href="https://www.489pro.com/????" target="_blank" rel="noreferrer">
+              空室を確認する（ProX）
+            </a>
+            <a class="btn btn-outline" href="/guide/">ご利用の作法（ガイド）</a>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 </LpLayout>
