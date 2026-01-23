@@ -4,29 +4,35 @@ import LpLayout from "../layouts/LpLayout.astro";
 
 <LpLayout title="Light Forest | おいらの森">
   <!-- HERO -->
-  <section id="hero" class="min-h-[86vh] py-10">
-    <div class="mx-auto max-w-6xl px-4">
-      <div class="hero rounded-3xl bg-base-200/60 min-h-[72vh]">
-        <div class="hero-content py-14">
-          <div class="max-w-2xl">
-            <p class="text-sm opacity-70 tracking-wide">Light Forest</p>
-            <h1 class="mt-2 text-4xl md:text-5xl font-bold leading-tight">
-              100年をかけて描く、森という名の芸術。
-            </h1>
-            <p class="mt-5 opacity-80 leading-relaxed">
-              オーナー自らが100年かけて描く「芸術作品としての森」を歩き、
-              その一部となるための招待状。
-            </p>
+<section id="hero" class="min-h-[86vh] py-10">
+  <div class="mx-auto max-w-6xl px-4">
+    <div
+      class="hero rounded-3xl min-h-[72vh] overflow-hidden"
+      style={`background-image:url(/images/lp/hero.jpg); background-size:cover; background-position:center;`}
+    >
+      <div class="hero-overlay bg-black/35"></div>
 
-            <div class="mt-8 flex flex-wrap gap-3">
-              <a class="btn btn-primary" href="#cta">空室を確認する</a>
-              <a class="btn btn-outline" href="/guide/">ご利用の作法</a>
-            </div>
+      <div class="hero-content py-14">
+        <div class="max-w-2xl text-white">
+          <p class="text-sm opacity-80 tracking-wide">Light Forest</p>
+          <h1 class="mt-2 text-4xl md:text-5xl font-bold leading-tight">
+            100年をかけて描く、森という名の芸術。
+          </h1>
+          <p class="mt-5 opacity-90 leading-relaxed">
+            オーナー自らが100年かけて描く「芸術作品としての森」を歩き、
+            その一部となるための招待状。
+          </p>
+
+          <div class="mt-8 flex flex-wrap gap-3">
+            <a class="btn btn-primary" href="#cta">空室を確認する</a>
+            <a class="btn btn-outline btn-ghost text-white" href="/guide/">ご利用の作法</a>
           </div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
+
 
   <!-- STATUS（重要情報の帯：最優先） -->
   <section id="status" class="py-5 bg-base-200/40 border-y border-base-300">
@@ -41,64 +47,80 @@ import LpLayout from "../layouts/LpLayout.astro";
   </section>
 
   <!-- SCENES（創作の断片） -->
-  <section id="scenes" class="py-16">
-    <div class="mx-auto max-w-6xl px-4">
-      <h2 class="text-2xl font-bold">Scenes</h2>
-      <p class="mt-3 opacity-75 max-w-3xl">
-        作品の筆跡を感じる、視覚的なストーリー。
-      </p>
+<section id="scenes" class="py-16">
+  <div class="mx-auto max-w-6xl px-4">
+    <h2 class="text-2xl font-bold">Scenes</h2>
+    <p class="mt-3 opacity-75 max-w-3xl">
+      作品の筆跡を感じる、視覚的なストーリー。
+    </p>
 
-      <div class="mt-10 grid gap-10">
-        <!-- scene-01 -->
-        <article class="grid md:grid-cols-2 gap-6 items-center" data-scene="01">
-          <div class="rounded-2xl bg-base-200/70 aspect-[4/3] flex items-center justify-center">
-            <span class="opacity-60 text-sm">IMAGE placeholder</span>
-          </div>
-          <div>
-            <p class="text-sm opacity-70">scene-01</p>
-            <h3 class="mt-1 text-xl font-bold">朝の呼吸</h3>
-            <p class="mt-3 font-semibold opacity-90">100年の森が目覚める瞬間。</p>
-            <p class="mt-3 opacity-80 leading-relaxed">
-              丁寧に間伐された木々の間から降り注ぐ斜光。ここにあるのは、
-              計算された自然と、無垢な静寂。
-            </p>
-          </div>
-        </article>
+    <div class="mt-10 grid gap-10">
+      <!-- scene-01 -->
+      <article class="grid md:grid-cols-2 gap-6 items-center" data-scene="01">
+        <div class="rounded-2xl overflow-hidden">
+          <img
+            src="/images/lp/scene-01.jpg"
+            alt="朝の呼吸"
+            loading="lazy"
+            class="w-full h-full object-cover aspect-[4/3]"
+          />
+        </div>
+        <div>
+          <p class="text-sm opacity-70">scene-01</p>
+          <h3 class="mt-1 text-xl font-bold">朝の呼吸</h3>
+          <p class="mt-3 font-semibold opacity-90">100年の森が目覚める瞬間。</p>
+          <p class="mt-3 opacity-80 leading-relaxed">
+            丁寧に間伐された木々の間から降り注ぐ斜光。ここにあるのは、
+            計算された自然と、無垢な静寂。
+          </p>
+        </div>
+      </article>
 
-        <!-- scene-02 -->
-        <article class="grid md:grid-cols-2 gap-6 items-center" data-scene="02">
-          <div class="rounded-2xl bg-base-200/70 aspect-[4/3] flex items-center justify-center md:order-2">
-            <span class="opacity-60 text-sm">IMAGE placeholder</span>
-          </div>
-          <div class="md:order-1">
-            <p class="text-sm opacity-70">scene-02</p>
-            <h3 class="mt-1 text-xl font-bold">柔らかな境界線</h3>
-            <p class="mt-3 font-semibold opacity-90">誰もが森の住人になれる場所。</p>
-            <p class="mt-3 opacity-80 leading-relaxed">
-              木漏れ日が揺れる平坦なフィールド。森の懐に抱かれる、
-              安心という名の時間。
-            </p>
-          </div>
-        </article>
+      <!-- scene-02 -->
+      <article class="grid md:grid-cols-2 gap-6 items-center" data-scene="02">
+        <div class="rounded-2xl overflow-hidden md:order-2">
+          <img
+            src="/images/lp/scene-02.jpg"
+            alt="柔らかな境界線"
+            loading="lazy"
+            class="w-full h-full object-cover aspect-[4/3]"
+          />
+        </div>
+        <div class="md:order-1">
+          <p class="text-sm opacity-70">scene-02</p>
+          <h3 class="mt-1 text-xl font-bold">柔らかな境界線</h3>
+          <p class="mt-3 font-semibold opacity-90">誰もが森の住人になれる場所。</p>
+          <p class="mt-3 opacity-80 leading-relaxed">
+            木漏れ日が揺れる平坦なフィールド。森の懐に抱かれる、
+            安心という名の時間。
+          </p>
+        </div>
+      </article>
 
-        <!-- scene-03 -->
-        <article class="grid md:grid-cols-2 gap-6 items-center" data-scene="03">
-          <div class="rounded-2xl bg-base-200/70 aspect-[4/3] flex items-center justify-center">
-            <span class="opacity-60 text-sm">IMAGE placeholder</span>
-          </div>
-          <div>
-            <p class="text-sm opacity-70">scene-03</p>
-            <h3 class="mt-1 text-xl font-bold">創作の筆跡</h3>
-            <p class="mt-3 font-semibold opacity-90">土をいじり、木を育て、景色を描く。</p>
-            <p class="mt-3 opacity-80 leading-relaxed">
-              キャンプ場を「作る」のではなく、森を「表現」する。
-              一歩踏み出すごとに、作り手の意思が宿る作品の感触。
-            </p>
-          </div>
-        </article>
-      </div>
+      <!-- scene-03 -->
+      <article class="grid md:grid-cols-2 gap-6 items-center" data-scene="03">
+        <div class="rounded-2xl overflow-hidden">
+          <img
+            src="/images/lp/scene-03.jpg"
+            alt="創作の筆跡"
+            loading="lazy"
+            class="w-full h-full object-cover aspect-[4/3]"
+          />
+        </div>
+        <div>
+          <p class="text-sm opacity-70">scene-03</p>
+          <h3 class="mt-1 text-xl font-bold">創作の筆跡</h3>
+          <p class="mt-3 font-semibold opacity-90">土をいじり、木を育て、景色を描く。</p>
+          <p class="mt-3 opacity-80 leading-relaxed">
+            キャンプ場を「作る」のではなく、森を「表現」する。
+            一歩踏み出すごとに、作り手の意思が宿る作品の感触。
+          </p>
+        </div>
+      </article>
     </div>
-  </section>
+  </div>
+</section>
+
 
   <!-- NEWS（森の鼓動） -->
   <section id="news" class="py-16 bg-base-200/40">
