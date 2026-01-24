@@ -10,29 +10,28 @@ const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.s
 
 <header class="sticky top-0 z-50 bg-white/80 border-b border-base-300">
   <div class="mx-auto max-w-6xl px-4 h-14 flex items-center justify-between gap-3">
-    <!-- 左：ロゴ（いまは favicon を暫定ロゴとして使用） -->
+    <!-- 左：ロゴ -->
     <a href="/" class="flex items-center gap-2">
       <img src="/images/logo/logo-w512.png" alt="おいらの森ロゴ" class="h-7 w-auto" />
       <span class="sr-only">おいらの森</span>
     </a>
 
     <!-- 中央：世界切替 -->
-    <nav class="hidden md:flex items-center gap-2">
+    <nav class="flex items-end gap-2 header-tabs">
       {topSwitch.map((item) => (
         <a
-          class={
-            "btn btn-sm " +
-            (isActive(item.href)
-              ? "btn-active font-bold border border-base-300 bg-white/90"
-              : "btn-ghost")
-          }
           href={item.href}
+          class={
+            "header-tab " +
+            (isActive(item.href) ? "is-active" : "")
+          }
           aria-current={isActive(item.href) ? "page" : undefined}
         >
           {item.label}
         </a>
       ))}
     </nav>
+
 
     <!-- 右：天気（ダミー）＋ハンバーガー -->
     <div class="flex items-center gap-2">
