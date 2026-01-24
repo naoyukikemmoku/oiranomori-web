@@ -104,3 +104,63 @@
   margin: 0;
   opacity: .8;
 }
+
+/* 固定透明ヘッダー */
+.site-header{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+
+  color: #fff;
+  background: rgba(0,0,0,.18);    /* うっすら暗幕 */
+  backdrop-filter: blur(10px);   /* ぼかし */
+  border-bottom: 1px solid rgba(255,255,255,.12);
+}
+
+/* ヘッダー上のリンクが暗い写真だと読めない場合に備えて */
+.site-header a{
+  color: inherit;
+}
+
+
+/* Floating side tab */
+.floating-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  /* “タブ”の形：右端に刺さるので左だけ丸く */
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+
+  /* タブの大きさ（縦長） */
+  width: 44px;
+  min-height: 120px;
+
+  /* 右端から少しだけ内側に */
+  padding: 10px 8px;
+
+  /* クリックしやすさ */
+  user-select: none;
+
+  /* タブの陰影 */
+  box-shadow: 0 10px 25px rgba(0,0,0,.12);
+
+}
+
+.floating-tab__text {
+  /* 縦書き（日本語） */
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+
+  /* 文字間 */
+  letter-spacing: 0.12em;
+
+  /* 見た目 */
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1;
+  color: rgb(17 24 39); /* だいたい slate-900 */
+}

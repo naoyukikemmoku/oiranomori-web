@@ -4,34 +4,31 @@ import LpLayout from "../layouts/LpLayout.astro";
 
 <LpLayout title="Light Forest | おいらの森">
   <!-- HERO -->
-<section id="hero" class="min-h-[86vh] py-10">
-  <div class="mx-auto max-w-6xl px-4">
-    <div
-      class="hero rounded-3xl min-h-[72vh] overflow-hidden"
-      style={`background-image:url(/images/lp/hero.jpg); background-size:cover; background-position:center;`}
-    >
-      <div class="hero-overlay bg-black/35"></div>
+<section
+  id="hero"
+  class="relative min-h-screen"
+  style={`background-image:url(/images/lp/hero.jpg); background-size:cover; background-position:center;`}
+>
+  <!-- 読みやすさ用の暗幕（必要なら濃さを bg-black/xx で調整） -->
+  <div class="absolute inset-0 bg-black/35"></div>
 
-      <div class="hero-content py-14">
-        <div class="max-w-2xl text-white">
-          <p class="text-sm opacity-80 tracking-wide">Light Forest</p>
-          <h1 class="mt-2 text-4xl md:text-5xl font-bold leading-tight">
-            100年をかけて描く、森という名の芸術。
-          </h1>
-          <p class="mt-5 opacity-90 leading-relaxed">
-            オーナー自らが100年かけて描く「芸術作品としての森」を歩き、
-            その一部となるための招待状。
-          </p>
-
-          <div class="mt-8 flex flex-wrap gap-3">
-            <a class="btn btn-primary" href="#cta">空室を確認する</a>
-            <a class="btn btn-outline btn-ghost text-white" href="/guide/">ご利用の作法</a>
-          </div>
-        </div>
+  <!-- 上端まで画像、文字は少し内側に寄せる -->
+  <div class="relative mx-auto max-w-6xl px-4 pt-24">
+    <div class="min-h-screen flex items-end md:items-center">
+      <div class="max-w-2xl text-white pb-14 md:pb-0">
+        <p class="text-sm opacity-80 tracking-wide">Light Forest</p>
+        <h1 class="mt-2 text-4xl md:text-5xl font-bold leading-tight">
+          100年をかけて描く、森という名の芸術。
+        </h1>
+        <p class="mt-5 opacity-90 leading-relaxed">
+          オーナー自らが100年かけて描く「芸術作品としての森」を歩き、
+          その一部となるための招待状。
+        </p>
       </div>
     </div>
   </div>
 </section>
+
 
 
   <!-- STATUS（重要情報の帯：最優先） -->

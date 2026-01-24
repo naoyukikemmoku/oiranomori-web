@@ -2,10 +2,23 @@
 import { floatingNav } from "../config/nav";
 ---
 
-<aside class="fixed right-3 top-1/2 -translate-y-1/2 z-40 hidden lg:block">
-  <div class="flex flex-col gap-2">
-    {floatingNav.map((it) => (
-      <a class="btn btn-sm btn-outline" href={it.href}>{it.label}</a>
+<aside class="fixed right-0 top-1/2 -translate-y-1/2 z-50">
+  <div class="flex flex-col items-end gap-2 pr-2">
+    {floatingNav.map((item) => (
+      <a
+        href={item.href}
+        class="
+          floating-tab
+          bg-white/95 backdrop-blur
+          border border-base-300
+          shadow-lg
+          hover:shadow-xl
+          transition
+        "
+        aria-label={item.label}
+      >
+        <span class="floating-tab__text">{item.label}</span>
+      </a>
     ))}
   </div>
 </aside>

@@ -17,7 +17,6 @@ export const topSwitch = [
 
 export const floatingNav: NavItem[] = [
   { label: "利用案内", href: "/guide/" },
-  { label: "アクセス", href: "/access/" },
 ];
 
 export const hamburgerGroups: NavGroup[] = [
