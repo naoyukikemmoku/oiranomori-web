@@ -10,10 +10,10 @@ export type NavGroup = {
 };
 
 export const topSwitch = [
-  { label: "Light Forest", href: "/" },
-  { label: "Deep Forest", href: "/deep/" },
-  { label: "Now（天気/注意）", href: "/now/" },
+  { label: "ライトフォレスト", href: "/" },
+  { label: "ディープフォレスト", href: "/deep/" },
 ] as const;
+
 
 export const floatingNav: NavItem[] = [
   { label: "利用案内", href: "/guide/" },

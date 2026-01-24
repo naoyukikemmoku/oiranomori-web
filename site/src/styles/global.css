@@ -136,11 +136,11 @@
   border-bottom-left-radius: 12px;
 
   /* タブの大きさ（縦長） */
-  width: 44px;
-  min-height: 120px;
+  width: 30px;
+  min-height: 84px;
 
   /* 右端から少しだけ内側に */
-  padding: 10px 8px;
+  padding: 6px 4px;
 
   /* クリックしやすさ */
   user-select: none;
@@ -160,7 +160,7 @@
 
   /* 見た目 */
   font-weight: 600;
-  font-size: 14px;
+  font-size: 11px;
   line-height: 1;
   color: rgb(17 24 39); /* だいたい slate-900 */
 }
