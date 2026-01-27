@@ -1,5 +1,9 @@
 ---
 import LpLayout from "../layouts/LpLayout.astro";
+import OshiraseList from "../components/OshiraseList.astro";
+import { getOshirase } from "../lib/oshirase";
+
+const { contents } = await getOshirase(3);
 ---
 
 <LpLayout title="Light Forest | おいらの森">
@@ -31,17 +35,11 @@ import LpLayout from "../layouts/LpLayout.astro";
 
 
 
-  <!-- STATUS（重要情報の帯：最優先） -->
-  <section id="status" class="py-5 bg-base-200/40 border-y border-base-300">
-    <div class="mx-auto max-w-6xl px-4">
-      <!-- ここは「重要なお知らせがある時だけ表示」も後で可能 -->
-      <div class="alert">
-        <span class="font-semibold">重要：</span>
-        <span class="opacity-80">（仮）本日の運営状況・注意事項をここに表示</span>
-        <a class="link ml-auto" href="/now/">Nowへ</a>
-      </div>
-    </div>
-  </section>
+<!-- STATUS（お知らせ） -->
+<section id="status" class="bg-gray-50/80">
+  <OshiraseList items={contents} />
+</section>
+
 
   <!-- SCENES（創作の断片） -->
 <section id="scenes" class="py-16">

@@ -10,7 +10,8 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.18",
-    "astro": "^5.16.11"
+    "astro": "^5.16.11",
+    "microcms-js-sdk": "^3.2.0"
   },
   "devDependencies": {
     "@astrojs/sitemap": "^3.7.0",

@@ -1,0 +1,25 @@
+---
+import { microcms } from "../../lib/microcms";
+import type { Oshirase } from "../../lib/oshirase";
+
+const { id } = Astro.params;
+
+const data = await microcms.get<Oshirase>({
+  endpoint: "oshirase", // ←ここも同じendpointに
+  contentId: id!,
+});
+const fmt = (iso: string) => iso?.slice(0, 10);
+---
+
+<main class="mx-auto max-w-3xl px-2 sm:px-4 py-10">
+  <div class="text-sm opacity-70">{fmt(data.date)} / {data.category}</div>
+  <h1 class="text-2xl font-bold mt-2">{data.title}</h1>
+
+  {data.image?.url ? (
+    <img src={data.image.url} alt="" class="mt-5 rounded-xl border border-base-300" />
+  ) : null}
+
+  <article class="prose prose-neutral max-w-none mt-6"
+    set:html={data.content}
+  />
+</main>

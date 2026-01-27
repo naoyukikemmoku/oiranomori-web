@@ -1,0 +1,73 @@
+---
+type Item = {
+  id: string;
+  title: string;
+  description?: string;
+  content?: string;
+  date: string;
+  category: string;
+};
+
+const { items } = Astro.props as { items: Item[] };
+
+const fmt = (iso: string) => (iso ? iso.slice(0, 10) : "");
+
+const clip = (s: string, n = 20) => {
+  const t = (s ?? "").trim();
+  return t.length > n ? t.slice(0, n) + "…" : t;
+};
+
+// リッチエディタ（HTML）からテキスト化（簡易）
+const stripHtml = (html: string) =>
+  (html ?? "")
+    .replace(/<[^>]*>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+const getPreview = (it: Item) => {
+  const base =
+    it.description && it.description.trim()
+      ? it.description
+      : stripHtml(it.content ?? "");
+  return clip(base || "（内容なし）", 20);
+};
+---
+
+<section class="bg-gray-50/80">
+  <div class="mx-auto max-w-6xl px-2 sm:px-4 py-6">
+    <div class="flex items-baseline justify-between gap-3">
+      <h2 class="text-sm tracking-wide">お知らせ</h2>
+      <a href="/news/" class="text-sm tracking-wide opacity-70 hover:opacity-100">一覧</a>
+    </div>
+
+    <!-- タイトル下の余白を詰める -->
+    <ul class="mt-2 space-y-1.5">
+      {items.slice(0, 3).map((it) => (
+        <li>
+          <a
+            href={`/news/${it.id}/`}
+            class="block py-1 leading-tight tracking-wide opacity-90 hover:opacity-100"
+            title={it.title}
+          >
+            <div class="flex items-center gap-3 min-w-0">
+              <!-- 全部同じトーン -->
+              <span class="shrink-0">{fmt(it.date)}</span>
+
+              <!-- カテゴリだけタグ復活 -->
+              <span class="shrink-0 px-2 py-0.5 rounded border border-gray-300 bg-white/70">
+                {it.category}
+              </span>
+
+              <span class="shrink-0">{it.title}</span>
+
+              <!-- 内容プレビュー（20文字） -->
+              <span class="min-w-0 truncate">
+                {getPreview(it)}
+              </span>
+            </div>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
