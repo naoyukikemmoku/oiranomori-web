@@ -216,3 +216,11 @@
   color: rgb(17 24 39);
   z-index: 2;
 }
+/* スマホ時：切替タブを少しだけ締める */
+@media (max-width: 639px) {
+  .header-tab {
+    font-size: 13px;
+    padding: 0 14px;
+    letter-spacing: 0.1em;
+  }
+}
