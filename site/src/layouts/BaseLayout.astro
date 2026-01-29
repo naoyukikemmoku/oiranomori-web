@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import Footer from "../components/Footer.astro";
 
 const { title = "おいらの森", description = "" } = Astro.props;
 ---
@@ -13,17 +14,12 @@ const { title = "おいらの森", description = "" } = Astro.props;
   </head>
 
   <body>
-
     <!-- ここに各ページの中身が入る -->
     <main>
       <slot />
     </main>
 
-    <!-- フッター（仮） -->
-    <footer class="border-t">
-      <div class="container-oir py-10 text-sm text-zinc-600">
-        © {new Date().getFullYear()} おいらの森
-      </div>
-    </footer>
+    <!-- フッター -->
+    <Footer />
   </body>
 </html>

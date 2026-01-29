@@ -9,9 +9,9 @@ const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.s
 ---
 
 <header class="sticky top-0 z-50 bg-white/80 border-b border-base-300">
-  <div class="mx-auto max-w-6xl px-4 h-14 flex items-center justify-between gap-3 min-w-0">
+  <div class="mx-auto max-w-6xl px-4 flex items-end justify-between gap-3 min-w-0 pb-0" style="padding-top: 0.75rem;">
     <!-- 左：ロゴ -->
-    <a href="/" class="flex items-center gap-2 shrink-0">
+    <a href="/" class="flex items-center gap-2 shrink-0 mb-1">
       <img src="/images/logo/logo-w512.png" alt="おいらの森ロゴ" class="h-7 w-auto" />
       <span class="sr-only">おいらの森</span>
     </a>
@@ -54,7 +54,7 @@ const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.s
 
 
     <!-- 右：天気（ダミー）＋ハンバーガー -->
-    <div class="flex items-center gap-2">
+    <div class="flex items-center gap-2 mb-1">
       <a
         href="/now/"
         class="btn btn-ghost btn-sm flex items-center gap-2  hidden sm:flex"

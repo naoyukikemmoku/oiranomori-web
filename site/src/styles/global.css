@@ -131,7 +131,7 @@
   align-items: center;
   justify-content: center;
 
-  /* “タブ”の形：右端に刺さるので左だけ丸く */
+  /* "タブ"の形：右端に刺さるので左だけ丸く */
   border-top-left-radius: 12px;
   border-bottom-left-radius: 12px;
 
@@ -192,8 +192,8 @@
 
   transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
 
-  /* タブがヘッダー下端に刺さる感じ */
-  margin-bottom: -1px;
+  /* タブがヘッダー下端にぴったり接続 */
+  margin-bottom: 0;
 
   /* sm以上は1行固定（日本語が勝手に折れないように） */
   white-space: nowrap;
@@ -209,7 +209,7 @@
   font-weight: 700;
   z-index: 3;
   box-shadow: 0 4px 10px rgba(0, 0, 0, .08);
-  transform: translateY(-1px);
+  transform: translateY(0);
 }
 
 /* Light Forest：アクティブ色 */
@@ -238,4 +238,3 @@
     white-space: normal;
   }
 }
-
