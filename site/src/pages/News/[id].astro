@@ -2,24 +2,30 @@
 import { microcms } from "../../lib/microcms";
 import type { Oshirase } from "../../lib/oshirase";
 
-// 1. ビルド時に生成するページのリスト（ID一覧）を定義する
 export async function getStaticPaths() {
-  const data = await microcms.get({
+  if (!microcms) {
+    return [];
+  }
+
+  const data = await microcms.get<{ contents: { id: string }[] }>({
     endpoint: "oshirase",
-    queries: { fields: ["id"], limit: 100 }, // 必要なのはIDだけ、最大100件取得
+    queries: { fields: ["id"], limit: 100 },
   });
 
-  return data.contents.map((content: any) => ({
+  return data.contents.map((content) => ({
     params: { id: content.id },
   }));
 }
 
-// 2. 実際の記事データを取得する
 const { id } = Astro.params;
 
-const data = await microcms.get<Oshirase>({
+if (!microcms || !id) {
+  return Astro.redirect("/");
+}
+
+const data = await microcms.get<Oshirase & { image?: { url?: string } }>({
   endpoint: "oshirase",
-  contentId: id!,
+  contentId: id,
 });
 
 const fmt = (iso: string) => iso?.slice(0, 10);
@@ -35,7 +41,5 @@ const fmt = (iso: string) => iso?.slice(0, 10);
     <img src={data.image.url} alt="" class="mt-5 rounded-xl border border-zinc-800" />
   ) : null}
 
-  <article class="prose prose-invert max-w-none mt-6 text-zinc-300"
-    set:html={data.content}
-  />
+  <article class="prose prose-invert max-w-none mt-6 text-zinc-300" set:html={data.content} />
 </main>

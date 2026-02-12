@@ -3,369 +3,125 @@ import LpLayout from "../layouts/LpLayout.astro";
 import OshiraseList from "../components/OshiraseList.astro";
 import { getOshirase } from "../lib/oshirase";
 
-const { contents } = await getOshirase(3);
+let contents = [];
+
+try {
+  const response = await getOshirase(3);
+  contents = response.contents;
+} catch (error) {
+  console.warn("Failed to fetch news from microCMS.", error);
+}
+
+const highlights = [
+  {
+    title: "ライトフォレスト",
+    subtitle: "陽だまりの広葉樹林",
+    desc: "コナラとクヌギに囲まれた明るい森。木漏れ日の下で、家族でもソロでもゆったり過ごせます。",
+    image: "/images/lp/scene-01.jpg",
+  },
+  {
+    title: "ディープフォレスト",
+    subtitle: "静寂の針葉樹林",
+    desc: "樹齢80年のスギ・ヒノキが立つ深い森。直火を楽しみたいブッシュクラフト派に人気です。",
+    image: "/images/lp/scene-02.jpg",
+  },
+  {
+    title: "おいらの薪",
+    subtitle: "林業家が届ける本物の焚き火",
+    desc: "オーナー自ら伐採・乾燥した薪を販売。火付き・火持ちの良さが違う、森の恵みを体験できます。",
+    image: "/images/lp/scene-03.jpg",
+  },
+];
 ---
 
-<LpLayout title="Light Forest | おいらの森">
-  <!-- HERO -->
+<LpLayout title="おいらの森キャンプ場 | 那須烏山の森で過ごす特別な時間">
   <section
-    id="hero"
-    class="relative min-h-screen"
-    style="background-image:url(/images/lp/hero.jpg); background-size:cover; background-position:center;"
+    class="hero min-h-[88vh]"
+    style="background-image:url('/images/lp/hero.jpg'); background-position:center; background-size:cover;"
   >
-    <div class="absolute inset-0 bg-black/35"></div>
-    
-    <div class="relative mx-auto max-w-6xl px-4 pt-24">
-      <div class="min-h-screen flex items-end md:items-center">
-        <div class="max-w-2xl text-white pb-14 md:pb-0">
-          <p class="text-sm opacity-80 tracking-wide">Light Forest</p>
-          <h1 class="mt-2 text-4xl md:text-5xl font-bold leading-tight">
-            100年の森作りを体験する<br />キャンプ場
-          </h1>
-          <p class="mt-5 opacity-90 leading-relaxed">
-            栃木県那須烏山市にある、明るいコナラ林と深いヒノキ林。<br />
-            オーナー「おいら」が描く100年の森で、あなただけの時間を。
-          </p>
+    <div class="hero-overlay bg-black/45"></div>
+    <div class="hero-content text-neutral-content text-left px-5">
+      <div class="max-w-3xl">
+        <p class="font-semibold tracking-[0.2em] text-sm">OI RA NO MORI CAMP</p>
+        <h1 class="mt-3 text-4xl md:text-6xl font-bold leading-tight">おいらの森で、<br />森と暮らすキャンプを。</h1>
+        <p class="mt-5 text-base md:text-lg leading-relaxed opacity-95">
+          栃木県那須烏山市の自然林を活かしたキャンプ場。<br />
+          明るいライトフォレストと静寂のディープフォレスト、
+          2つの森で焚き火と余白の時間を楽しめます。
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="https://www.nap-camp.com/tochigi/14964" class="btn btn-primary">予約する</a>
+          <a href="#highlights" class="btn btn-outline btn-neutral text-white border-white hover:text-neutral">
+            森の魅力を見る
+          </a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- STATUS（お知らせ） -->
-  <section id="status" class="bg-gray-50/80">
+  <section class="bg-base-100 py-14" id="concept">
+    <div class="mx-auto max-w-6xl px-4 grid md:grid-cols-3 gap-5">
+      <div class="card bg-base-200">
+        <div class="card-body">
+          <h2 class="card-title">コンセプト</h2>
+          <p>100年先を見据えた森づくりと、自然への敬意を大切にしたキャンプ体験。</p>
+        </div>
+      </div>
+      <div class="card bg-base-200">
+        <div class="card-body">
+          <h2 class="card-title">営業情報</h2>
+          <p>チェックイン 13:00〜 / チェックアウト 〜11:00。詳細は予約ページをご確認ください。</p>
+        </div>
+      </div>
+      <div class="card bg-base-200">
+        <div class="card-body">
+          <h2 class="card-title">アクセス</h2>
+          <p>宇都宮市内から車で約60分。関東圏から週末の小旅行にちょうど良い立地です。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="news" class="bg-gray-50/80 py-10">
+    <div class="mx-auto max-w-6xl px-4">
+      <h2 class="text-3xl font-bold">お知らせ</h2>
+    </div>
     <OshiraseList items={contents} />
   </section>
 
-  <!-- SCENES（場内風景） -->
-  <section id="scenes" class="py-16">
+  <section id="highlights" class="py-16 bg-base-100">
     <div class="mx-auto max-w-6xl px-4">
-      <h2 class="text-2xl font-bold">おいらの森の魅力</h2>
-      <p class="mt-3 opacity-75 max-w-3xl">
-        2つのフィールドと、林業家が育てる薪。
+      <h2 class="text-3xl font-bold">おいらの森の魅力</h2>
+      <p class="mt-3 opacity-80 max-w-3xl">「明るさ」と「深さ」が共存する森で、同じ1泊でもまったく違う時間を過ごせます。</p>
+
+      <div class="mt-10 grid gap-7 md:grid-cols-3">
+        {
+          highlights.map((item) => (
+            <article class="card bg-base-100 border border-base-300 shadow-sm">
+              <figure class="aspect-[4/3] overflow-hidden">
+                <img src={item.image} alt={item.title} class="h-full w-full object-cover" loading="lazy" />
+              </figure>
+              <div class="card-body">
+                <p class="text-xs tracking-widest opacity-60">{item.subtitle}</p>
+                <h3 class="card-title">{item.title}</h3>
+                <p class="opacity-80">{item.desc}</p>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="py-16 bg-base-200/70" id="cta">
+    <div class="mx-auto max-w-4xl px-4 text-center">
+      <h2 class="text-3xl font-bold">次の週末、森へ行こう。</h2>
+      <p class="mt-4 opacity-80">
+        空き状況の確認・料金・設備詳細は予約ページから。はじめての方でも安心して利用できるよう、最新情報を随時更新しています。
       </p>
-
-      <div class="mt-10 grid gap-10">
-        <!-- scene-01: 陽だまりの森 -->
-        <article class="grid md:grid-cols-2 gap-6 items-center">
-          <div class="rounded-2xl overflow-hidden">
-            <img
-              src="/images/lp/scene-01.jpg"
-              alt="陽だまりの森"
-              loading="lazy"
-              class="w-full h-full object-cover aspect-[4/3]"
-            />
-          </div>
-          <div>
-            <p class="text-sm opacity-70">Light Forest</p>
-            <h3 class="mt-1 text-xl font-bold">陽だまりの森</h3>
-            <p class="mt-3 font-semibold opacity-90">明るいコナラとクヌギの落葉広葉樹林</p>
-            <p class="mt-3 opacity-80 leading-relaxed">
-              ライトフォレストは南向きの明るい森。木漏れ日が揺れる中で、焚き火とテントのある暮らしを。車の横付けができるオートサイトから、ソロキャンパー専用の直火区画まで。
-            </p>
-          </div>
-        </article>
-
-        <!-- scene-02: 静寂の深い森 -->
-        <article class="grid md:grid-cols-2 gap-6 items-center">
-          <div class="rounded-2xl overflow-hidden md:order-2">
-            <img
-              src="/images/lp/scene-02.jpg"
-              alt="静寂の深い森"
-              loading="lazy"
-              class="w-full h-full object-cover aspect-[4/3]"
-            />
-          </div>
-          <div class="md:order-1">
-            <p class="text-sm opacity-70">Deep Forest</p>
-            <h3 class="mt-1 text-xl font-bold">静寂の深い森</h3>
-            <p class="mt-3 font-semibold opacity-90">樹齢80年のスギとヒノキの針葉樹林</p>
-            <p class="mt-3 opacity-80 leading-relaxed">
-              ディープフォレストは、ブッシュクラフトに最適な野営エリア。全面直火可能で、一目を気にせず自然と一体になれる。普通のキャンプでは物足りなくなったあなたへ。
-            </p>
-          </div>
-        </article>
-
-        <!-- scene-03: おいらの薪 -->
-        <article class="grid md:grid-cols-2 gap-6 items-center">
-          <div class="rounded-2xl overflow-hidden">
-            <img
-              src="/images/lp/scene-03.jpg"
-              alt="林業家おいらの薪"
-              loading="lazy"
-              class="w-full h-full object-cover aspect-[4/3]"
-            />
-          </div>
-          <div>
-            <p class="text-sm opacity-70">Firewood</p>
-            <h3 class="mt-1 text-xl font-bold">林業家おいらの、最高の薪</h3>
-            <p class="mt-3 font-semibold opacity-90">森林資源の宝庫で育まれる</p>
-            <p class="mt-3 opacity-80 leading-relaxed">
-              おいらが自ら切り出し、割った薪。森の恵みを思う存分、焚き火で楽しんでほしい。焚き火をするためにキャンプする、そんな時間を過ごせる場所です。
-            </p>
-          </div>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- CAMPSITES（サイトを選ぶ） -->
-  <section id="campsites" class="py-16 bg-base-200/40">
-    <div class="mx-auto max-w-6xl px-4">
-      <h2 class="text-2xl font-bold">サイトを選ぶ</h2>
-      <p class="mt-3 opacity-80 max-w-3xl">
-        ソロテント1張りから大型グループまで、あなたに合ったサイトを。
-      </p>
-
-      <!-- PC: 5列グリッド -->
-      <div class="mt-10 hidden md:grid gap-6 md:grid-cols-5">
-        <a class="card bg-base-100 border border-base-300 hover:shadow-lg transition" href="/sites/#ss">
-          <div class="card-body p-5">
-            <p class="text-sm opacity-60">Site</p>
-            <h3 class="text-xl font-bold">SS</h3>
-            <p class="mt-2 text-sm opacity-75">ソロテント1張り<br />プライベート感重視</p>
-            <div class="mt-4">
-              <span class="link text-sm">詳しく見る →</span>
-            </div>
-          </div>
-        </a>
-
-        <a class="card bg-base-100 border border-base-300 hover:shadow-lg transition" href="/sites/#s">
-          <div class="card-body p-5">
-            <p class="text-sm opacity-60">Site</p>
-            <h3 class="text-xl font-bold">S</h3>
-            <p class="mt-2 text-sm opacity-75">小型テント+タープ<br />2人以下向け</p>
-            <div class="mt-4">
-              <span class="link text-sm">詳しく見る →</span>
-            </div>
-          </div>
-        </a>
-
-        <a class="card bg-base-100 border border-base-300 hover:shadow-lg transition" href="/sites/#m">
-          <div class="card-body p-5">
-            <p class="text-sm opacity-60">Site</p>
-            <h3 class="text-xl font-bold">M</h3>
-            <p class="mt-2 text-sm opacity-75">中型テント+タープ<br />2〜4人向け</p>
-            <div class="mt-4">
-              <span class="link text-sm">詳しく見る →</span>
-            </div>
-          </div>
-        </a>
-
-        <a class="card bg-base-100 border border-base-300 hover:shadow-lg transition" href="/sites/#l">
-          <div class="card-body p-5">
-            <p class="text-sm opacity-60">Site</p>
-            <h3 class="text-xl font-bold">L</h3>
-            <p class="mt-2 text-sm opacity-75">大型テント1〜2張り<br />4〜6人向け</p>
-            <div class="mt-4">
-              <span class="link text-sm">詳しく見る →</span>
-            </div>
-          </div>
-        </a>
-
-        <a class="card bg-base-100 border border-base-300 hover:shadow-lg transition" href="/sites/#xl">
-          <div class="card-body p-5">
-            <p class="text-sm opacity-60">Site</p>
-            <h3 class="text-xl font-bold">XL</h3>
-            <p class="mt-2 text-sm opacity-75">超大型テント+タープ<br />10人以上向け</p>
-            <div class="mt-4">
-              <span class="link text-sm">詳しく見る →</span>
-            </div>
-          </div>
-        </a>
-      </div>
-
-      <!-- スマホ: Swiperスライド -->
-      <div class="mt-10 md:hidden">
-        <div class="swiper campsite-swiper">
-          <div class="swiper-wrapper">
-            <div class="swiper-slide">
-              <a class="card bg-base-100 border border-base-300 shadow-lg block h-full" href="/sites/#ss">
-                <div class="card-body p-5">
-                  <p class="text-sm opacity-60">Site</p>
-                  <h3 class="text-xl font-bold">SS</h3>
-                  <p class="mt-2 text-sm opacity-75">ソロテント1張り<br />プライベート感重視</p>
-                  <div class="mt-4">
-                    <span class="link text-sm">詳しく見る →</span>
-                  </div>
-                </div>
-              </a>
-            </div>
-
-            <div class="swiper-slide">
-              <a class="card bg-base-100 border border-base-300 shadow-lg block h-full" href="/sites/#s">
-                <div class="card-body p-5">
-                  <p class="text-sm opacity-60">Site</p>
-                  <h3 class="text-xl font-bold">S</h3>
-                  <p class="mt-2 text-sm opacity-75">小型テント+タープ<br />2人以下向け</p>
-                  <div class="mt-4">
-                    <span class="link text-sm">詳しく見る →</span>
-                  </div>
-                </div>
-              </a>
-            </div>
-
-            <div class="swiper-slide">
-              <a class="card bg-base-100 border border-base-300 shadow-lg block h-full" href="/sites/#m">
-                <div class="card-body p-5">
-                  <p class="text-sm opacity-60">Site</p>
-                  <h3 class="text-xl font-bold">M</h3>
-                  <p class="mt-2 text-sm opacity-75">中型テント+タープ<br />2〜4人向け</p>
-                  <div class="mt-4">
-                    <span class="link text-sm">詳しく見る →</span>
-                  </div>
-                </div>
-              </a>
-            </div>
-
-            <div class="swiper-slide">
-              <a class="card bg-base-100 border border-base-300 shadow-lg block h-full" href="/sites/#l">
-                <div class="card-body p-5">
-                  <p class="text-sm opacity-60">Site</p>
-                  <h3 class="text-xl font-bold">L</h3>
-                  <p class="mt-2 text-sm opacity-75">大型テント1〜2張り<br />4〜6人向け</p>
-                  <div class="mt-4">
-                    <span class="link text-sm">詳しく見る →</span>
-                  </div>
-                </div>
-              </a>
-            </div>
-
-            <div class="swiper-slide">
-              <a class="card bg-base-100 border border-base-300 shadow-lg block h-full" href="/sites/#xl">
-                <div class="card-body p-5">
-                  <p class="text-sm opacity-60">Site</p>
-                  <h3 class="text-xl font-bold">XL</h3>
-                  <p class="mt-2 text-sm opacity-75">超大型テント+タープ<br />10人以上向け</p>
-                  <div class="mt-4">
-                    <span class="link text-sm">詳しく見る →</span>
-                  </div>
-                </div>
-              </a>
-            </div>
-          </div>
-          
-          <!-- ページネーション -->
-          <div class="swiper-pagination mt-6"></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- LOCATION（森の場所） -->
-  <section id="location" class="py-16">
-    <div class="mx-auto max-w-6xl px-4">
-      <h2 class="text-2xl font-bold">おいらの森の場所</h2>
-      <p class="mt-3 font-semibold opacity-90">栃木県那須烏山市 - 都内から約2時間半</p>
-      <p class="mt-4 opacity-80 leading-relaxed max-w-3xl">
-        東京から車で約2時間半。その距離が、心を森へとチューニングする。標高140mの丘陵地で、平地より涼しく冬は温暖。通年積雪なし、北風に強い立地です。
-      </p>
-      <div class="mt-6">
-        <a class="btn btn-outline" href="/access/">アクセス詳細へ</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- MEMBERS（森の住人） -->
-  <section id="members" class="py-16 bg-base-200/40">
-    <div class="mx-auto max-w-6xl px-4">
-      <h2 class="text-2xl font-bold">森の住人</h2>
-
-      <div class="mt-8 grid md:grid-cols-2 gap-6">
-        <article class="card bg-base-100 border border-base-300">
-          <div class="card-body">
-            <h3 class="card-title">おいら（Oira）</h3>
-            <p class="opacity-80">
-              100年後の森を描き、日々土と木に向き合う作り手。林業家として森を育て、キャンプ場を営む。その手から生まれる景色の物語。
-            </p>
-          </div>
-        </article>
-
-        <article class="card bg-base-100 border border-base-300">
-          <div class="card-body">
-            <h3 class="card-title">おかみ（Okami）</h3>
-            <p class="opacity-80">
-              訪れる人を柔らかな空気で包み、森の時間を支える。おいらと共に、森の暮らしを紡ぐパートナー。
-            </p>
-          </div>
-        </article>
-      </div>
-
-      <div class="mt-8">
-        <a class="btn btn-outline" href="https://note.com/oiranomori" target="_blank" rel="noreferrer">二人の日々（Note）へ</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ACCESS（アプローチ） -->
-  <section id="access" class="py-16">
-    <div class="mx-auto max-w-6xl px-4">
-      <h2 class="text-2xl font-bold">アクセス・周辺施設</h2>
-
-      <div class="mt-8 grid md:grid-cols-2 gap-6 items-center">
-        <div class="rounded-2xl bg-base-200/70 aspect-[4/3] flex items-center justify-center">
-          <span class="opacity-60 text-sm">MAP（後で差し替え）</span>
-        </div>
-        <div>
-          <p class="opacity-80 leading-relaxed">
-            都内から約2時間半。温泉・コンビニ・スーパー・ホームセンターは車で10分以内。初心者からベテランまで、安心してキャンプを楽しめる環境です。
-          </p>
-          <div class="mt-6">
-            <a class="btn btn-outline" href="/access/">詳しいアクセス情報</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA（予約） -->
-  <section id="cta" class="py-16 bg-base-200/40">
-    <div class="mx-auto max-w-6xl px-4">
-      <div class="card bg-base-100 border border-base-300 shadow">
-        <div class="card-body">
-          <h2 class="card-title text-2xl">森に泊まる</h2>
-          <p class="mt-2 opacity-80">
-            100年の森で、静かな週末を過ごしませんか。
-          </p>
-          <div class="mt-6 flex flex-wrap gap-3">
-            <a class="btn btn-primary" href="https://www.489pro-x.com/ja/s/oiranomori/planlist/" target="_blank" rel="noreferrer">
-              空室を確認する
-            </a>
-            <a class="btn btn-outline" href="/guide/">ご利用案内</a>
-          </div>
-        </div>
+      <div class="mt-7">
+        <a href="https://www.nap-camp.com/tochigi/14964" class="btn btn-primary btn-wide">予約ページへ進む</a>
       </div>
     </div>
   </section>
 </LpLayout>
-
-<!-- Swiper CSS/JS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-<script>
-  import Swiper from 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.mjs'
-
-  const swiper = new Swiper('.campsite-swiper', {
-    slidesPerView: 1.2,
-    spaceBetween: 16,
-    centeredSlides: true,
-    pagination: {
-      el: '.swiper-pagination',
-      clickable: true,
-    },
-    breakpoints: {
-      640: {
-        slidesPerView: 2.2,
-        centeredSlides: false,
-      },
-    },
-  })
-</script>
-
-<style>
-  .swiper-slide {
-    height: auto;
-  }
-  
-  .swiper-pagination {
-    position: relative;
-  }
-</style>
