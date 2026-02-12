@@ -1,5 +1,4 @@
 ---
-// カテゴリ別メニュー構造
 const menuGroups = [
   {
     title: "予約・会員",
@@ -63,45 +62,52 @@ const menuGroups = [
 ];
 ---
 
-<div class="dropdown dropdown-end">
-  <button class="btn btn-outline btn-sm flex items-center justify-center" aria-label="メニュー">
-    <!-- 横3本線アイコン -->
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M2 4h16M2 10h16M2 16h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-    </svg>
-  </button>
+<div class="drawer drawer-end">
+  <input id="site-menu-drawer" type="checkbox" class="drawer-toggle" />
 
-  <div class="dropdown-content mt-2 w-80 max-w-[90vw] max-h-[80vh] overflow-y-auto rounded-box bg-base-100 shadow-xl border border-base-300">
-    <div class="p-4 grid gap-6">
-      {menuGroups.map((group) => (
-        <section>
-          <p class="text-xs font-semibold opacity-70 mb-2 uppercase tracking-wider">{group.title}</p>
-          <div class="grid gap-1">
-            {group.items.map((item) => (
-              item.active ? (
-                <a 
-                  class="btn btn-ghost btn-sm justify-start text-left" 
-                  href={item.href}
-                  target={item.external ? "_blank" : undefined}
-                  rel={item.external ? "noreferrer" : undefined}
-                >
-                  {item.label}
-                  {item.external && (
-                    <svg class="w-3 h-3 ml-1 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                    </svg>
-                  )}
-                </a>
-              ) : (
-                <span class="btn btn-ghost btn-sm justify-start text-left opacity-40 pointer-events-none">
-                  {item.label}
-                  <span class="text-xs ml-2">(準備中)</span>
-                </span>
-              )
-            ))}
-          </div>
-        </section>
-      ))}
-    </div>
+  <div class="drawer-content">
+    <label for="site-menu-drawer" class="menu-toggle" aria-label="メニューを開く">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <path d="M2 4h16M2 10h16M2 16h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+      </svg>
+    </label>
+  </div>
+
+  <div class="drawer-side z-[65]">
+    <label for="site-menu-drawer" aria-label="メニューを閉じる" class="drawer-overlay"></label>
+    <aside class="menu-panel">
+      <div class="mb-5 flex items-center justify-between">
+        <p class="text-sm tracking-[0.2em] uppercase text-zinc-500">Menu</p>
+        <label for="site-menu-drawer" class="menu-close" aria-label="メニューを閉じる">✕</label>
+      </div>
+
+      <div class="menu-grid">
+        {menuGroups.map((group) => (
+          <section>
+            <p class="menu-group-title">{group.title}</p>
+            <div class="menu-items">
+              {group.items.map((item) =>
+                item.active ? (
+                  <a
+                    class="menu-link"
+                    href={item.href}
+                    target={item.external ? "_blank" : undefined}
+                    rel={item.external ? "noopener" : undefined}
+                  >
+                    {item.label}
+                    {item.external && <span class="text-xs opacity-50">↗</span>}
+                  </a>
+                ) : (
+                  <span class="menu-link is-disabled" aria-disabled="true">
+                    {item.label}
+                    <span class="text-xs">(準備中)</span>
+                  </span>
+                )
+              )}
+            </div>
+          </section>
+        ))}
+      </div>
+    </aside>
   </div>
 </div>

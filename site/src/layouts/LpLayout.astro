@@ -11,7 +11,7 @@ const { title = "おいらの森" } = Astro.props;
   <Header />
   <FloatingNav />
   <ReserveCTA />
-  <main>
+  <main class="pt-[var(--header-offset)]">
     <slot />
   </main>
 </BaseLayout>
