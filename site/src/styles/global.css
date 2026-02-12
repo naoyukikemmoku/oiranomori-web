@@ -1,240 +1,166 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
-/* ========== おいらの森：最小の型 ========== */
+:root {
+  --forest-700: #1f2820;
+  --forest-600: #2d3a30;
+  --forest-100: #eef1ec;
+  --header-height: 72px;
+  --header-offset: calc(var(--header-height) + 10px);
+}
+
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
-    @apply text-zinc-900 bg-white;
+    font-family: "Noto Serif JP", serif;
+    letter-spacing: 0.05em;
+    line-height: 1.8;
+    @apply bg-white text-zinc-700;
   }
-.page {
-  display: block;
-}
 
-.sec {
-  padding: 56px 0;
-}
-
-.inner {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 16px;
-}
-
-/* 開発中だけ：章が見える化 */
-.sec {
-  outline: 1px dashed rgba(0,0,0,0.15);
-}
-
-  h1 {
-    @apply text-3xl md:text-4xl font-semibold tracking-tight;
-  }
-  h2 {
-    @apply text-2xl md:text-3xl font-semibold tracking-tight;
-  }
+  h1,
+  h2,
   h3 {
-    @apply text-xl md:text-2xl font-semibold;
+    letter-spacing: 0.06em;
+    @apply text-zinc-800;
   }
 
-  p {
-    @apply leading-7;
+  :is(section[id], article[id], div[id]) {
+    scroll-margin-top: calc(var(--header-height) + 16px);
   }
 }
 
 @layer components {
-  /* 幅の型（迷ったらこれ） */
-  .container-oir {
-    @apply mx-auto w-full max-w-6xl px-4 md:px-6;
+  .site-header {
+    @apply fixed inset-x-0 top-0 z-[60] border-b border-zinc-200/70 bg-white/70 backdrop-blur-md transition-transform duration-300;
   }
 
-  /* 余白の型（セクションはこれ） */
-  .section-oir {
-    @apply py-12 md:py-16;
+  .site-header.is-hidden {
+    transform: translateY(-100%);
   }
 
-  /* ボタンの型（2種だけ） */
-  .btn {
-    @apply inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-medium
-      transition hover:opacity-90 active:opacity-80 focus:outline-none focus:ring-2 focus:ring-zinc-400;
+  .header-switch {
+    @apply grid grid-cols-2 overflow-hidden rounded-xl border border-zinc-300 bg-white/90;
   }
-  .btn-primary {
-    @apply btn bg-zinc-900 text-white;
+
+  .header-switch__item {
+    @apply min-w-[106px] px-3 py-2 text-center text-xs sm:text-sm font-medium text-zinc-600 transition;
   }
-  .btn-secondary {
-    @apply btn bg-zinc-100 text-zinc-900;
+
+  .header-switch__item.is-active {
+    @apply bg-[color:var(--forest-100)] text-[color:var(--forest-700)] shadow-sm;
   }
-}
-/* =========================
-   DEBUG: section skeleton
-   いらなくなったら、この塊ごと削除OK
-========================= */
 
-.page-oir {
-  /* なんとなく縦のリズム */
-  display: block;
-}
+  .header-weather {
+    @apply items-center gap-2 rounded-full border border-zinc-300 px-3 py-1.5 text-sm text-zinc-700 transition hover:border-zinc-400 hover:bg-white;
+  }
 
-.sec {
-  padding: 56px 0;
-  outline: 1px dashed rgba(0,0,0,.18);
-}
+  .menu-toggle,
+  .menu-close {
+    @apply inline-flex h-10 w-10 items-center justify-center rounded-full border border-zinc-300 bg-white text-zinc-700 transition hover:border-zinc-500;
+  }
 
-.sec:nth-of-type(odd) {
-  background: rgba(0,0,0,.03);
-}
+  .menu-panel {
+    @apply h-full w-[min(92vw,420px)] overflow-y-auto bg-white px-5 py-6 shadow-2xl;
+  }
 
-.inner {
-  max-width: 1120px;
-  margin: 0 auto;
-  padding: 0 16px;
-}
+  .menu-grid {
+    @apply grid gap-6;
+  }
 
-.sec-kicker {
-  font-size: 12px;
-  letter-spacing: .12em;
-  opacity: .7;
-  margin: 0 0 8px;
-}
+  .menu-group-title {
+    @apply mb-2 text-xs tracking-[0.16em] text-zinc-500;
+  }
 
-.sec-title {
-  font-size: 28px;
-  margin: 0 0 8px;
-}
+  .menu-items {
+    @apply grid gap-1;
+  }
 
-.sec-lead {
-  margin: 0;
-  opacity: .8;
-}
+  .menu-link {
+    @apply flex items-center justify-between rounded-lg px-3 py-2 text-sm text-zinc-700 transition hover:bg-zinc-100;
+  }
 
-/* 固定透明ヘッダー */
-.site-header{
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 50;
-
-  color: #fff;
-  background: rgba(0,0,0,.18);    /* うっすら暗幕 */
-  backdrop-filter: blur(10px);   /* ぼかし */
-  border-bottom: 1px solid rgba(255,255,255,.12);
-}
-
-/* ヘッダー上のリンクが暗い写真だと読めない場合に備えて */
-.site-header a{
-  color: inherit;
-}
+  .menu-link.is-disabled {
+    @apply cursor-not-allowed opacity-45;
+  }
 
 
-/* Floating side tab */
-.floating-tab {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  .floating-tab {
+    @apply inline-flex min-h-[84px] w-[30px] select-none items-center justify-center rounded-l-xl border border-zinc-200 bg-white/95 px-1 py-2 shadow-lg;
+  }
 
-  /* "タブ"の形：右端に刺さるので左だけ丸く */
-  border-top-left-radius: 12px;
-  border-bottom-left-radius: 12px;
+  .floating-tab__text {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    letter-spacing: 0.12em;
+    @apply text-[11px] font-semibold leading-none text-zinc-800;
+  }
 
-  /* タブの大きさ（縦長） */
-  width: 30px;
-  min-height: 84px;
+  .reserve-cta {
+    @apply inline-flex items-center gap-2 rounded-full bg-[color:var(--forest-600)] px-7 py-3 text-sm text-white shadow-lg shadow-black/20 transition hover:-translate-y-0.5 hover:bg-[color:var(--forest-700)];
+  }
 
-  /* 右端から少しだけ内側に */
-  padding: 6px 4px;
+  .reserve-cta svg {
+    @apply h-4 w-4;
+  }
 
-  /* クリックしやすさ */
-  user-select: none;
+  .lp-hero {
+    @apply relative flex min-h-[88vh] items-center bg-cover bg-center;
+  }
 
-  /* タブの陰影 */
-  box-shadow: 0 10px 25px rgba(0,0,0,.12);
+  .lp-hero__overlay {
+    @apply absolute inset-0 bg-black/45;
+  }
 
-}
+  .lp-hero__content {
+    @apply relative z-10 max-w-3xl py-24;
+  }
 
-.floating-tab__text {
-  /* 縦書き（日本語） */
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
+  .lp-scroll {
+    @apply absolute bottom-8 right-8 z-10 text-xs uppercase tracking-[0.22em] text-zinc-100;
+  }
 
-  /* 文字間 */
-  letter-spacing: 0.12em;
+  .lp-scroll::after {
+    content: "";
+    @apply ml-3 inline-block h-9 w-px bg-zinc-100/80 align-middle;
+  }
 
-  /* 見た目 */
-  font-weight: 600;
-  font-size: 11px;
-  line-height: 1;
-  color: rgb(17 24 39); /* だいたい slate-900 */
-}
-/* ===== Header bottom tabs (Light / Deep) ===== */
+  .lp-section {
+    @apply py-16 md:py-20;
+  }
 
-.header-tab {
-  position: relative;
+  .lp-title {
+    @apply text-3xl font-semibold md:text-4xl;
+  }
 
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  .lp-card {
+    @apply rounded-2xl border border-zinc-200 bg-white p-7 shadow-sm;
+  }
 
-  height: 36px;
-  padding: 0 20px;
+  .lp-photo-card {
+    @apply rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm;
+  }
 
-  background: rgba(255, 255, 255, 0.6);
-  border: 1px solid rgb(229 231 235); /* gray-200 */
-  border-bottom: none;
+  .lp-btn-primary {
+    @apply inline-flex items-center justify-center rounded-full bg-[color:var(--forest-600)] px-7 py-3 text-sm text-white shadow-md transition hover:-translate-y-0.5 hover:bg-[color:var(--forest-700)];
+  }
 
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+  .lp-btn-outline {
+    @apply inline-flex items-center justify-center rounded-full border border-white/80 bg-white/10 px-7 py-3 text-sm text-white backdrop-blur-sm transition hover:bg-white hover:text-zinc-800;
+  }
 
-  font-size: 15px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
+  .lp-footer {
+    @apply border-t border-zinc-200 bg-[#f6f7f5] text-zinc-700;
+  }
 
-  color: rgb(55 65 81); /* gray-700 */
-  text-decoration: none;
+  .footer-link {
+    @apply text-zinc-600 transition hover:text-zinc-900;
+  }
 
-  transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
-
-  /* タブがヘッダー下端にぴったり接続 */
-  margin-bottom: 0;
-
-  /* sm以上は1行固定（日本語が勝手に折れないように） */
-  white-space: nowrap;
-}
-
-.header-tab:hover {
-  background: rgba(255, 255, 255, 0.9);
-  color: rgb(17 24 39); /* gray-900 */
-}
-
-/* 共通：アクティブ */
-.header-tab.is-active {
-  font-weight: 700;
-  z-index: 3;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, .08);
-  transform: translateY(0);
-}
-
-/* Light Forest：アクティブ色 */
-.header-tab.is-light.is-active {
-  background: rgb(240 253 244); /* green-50 */
-  color: rgb(22 101 52);        /* green-800 */
-  border-color: rgb(34 197 94); /* green-500 */
-}
-
-/* Deep Forest：アクティブ色 */
-.header-tab.is-deep.is-active {
-  background: rgb(241 245 249); /* slate-100 */
-  color: rgb(30 41 59);         /* slate-800 */
-  border-color: rgb(15 23 42);  /* slate-900 */
-}
-
-/* スマホ：2行表示を許可して、サイズを少し調整 */
-@media (max-width: 639px) {
-  .header-tab {
-    height: 44px;
-    padding: 0 12px;
-    font-size: 13px;
-    letter-spacing: 0.08em;
-
-    /* スマホは2行（Light<br>Forest）を許可 */
-    white-space: normal;
+  .footer-sns {
+    @apply rounded-full border border-zinc-300 px-4 py-2 text-xs tracking-[0.12em] text-zinc-700 transition hover:border-zinc-500 hover:bg-white;
   }
 }
