@@ -35,76 +35,66 @@ const highlights = [
 ---
 
 <LpLayout title="おいらの森キャンプ場 | 那須烏山の森で過ごす特別な時間">
-  <section
-    class="hero min-h-[88vh]"
-    style="background-image:url('/images/lp/hero.jpg'); background-position:center; background-size:cover;"
-  >
-    <div class="hero-overlay bg-black/45"></div>
-    <div class="hero-content text-neutral-content text-left px-5">
-      <div class="max-w-3xl">
-        <p class="font-semibold tracking-[0.2em] text-sm">OI RA NO MORI CAMP</p>
-        <h1 class="mt-3 text-4xl md:text-6xl font-bold leading-tight">おいらの森で、<br />森と暮らすキャンプを。</h1>
-        <p class="mt-5 text-base md:text-lg leading-relaxed opacity-95">
+  <section id="top" class="lp-hero" style="background-image:url('/images/lp/hero.jpg');">
+    <div class="lp-hero__overlay"></div>
+    <div class="mx-auto max-w-6xl px-5">
+      <div class="lp-hero__content">
+        <p class="text-sm tracking-[0.26em] text-zinc-100">OI RA NO MORI CAMP</p>
+        <h1 class="mt-4 text-4xl font-semibold leading-tight text-white md:text-6xl">おいらの森で、<br />森と暮らすキャンプを。</h1>
+        <p class="mt-6 max-w-2xl text-base leading-loose text-zinc-100 md:text-lg">
           栃木県那須烏山市の自然林を活かしたキャンプ場。<br />
-          明るいライトフォレストと静寂のディープフォレスト、
-          2つの森で焚き火と余白の時間を楽しめます。
+          明るいライトフォレストと静寂のディープフォレスト、2つの森で焚き火と余白の時間を楽しめます。
         </p>
-        <div class="mt-8 flex flex-wrap gap-3">
-          <a href="https://www.nap-camp.com/tochigi/14964" class="btn btn-primary">予約する</a>
-          <a href="#highlights" class="btn btn-outline btn-neutral text-white border-white hover:text-neutral">
-            森の魅力を見る
-          </a>
+        <div class="mt-9 flex flex-wrap gap-4">
+          <a href="https://www.nap-camp.com/tochigi/14964" class="lp-btn-primary">予約する</a>
+          <a href="#highlights" class="lp-btn-outline">森の魅力を見る</a>
         </div>
+      </div>
+      <a href="#concept" class="lp-scroll">Scroll</a>
+    </div>
+  </section>
+
+  <section class="lp-section" id="concept">
+    <div class="mx-auto grid max-w-6xl gap-5 px-4 md:grid-cols-3">
+      <div class="lp-card">
+        <h2 class="lp-title !text-2xl">コンセプト</h2>
+        <p>100年先を見据えた森づくりと、自然への敬意を大切にしたキャンプ体験。</p>
+      </div>
+      <div class="lp-card">
+        <h2 class="lp-title !text-2xl">営業情報</h2>
+        <p>チェックイン 13:00〜 / チェックアウト 〜11:00。詳細は予約ページをご確認ください。</p>
+      </div>
+      <div class="lp-card">
+        <h2 class="lp-title !text-2xl">アクセス</h2>
+        <p>宇都宮市内から車で約60分。関東圏から週末の小旅行にちょうど良い立地です。</p>
       </div>
     </div>
   </section>
 
-  <section class="bg-base-100 py-14" id="concept">
-    <div class="mx-auto max-w-6xl px-4 grid md:grid-cols-3 gap-5">
-      <div class="card bg-base-200">
-        <div class="card-body">
-          <h2 class="card-title">コンセプト</h2>
-          <p>100年先を見据えた森づくりと、自然への敬意を大切にしたキャンプ体験。</p>
-        </div>
-      </div>
-      <div class="card bg-base-200">
-        <div class="card-body">
-          <h2 class="card-title">営業情報</h2>
-          <p>チェックイン 13:00〜 / チェックアウト 〜11:00。詳細は予約ページをご確認ください。</p>
-        </div>
-      </div>
-      <div class="card bg-base-200">
-        <div class="card-body">
-          <h2 class="card-title">アクセス</h2>
-          <p>宇都宮市内から車で約60分。関東圏から週末の小旅行にちょうど良い立地です。</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="news" class="bg-gray-50/80 py-10">
+  <section id="news" class="lp-section bg-zinc-50">
     <div class="mx-auto max-w-6xl px-4">
-      <h2 class="text-3xl font-bold">お知らせ</h2>
+      <h2 class="lp-title">お知らせ</h2>
+      <p class="mt-2 text-zinc-600">最新の営業情報や森の更新情報を掲載しています。</p>
     </div>
-    <OshiraseList items={contents} />
+    <div class="mt-8"><OshiraseList items={contents} /></div>
   </section>
 
-  <section id="highlights" class="py-16 bg-base-100">
+  <section id="highlights" class="lp-section bg-white">
     <div class="mx-auto max-w-6xl px-4">
-      <h2 class="text-3xl font-bold">おいらの森の魅力</h2>
-      <p class="mt-3 opacity-80 max-w-3xl">「明るさ」と「深さ」が共存する森で、同じ1泊でもまったく違う時間を過ごせます。</p>
+      <h2 class="lp-title">おいらの森の魅力</h2>
+      <p class="mt-3 max-w-3xl text-zinc-600">「明るさ」と「深さ」が共存する森で、同じ1泊でもまったく違う時間を過ごせます。</p>
 
       <div class="mt-10 grid gap-7 md:grid-cols-3">
         {
           highlights.map((item) => (
-            <article class="card bg-base-100 border border-base-300 shadow-sm">
-              <figure class="aspect-[4/3] overflow-hidden">
+            <article class="lp-photo-card">
+              <figure class="aspect-[4/3] overflow-hidden rounded-2xl">
                 <img src={item.image} alt={item.title} class="h-full w-full object-cover" loading="lazy" />
               </figure>
-              <div class="card-body">
-                <p class="text-xs tracking-widest opacity-60">{item.subtitle}</p>
-                <h3 class="card-title">{item.title}</h3>
-                <p class="opacity-80">{item.desc}</p>
+              <div class="pt-5">
+                <p class="text-xs tracking-[0.2em] text-zinc-500">{item.subtitle}</p>
+                <h3 class="mt-2 text-2xl font-semibold text-zinc-800">{item.title}</h3>
+                <p class="mt-3 text-zinc-600">{item.desc}</p>
               </div>
             </article>
           ))
@@ -113,14 +103,14 @@ const highlights = [
     </div>
   </section>
 
-  <section class="py-16 bg-base-200/70" id="cta">
+  <section class="lp-section bg-zinc-100" id="cta">
     <div class="mx-auto max-w-4xl px-4 text-center">
-      <h2 class="text-3xl font-bold">次の週末、森へ行こう。</h2>
-      <p class="mt-4 opacity-80">
+      <h2 class="lp-title">次の週末、森へ行こう。</h2>
+      <p class="mt-4 text-zinc-600">
         空き状況の確認・料金・設備詳細は予約ページから。はじめての方でも安心して利用できるよう、最新情報を随時更新しています。
       </p>
-      <div class="mt-7">
-        <a href="https://www.nap-camp.com/tochigi/14964" class="btn btn-primary btn-wide">予約ページへ進む</a>
+      <div class="mt-8">
+        <a href="https://www.nap-camp.com/tochigi/14964" class="lp-btn-primary">予約ページへ進む</a>
       </div>
     </div>
   </section>
