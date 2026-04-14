@@ -4,48 +4,16 @@ export type NavItem = {
   desc?: string;
 };
 
-export type NavGroup = {
-  title: string;
-  items: NavItem[];
-};
-
 export const topSwitch = [
   { label: "ライトフォレスト", href: "/" },
   { label: "ディープフォレスト", href: "/deep/" },
 ] as const;
 
-
 export const floatingNav: NavItem[] = [
-  { label: "利用案内", href: "/guide/" },
-];
-
-export const hamburgerGroups: NavGroup[] = [
-  {
-    title: "フィールド",
-    items: [
-      { label: "サイト一覧", href: "/sites/" },
-      { label: "ライトフォレスト", href: "/light/" },
-      { label: "ディープフォレスト", href: "/deep/" },
-    ],
-  },
-  {
-    title: "過ごし方",
-    items: [
-      { label: "体験", href: "/experiences/" },
-      { label: "薪", href: "/firewood/" },
-    ],
-  },
-  {
-    title: "サポート",
-    items: [
-      { label: "お知らせ", href: "/news/" },
-      { label: "よくある質問", href: "/faq/" },
-      { label: "ルール/免責", href: "/rules/" },
-    ],
-  },
+  { label: "利用案内", href: "/light-guide/" },
 ];
 
 export const reserveCta = {
   label: "予約する",
-  href: "https://www.489pro.com/????", // 後で差し替え（今は仮でOK）
+  href: "https://www.489pro-x.com/ja/s/oiranomori/planlist/",
 };

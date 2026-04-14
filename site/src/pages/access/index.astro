@@ -1,0 +1,128 @@
+---
+import PageLayout from "../../layouts/PageLayout.astro";
+---
+
+<PageLayout title="アクセス・場内マップ | おいらの森" heading="">
+
+  {/* アクセス */}
+  <section class="mb-14">
+    <h1 class="text-3xl font-semibold text-zinc-800 md:text-4xl">アクセス・場内マップ</h1>
+    <p class="mt-3 text-zinc-600">栃木県那須烏山市の自然林の中にあります。車でのご来場をおすすめします。</p>
+  </section>
+
+  {/* 基本情報 */}
+  <section class="mb-12" id="info">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">基本情報</h2>
+    <dl class="divide-y divide-zinc-200 border-t border-b border-zinc-200 text-sm">
+      {[
+        { label: "住所", value: "栃木県那須烏山市 ●●●●●" }, // TODO: 正確な住所に差し替え
+        { label: "電話", value: "TODO: 連絡先を記入" },       // TODO: 電話番号に差し替え
+        { label: "チェックイン", value: "13:00〜18:00" },
+        { label: "チェックアウト", value: "〜11:00" },
+        { label: "駐車場", value: "あり（無料）" },
+      ].map((item) => (
+        <div class="grid grid-cols-[9rem_1fr] gap-4 py-4 sm:grid-cols-[12rem_1fr]">
+          <dt class="text-zinc-500">{item.label}</dt>
+          <dd class="text-zinc-700">{item.value}</dd>
+        </div>
+      ))}
+    </dl>
+  </section>
+
+  {/* 地図 */}
+  <section class="mb-12" id="map">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">広域マップ</h2>
+    {/* TODO: src のURLをおいらの森の正確な座標に更新する */}
+    {/* Google Maps embed（APIキー不要の埋め込み形式） */}
+    <div class="overflow-hidden rounded-2xl border border-zinc-200 shadow-sm">
+      <iframe
+        title="おいらの森 地図"
+        src="https://maps.google.com/maps?q=那須烏山市&output=embed&hl=ja&z=13"
+        width="100%"
+        height="420"
+        style="border:0;"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+      ></iframe>
+    </div>
+    <p class="mt-3 text-xs text-zinc-500">※ 地図は参考表示です。カーナビでお越しの場合は住所または電話番号でご検索ください。</p>
+  </section>
+
+  {/* 車でのアクセス */}
+  <section class="mb-12" id="car">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">車でのアクセス</h2>
+    <div class="grid gap-4 sm:grid-cols-2">
+      {[
+        { from: "宇都宮市内から", time: "約60分", note: "国道294号線経由" },
+        { from: "東京都心から", time: "約2時間30分", note: "東北自動車道 矢板ICから約45分" },
+        { from: "水戸市内から", time: "約1時間30分", note: "国道293号線経由" },
+        { from: "那須塩原から", time: "約50分", note: "国道294号線経由" },
+      ].map((item) => (
+        <div class="rounded-xl border border-zinc-200 p-5">
+          <p class="text-xs tracking-[0.14em] text-zinc-500">{item.from}</p>
+          <p class="mt-1 text-2xl font-semibold text-zinc-800">{item.time}</p>
+          <p class="mt-1 text-xs text-zinc-500">{item.note}</p>
+        </div>
+      ))}
+    </div>
+    <p class="mt-4 text-sm text-zinc-600">
+      ※ 所要時間は目安です。道路状況によって異なります。<br />
+      ※ 場内は未舗装路を含みます。普通車でご来場いただけますが、大型車はご相談ください。
+    </p>
+  </section>
+
+  {/* 電車・バス */}
+  <section class="mb-12" id="transit">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">電車・バスでのアクセス</h2>
+    <div class="rounded-xl border border-zinc-200 p-6 text-sm text-zinc-700">
+      <p class="leading-loose">
+        JR烏山線 <strong>烏山駅</strong> 下車後、タクシーにてお越しください（約●分・●円程度）。<br />
+        {/* TODO: タクシー所要時間・料金目安を記入 */}
+        送迎については事前にお問い合わせください。
+      </p>
+      <a href="/contact/" class="mt-4 inline-block text-sm text-zinc-500 underline hover:text-zinc-800 transition">
+        お問い合わせはこちら →
+      </a>
+    </div>
+  </section>
+
+  {/* 場内マップ */}
+  <section class="mb-12" id="light">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">場内マップ（ライトフォレスト）</h2>
+    {/* TODO: ライトフォレストの場内マップ画像を /public/images/map/light-map.jpg に配置して差し替え */}
+    <div class="flex min-h-[280px] items-center justify-center rounded-2xl border-2 border-dashed border-zinc-300 bg-zinc-50">
+      <p class="text-sm text-zinc-400">場内マップ（画像）を配置予定</p>
+    </div>
+    <p class="mt-3 text-xs text-zinc-500">※ 地図は現地にも掲示しています。</p>
+  </section>
+
+  <section class="mb-12" id="deep">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">場内マップ（ディープフォレスト）</h2>
+    {/* TODO: ディープフォレストの場内マップ画像を /public/images/map/deep-map.jpg に配置して差し替え */}
+    <div class="flex min-h-[280px] items-center justify-center rounded-2xl border-2 border-dashed border-zinc-300 bg-zinc-50">
+      <p class="text-sm text-zinc-400">場内マップ（画像）を配置予定</p>
+    </div>
+  </section>
+
+  {/* 周辺案内 */}
+  <section id="area">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">周辺案内</h2>
+    <div class="grid gap-4 sm:grid-cols-3 text-sm">
+      {[
+        { category: "コンビニ・スーパー", items: ["ローソン 那須烏山店（約●km）", "マミーマート 烏山店（約●km）"] },
+        { category: "温泉・入浴", items: ["烏山城温泉（約●km）", "那須烏山市民センター（約●km）"] },
+        { category: "病院・緊急", items: ["那須烏山市民病院（約●km）", "救急：0119 / 警察：0110"] },
+      ].map((col) => (
+        // TODO: 各施設の距離・名称を実際のものに更新
+        <div class="rounded-xl border border-zinc-200 p-5">
+          <p class="mb-3 text-xs tracking-[0.14em] text-zinc-500">{col.category}</p>
+          <ul class="space-y-2 text-zinc-700">
+            {col.items.map((it) => <li>{it}</li>)}
+          </ul>
+        </div>
+      ))}
+    </div>
+    <p class="mt-4 text-xs text-zinc-400">※ 距離・所要時間は目安です。来場前に必ず食料・燃料等を調達してください。</p>
+  </section>
+
+</PageLayout>
