@@ -1,7 +1,14 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(git rm *)",
+      "Bash(rm -rf src/ public/)",
+      "Bash(rmdir .astro/)",
+      "Bash(npm install *)",
+      "Bash(curl -s http://localhost:4321/)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
     ]
   }
 }

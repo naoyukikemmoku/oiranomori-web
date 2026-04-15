@@ -1,6 +1,7 @@
 ---
 import LpLayout from "../layouts/LpLayout.astro";
 import OshiraseList from "../components/OshiraseList.astro";
+import SeasonSlider from "../components/SeasonSlider.astro";
 import { getOshirase } from "../lib/oshirase";
 
 let contents = [];
@@ -11,107 +12,175 @@ try {
 } catch (error) {
   console.warn("Failed to fetch news from microCMS.", error);
 }
-
-const highlights = [
-  {
-    title: "ライトフォレスト",
-    subtitle: "陽だまりの広葉樹林",
-    desc: "コナラとクヌギに囲まれた明るい森。木漏れ日の下で、家族でもソロでもゆったり過ごせます。",
-    image: "/images/lp/scene-01.jpg",
-  },
-  {
-    title: "ディープフォレスト",
-    subtitle: "静寂の針葉樹林",
-    desc: "樹齢80年のスギ・ヒノキが立つ深い森。直火を楽しみたいブッシュクラフト派に人気です。",
-    image: "/images/lp/scene-02.jpg",
-  },
-  {
-    title: "おいらの薪",
-    subtitle: "林業家が届ける本物の焚き火",
-    desc: "オーナー自ら伐採・乾燥した薪を販売。火付き・火持ちの良さが違う、森の恵みを体験できます。",
-    image: "/images/lp/scene-03.jpg",
-  },
-];
 ---
 
-<LpLayout title="おいらの森キャンプ場 | 那須烏山の森で過ごす特別な時間">
+<LpLayout title="フォレストパークおいらの森 | 那須烏山・100年の森のキャンプ場">
+
+  {/* 1. Hero */}
   <section id="top" class="lp-hero" style="background-image:url('/images/lp/hero.jpg');">
     <div class="lp-hero__overlay"></div>
     <div class="mx-auto max-w-6xl px-5">
       <div class="lp-hero__content">
-        <p class="text-sm tracking-[0.26em] text-zinc-100">OI RA NO MORI CAMP</p>
-        <h1 class="mt-4 text-4xl font-semibold leading-tight text-white md:text-6xl">おいらの森で、<br />森と暮らすキャンプを。</h1>
-        <p class="mt-6 max-w-2xl text-base leading-loose text-zinc-100 md:text-lg">
-          栃木県那須烏山市の自然林を活かしたキャンプ場。<br />
-          明るいライトフォレストと静寂のディープフォレスト、2つの森で焚き火と余白の時間を楽しめます。
+        <p class="text-xs tracking-[0.32em] text-zinc-400">OI RA NO MORI</p>
+        <h1 class="mt-5 font-semibold leading-snug text-white">
+          <span class="block text-2xl md:text-3xl">フォレストパーク</span>
+          <span class="block text-5xl md:text-7xl">おいらの森</span>
+        </h1>
+        <p class="mt-5 text-sm tracking-[0.2em] text-zinc-300 md:text-base">
+          栃木県那須烏山市にある100年の森作りを体験するキャンプ場
         </p>
-        <div class="mt-9 flex flex-wrap gap-4">
-          <a href="https://www.nap-camp.com/tochigi/14964" class="lp-btn-primary">予約する</a>
-          <a href="#highlights" class="lp-btn-outline">森の魅力を見る</a>
-        </div>
+        <p class="mt-8 max-w-2xl text-sm leading-[2] text-zinc-200 md:text-base">
+          フォレストパークおいらの森は栃木県那須烏山市にある森の中のキャンプ場。<br />
+          静かな森の中のキャンプ場をコンセプトに、100年の森作りを目指して樹木の伐採を最小限に抑え、<br />
+          明るい森のライトフォレストと深い森のディープフォレスト、<br />
+          2つのフィールドで皆様のご来場をお待ちしております。
+        </p>
       </div>
-      <a href="#concept" class="lp-scroll">Scroll</a>
+    </div>
+    <a href="#season" class="lp-scroll">Scroll</a>
+  </section>
+
+  {/* 2. 森の四季スライダー */}
+  <SeasonSlider />
+
+  {/* 3. 焚火セクション */}
+  <section
+    id="bonfire"
+    class="relative bg-cover bg-center py-24 md:py-32"
+    style="background-image:url('/images/bonfire.jpg');"
+  >
+    <div class="absolute inset-0 bg-black/55"></div>
+    <div class="relative z-10 mx-auto max-w-6xl px-6 md:px-10">
+      <div class="max-w-2xl">
+        <p class="text-xs tracking-[0.32em] text-zinc-400">CAMPFIRE</p>
+        <h2 class="mt-4 text-3xl font-semibold leading-snug text-white md:text-4xl">
+          キャンプといえば焚火
+        </h2>
+        <p class="mt-3 text-sm tracking-[0.16em] text-zinc-300 md:text-base">
+          焚き火をするためにキャンプする方も
+        </p>
+        <p class="mt-8 text-sm leading-[2.2] text-zinc-200 md:text-base">
+          多々焚き火を見つめる至高の時間を楽しむ。<br />
+          おいらの森にきてぜひ楽しんでもらいたいのは焚火です。<br />
+          おいらが自家生産している自慢の薪をぜひ燃やしてください。
+        </p>
+        <p class="mt-6 text-xs leading-[2.4] text-zinc-400 md:text-sm">
+          おいらの森は全面焚火OK！直火OKサイトもあります。<br />
+          おいらが切り出したほぼ自家製の薪を割安で販売しております。<br />
+          思う存分焚火をお楽しみください。<br />
+          オートサイトは焚き火台の使用をお願いしております。
+        </p>
+        <a
+          href="/firewood/"
+          class="mt-8 inline-flex items-center gap-2 text-sm tracking-[0.16em] text-zinc-200 transition hover:text-white"
+        >
+          林業家おいらの最高の薪
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M5 12h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
     </div>
   </section>
 
-  <section class="lp-section" id="concept">
-    <div class="mx-auto grid max-w-6xl gap-5 px-4 md:grid-cols-3">
-      <div class="lp-card">
-        <h2 class="lp-title !text-2xl">コンセプト</h2>
-        <p>100年先を見据えた森づくりと、自然への敬意を大切にしたキャンプ体験。</p>
+  {/* 4. プランギャラリー */}
+  <section id="plans" class="py-20 md:py-28 bg-[#f4f5f2]">
+    <div class="mx-auto max-w-6xl px-6 md:px-10">
+      <p class="text-xs tracking-[0.32em] text-zinc-400">PLAN</p>
+      <h2 class="mt-3 text-2xl font-semibold text-zinc-800 md:text-3xl">プランを選ぶ</h2>
+
+      <div class="mt-10 grid grid-cols-2 gap-3 md:grid-cols-5 md:gap-4">
+        {[
+          {
+            name: "スタンダード・\nオートサイト",
+            price: "¥3,300/サイト〜",
+            ci: "IN 9:00〜17:00",
+            co: "OUT 12:00",
+            bg: "bg-[#2d3a30]",
+            id: 4,
+          },
+          {
+            name: "貸切\nドッグランサイト",
+            price: "¥4,400/サイト〜",
+            ci: "IN 9:00〜17:00",
+            co: "OUT 12:00",
+            bg: "bg-[#3a3228]",
+            id: 7,
+          },
+          {
+            name: "ソロ割り\nオートサイト",
+            price: "¥2,530/サイト〜",
+            ci: "IN 9:00〜17:00（平日ソロ限定）",
+            co: "OUT 12:00",
+            bg: "bg-[#1f2820]",
+            id: 21,
+          },
+          {
+            name: "日帰り\nデイキャンプ",
+            price: "¥1,100〜",
+            ci: "IN 9:00〜13:00",
+            co: "OUT 18:00",
+            bg: "bg-[#38342a]",
+            id: 14,
+          },
+          {
+            name: "野営っぽく\nキャンプ（ライト）",
+            price: "¥2,200/人〜",
+            ci: "IN 9:00〜17:00",
+            co: "OUT 12:00",
+            bg: "bg-[#2a3530]",
+            id: 6,
+          },
+        ].map((plan) => (
+          <a
+            href={`https://www.489pro-x.com/ja/s/oiranomori/plan/${plan.id}/`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class={`group relative flex flex-col justify-end overflow-hidden ${plan.bg}`}
+            style="aspect-ratio: 3/4;"
+          >
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent transition group-hover:from-black/80"></div>
+            <div class="relative z-10 p-4">
+              <p class="whitespace-pre-line text-sm font-medium leading-snug text-white md:text-base">
+                {plan.name}
+              </p>
+              <p class="mt-1 text-xs tracking-wide text-zinc-300">{plan.price}</p>
+              <p class="mt-0.5 text-[10px] text-zinc-400">{plan.ci} / {plan.co}</p>
+              <p class="mt-3 inline-flex items-center gap-1 text-[10px] tracking-[0.16em] text-zinc-300 transition group-hover:text-white">
+                予約する
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <path d="M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </p>
+            </div>
+          </a>
+        ))}
       </div>
-      <div class="lp-card">
-        <h2 class="lp-title !text-2xl">営業情報</h2>
-        <p>チェックイン 13:00〜 / チェックアウト 〜11:00。詳細は予約ページをご確認ください。</p>
-      </div>
-      <div class="lp-card">
-        <h2 class="lp-title !text-2xl">アクセス</h2>
-        <p>宇都宮市内から車で約60分。関東圏から週末の小旅行にちょうど良い立地です。</p>
+
+      <div class="mt-8 text-right">
+        <a
+          href="https://www.489pro-x.com/ja/s/oiranomori/planlist/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 text-xs tracking-[0.2em] text-zinc-500 transition hover:text-zinc-800"
+        >
+          すべてのプランを見る
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M5 12h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
       </div>
     </div>
   </section>
 
-  <section id="news" class="lp-section bg-zinc-50">
+  {/* 5. お知らせ */}
+  <section id="news" class="py-12 md:py-16 bg-[#f4f5f2]">
     <div class="mx-auto max-w-6xl px-4">
-      <h2 class="lp-title">お知らせ</h2>
-      <p class="mt-2 text-zinc-600">最新の営業情報や森の更新情報を掲載しています。</p>
-    </div>
-    <div class="mt-8"><OshiraseList items={contents} /></div>
-  </section>
-
-  <section id="highlights" class="lp-section bg-white">
-    <div class="mx-auto max-w-6xl px-4">
-      <h2 class="lp-title">おいらの森の魅力</h2>
-      <p class="mt-3 max-w-3xl text-zinc-600">「明るさ」と「深さ」が共存する森で、同じ1泊でもまったく違う時間を過ごせます。</p>
-
-      <div class="mt-10 grid gap-7 md:grid-cols-3">
-        {
-          highlights.map((item) => (
-            <article class="lp-photo-card">
-              <figure class="aspect-[4/3] overflow-hidden rounded-2xl">
-                <img src={item.image} alt={item.title} class="h-full w-full object-cover" loading="lazy" />
-              </figure>
-              <div class="pt-5">
-                <p class="text-xs tracking-[0.2em] text-zinc-500">{item.subtitle}</p>
-                <h3 class="mt-2 text-2xl font-semibold text-zinc-800">{item.title}</h3>
-                <p class="mt-3 text-zinc-600">{item.desc}</p>
-              </div>
-            </article>
-          ))
-        }
-      </div>
+      <OshiraseList items={contents} />
     </div>
   </section>
 
-  <section class="lp-section bg-zinc-100" id="cta">
-    <div class="mx-auto max-w-4xl px-4 text-center">
-      <h2 class="lp-title">次の週末、森へ行こう。</h2>
-      <p class="mt-4 text-zinc-600">
-        空き状況の確認・料金・設備詳細は予約ページから。はじめての方でも安心して利用できるよう、最新情報を随時更新しています。
-      </p>
-      <div class="mt-8">
-        <a href="https://www.nap-camp.com/tochigi/14964" class="lp-btn-primary">予約ページへ進む</a>
-      </div>
-    </div>
-  </section>
 </LpLayout>
