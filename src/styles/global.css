@@ -42,16 +42,20 @@
     transform: translateY(-100%);
   }
 
+  /* タブ風切り替えUI */
   .header-switch {
-    @apply grid grid-cols-2 overflow-hidden rounded-xl border border-zinc-300 bg-white/90;
+    @apply flex items-end gap-0.5;
   }
 
   .header-switch__item {
-    @apply min-w-[106px] px-3 py-2 text-center text-xs sm:text-sm font-medium text-zinc-600 transition;
+    @apply relative min-w-[90px] sm:min-w-[106px] px-3 pb-2 pt-2.5 text-center
+           text-xs sm:text-sm font-medium text-zinc-500 transition
+           rounded-t-lg border border-zinc-300/80 bg-zinc-100/80 -mb-px;
   }
 
   .header-switch__item.is-active {
-    @apply bg-[color:var(--forest-100)] text-[color:var(--forest-700)] shadow-sm;
+    @apply bg-white/95 text-[color:var(--forest-700)] border-zinc-300/80
+           pb-3 pt-2.5 shadow-sm z-10;
   }
 
   .header-weather {

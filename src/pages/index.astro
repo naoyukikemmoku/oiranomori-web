@@ -40,10 +40,17 @@ try {
     <a href="#season" class="lp-scroll">Scroll</a>
   </section>
 
-  {/* 2. 森の四季スライダー */}
+  {/* 2. お知らせ（Heroの直後、四季スライダーの前） */}
+  <section id="news" class="py-12 md:py-16 bg-[#f4f5f2]">
+    <div class="mx-auto max-w-6xl px-4">
+      <OshiraseList items={contents} />
+    </div>
+  </section>
+
+  {/* 3. 森の四季スライダー */}
   <SeasonSlider />
 
-  {/* 3. 焚火セクション */}
+  {/* 4. 焚火セクション */}
   <section
     id="bonfire"
     class="relative bg-cover bg-center py-24 md:py-32"
@@ -59,20 +66,9 @@ try {
         <p class="mt-3 text-sm tracking-[0.16em] text-zinc-300 md:text-base">
           焚き火をするためにキャンプする方も
         </p>
-        <p class="mt-8 text-sm leading-[2.2] text-zinc-200 md:text-base">
-          多々焚き火を見つめる至高の時間を楽しむ。<br />
-          おいらの森にきてぜひ楽しんでもらいたいのは焚火です。<br />
-          おいらが自家生産している自慢の薪をぜひ燃やしてください。
-        </p>
-        <p class="mt-6 text-xs leading-[2.4] text-zinc-400 md:text-sm">
-          おいらの森は全面焚火OK！直火OKサイトもあります。<br />
-          おいらが切り出したほぼ自家製の薪を割安で販売しております。<br />
-          思う存分焚火をお楽しみください。<br />
-          オートサイトは焚き火台の使用をお願いしております。
-        </p>
         <a
           href="/firewood/"
-          class="mt-8 inline-flex items-center gap-2 text-sm tracking-[0.16em] text-zinc-200 transition hover:text-white"
+          class="mt-8 inline-flex items-center gap-2 rounded border border-white/40 bg-white/10 px-5 py-2.5 text-sm tracking-[0.16em] text-zinc-200 backdrop-blur-sm transition hover:bg-white/20 hover:text-white hover:border-white/60"
         >
           林業家おいらの最高の薪
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -84,13 +80,13 @@ try {
     </div>
   </section>
 
-  {/* 4. プランギャラリー */}
+  {/* 5. プランギャラリー */}
   <section id="plans" class="py-20 md:py-28 bg-[#f4f5f2]">
     <div class="mx-auto max-w-6xl px-6 md:px-10">
       <p class="text-xs tracking-[0.32em] text-zinc-400">PLAN</p>
       <h2 class="mt-3 text-2xl font-semibold text-zinc-800 md:text-3xl">プランを選ぶ</h2>
 
-      <div class="mt-10 grid grid-cols-2 gap-3 md:grid-cols-5 md:gap-4">
+      <div class="mt-10 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
         {[
           {
             name: "スタンダード・\nオートサイト",
@@ -109,20 +105,29 @@ try {
             id: 7,
           },
           {
-            name: "ソロ割り\nオートサイト",
-            price: "¥2,530/サイト〜",
-            ci: "IN 9:00〜17:00（平日ソロ限定）",
-            co: "OUT 12:00",
-            bg: "bg-[#1f2820]",
-            id: 21,
-          },
-          {
             name: "日帰り\nデイキャンプ",
             price: "¥1,100〜",
             ci: "IN 9:00〜13:00",
             co: "OUT 18:00",
             bg: "bg-[#38342a]",
             id: 14,
+          },
+          {
+            name: "電車\nプラン",
+            price: "¥2,200/人〜",
+            ci: "IN 9:00〜17:00",
+            co: "OUT 12:00",
+            bg: "bg-[#2a3530]",
+            id: 23,
+          },
+          /* 非表示プラン（要件外のため除外）
+          {
+            name: "ソロ割り\nオートサイト",
+            price: "¥2,530/サイト〜",
+            ci: "IN 9:00〜17:00（平日ソロ限定）",
+            co: "OUT 12:00",
+            bg: "bg-[#1f2820]",
+            id: 21,
           },
           {
             name: "野営っぽく\nキャンプ（ライト）",
@@ -132,6 +137,7 @@ try {
             bg: "bg-[#2a3530]",
             id: 6,
           },
+          */
         ].map((plan) => (
           <a
             href={`https://www.489pro-x.com/ja/s/oiranomori/plan/${plan.id}/`}
@@ -176,11 +182,5 @@ try {
     </div>
   </section>
 
-  {/* 5. お知らせ */}
-  <section id="news" class="py-12 md:py-16 bg-[#f4f5f2]">
-    <div class="mx-auto max-w-6xl px-4">
-      <OshiraseList items={contents} />
-    </div>
-  </section>
 
 </LpLayout>
