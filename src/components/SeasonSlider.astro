@@ -1,0 +1,221 @@
+---
+const slides = [
+  { season: "SPRING", label: "春", caption: "新緑の芽吹き", src: "/images/seasons/spring.jpg" },
+  { season: "SUMMER", label: "夏", caption: "木陰の涼しさ", src: "/images/seasons/summer.jpg" },
+  { season: "AUTUMN", label: "秋", caption: "落葉広葉樹の紅葉", src: "/images/seasons/autumn.jpg" },
+  { season: "WINTER", label: "冬", caption: "陽だまりの暖かさ", src: "/images/seasons/winter.jpg" },
+];
+---
+
+<section id="season" class="ss-wrap" aria-label="森の四季">
+  <div class="ss-track" id="ssTrack">
+    {slides.map((s, i) => (
+      <div class:list={["ss-slide", i === 0 && "is-active"]} data-index={i}>
+        <img
+          class="ss-img"
+          src={s.src}
+          alt={`${s.label}の森`}
+          loading={i === 0 ? "eager" : "lazy"}
+        />
+        <div class="ss-overlay"></div>
+        <div class="ss-caption">
+          <span class="ss-season">{s.season}</span>
+          <span class="ss-text">{s.caption}</span>
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <button class="ss-btn ss-btn--prev" id="ssPrev" aria-label="前のスライド">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+  <button class="ss-btn ss-btn--next" id="ssNext" aria-label="次のスライド">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+
+  <div class="ss-progress" id="ssProgress" aria-hidden="true">
+    <div class="ss-progress__bar" id="ssProgressBar"></div>
+  </div>
+</section>
+
+<style>
+  .ss-wrap {
+    position: relative;
+    width: 100%;
+    height: 70vw;
+    max-height: 80vh;
+    min-height: 320px;
+    overflow: hidden;
+    background: #1a2118;
+  }
+
+  .ss-track {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .ss-slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.9s ease;
+    pointer-events: none;
+  }
+
+  .ss-slide.is-active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .ss-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .ss-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(10, 14, 10, 0.65) 0%,
+      rgba(10, 14, 10, 0.15) 40%,
+      transparent 70%
+    );
+  }
+
+  .ss-caption {
+    position: absolute;
+    bottom: 3rem;
+    left: 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .ss-season {
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    color: rgba(255, 255, 255, 0.55);
+    font-family: "Noto Serif JP", serif;
+  }
+
+  .ss-text {
+    font-size: 1.1rem;
+    letter-spacing: 0.12em;
+    color: rgba(255, 255, 255, 0.9);
+    font-family: "Noto Serif JP", serif;
+    font-weight: 300;
+  }
+
+  @media (max-width: 640px) {
+    .ss-wrap {
+      height: 100vw;
+      max-height: none;
+    }
+    .ss-caption {
+      bottom: 2rem;
+      left: 1.5rem;
+    }
+    .ss-text {
+      font-size: 0.95rem;
+    }
+  }
+
+  .ss-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    color: rgba(255, 255, 255, 0.7);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 1rem;
+    transition: color 0.2s;
+    line-height: 0;
+  }
+
+  .ss-btn:hover {
+    color: #fff;
+  }
+
+  .ss-btn--prev {
+    left: 1rem;
+  }
+
+  .ss-btn--next {
+    right: 1rem;
+  }
+
+  .ss-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  .ss-progress__bar {
+    height: 100%;
+    width: 0%;
+    background: rgba(255, 255, 255, 0.5);
+    transition: width linear;
+  }
+</style>
+
+<script>
+  const INTERVAL = 6000;
+
+  const slides = document.querySelectorAll<HTMLElement>(".ss-slide");
+  const prevBtn = document.getElementById("ssPrev");
+  const nextBtn = document.getElementById("ssNext");
+  const progressBar = document.getElementById("ssProgressBar") as HTMLElement | null;
+
+  let current = 0;
+  let timer: ReturnType<typeof setTimeout> | null = null;
+  let progTimer: ReturnType<typeof setTimeout> | null = null;
+
+  function goTo(index: number) {
+    slides[current].classList.remove("is-active");
+    current = (index + slides.length) % slides.length;
+    slides[current].classList.add("is-active");
+    resetProgress();
+  }
+
+  function resetProgress() {
+    if (!progressBar) return;
+    if (progTimer) clearTimeout(progTimer);
+    progressBar.style.transition = "none";
+    progressBar.style.width = "0%";
+    // force reflow
+    progressBar.getBoundingClientRect();
+    progressBar.style.transition = `width ${INTERVAL}ms linear`;
+    progressBar.style.width = "100%";
+  }
+
+  function startAutoPlay() {
+    if (timer) clearInterval(timer);
+    timer = setInterval(() => goTo(current + 1), INTERVAL);
+    resetProgress();
+  }
+
+  prevBtn?.addEventListener("click", () => {
+    goTo(current - 1);
+    startAutoPlay();
+  });
+
+  nextBtn?.addEventListener("click", () => {
+    goTo(current + 1);
+    startAutoPlay();
+  });
+
+  startAutoPlay();
+</script>
