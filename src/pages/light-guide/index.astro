@@ -1,42 +1,78 @@
 ---
 import PageLayout from "../../layouts/PageLayout.astro";
 
-// TODO: 実際の料金に差し替え（S1=繁忙期 / S5=閑散期）
-const seasons = [
-  { id: "S1", label: "S1（最繁忙期）", note: "GW・お盆・年末年始など" },
-  { id: "S2", label: "S2（繁忙期）",   note: "土日祝・連休" },
-  { id: "S3", label: "S3（通常期）",   note: "平日・週末など" },
-  { id: "S4", label: "S4（閑散期）",   note: "平日を中心とした時期" },
-  { id: "S5", label: "S5（最閑散期）", note: "冬季平日など" },
+const siteTypes = [
+  { name: "オートサイト",   desc: "区画内に車を乗り入れ・横付け可能。有効面積は車の面積を除いた広さ。" },
+  { name: "区画サイト",     desc: "車の乗り入れができないサイト。サイト付近に駐車スペースあり。" },
+  { name: "ドッグランサイト", desc: "柵内でキャンプ可能。車乗り入れ可・ノーリードOK。" },
 ];
 
-const sites = [
-  { name: "ファミリーサイト（AC電源付）", capacity: "〜6名", prices: ["●,●●●", "●,●●●", "●,●●●", "●,●●●", "●,●●●"] },
-  { name: "スタンダードサイト",           capacity: "〜4名", prices: ["●,●●●", "●,●●●", "●,●●●", "●,●●●", "●,●●●"] },
-  { name: "ソロサイト",                   capacity: "1名",   prices: ["●,●●●", "●,●●●", "●,●●●", "●,●●●", "●,●●●"] },
-  { name: "ハンモックサイト",             capacity: "1〜2名",prices: ["●,●●●", "●,●●●", "●,●●●", "●,●●●", "●,●●●"] },
+const sizeGuide = [
+  { size: "XL", area: "110㎡以上",  guide: "10人以上：超大型テント＋タープ、車3台＋ソロテント3張り" },
+  { size: "LL", area: "80〜109㎡",  guide: "6〜8人：超大型テント1張り＋タープ、ソロテント数張り" },
+  { size: "L",  area: "60〜79㎡",   guide: "4〜6人：大型テント1〜2張り＋タープ" },
+  { size: "M",  area: "40〜59㎡",   guide: "2〜4人：中型テント1張り＋タープ" },
+  { size: "S",  area: "20〜39㎡",   guide: "2人以下：小型テント1張り＋タープ" },
+  { size: "SS", area: "20㎡未満",   guide: "2人以下：ソロテント1張り。通称ソロ区画。プライベート感重視。" },
 ];
 
 const facilities = [
-  { label: "トイレ",      value: "水洗（男女別）",              avail: true },
-  { label: "炊事場",      value: "あり（流し台・かまど）",      avail: true },
-  { label: "AC電源",      value: "一部サイトに設置",            avail: true },
-  { label: "駐車場",      value: "無料（サイト横付け可）",      avail: true },
-  { label: "シャワー",    value: "なし",                        avail: false },
-  { label: "Wi-Fi",       value: "なし（自然の中でどうぞ）",    avail: false },
-  { label: "売店",        value: "薪・着火剤など（現地購入可）", avail: true },
-  { label: "ゴミ",        value: "持ち帰り",                    avail: false },
+  { label: "受付・売店",   value: "9:00〜17:30。飲料（水・ビール等）、薪の販売。",              avail: true  },
+  { label: "トイレ",       value: "水洗・洋式。男女各2室完備（新築）。",                        avail: true  },
+  { label: "水道・流し",   value: "給湯器付き。すべて水道水（飲用可）。洗剤・油・残飯は流さないこと。", avail: true  },
+  { label: "Wi-Fi",        value: "無料Wi-Fiあり（接続詳細は場内掲示）。※ソロ区画・オートA・オートBはエリア外のため接続不可。", avail: true },
+  { label: "AC電源",       value: "有料オプション。消費電力600Wまで。ブレーカー落ちはセルフ復旧。", avail: true  },
+  { label: "駐車場",       value: "オートサイト以外に15台分（1台 2,200円）。",                  avail: true  },
+  { label: "シャワー",     value: "なし。近隣温泉をご利用ください。",                            avail: false },
+  { label: "ゴミ",         value: "灰以外は全て持ち帰り。灰は指定ペール缶へ（蓋を必ず閉める）。", avail: false },
+];
+
+const timeline = [
+  { time: "09:00", event: "受付オープン / アーリーチェックイン開始" },
+  { time: "12:00", event: "宿泊チェックアウト / 通常チェックイン開始" },
+  { time: "17:30", event: "売店・薪販売終了" },
+  { time: "18:00", event: "外出門限（町内放送）/ 日帰りチェックアウト。門限以降の車移動禁止。" },
+  { time: "21:00", event: "星空タイム。外への光漏れ禁止・談笑禁止・車のドア開閉注意。" },
+  { time: "23:00", event: "消灯・完全サイレント（無言の焚き火のみOK）。" },
+  { time: "06:00", event: "車の移動・朝バトニング開始OK。" },
 ];
 
 const rules = [
-  { title: "チェックイン・アウト", body: "チェックイン 13:00〜18:00 / チェックアウト 〜11:00。時間外のご入場はご遠慮ください。" },
-  { title: "焚き火",              body: "焚き火台の使用に限ります。直火は禁止です。炭・灰は現地の処理場へ。" },
-  { title: "消灯・静寂時間",      body: "22:00〜翌6:00は静寂時間です。発電機・大音量の音楽の使用はご遠慮ください。" },
-  { title: "ペット",              body: "可（リード着用必須）。フンの処理はオーナーの責任で行ってください。" },
-  { title: "車の乗り入れ",        body: "サイトへの車横付けが可能です。ただし速度は徐行でお願いします。" },
-  { title: "ゴミ",                body: "すべてお持ち帰りください。分別袋をご持参ください。" },
-  { title: "子どもの利用",        body: "年齢制限なし。保護者の同伴をお願いします。" },
-  { title: "禁止事項",            body: "花火（打ち上げ・ロケット）、大型発電機、サイト外の立ち入り禁止区域への侵入。" },
+  {
+    title: "チェックアウト手続き",
+    body: "帰宅時はHP（チェックアウトページ）またはLINEから手続きを行ってください。管理棟へ寄る必要はありません。",
+  },
+  {
+    title: "焚火処理",
+    body: "灰は指定ペール缶へ。蚊取線香・アルミ・ゴミ・タバコ等の混入厳禁。蓋は必ず閉める。",
+  },
+  {
+    title: "ゴミ",
+    body: "灰以外は全て持ち帰り。分別袋をご持参ください。",
+  },
+  {
+    title: "ペット",
+    body: "ドッグラン以外は要リード。ふんの処理・管理は飼い主の責任です。",
+  },
+  {
+    title: "禁止事項",
+    body: "スピーカー・アイドリング・打ち上げ花火・発電機・21時以降の談笑。樹木の損傷や窃盗・不法投棄は即警察へ通報します。",
+  },
+  {
+    title: "免責",
+    body: "瑕疵によるものを除き、場内での事故・怪我は自己責任となります。ご了承の上ご利用ください。",
+  },
+];
+
+const plans = [
+  { name: "スタンダード・オートサイト", id: 4,  note: "" },
+  { name: "区画サイト",                 id: 5,  note: "" },
+  { name: "野営っぽくキャンプ（ライト）", id: 6, note: "" },
+  { name: "貸切ドッグランサイト",        id: 7,  note: "" },
+  { name: "日帰りデイキャンプ",          id: 14, note: "9:00〜18:00" },
+  { name: "ワーケーション",             id: 16, note: "平日ソロ限定" },
+  { name: "ソロ割りオートサイト",        id: 21, note: "平日ソロ限定" },
+  { name: "電車キャンパー歓迎",          id: 23, note: "送迎無料サービスあり" },
 ];
 ---
 
@@ -47,61 +83,64 @@ const rules = [
     <p class="text-xs tracking-[0.26em] text-zinc-400 uppercase">Light Forest</p>
     <h1 class="mt-3 text-3xl font-semibold text-zinc-800 md:text-4xl">ライトフォレスト<br class="sm:hidden" /> 利用案内</h1>
     <p class="mt-4 max-w-2xl text-base leading-loose text-zinc-600">
-      コナラとクヌギに囲まれた明るい広葉樹林。AC電源付きサイトも完備し、はじめてのキャンプから
-      ファミリーまで安心してご利用いただけます。
+      おいらが家族と森の中に住んでいる、管理人常駐の安心・安全なキャンプ場。
+      日当たり良好・眺め良しの里山広葉樹林。全サイト焚き火可能。
     </p>
     <nav class="mt-6 flex flex-wrap gap-3 text-sm">
       {[
-        { href: "#price",    label: "料金" },
+        { href: "#plans",    label: "プラン一覧" },
+        { href: "#sites",    label: "サイト種別" },
+        { href: "#schedule", label: "タイムスケジュール" },
         { href: "#facility", label: "設備" },
         { href: "#rules",    label: "利用ルール" },
         { href: "#map",      label: "場内マップ" },
       ].map((item) => (
-        <a href={item.href} class="rounded-full border border-zinc-300 px-4 py-1.5 text-zinc-600 transition hover:border-zinc-500 hover:text-zinc-800">
+        <a
+          href={item.href}
+          class="rounded-full border border-zinc-300 px-4 py-1.5 text-zinc-600 transition hover:border-zinc-500 hover:text-zinc-800"
+        >
           {item.label}
         </a>
       ))}
     </nav>
   </div>
 
-  {/* 料金表 */}
-  <section id="price" class="mb-14">
-    <h2 class="mb-2 text-xl font-semibold text-zinc-800">料金表</h2>
+  {/* プラン一覧 */}
+  <section id="plans" class="mb-14">
+    <h2 class="mb-2 text-xl font-semibold text-zinc-800">予約プラン一覧</h2>
     <p class="mb-5 text-sm text-zinc-500">
-      料金は5段階のシーズナリティ（S1〜S5）で変動します。詳細・空き状況は予約ページをご確認ください。<br />
-      {/* TODO: 実際の料金を入力 */}
-      ●印は調整中の金額です。単位：円（税込・1泊）
+      料金・空き状況はProX（予約システム）にてご確認ください。
     </p>
 
-    {/* スクロール可能な横長テーブル */}
-    <div class="overflow-x-auto rounded-xl border border-zinc-200">
-      <table class="w-full text-sm">
+    <div class="overflow-x-auto border-y border-zinc-200">
+      <table class="w-full min-w-[480px] text-sm">
         <thead>
           <tr class="border-b border-zinc-200 bg-zinc-50">
-            <th class="px-4 py-3 text-left font-medium text-zinc-600 whitespace-nowrap">サイト種別</th>
-            <th class="px-3 py-3 text-center font-medium text-zinc-600 whitespace-nowrap">定員</th>
-            {seasons.map((s) => (
-              <th class="px-3 py-3 text-center font-medium text-zinc-600 whitespace-nowrap">
-                {s.id}
-                <span class="block text-[10px] font-normal text-zinc-400">{s.note}</span>
-              </th>
-            ))}
+            <th class="px-4 py-3 text-left font-medium text-zinc-600">プラン名</th>
+            <th class="px-4 py-3 text-left font-medium text-zinc-600">備考</th>
+            <th class="px-4 py-3 text-right font-medium text-zinc-600"></th>
           </tr>
         </thead>
         <tbody class="divide-y divide-zinc-100">
-          {sites.map((site) => (
+          {plans.map((plan) => (
             <tr class="hover:bg-zinc-50 transition">
-              <td class="px-4 py-3 font-medium text-zinc-700 whitespace-nowrap">{site.name}</td>
-              <td class="px-3 py-3 text-center text-zinc-500 whitespace-nowrap">{site.capacity}</td>
-              {site.prices.map((p) => (
-                <td class="px-3 py-3 text-center text-zinc-700 whitespace-nowrap">{p}</td>
-              ))}
+              <td class="px-4 py-3 font-medium text-zinc-700">{plan.name}</td>
+              <td class="px-4 py-3 text-zinc-500">{plan.note}</td>
+              <td class="px-4 py-3 text-right">
+                <a
+                  href={`https://www.489pro-x.com/ja/s/oiranomori/plan/${plan.id}/`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-xs tracking-[0.14em] text-zinc-400 transition hover:text-zinc-700"
+                >
+                  予約 →
+                </a>
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
     </div>
-    <p class="mt-3 text-xs text-zinc-400">※ 上記は1サイト・1泊あたりの利用料です。ペット・薪等の追加料金は別途。</p>
 
     <div class="mt-5">
       <a
@@ -115,51 +154,118 @@ const rules = [
     </div>
   </section>
 
+  {/* サイト種別 */}
+  <section id="sites" class="mb-14">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">サイト種別</h2>
+
+    <div class="mb-8 grid gap-5 sm:grid-cols-3">
+      {siteTypes.map((s) => (
+        <div class="border-t border-zinc-200 pt-5">
+          <h3 class="font-semibold text-zinc-800">{s.name}</h3>
+          <p class="mt-2 text-sm leading-loose text-zinc-600">{s.desc}</p>
+        </div>
+      ))}
+    </div>
+
+    <h3 class="mb-3 text-base font-semibold text-zinc-700">サイズ別目安（有効面積＝駐車スペースを除く）</h3>
+    <div class="overflow-x-auto border-y border-zinc-200">
+      <table class="w-full min-w-[520px] text-sm">
+        <thead>
+          <tr class="border-b border-zinc-200 bg-zinc-50">
+            <th class="px-4 py-3 text-left font-medium text-zinc-600">サイズ</th>
+            <th class="px-4 py-3 text-left font-medium text-zinc-600">有効面積</th>
+            <th class="px-4 py-3 text-left font-medium text-zinc-600">収容・レイアウト目安</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-zinc-100">
+          {sizeGuide.map((s) => (
+            <tr class="hover:bg-zinc-50 transition">
+              <td class="px-4 py-3 font-medium text-zinc-700">{s.size}</td>
+              <td class="px-4 py-3 text-zinc-600">{s.area}</td>
+              <td class="px-4 py-3 text-zinc-600">{s.guide}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  {/* タイムスケジュール */}
+  <section id="schedule" class="mb-14">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">タイムスケジュール</h2>
+    <dl class="divide-y divide-zinc-100 border-y border-zinc-200 text-sm">
+      {timeline.map((item) => (
+        <div class="grid grid-cols-[5rem_1fr] gap-4 py-4 sm:grid-cols-[7rem_1fr]">
+          <dt class="font-semibold text-zinc-700">{item.time}</dt>
+          <dd class="text-zinc-600">{item.event}</dd>
+        </div>
+      ))}
+    </dl>
+  </section>
+
   {/* 設備 */}
   <section id="facility" class="mb-14">
     <h2 class="mb-5 text-xl font-semibold text-zinc-800">設備</h2>
-    <dl class="divide-y divide-zinc-100 rounded-xl border border-zinc-200 overflow-hidden text-sm">
+    <dl class="divide-y divide-zinc-100 border-y border-zinc-200 text-sm">
       {facilities.map((item) => (
-        <div class="grid grid-cols-[9rem_1fr] gap-4 px-5 py-4 sm:grid-cols-[12rem_1fr]">
+        <div class="grid grid-cols-[9rem_1fr] gap-4 px-0 py-4 sm:grid-cols-[12rem_1fr]">
           <dt class="flex items-center gap-2 text-zinc-500">
-            <span class={`h-1.5 w-1.5 rounded-full shrink-0 ${item.avail ? "bg-green-500" : "bg-zinc-300"}`}></span>
+            <span
+              class={`h-1.5 w-1.5 rounded-full shrink-0 ${item.avail ? "bg-[color:var(--forest-600)]" : "bg-zinc-300"}`}
+            ></span>
             {item.label}
           </dt>
           <dd class="text-zinc-700">{item.value}</dd>
         </div>
       ))}
     </dl>
+    <p class="mt-3 text-xs text-zinc-400">
+      ※ アーリーチェックイン（9:00〜）は、エリアに余裕がある場合に限り追加料金なしで可能です。前日までに電話または問い合わせフォームよりご連絡ください。
+    </p>
   </section>
 
   {/* 利用ルール */}
   <section id="rules" class="mb-14">
     <h2 class="mb-5 text-xl font-semibold text-zinc-800">利用ルール</h2>
-    <div class="grid gap-4 sm:grid-cols-2">
+    <div class="grid gap-5 sm:grid-cols-2">
       {rules.map((rule) => (
-        <div class="rounded-xl border border-zinc-200 p-5">
-          <p class="mb-2 text-sm font-semibold text-zinc-700">{rule.title}</p>
+        <div class="border-t border-zinc-200 pt-5">
+          <p class="mb-2 font-semibold text-zinc-700">{rule.title}</p>
           <p class="text-sm leading-loose text-zinc-600">{rule.body}</p>
         </div>
       ))}
     </div>
-    <p class="mt-5 text-sm text-zinc-500">
+    <p class="mt-6 text-sm text-zinc-500">
       ルール違反が確認された場合、退場をお願いする場合があります。
-      詳細は<a href="/policy/#terms" class="underline hover:text-zinc-800 transition">利用規約</a>をご確認ください。
+      詳細は<a href="/policy/#terms" class="underline transition hover:text-zinc-800">利用規約</a>をご確認ください。
     </p>
   </section>
 
   {/* 場内マップ */}
   <section id="map" class="mb-10">
     <h2 class="mb-5 text-xl font-semibold text-zinc-800">場内マップ</h2>
-    {/* TODO: /public/images/map/light-map.jpg を配置して img タグに差し替え */}
-    <div class="flex min-h-[320px] items-center justify-center rounded-2xl border-2 border-dashed border-zinc-300 bg-zinc-50">
-      <p class="text-sm text-zinc-400">ライトフォレスト 場内マップ（画像）を配置予定</p>
-    </div>
+    <img
+      src="https://oiranomori.jp/wp-content/uploads/2024/05/LightMapweb.jpg"
+      alt="ライトフォレスト 場内マップ"
+      class="w-full"
+      loading="lazy"
+    />
     <p class="mt-3 text-xs text-zinc-400">※ 場内の詳細マップは受付時にもお渡しします。</p>
+
+    <div class="mt-5">
+      <a
+        href="http://oiranomori.jp/wp-content/uploads/2024/05/LightMapInfoweb.pdf"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-2 text-sm text-zinc-600 underline transition hover:text-zinc-800"
+      >
+        利用案内PDF をダウンロード
+      </a>
+    </div>
   </section>
 
   {/* 予約CTA */}
-  <div class="mt-12 rounded-2xl bg-[color:var(--forest-100)] px-8 py-10 text-center">
+  <div class="mt-12 bg-[color:var(--forest-100)] px-8 py-10 text-center">
     <p class="text-sm text-zinc-500">ご予約・詳細料金の確認</p>
     <p class="mt-2 text-xl font-semibold text-zinc-800">予約はProX（予約システム）から</p>
     <p class="mt-3 text-sm leading-loose text-zinc-600">

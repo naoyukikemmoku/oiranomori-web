@@ -1,39 +1,5 @@
 ---
 import LpLayout from "../../layouts/LpLayout.astro";
-
-const plans = [
-  {
-    title: "ブッシュクラフトサイト",
-    subtitle: "直火 / 野営",
-    desc: "整備された設備に頼らず、自然そのものと向き合う区画。直火可、焚き火台不要。",
-    image: "/images/lp/scene-01.jpg", // TODO: deep専用画像に差し替え
-    href: "https://www.489pro-x.com/ja/s/oiranomori/planlist/",
-  },
-  {
-    title: "ソロ静寂サイト",
-    subtitle: "1名 / 孤独と静寂",
-    desc: "樹齢80年のスギ・ヒノキに囲まれた、一人のための深い森。22時以降は完全な静寂が訪れる。",
-    image: "/images/lp/scene-02.jpg", // TODO: deep専用画像に差し替え
-    href: "https://www.489pro-x.com/ja/s/oiranomori/planlist/",
-  },
-  {
-    title: "デュオ・ディープサイト",
-    subtitle: "2名 / 焚き火",
-    desc: "二人で焚き火を囲む夜。直火の炎と針葉樹の香りだけが記憶に残る。",
-    image: "/images/lp/scene-03.jpg", // TODO: deep専用画像に差し替え
-    href: "https://www.489pro-x.com/ja/s/oiranomori/planlist/",
-  },
-];
-
-const specs = [
-  { label: "利用制限", value: "18歳以上のみ（未成年者の入場不可）" },
-  { label: "直火", value: "可（指定エリア内）" },
-  { label: "焚き火台", value: "不要" },
-  { label: "ペット", value: "可（リード着用・エリア制限あり）" },
-  { label: "消灯・静寂", value: "22:00 厳守" },
-  { label: "チェックイン", value: "13:00〜18:00" },
-  { label: "チェックアウト", value: "〜11:00" },
-];
 ---
 
 <LpLayout title="ディープフォレスト | おいらの森キャンプ場">
@@ -44,36 +10,36 @@ const specs = [
     class="relative flex min-h-[90vh] items-center bg-cover bg-center"
     style="background-image:url('/images/lp/hero.jpg');"
   >
-    {/* TODO: ディープ専用のhero画像に差し替え */}
-    <div class="absolute inset-0 bg-black/65"></div>
+    <div class="absolute inset-0 bg-black/70"></div>
     <div class="relative z-10 mx-auto max-w-6xl px-5 py-28">
       <p class="text-xs tracking-[0.32em] text-zinc-400 uppercase">Deep Forest — 18+ / Direct Fire / Silence</p>
       <h1 class="mt-5 text-4xl font-semibold leading-tight text-white md:text-6xl">
-        静寂の森へ、<br />道具を持って踏み込め。
+        この雰囲気は、<br />いかないとわからない。
       </h1>
       <p class="mt-7 max-w-2xl text-base leading-loose text-zinc-300 md:text-lg">
-        樹齢80年のスギとヒノキが立ち並ぶ深い針葉樹林。<br />
-        直火、ブッシュクラフト、完全な静寂——18歳以上限定の、本物の野営地。
+        太平洋戦争で荒廃した日本の森を回復させるため、国策で植えられたスギ・ヒノキたち。
+        それから約80年が経過した今、ディープフォレストの木々は大きなもので直径50cm、樹高25mを超え、
+        整然と、しかし圧倒的な密度でそびえ立っています。
       </p>
       <div class="mt-10 flex flex-wrap gap-4">
         <a
           href="https://www.489pro-x.com/ja/s/oiranomori/planlist/"
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex items-center justify-center rounded-full bg-white/10 border border-white/50 px-7 py-3 text-sm text-white backdrop-blur-sm transition hover:bg-white hover:text-zinc-900"
+          class="inline-flex items-center justify-center rounded-full border border-white/50 bg-white/10 px-7 py-3 text-sm text-white backdrop-blur-sm transition hover:bg-white hover:text-zinc-900"
         >
           予約する
         </a>
         <a
-          href="#plans"
+          href="#experiences"
           class="inline-flex items-center justify-center rounded-full border border-white/30 px-7 py-3 text-sm text-white/80 transition hover:border-white/60 hover:text-white"
         >
-          プランを見る
+          この森の体験
         </a>
       </div>
       <a
         href="/deep-guide/"
-        class="mt-4 inline-block text-xs tracking-[0.2em] text-zinc-500 hover:text-zinc-300 transition"
+        class="mt-4 inline-block text-xs tracking-[0.2em] text-zinc-500 transition hover:text-zinc-300"
       >
         ディープフォレスト 利用案内 →
       </a>
@@ -88,18 +54,19 @@ const specs = [
     <div class="mx-auto max-w-6xl px-5">
       <p class="text-xs tracking-[0.28em] text-zinc-500 uppercase">Concept</p>
       <h2 class="mt-5 text-3xl font-semibold text-white md:text-4xl">
-        自然との対話、<br />それだけを持ち帰れ。
+        樹齢80年のスギ・ヒノキが創り出す、<br />圧倒的な静寂と闇。
       </h2>
       <p class="mt-6 max-w-2xl text-base leading-loose text-zinc-400">
         ディープフォレストは、コンビニも整備された炊事場もない。あるのは深い森と、直火と、静寂だけ。
         「キャンプ」ではなく「野営」を求める人のためのフィールドです。
       </p>
 
-      <div class="mt-12 grid gap-px border border-zinc-700 sm:grid-cols-3">
+      <div class="mt-12 grid gap-px border border-zinc-700 sm:grid-cols-4">
         {[
-          { head: "直火", body: "焚き火台不要。地面に火を起こし、炎と向き合う原初の体験。" },
-          { head: "静寂", body: "22時以降は発電機・音楽の使用禁止。針葉樹林が音を吸い込む夜。" },
-          { head: "18歳以上限定", body: "未成年の入場は不可。自己責任と自然への敬意を持つ者だけに開かれた森。" },
+          { head: "静寂",       body: "耳がキーンとするほどの静寂。針葉樹の密林が音を吸い込む。" },
+          { head: "闇",         body: "本物の闇に包まれる夜。人工の光が届かない深い森の夜。" },
+          { head: "変化",       body: "変化する森の表情。朝霧、木漏れ日、風の音、季節の移ろい。" },
+          { head: "野生",       body: "野生との境界線。管理された快適さの外側にある、本物の自然。" },
         ].map((item) => (
           <div class="bg-[color:var(--forest-600)] p-8">
             <p class="text-xs tracking-[0.2em] text-zinc-500 uppercase">{item.head}</p>
@@ -110,39 +77,117 @@ const specs = [
     </div>
   </section>
 
+  {/* 4 Experiences */}
+  <section id="experiences" class="bg-[color:var(--forest-700)] py-16 md:py-20">
+    <div class="mx-auto max-w-6xl px-5">
+      <p class="text-xs tracking-[0.28em] text-zinc-500 uppercase">Experiences</p>
+      <h2 class="mt-4 text-3xl font-semibold text-white md:text-4xl">4つの情緒的体験</h2>
+
+      <div class="mt-12 grid gap-8 sm:grid-cols-2">
+        {[
+          {
+            no: "01",
+            title: "耳がキーンとするほどの静寂",
+            desc: "日常から切り離された場所にだけ存在する、完全な静寂。スピーカーも、エンジン音も、他人の声も届かない。ただ、風と葉擦れと、自分の呼吸だけ。",
+          },
+          {
+            no: "02",
+            title: "本物の闇に包まれる夜",
+            desc: "街灯も、コンビニの灯りも届かない深い森の夜。目が慣れるまで、真っ暗な闇がある。炎の明かりがいかに人を安心させるかを、ここで初めて知る人がいる。",
+          },
+          {
+            no: "03",
+            title: "変化する森の表情",
+            desc: "朝霧の中で目覚め、木漏れ日の下で朝を過ごし、夕暮れに樹齢80年のスギが金色に染まるのを見る。同じ場所が、何度も別の場所になる。",
+          },
+          {
+            no: "04",
+            title: "野生との境界線",
+            desc: "獣道があり、夜には生き物の気配がある。人間が手を加えていない自然の中に立つこと。それだけで、日常の感覚が少し変わって帰ってくる。",
+          },
+        ].map((item) => (
+          <div class="border-t border-zinc-700 pt-8">
+            <p class="text-3xl font-semibold text-zinc-700">{item.no}</p>
+            <h3 class="mt-3 text-lg font-semibold text-white">{item.title}</h3>
+            <p class="mt-3 text-sm leading-loose text-zinc-400">{item.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {/* 4 Iron Rules */}
+  <section class="bg-[color:var(--forest-600)] py-16 md:py-20">
+    <div class="mx-auto max-w-6xl px-5">
+      <p class="text-xs tracking-[0.28em] text-zinc-500 uppercase">Principles</p>
+      <h2 class="mt-4 text-3xl font-semibold text-white md:text-4xl">基本の4鉄則</h2>
+      <p class="mt-4 text-sm text-zinc-500">この森を利用するすべての者が守る、精神的基盤。</p>
+
+      <dl class="mt-10 divide-y divide-zinc-700 border-t border-b border-zinc-700">
+        {[
+          "森の静寂と闇夜、自然の音を楽しむこと。",
+          "現地で使用可能なものは「落葉・落枝」のみ。",
+          "利用後は現状回復し、足跡以外の痕跡を残さないこと。",
+          "トイレ以外の場所での排泄（野外排泄）は厳禁。",
+        ].map((rule, i) => (
+          <div class="grid grid-cols-[2rem_1fr] gap-4 py-5 text-sm sm:grid-cols-[3rem_1fr]">
+            <dt class="text-xl font-semibold text-zinc-600">{i + 1}</dt>
+            <dd class="text-zinc-300">{rule}</dd>
+          </div>
+        ))}
+      </dl>
+
+      <p class="mt-6 text-right">
+        <a
+          href="/deep-guide/"
+          class="text-xs tracking-[0.2em] text-zinc-500 transition hover:text-zinc-300"
+        >
+          詳細な利用案内を見る →
+        </a>
+      </p>
+    </div>
+  </section>
+
   {/* Plans */}
   <section id="plans" class="bg-[color:var(--forest-700)] py-16 md:py-20">
     <div class="mx-auto max-w-6xl px-5">
       <p class="text-xs tracking-[0.28em] text-zinc-500 uppercase">Plans</p>
-      <h2 class="mt-4 text-3xl font-semibold text-white md:text-4xl">選りすぐりのプラン</h2>
-      <p class="mt-3 text-sm text-zinc-500">すべてのプランは予約ページでご確認いただけます。</p>
+      <h2 class="mt-4 text-3xl font-semibold text-white md:text-4xl">ディープフォレストへ</h2>
+      <p class="mt-3 text-sm text-zinc-500">18歳以上限定。すべてのプランは予約ページでご確認いただけます。</p>
 
       <div class="mt-10 grid gap-6 md:grid-cols-3">
-        {plans.map((plan) => (
+        {[
+          {
+            title: "野営っぽくキャンプ（ディープ）",
+            subtitle: "直火 / 野営 / ブッシュクラフト",
+            desc: "整備された設備に頼らず、自然そのものと向き合う区画。直火可、焚き火台不要。",
+          },
+          {
+            title: "ソロ・ディープ",
+            subtitle: "1名 / 孤独と静寂",
+            desc: "樹齢80年のスギ・ヒノキに囲まれた、一人のための深い森。22時以降は完全な静寂が訪れる。",
+          },
+          {
+            title: "デュオ・ディープ",
+            subtitle: "2名 / 焚き火",
+            desc: "二人で焚き火を囲む夜。直火の炎と針葉樹の香りだけが記憶に残る。",
+          },
+        ].map((plan) => (
           <a
-            href={plan.href}
+            href="https://www.489pro-x.com/ja/s/oiranomori/planlist/"
             target="_blank"
             rel="noopener noreferrer"
-            class="group block overflow-hidden rounded-xl transition hover:opacity-90"
+            class="group block border-t border-zinc-700 pt-6 transition hover:border-zinc-500"
           >
-            <figure class="aspect-[4/3] overflow-hidden">
-              <img
-                src={plan.image}
-                alt={plan.title}
-                class="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                loading="lazy"
-              />
-            </figure>
-            <div class="bg-[color:var(--forest-600)] p-5">
-              <p class="text-[10px] tracking-[0.22em] text-zinc-500 uppercase">{plan.subtitle}</p>
-              <h3 class="mt-2 text-lg font-semibold text-white">{plan.title}</h3>
-              <p class="mt-2 text-sm leading-loose text-zinc-400">{plan.desc}</p>
-            </div>
+            <p class="text-[10px] tracking-[0.22em] text-zinc-500 uppercase">{plan.subtitle}</p>
+            <h3 class="mt-2 text-lg font-semibold text-white transition group-hover:text-zinc-200">{plan.title}</h3>
+            <p class="mt-2 text-sm leading-loose text-zinc-400">{plan.desc}</p>
+            <p class="mt-4 text-xs tracking-[0.18em] text-zinc-600 transition group-hover:text-zinc-400">予約ページへ →</p>
           </a>
         ))}
       </div>
 
-      <div class="mt-8 text-center">
+      <div class="mt-10 text-center">
         <a
           href="https://www.489pro-x.com/ja/s/oiranomori/planlist/"
           target="_blank"
@@ -155,26 +200,38 @@ const specs = [
     </div>
   </section>
 
-  {/* Specs & Rules */}
+  {/* Specs & Rules summary */}
   <section class="bg-[color:var(--forest-600)] py-16 md:py-20">
     <div class="mx-auto max-w-6xl px-5">
       <p class="text-xs tracking-[0.28em] text-zinc-500 uppercase">Rules & Info</p>
       <h2 class="mt-4 text-3xl font-semibold text-white md:text-4xl">利用規定・基本情報</h2>
-      <p class="mt-3 text-sm leading-loose text-zinc-500">
-        ディープフォレストは自然環境の保護と利用者の安全のため、いくつかのルールを設けています。<br />
-        詳細は
-        <a href="/deep-guide/" class="underline text-zinc-400 hover:text-zinc-200 transition">ディープフォレスト 利用案内</a>
-        をご確認ください。
-      </p>
 
       <dl class="mt-10 divide-y divide-zinc-700 border-t border-b border-zinc-700">
-        {specs.map((item) => (
+        {[
+          { label: "利用制限",         value: "18歳以上のみ（入場時に年齢確認書類を提示）" },
+          { label: "チェックイン",     value: "12:00〜17:00（ライトフォレスト管理棟にて受付）" },
+          { label: "チェックアウト",   value: "12:00（空きがある場合、17:00まで無料延長可）" },
+          { label: "直火",             value: "可（立木の枯れ枝・積んである丸太の使用は厳禁）" },
+          { label: "火消し壺",         value: "持参必須。レンタルあり（¥500）" },
+          { label: "ゴミ",             value: "原則全て持ち帰り（灰のみ指定ペール缶可）" },
+          { label: "発電機・スピーカー", value: "禁止" },
+          { label: "場所",             value: "非公開。受付にて案内（ライトフォレストから車で約7分）" },
+        ].map((item) => (
           <div class="grid grid-cols-[9rem_1fr] gap-4 py-4 text-sm sm:grid-cols-[12rem_1fr]">
             <dt class="text-zinc-500">{item.label}</dt>
             <dd class="text-zinc-300">{item.value}</dd>
           </div>
         ))}
       </dl>
+
+      <p class="mt-6">
+        <a
+          href="/deep-guide/"
+          class="text-xs tracking-[0.2em] text-zinc-500 underline transition hover:text-zinc-300"
+        >
+          ディープフォレスト 利用案内（詳細）→
+        </a>
+      </p>
     </div>
   </section>
 
