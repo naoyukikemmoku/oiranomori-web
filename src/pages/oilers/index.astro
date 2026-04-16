@@ -1,0 +1,252 @@
+---
+import LpLayout from "../../layouts/LpLayout.astro";
+---
+
+<LpLayout title="OILERS | おいらの森">
+
+  {/* Hero */}
+  <section
+    class="relative flex min-h-[80vh] items-center bg-cover bg-center"
+    style="background-image:url('/images/lp/scene-01.jpg');"
+  >
+    <div class="absolute inset-0 bg-black/65"></div>
+    <div class="relative z-10 mx-auto max-w-6xl px-5 py-24">
+      <p class="text-xs tracking-[0.32em] text-zinc-400 uppercase">Oilers</p>
+      <h1 class="mt-5 text-5xl font-semibold tracking-widest text-white md:text-7xl">OILERS</h1>
+      <p class="mt-4 text-lg font-semibold tracking-widest text-zinc-300 md:text-xl">森を創り、経営を遊ぶ。</p>
+      <p class="mt-6 max-w-2xl text-sm leading-loose text-zinc-300 md:text-base">
+        「おいらの森」を動かすのは、オーナーだけではありません。<br />
+        森の整備、畑の開墾、そしてお客様を迎える運営業務。<br />
+        これらを「自分ごと」として楽しむ運営チーム、それがオイラーズです。
+      </p>
+      <div class="mt-10 flex flex-wrap gap-4">
+        <a
+          href="#missions"
+          class="inline-flex items-center justify-center rounded-full border border-white/50 bg-white/10 px-7 py-3 text-sm text-white backdrop-blur-sm transition hover:bg-white hover:text-zinc-900"
+        >
+          ミッションを見る
+        </a>
+        <a
+          href="#join"
+          class="inline-flex items-center justify-center rounded-full border border-white/30 px-7 py-3 text-sm text-white/80 transition hover:border-white/60 hover:text-white"
+        >
+          参加する
+        </a>
+      </div>
+    </div>
+  </section>
+
+  {/* Missions */}
+  <section id="missions" class="bg-[color:var(--forest-700)] py-16 md:py-24">
+    <div class="mx-auto max-w-6xl px-5">
+      <p class="text-xs tracking-[0.28em] text-zinc-500 uppercase">Missions</p>
+      <h2 class="mt-4 text-3xl font-semibold text-white md:text-4xl">活動の3本柱</h2>
+      <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-400">
+        オイラーズの活動は、単なるボランティアではなく、対価を伴う「真剣な作業（労働）」です。
+        キャンプ場を共に盛り上げるパートナーとして、以下のミッションを担っていただきます。
+      </p>
+
+      <div class="mt-12 grid gap-px border border-zinc-700 sm:grid-cols-3">
+        {[
+          {
+            no: "01",
+            title: "FOREST",
+            subtitle: "林業・整備",
+            items: [
+              "伐採・運搬（補助、枝集め、丸太の運搬。マニュアル軽トラ運転者歓迎）",
+              "薪割り（薪割機を使用。斧は使用しません。初回15分程度の説明あり）",
+              "草刈り・篠刈り、水路整備（ホタルの環境維持）",
+              "道路整備、台風後の落ち葉かき",
+            ],
+          },
+          {
+            no: "02",
+            title: "FARM",
+            subtitle: "農業",
+            items: [
+              "土壌管理・栽培（季節に応じた農作業。主に春〜秋）",
+            ],
+          },
+          {
+            no: "03",
+            title: "OPERATION",
+            subtitle: "運営",
+            items: [
+              "フィールド管理（トイレ掃除は常時募集）",
+              "イベント（芋煮・キャンプファイヤー等）の設営・運営補助",
+              "公式ウェブサイトの制作補助・コンテンツライティング",
+              "GA4 / SEO対策サポート",
+            ],
+          },
+        ].map((mission) => (
+          <div class="bg-[color:var(--forest-600)] p-8">
+            <p class="text-xs tracking-[0.2em] text-zinc-500">{mission.no}</p>
+            <p class="mt-1 text-lg font-semibold text-white">{mission.title}</p>
+            <p class="text-xs tracking-[0.16em] text-zinc-500 uppercase">{mission.subtitle}</p>
+            <ul class="mt-5 space-y-2">
+              {mission.items.map((item) => (
+                <li class="flex items-start gap-2 text-sm leading-snug text-zinc-400">
+                  <span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-600"></span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {/* Reward */}
+  <section class="bg-[#f4f4f5] py-16 md:py-24">
+    <div class="mx-auto max-w-6xl px-5">
+      <p class="text-xs tracking-[0.28em] text-zinc-400">Reward</p>
+      <h2 class="mt-4 text-3xl font-semibold text-zinc-800 md:text-4xl">報酬</h2>
+      <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-600">
+        作業への貢献に対し、対等な交換条件として独自のポイントを付与します。
+      </p>
+
+      <div class="mt-12 grid gap-10 md:grid-cols-2">
+        <div>
+          <p class="text-xs tracking-[0.22em] text-zinc-400">レート</p>
+          <p class="mt-3 text-5xl font-semibold text-zinc-800">1,000 pt</p>
+          <p class="mt-1 text-sm text-zinc-500">/ 時間</p>
+        </div>
+        <div>
+          <p class="text-xs tracking-[0.22em] text-zinc-400 mb-4">用途</p>
+          <ul class="space-y-3">
+            {[
+              "キャンプ宿泊代金",
+              "薪・物販の購入代金",
+              "回数券・年間パスポートの購入代金",
+            ].map((use) => (
+              <li class="flex items-start gap-2 text-sm text-zinc-600">
+                <span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400"></span>
+                {use}
+              </li>
+            ))}
+          </ul>
+          <p class="mt-6 border-t border-zinc-300 pt-5 text-sm leading-loose text-zinc-600">
+            <strong class="text-zinc-800">具体例：</strong>
+            3時間の作業で「薪券30kg ＋ 近隣温泉入浴券 ＋ 缶ビール1本」相当。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* Internship */}
+  <section class="bg-[color:var(--forest-700)] py-16 md:py-24">
+    <div class="mx-auto max-w-6xl px-5">
+      <p class="text-xs tracking-[0.28em] text-zinc-500 uppercase">Internship</p>
+      <h2 class="mt-4 text-3xl font-semibold text-white md:text-4xl">キャンプ場 インターンシップ</h2>
+      <p class="mt-5 max-w-2xl text-sm leading-loose text-zinc-400">
+        観光業・アウトドア業界・地域活性化を目指す学生や社会人の皆様へ。
+        「おいらの森」では、現場のリアルを学ぶ実務インターンシップを積極的に受け入れています。
+      </p>
+
+      <div class="mt-12 grid gap-8 sm:grid-cols-3">
+        {[
+          {
+            title: "経営のリアル",
+            desc: "集客、コスト管理、顧客単価向上の施策など、オーナー直下の経営視点を学べます。",
+          },
+          {
+            title: "フィールドマネジメント",
+            desc: "100年続く森を作るための、持続可能な林業と環境整備の現場。",
+          },
+          {
+            title: "カスタマーサービス",
+            desc: "リピーターを生む接客と、トラブル対応の実務。生きたコミュニケーションスキルを習得。",
+          },
+        ].map((item) => (
+          <div class="border-t border-zinc-700 pt-6">
+            <h3 class="font-semibold text-white">{item.title}</h3>
+            <p class="mt-3 text-sm leading-loose text-zinc-400">{item.desc}</p>
+          </div>
+        ))}
+      </div>
+
+      <div class="mt-12 border-t border-zinc-700 pt-10 text-sm">
+        <p class="text-zinc-400">
+          <strong class="text-zinc-200">対象：</strong>
+          大学生、専門学生、または将来のキャンプ場開業を目指す社会人。
+          単位認定や長期休暇中の受け入れも相談可能です。
+        </p>
+        <p class="mt-3 text-zinc-400">
+          <strong class="text-zinc-200">得られるもの：</strong>
+          マニュアルを超えた「事業を動かす手触り感」。活動証明書の発行も対応します。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  {/* Safety & Rules */}
+  <section class="bg-[color:var(--forest-600)] py-16">
+    <div class="mx-auto max-w-6xl px-5">
+      <p class="text-xs tracking-[0.28em] text-zinc-500 uppercase">Safety & Rules</p>
+      <h2 class="mt-4 text-2xl font-semibold text-white">安全・規律について</h2>
+
+      <dl class="mt-8 divide-y divide-zinc-700 border-t border-b border-zinc-700 text-sm">
+        {[
+          { label: "安全優先",   value: "チェーンソー等の動力機材の使用は許可制です。" },
+          { label: "プロ意識",   value: "挨拶、安全確認、報告・連絡・相談（ホウレンソウ）を徹底してください。" },
+          { label: "心構え",     value: "レクリエーションではなく、キャンプ場を共に育てる「仕事」として取り組んでいただきます。" },
+        ].map((item) => (
+          <div class="grid grid-cols-[7rem_1fr] gap-4 py-5">
+            <dt class="text-zinc-500">{item.label}</dt>
+            <dd class="text-zinc-300">{item.value}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  {/* Join Flow */}
+  <section id="join" class="bg-[color:var(--forest-700)] py-20 md:py-28">
+    <div class="mx-auto max-w-3xl px-5 text-center">
+      <p class="text-xs tracking-[0.28em] text-zinc-600 uppercase">Join Us</p>
+      <h2 class="mt-5 text-3xl font-semibold text-white md:text-4xl">
+        本気の方のみ、<br />現地で面談します。
+      </h2>
+
+      <div class="mt-14 grid gap-8 text-left sm:grid-cols-3">
+        {[
+          {
+            no: "1",
+            title: "Experience",
+            desc: "まずは「お客様」として来場・宿泊し、森の空気と運営の様子を感じてください。",
+          },
+          {
+            no: "2",
+            title: "Contact",
+            desc: "滞在中にオーナー（ナオ）へ直接「オイラーズ参加希望」または「インターン希望」と声をかけてください。予約時（ProX）の備考欄に明記いただくとスムーズです。",
+          },
+          {
+            no: "3",
+            title: "Interview",
+            desc: "その場で想いをお聞きし、マッチすれば採用。オイラーズ限定の公式LINEグループへ招待します。",
+          },
+        ].map((step) => (
+          <div class="border-t border-zinc-700 pt-6">
+            <p class="text-3xl font-semibold text-zinc-700 leading-none">{step.no}</p>
+            <h3 class="mt-3 font-semibold text-white">{step.title}</h3>
+            <p class="mt-2 text-sm leading-loose text-zinc-400">{step.desc}</p>
+          </div>
+        ))}
+      </div>
+
+      <div class="mt-14">
+        <a
+          href="https://www.489pro-x.com/ja/s/oiranomori/planlist/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center justify-center rounded-full border border-white/40 bg-white/10 px-10 py-4 text-sm text-white backdrop-blur-sm transition hover:bg-white hover:text-zinc-900"
+        >
+          まずはキャンプの予約から →
+        </a>
+      </div>
+    </div>
+  </section>
+
+</LpLayout>
