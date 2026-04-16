@@ -1,0 +1,113 @@
+---
+const menuGroups = [
+  {
+    title: "予約・会員",
+    items: [
+      { label: "予約する", href: "https://www.489pro-x.com/ja/s/oiranomori/planlist/", external: true, active: true },
+      { label: "予約ガイド", href: "/reservation-guide/", active: true },
+      { label: "ご予約確認", href: "https://www.489pro-x.com/ja/s/oiranomori/booking/login/", external: true, active: true },
+      { label: "会員ログイン", href: "https://www.489pro-x.com/ja/s/oiranomori/member/login/", external: true, active: true },
+      { label: "新規会員登録", href: "https://www.489pro-x.com/ja/s/oiranomori/member/input/", external: true, active: true },
+      { label: "チェックアウトの連絡", href: "/checkout/", active: false },
+    ],
+  },
+  {
+    title: "フィールド案内",
+    items: [
+      { label: "森のいま", href: "/now/", active: false },
+      { label: "ライトフォレスト 利用案内", href: "/light-guide/", active: true },
+      { label: "ディープフォレスト 利用案内", href: "/deep-guide/", active: true },
+      { label: "場内マップ(Light)", href: "/access/#light", active: false },
+      { label: "場内マップ(Deep)", href: "/access/#deep", active: false },
+      { label: "周辺案内", href: "/access/#area", active: false },
+      { label: "アクセス", href: "/access/", active: false },
+    ],
+  },
+  {
+    title: "薪・レンタル・チケット",
+    items: [
+      { label: "おいらの薪", href: "/firewood/", active: true },
+      { label: "レンタル・売店", href: "/firewood/#rental", active: true },
+      { label: "年間パスポート・回数券", href: "/passport/", active: false },
+    ],
+  },
+  {
+    title: "森を体験する",
+    items: [
+      { label: "過ごし方", href: "/experience/", active: false },
+      { label: "焚火のすすめ", href: "/experience/#bonfire", active: false },
+      { label: "全てのキャンププラン", href: "/experience/#plans", active: false },
+    ],
+  },
+  {
+    title: "森の物語・記録",
+    items: [
+      { label: "森 of the Story", href: "https://note.com/oiranomori", external: true, active: true },
+      { label: "開拓日誌", href: "https://note.com/oiranomori/m/m7c8e8e8e8e8e", external: true, active: false },
+      { label: "生きもの観察記録", href: "https://note.com/oiranomori/m/m9c9e9e9e9e9e", external: true, active: false },
+      { label: "おすすめキャンプ場", href: "https://note.com/oiranomori/m/m1c1e1e1e1e1e", external: true, active: false },
+    ],
+  },
+  {
+    title: "サポート",
+    items: [
+      { label: "お知らせ", href: "/news/", active: false },
+      { label: "お問い合わせ", href: "/contact/", active: false },
+      { label: "よくある質問", href: "/faq/", active: false },
+      { label: "キャンセルポリシー", href: "/reservation-guide/#cancellation", active: true },
+      { label: "利用規約", href: "/policy/#terms", active: false },
+      { label: "プライバシーポリシー", href: "/policy/#privacy", active: false },
+    ],
+  },
+];
+---
+
+<div class="drawer drawer-end">
+  <input id="site-menu-drawer" type="checkbox" class="drawer-toggle" />
+
+  <div class="drawer-content">
+    <label for="site-menu-drawer" class="menu-toggle" aria-label="メニューを開く">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <path d="M2 4h16M2 10h16M2 16h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+      </svg>
+    </label>
+  </div>
+
+  <div class="drawer-side z-[65]">
+    <label for="site-menu-drawer" aria-label="メニューを閉じる" class="drawer-overlay"></label>
+    <aside class="menu-panel">
+      <div class="mb-5 flex items-center justify-between">
+        <p class="text-sm tracking-[0.2em] uppercase text-zinc-500">Menu</p>
+        <label for="site-menu-drawer" class="menu-close" aria-label="メニューを閉じる">✕</label>
+      </div>
+
+      <div class="menu-grid">
+        {menuGroups.map((group) => (
+          <section>
+            <p class="menu-group-title">{group.title}</p>
+            <div class="menu-items">
+              {group.items.map((item) =>
+                item.active ? (
+                  <a
+                    class="menu-link"
+                    href={item.href}
+                    target={item.external ? "_blank" : undefined}
+                    rel={item.external ? "noopener" : undefined}
+                  >
+                    {item.label}
+                    {item.external && <span class="text-xs opacity-50">↗</span>}
+                  </a>
+                ) : (
+                  <span class="menu-link is-disabled" aria-disabled="true">
+                    {item.label}
+                    <span class="text-xs">(準備中)</span>
+                  </span>
+                )
+              )}
+            </div>
+          </section>
+        ))}
+      </div>
+    </aside>
+  </div>
+</div>
