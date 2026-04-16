@@ -1,0 +1,172 @@
+---
+import PageLayout from "../../layouts/PageLayout.astro";
+---
+
+<PageLayout title="森のいま | おいらの森">
+
+  <div class="mb-10 border-b border-zinc-200 pb-8">
+    <p class="text-xs tracking-[0.26em] text-zinc-400 uppercase">Forest Now</p>
+    <h1 class="mt-3 text-3xl font-semibold text-zinc-800 md:text-4xl">森のいま</h1>
+    <p class="mt-4 max-w-2xl text-base leading-loose text-zinc-600">
+      那須烏山の現在の天気・気温・予約状況をお伝えします。
+      来場前にご確認ください。
+    </p>
+    <nav class="mt-6 flex flex-wrap gap-3 text-sm">
+      {[
+        { href: "#weather",    label: "天気・気温" },
+        { href: "#forecast",   label: "週間予報" },
+        { href: "#reserve",    label: "予約状況" },
+      ].map((item) => (
+        <a
+          href={item.href}
+          class="rounded-full border border-zinc-300 px-4 py-1.5 text-zinc-600 transition hover:border-zinc-500 hover:text-zinc-800"
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+  </div>
+
+  {/* 天気・気温 */}
+  <section id="weather" class="mb-14">
+    <h2 class="mb-6 text-xl font-semibold text-zinc-800">現在の天気・気温</h2>
+    <div class="rounded-2xl border border-zinc-200 bg-zinc-50 p-8 text-center">
+      <p class="text-xs tracking-[0.2em] text-zinc-400">那須烏山市（アメダス観測）</p>
+      <div id="now-temp" class="mt-4 text-6xl font-semibold text-zinc-800">--℃</div>
+      <div id="now-weather" class="mt-3 flex items-center justify-center gap-3">
+        <span id="now-weather-icon" class="text-3xl">—</span>
+        <span id="now-weather-label" class="text-lg text-zinc-600">取得中…</span>
+      </div>
+      <p class="mt-4 text-xs text-zinc-400">気象庁データ（自動更新）</p>
+    </div>
+  </section>
+
+  {/* 週間予報 */}
+  <section id="forecast" class="mb-14">
+    <h2 class="mb-6 text-xl font-semibold text-zinc-800">週間予報</h2>
+    <div id="forecast-list" class="grid gap-3 sm:grid-cols-7">
+      {Array.from({ length: 7 }).map((_, i) => (
+        <div class="rounded-2xl border border-zinc-200 bg-white p-4 text-center">
+          <p class="text-xs text-zinc-400" id={`fc-day-${i}`}>—</p>
+          <div class="my-3 text-2xl" id={`fc-icon-${i}`}>—</div>
+          <p class="text-xs text-zinc-500" id={`fc-temp-${i}`}>— / —</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  {/* 予約状況 */}
+  <section id="reserve" class="mb-14">
+    <h2 class="mb-6 text-xl font-semibold text-zinc-800">予約状況・カレンダー</h2>
+    <div class="rounded-2xl border border-zinc-200 bg-zinc-50 p-8 text-center">
+      <p class="text-sm leading-loose text-zinc-500">
+        予約状況はProX（489ProX）の予約カレンダーでご確認ください。
+      </p>
+      <a
+        href="https://www.489pro-x.com/ja/s/oiranomori/planlist/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="lp-btn-primary mt-6 inline-flex"
+      >
+        予約カレンダーを見る
+      </a>
+    </div>
+  </section>
+
+</PageLayout>
+
+<script>
+  // ── 気象庁API：現在気温・天気 ──────────────────────────
+  async function fetchNow() {
+    try {
+      const timeRes = await fetch("https://www.jma.go.jp/bosai/amedas/data/latest_time.json");
+      const latestTime: string = await timeRes.json();
+      const timeStr = latestTime.replace(/[-:T]/g, "").slice(0, 12) + "00";
+
+      const amedasRes = await fetch(`https://www.jma.go.jp/bosai/amedas/data/point/41226/${timeStr}.json`);
+      const amedas: Record<string, [number, number]> = await amedasRes.json();
+      const temp = amedas.temp?.[0];
+
+      if (temp !== undefined) {
+        const el = document.getElementById("now-temp");
+        if (el) el.textContent = `${temp.toFixed(1)}℃`;
+      }
+
+      const forecastRes = await fetch("https://www.jma.go.jp/bosai/forecast/data/forecast/090000.json");
+      const forecast: any[] = await forecastRes.json();
+      const area = forecast[0]?.timeSeries?.[0]?.areas?.[0];
+      const code = area?.weatherCodes?.[0] ?? "";
+      const label = area?.weathers?.[0] ?? "";
+
+      const iconEl = document.getElementById("now-weather-icon");
+      const labelEl = document.getElementById("now-weather-label");
+
+      if (iconEl && code) {
+        const img = document.createElement("img");
+        img.src = `https://www.jma.go.jp/bosai/forecast/img/${code}.svg`;
+        img.width = 48;
+        img.height = 48;
+        img.alt = label;
+        iconEl.replaceWith(img);
+      }
+      if (labelEl && label) {
+        labelEl.textContent = label.replace(/　/g, " ").trim();
+      }
+    } catch (e) {
+      console.warn("[Now] 気象庁API取得失敗", e);
+      const labelEl = document.getElementById("now-weather-label");
+      if (labelEl) labelEl.textContent = "取得できませんでした";
+    }
+  }
+
+  // ── 週間予報 ───────────────────────────────────────────
+  async function fetchForecast() {
+    try {
+      const res = await fetch("https://www.jma.go.jp/bosai/forecast/data/forecast/090000.json");
+      const data: any[] = await res.json();
+
+      const timeSeries = data[0]?.timeSeries ?? [];
+      const weatherSeries = timeSeries[0];
+      const tempSeries = timeSeries[2];
+
+      const dates: string[] = weatherSeries?.timeDefines ?? [];
+      const codes: string[] = weatherSeries?.areas?.[0]?.weatherCodes ?? [];
+      const maxTemps: string[] = tempSeries?.areas?.[0]?.tempsMax ?? [];
+      const minTemps: string[] = tempSeries?.areas?.[0]?.tempsMin ?? [];
+
+      const dow = ["日", "月", "火", "水", "木", "金", "土"];
+
+      dates.slice(0, 7).forEach((dateStr, i) => {
+        const d = new Date(dateStr);
+        const label = `${d.getMonth() + 1}/${d.getDate()}(${dow[d.getDay()]})`;
+
+        const dayEl = document.getElementById(`fc-day-${i}`);
+        const iconEl = document.getElementById(`fc-icon-${i}`);
+        const tempEl = document.getElementById(`fc-temp-${i}`);
+
+        if (dayEl) dayEl.textContent = label;
+
+        if (iconEl && codes[i]) {
+          const img = document.createElement("img");
+          img.src = `https://www.jma.go.jp/bosai/forecast/img/${codes[i]}.svg`;
+          img.width = 40;
+          img.height = 40;
+          img.alt = "";
+          img.className = "mx-auto";
+          iconEl.replaceWith(img);
+        }
+
+        if (tempEl) {
+          const max = maxTemps[i] ?? "—";
+          const min = minTemps[i] ?? "—";
+          tempEl.innerHTML = `<span class="text-red-500">${max}°</span> / <span class="text-blue-500">${min}°</span>`;
+        }
+      });
+    } catch (e) {
+      console.warn("[Forecast] 気象庁API取得失敗", e);
+    }
+  }
+
+  fetchNow();
+  fetchForecast();
+</script>
