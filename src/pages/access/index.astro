@@ -1,0 +1,306 @@
+---
+import LpLayout from "../../layouts/LpLayout.astro";
+---
+
+<LpLayout title="アクセス・場内マップ | おいらの森">
+
+  {/* Hero */}
+  <section
+    class="lp-hero"
+    style="background-image:url('https://oiranomori.jp/wp-content/uploads/2022/12/Neighborhood-guide.png'); background-size: cover; background-position: center;"
+  >
+    <div class="lp-hero__overlay" style="background:rgba(0,0,0,0.62);"></div>
+    <div class="relative z-10 mx-auto max-w-6xl px-5">
+      <div class="lp-hero__content">
+        <p class="text-xs tracking-[0.32em] text-zinc-400 uppercase">Access &amp; Map</p>
+        <h1 class="mt-6 text-4xl font-semibold leading-tight text-white md:text-6xl">
+          森への道順
+        </h1>
+        <p class="mt-6 max-w-xl text-sm leading-loose text-zinc-300 md:text-base">
+          那須烏山の山の中にあるキャンプ場です。<br />
+          カーナビの案内では絶対にたどり着けません。必ずこのページの案内に従ってお越しください。
+        </p>
+        <nav class="mt-10 flex flex-wrap gap-3">
+          {[
+            { href: "#important",  label: "重要なお知らせ" },
+            { href: "#car",        label: "お車・バイク" },
+            { href: "#train",      label: "電車・公共交通" },
+            { href: "#light",      label: "ライトフォレスト" },
+            { href: "#deep",       label: "ディープフォレスト" },
+          ].map((item) => (
+            <a
+              href={item.href}
+              class="rounded-full border border-white/30 bg-white/10 px-4 py-2 text-xs tracking-[0.18em] text-zinc-200 transition hover:bg-white/20 hover:text-white"
+            >
+              {item.label}
+            </a>
+          ))}
+        </nav>
+      </div>
+    </div>
+    <a href="#important" class="lp-scroll">Scroll</a>
+  </section>
+
+  {/* 重要なお知らせ */}
+  <section id="important" class="bg-zinc-900 py-16 md:py-20">
+    <div class="mx-auto max-w-6xl px-5">
+      <p class="text-xs tracking-[0.32em] text-amber-400 uppercase">Important</p>
+      <h2 class="mt-4 text-2xl font-semibold text-white md:text-3xl">必読：来場前に確認してください</h2>
+
+      <div class="mt-10 grid gap-6 md:grid-cols-2">
+
+        {/* カーナビ禁止 */}
+        <div class="rounded-2xl border border-amber-400/30 bg-amber-400/5 p-7">
+          <div class="mb-4 flex items-start gap-4">
+            <span class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-amber-400/20 text-sm text-amber-300">!</span>
+            <h3 class="text-lg font-semibold text-amber-300">カーナビ・住所検索は絶対使用禁止</h3>
+          </div>
+          <p class="text-sm leading-loose text-zinc-300">
+            車据え付け型のカーナビや住所検索では<strong class="text-white">全く別の場所に案内されます</strong>。
+            有史以前から人が住んでいない土地のため、地図データが存在しません。
+          </p>
+          <div class="mt-5 rounded-xl bg-white/5 p-4">
+            <p class="mb-2 text-xs tracking-[0.16em] text-zinc-400">正しい方法</p>
+            <p class="text-sm text-zinc-200">
+              <strong class="text-white">Google Map</strong> または <strong class="text-white">Yahoo!地図</strong> で
+              「おいらの森」と検索してください。
+            </p>
+            <p class="mt-3 text-xs leading-relaxed text-zinc-400">
+              カーナビを使う場合は「道の駅げんきあっぷ村」または「ファミリーマートこぶし台店」を目的地に設定し、
+              到着後に地図アプリへ切り替えること。
+            </p>
+          </div>
+        </div>
+
+        {/* 騒音規制 */}
+        <div class="rounded-2xl border border-red-400/30 bg-red-400/5 p-7">
+          <div class="mb-4 flex items-start gap-4">
+            <span class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-red-400/20 text-sm text-red-300">!</span>
+            <h3 class="text-lg font-semibold text-red-300">近接排気音100dB以上は入場不可</h3>
+          </div>
+          <p class="text-sm leading-loose text-zinc-300">
+            車検非対応レベルの爆音車両での入場は<strong class="text-white">禁止</strong>です。
+            該当車両で来場した場合はその場で退去となります。
+          </p>
+          <div class="mt-5 rounded-xl bg-white/5 p-4">
+            <p class="text-sm text-zinc-300">
+              静かな森の環境を守るため、近接排気音 <strong class="text-white">100デシベル未満</strong>（車検対応レベル）の車両のみ入場可能です。
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  {/* お車・バイクでのアクセス */}
+  <section id="car" class="bg-[#f4f4f5] py-20 md:py-28">
+    <div class="mx-auto max-w-6xl px-5">
+      <p class="text-xs tracking-[0.32em] text-zinc-400 uppercase">By Car / Motorbike</p>
+      <h2 class="mt-4 text-3xl font-semibold text-zinc-800 md:text-4xl">お車・バイクでお越しの方</h2>
+      <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-600">
+        最もアクセスしやすい方法です。Google Mapで「おいらの森」と検索し、案内に従ってお越しください。
+      </p>
+
+      {/* 所要時間 */}
+      <div class="mt-12">
+        <h3 class="mb-6 text-lg font-semibold text-zinc-700">参考所要時間</h3>
+        <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            { from: "東京方面", via: "江北JCT", time: "約 2 時間" },
+            { from: "仙台方面", via: "仙台IC", time: "約 2 時間" },
+            { from: "宇都宮方面", via: "宇都宮上三川IC", time: "約 50 分" },
+            { from: "宇都宮市内", via: "中心部より", time: "約 45 分" },
+          ].map((item) => (
+            <div class="rounded-2xl bg-white p-6 shadow-sm">
+              <p class="text-xs tracking-[0.14em] text-zinc-400">{item.via}</p>
+              <p class="mt-1 text-sm font-medium text-zinc-700">{item.from}</p>
+              <p class="mt-3 text-2xl font-semibold text-[color:var(--forest-700)]">{item.time}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* 入り口の急坂 */}
+      <div class="mt-14 grid gap-8 md:grid-cols-2">
+        <div>
+          <h3 class="mb-4 text-lg font-semibold text-zinc-700">入り口の急坂について</h3>
+          <p class="text-sm leading-loose text-zinc-600">
+            ライトフォレストへの出入口は<strong class="text-zinc-800">未舗装の急勾配</strong>です。アクセルを踏みすぎないようにご注意ください。
+          </p>
+          <p class="mt-3 text-sm leading-loose text-zinc-600">
+            スリップした場合は一度停止し、バックして勢いをつけてから再チャレンジすると確実に登れます。無理に進もうとしないことが重要です。
+          </p>
+          <p class="mt-3 text-sm leading-loose text-zinc-500">
+            ※ライトフォレスト入り口には看板がありません。案内図を事前にご確認ください。
+          </p>
+        </div>
+        <div class="overflow-hidden rounded-2xl">
+          <img
+            src="https://oiranomori.jp/wp-content/uploads/2022/11/img_2031-1024x576.jpg"
+            alt="入り口の急坂"
+            class="h-full w-full object-cover"
+          />
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  {/* 電車・公共交通 */}
+  <section id="train" class="bg-white py-20 md:py-28">
+    <div class="mx-auto max-w-6xl px-5">
+      <p class="text-xs tracking-[0.32em] text-zinc-400 uppercase">By Train</p>
+      <h2 class="mt-4 text-3xl font-semibold text-zinc-800 md:text-4xl">電車・公共交通でお越しの方</h2>
+      <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-600">
+        駅から徒歩30〜50分以上かかります。荷物がある場合は「電車プラン」の予約を強くお勧めします。
+      </p>
+
+      {/* JR烏山線の注意 */}
+      <div class="mt-12 rounded-2xl border border-zinc-200 bg-zinc-50 p-7">
+        <h3 class="mb-4 text-base font-semibold text-zinc-800">JR烏山線ご利用の際の注意点</h3>
+        <ul class="space-y-3 text-sm leading-loose text-zinc-600">
+          <li class="flex items-start gap-3">
+            <span class="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-zinc-200 text-xs font-bold text-zinc-600">!</span>
+            <span><strong class="text-zinc-800">Suica・PASMO等のICカードは利用不可。</strong> 宇都宮駅などで一度下車し、紙の切符を購入してから乗り換えてください。</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-zinc-200 text-xs font-bold text-zinc-600">i</span>
+            <span>バスと同様に整理券を取り、着駅の改札で精算します。</span>
+          </li>
+        </ul>
+      </div>
+
+      {/* 移動手段の使い分け */}
+      <div class="mt-12 grid gap-4 md:grid-cols-3">
+        {[
+          {
+            method: "送迎（電車プラン専用）",
+            station: "烏山線【鴻野山駅】下車",
+            detail: "対応時刻：8:37・15:02\n混雑時ワンオペのため時刻厳守。\n事前に「電車プラン」で車両オプション「送迎」を選択して予約のこと。",
+            note: "",
+          },
+          {
+            method: "タクシー",
+            station: "烏山線【大金駅】下車",
+            detail: "料金目安：約¥2,000\n鴻野山駅にはタクシー待機所がないため注意。",
+            note: "",
+          },
+          {
+            method: "徒歩",
+            station: "各駅より",
+            detail: "鴻野山駅 → ライトフォレスト：約53分\n大金駅 → ディープフォレスト：約32分",
+            note: "荷物がある場合は非推奨",
+          },
+        ].map((item) => (
+          <div class="rounded-2xl border border-zinc-200 p-6">
+            <p class="text-xs tracking-[0.14em] text-zinc-400 uppercase">{item.method}</p>
+            <p class="mt-2 text-sm font-semibold text-zinc-800">{item.station}</p>
+            <p class="mt-3 whitespace-pre-line text-sm leading-loose text-zinc-600">{item.detail}</p>
+            {item.note && (
+              <p class="mt-3 text-xs text-amber-600">{item.note}</p>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* 烏山線の画像 */}
+      <div class="mt-12 grid gap-4 sm:grid-cols-2">
+        <div class="overflow-hidden rounded-2xl">
+          <img
+            src="http://oiranomori.jp/wp-content/uploads/2021/05/IMG_0694-300x169.jpeg"
+            alt="JR烏山線 ACCUM"
+            class="h-48 w-full object-cover"
+          />
+        </div>
+        <div class="overflow-hidden rounded-2xl">
+          <img
+            src="http://oiranomori.jp/wp-content/uploads/2021/05/IMG_5894-300x169.jpeg"
+            alt="JR烏山線 ACCUM"
+            class="h-48 w-full object-cover"
+          />
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  {/* フィールド別アクセス */}
+  <section id="light" class="bg-[#f4f4f5] py-20 md:py-28">
+    <div class="mx-auto max-w-6xl px-5">
+      <p class="text-xs tracking-[0.32em] text-zinc-400 uppercase">Field Guide</p>
+      <h2 class="mt-4 text-3xl font-semibold text-zinc-800 md:text-4xl">フィールド別アクセス</h2>
+
+      <div class="mt-12 grid gap-8 lg:grid-cols-2">
+
+        {/* ライトフォレスト */}
+        <div id="light-detail" class="rounded-2xl bg-white p-8">
+          <p class="text-xs tracking-[0.24em] text-zinc-400 uppercase">Light Forest</p>
+          <h3 class="mt-3 text-xl font-semibold text-zinc-800">ライトフォレスト</h3>
+          <div class="mt-5 space-y-4 text-sm leading-loose text-zinc-600">
+            <p>入り口には看板がありません。下の空から案内図を参照してお越しください。</p>
+            <p>
+              出入口は未舗装の急勾配です。アクセルを踏みすぎず、スリップした場合は一度バックして勢いをつけて登り直してください。
+            </p>
+          </div>
+          <div class="mt-6 overflow-hidden rounded-xl">
+            <img
+              src="https://oiranomori.jp/wp-content/uploads/2022/12/Lightforest-field-areialmap-1-1024x678.jpg"
+              alt="ライトフォレスト 空から案内図"
+              class="w-full object-cover"
+            />
+          </div>
+          <p class="mt-3 text-center text-xs text-zinc-400">ライトフォレスト 空から案内図</p>
+        </div>
+
+        {/* ディープフォレスト */}
+        <div id="deep" class="rounded-2xl bg-zinc-900 p-8">
+          <p class="text-xs tracking-[0.24em] text-zinc-400 uppercase">Deep Forest</p>
+          <h3 class="mt-3 text-xl font-semibold text-white">ディープフォレスト</h3>
+          <div class="mt-5 space-y-4 text-sm leading-loose text-zinc-300">
+            <p>
+              ディープフォレストは<strong class="text-white">場所を非公表</strong>としています。
+            </p>
+            <p>
+              必ず<strong class="text-white">ライトフォレスト管理棟にて受付</strong>を済ませてください。
+              受付後に詳細な場所をご案内します。直接現地へ向かうことはできません。
+            </p>
+          </div>
+          <div class="mt-8 rounded-xl border border-zinc-700 bg-zinc-800 p-5">
+            <p class="mb-2 text-xs tracking-[0.16em] text-zinc-400">アクセス手順</p>
+            <ol class="space-y-3 text-sm text-zinc-300">
+              {[
+                "Google Mapで「おいらの森」と検索",
+                "まずライトフォレストへ向かう",
+                "管理棟にて受付を完了させる",
+                "スタッフの案内に従いディープフォレストへ",
+              ].map((step, i) => (
+                <li class="flex items-start gap-3">
+                  <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-zinc-700 text-xs font-bold text-zinc-300">
+                    {i + 1}
+                  </span>
+                  <span>{step}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </div>
+
+      </div>
+
+      {/* 周辺ガイドマップ */}
+      <div id="area" class="mt-16">
+        <h3 class="mb-6 text-xl font-semibold text-zinc-800">周辺案内図</h3>
+        <div class="overflow-hidden rounded-2xl">
+          <img
+            src="https://oiranomori.jp/wp-content/uploads/2022/12/Neighborhood-guide.png"
+            alt="周辺ガイドマップ"
+            class="w-full object-cover"
+          />
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</LpLayout>
