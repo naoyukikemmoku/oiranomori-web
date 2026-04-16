@@ -1,0 +1,166 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+:root {
+  --forest-700: #1f2820;
+  --forest-600: #2d3a30;
+  --forest-100: #eef1ec;
+  --header-height: 72px;
+  --header-offset: calc(var(--header-height) + 10px);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: "Noto Serif JP", serif;
+    letter-spacing: 0.05em;
+    line-height: 1.8;
+    @apply bg-white text-zinc-700;
+  }
+
+  h1,
+  h2,
+  h3 {
+    letter-spacing: 0.06em;
+    @apply text-zinc-800;
+  }
+
+  :is(section[id], article[id], div[id]) {
+    scroll-margin-top: calc(var(--header-height) + 16px);
+  }
+}
+
+@layer components {
+  .site-header {
+    @apply fixed inset-x-0 top-0 z-[60] border-b border-zinc-200/70 bg-white/70 backdrop-blur-md transition-transform duration-300;
+  }
+
+  .site-header.is-hidden {
+    transform: translateY(-100%);
+  }
+
+  .header-switch {
+    @apply grid grid-cols-2 overflow-hidden rounded-xl border border-zinc-300 bg-white/90;
+  }
+
+  .header-switch__item {
+    @apply min-w-[106px] px-3 py-2 text-center text-xs sm:text-sm font-medium text-zinc-600 transition;
+  }
+
+  .header-switch__item.is-active {
+    @apply bg-[color:var(--forest-100)] text-[color:var(--forest-700)] shadow-sm;
+  }
+
+  .header-weather {
+    @apply items-center gap-2 rounded-full border border-zinc-300 px-3 py-1.5 text-sm text-zinc-700 transition hover:border-zinc-400 hover:bg-white;
+  }
+
+  .menu-toggle,
+  .menu-close {
+    @apply inline-flex h-10 w-10 items-center justify-center rounded-full border border-zinc-300 bg-white text-zinc-700 transition hover:border-zinc-500;
+  }
+
+  .menu-panel {
+    @apply h-full w-[min(92vw,420px)] overflow-y-auto bg-white px-5 py-6 shadow-2xl;
+  }
+
+  .menu-grid {
+    @apply grid gap-6;
+  }
+
+  .menu-group-title {
+    @apply mb-2 text-xs tracking-[0.16em] text-zinc-500;
+  }
+
+  .menu-items {
+    @apply grid gap-1;
+  }
+
+  .menu-link {
+    @apply flex items-center justify-between rounded-lg px-3 py-2 text-sm text-zinc-700 transition hover:bg-zinc-100;
+  }
+
+  .menu-link.is-disabled {
+    @apply cursor-not-allowed opacity-45;
+  }
+
+
+  .floating-tab {
+    @apply inline-flex min-h-[84px] w-[30px] select-none items-center justify-center rounded-l-xl border border-zinc-200 bg-white/95 px-1 py-2 shadow-lg;
+  }
+
+  .floating-tab__text {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    letter-spacing: 0.12em;
+    @apply text-[11px] font-semibold leading-none text-zinc-800;
+  }
+
+  .reserve-cta {
+    @apply inline-flex items-center gap-2 rounded-full bg-[color:var(--forest-600)] px-7 py-3 text-sm text-white shadow-lg shadow-black/20 transition hover:-translate-y-0.5 hover:bg-[color:var(--forest-700)];
+  }
+
+  .reserve-cta svg {
+    @apply h-4 w-4;
+  }
+
+  .lp-hero {
+    @apply relative flex min-h-[88vh] items-center bg-cover bg-center;
+  }
+
+  .lp-hero__overlay {
+    @apply absolute inset-0 bg-black/45;
+  }
+
+  .lp-hero__content {
+    @apply relative z-10 max-w-3xl py-24;
+  }
+
+  .lp-scroll {
+    @apply absolute bottom-8 right-8 z-10 text-xs uppercase tracking-[0.22em] text-zinc-100;
+  }
+
+  .lp-scroll::after {
+    content: "";
+    @apply ml-3 inline-block h-9 w-px bg-zinc-100/80 align-middle;
+  }
+
+  .lp-section {
+    @apply py-16 md:py-20;
+  }
+
+  .lp-title {
+    @apply text-3xl font-semibold md:text-4xl;
+  }
+
+  .lp-card {
+    @apply rounded-2xl border border-zinc-200 bg-white p-7 shadow-sm;
+  }
+
+  .lp-photo-card {
+    @apply rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm;
+  }
+
+  .lp-btn-primary {
+    @apply inline-flex items-center justify-center rounded-full bg-[color:var(--forest-600)] px-7 py-3 text-sm text-white shadow-md transition hover:-translate-y-0.5 hover:bg-[color:var(--forest-700)];
+  }
+
+  .lp-btn-outline {
+    @apply inline-flex items-center justify-center rounded-full border border-white/80 bg-white/10 px-7 py-3 text-sm text-white backdrop-blur-sm transition hover:bg-white hover:text-zinc-800;
+  }
+
+  .lp-footer {
+    @apply border-t border-zinc-200 bg-[#f6f7f5] text-zinc-700;
+  }
+
+  .footer-link {
+    @apply text-zinc-600 transition hover:text-zinc-900;
+  }
+
+  .footer-sns {
+    @apply rounded-full border border-zinc-300 px-4 py-2 text-xs tracking-[0.12em] text-zinc-700 transition hover:border-zinc-500 hover:bg-white;
+  }
+}
