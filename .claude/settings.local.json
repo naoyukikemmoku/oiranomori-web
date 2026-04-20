@@ -14,7 +14,22 @@
       "Bash(git commit *)",
       "Bash(wc *)",
       "Bash(xargs grep *)",
-      "Bash(git *)"
+      "Bash(git *)",
+      "Bash(cp \"src/pages/News/[id].astro\" src/pages/news_tmp/)",
+      "Bash(cp \"src/pages/News/page/[page].astro\" src/pages/news_tmp/page/)",
+      "Bash(cp \"src/pages/news_tmp/[id].astro\" src/pages/news/)",
+      "Bash(cp \"src/pages/news_tmp/page/[page].astro\" src/pages/news/page/)",
+      "Bash(powershell -Command \"Rename-Item 'src\\\\pages\\\\News' 'src\\\\pages\\\\news_lower' -Force\")",
+      "Bash(powershell -Command \"cd 'src\\\\pages'; Rename-Item 'News' 'News2'\")",
+      "Bash(taskkill /F /IM node.exe)",
+      "Bash(mkdir -p /tmp/news_rescue)",
+      "Bash(cp \"src/pages/News/index.astro\" /tmp/news_rescue/)",
+      "Bash(cp \"src/pages/News/[id].astro\" /tmp/news_rescue/)",
+      "Bash(mkdir -p /tmp/news_rescue/page)",
+      "Bash(cp \"src/pages/News/page/[page].astro\" /tmp/news_rescue/page/)",
+      "Bash(cp /tmp/news_rescue/index.astro src/pages/news/)",
+      "Bash(cp \"/tmp/news_rescue/[id].astro\" src/pages/news/)",
+      "Bash(cp \"/tmp/news_rescue/page/[page].astro\" src/pages/news/page/)"
     ]
   }
 }
