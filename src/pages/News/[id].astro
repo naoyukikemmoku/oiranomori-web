@@ -1,0 +1,138 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getOshirasePage, getOshiraseDetail } from "../../lib/oshirase";
+
+export async function getStaticPaths() {
+  const LIMIT = 100;
+  let allIds: string[] = [];
+
+  try {
+    // 最大100件取得（それ以上ある場合は適宜増やす）
+    const res = await getOshirasePage(1, LIMIT);
+    allIds = res.contents.map((c: any) => c.id);
+  } catch (e) {
+    console.warn("[news/[id]] microCMS 取得失敗", e);
+    return [];
+  }
+
+  return allIds.map((id) => ({ params: { id } }));
+}
+
+const { id } = Astro.params;
+
+let article: any = null;
+try {
+  article = await getOshiraseDetail(id);
+} catch (e) {
+  console.warn("[news/[id]] 記事取得失敗", e);
+}
+
+function formatDate(str: string) {
+  const d = new Date(str);
+  return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, "0")}.${String(d.getDate()).padStart(2, "0")}`;
+}
+---
+
+<BaseLayout
+  title={article ? `${article.title} | おいらの森` : "お知らせ | おいらの森"}
+  description={article?.description ?? "おいらの森からのお知らせです。"}
+>
+  <div class="min-h-screen bg-[#f4f5f2] pb-24">
+    <div class="mx-auto max-w-3xl px-5">
+
+      <div class="pt-16 pb-2">
+        <a
+          href="/news/"
+          class="inline-flex items-center gap-1.5 text-xs tracking-[0.12em] text-zinc-400 transition hover:text-zinc-700"
+        >
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M19 12H5"/><path d="M11 6l-6 6 6 6"/>
+          </svg>
+          お知らせ一覧へ
+        </a>
+      </div>
+
+      {article ? (
+        <article class="pt-8">
+          <header class="mb-8 border-b border-zinc-300 pb-8">
+            <div class="flex flex-wrap items-center gap-3 mb-4">
+              <time class="text-xs tracking-[0.12em] text-zinc-400" datetime={article.date}>
+                {formatDate(article.date)}
+              </time>
+              {article.category && (
+                <span class="text-xs tracking-[0.1em] text-zinc-500 border border-zinc-300 px-2 py-0.5">
+                  {article.category}
+                </span>
+              )}
+            </div>
+            <h1 class="text-xl font-semibold leading-snug text-zinc-800 md:text-2xl">
+              {article.title}
+            </h1>
+          </header>
+
+          <div
+            class="prose-news text-sm leading-[2] text-zinc-700"
+            set:html={article.content}
+          />
+
+          <div class="mt-16 border-t border-zinc-300 pt-8">
+            <a
+              href="/news/"
+              class="inline-flex items-center gap-1.5 text-sm tracking-[0.12em] text-zinc-500 transition hover:text-zinc-800"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M19 12H5"/><path d="M11 6l-6 6 6 6"/>
+              </svg>
+              お知らせ一覧へ
+            </a>
+          </div>
+        </article>
+      ) : (
+        <div class="pt-12">
+          <p class="text-sm text-zinc-500">記事が見つかりませんでした。</p>
+        </div>
+      )}
+
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .prose-news :global(h2) {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #27272a;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid #d4d4d8;
+  }
+  .prose-news :global(h3) {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #3f3f46;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .prose-news :global(p) {
+    margin-bottom: 1rem;
+  }
+  .prose-news :global(a) {
+    color: #2d3a30;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .prose-news :global(ul),
+  .prose-news :global(ol) {
+    padding-left: 1.25rem;
+    margin-bottom: 1rem;
+  }
+  .prose-news :global(li) {
+    margin-bottom: 0.25rem;
+  }
+  .prose-news :global(img) {
+    max-width: 100%;
+    height: auto;
+    margin: 1.5rem 0;
+  }
+</style>

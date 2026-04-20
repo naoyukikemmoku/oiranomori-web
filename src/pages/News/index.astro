@@ -1,0 +1,87 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getOshirasePage } from "../../lib/oshirase";
+
+const LIMIT = 10;
+const page = 1;
+
+let items: any[] = [];
+let totalCount = 0;
+
+try {
+  const res = await getOshirasePage(page, LIMIT);
+  items = res.contents;
+  totalCount = res.totalCount;
+} catch (e) {
+  console.warn("[news] microCMS 取得失敗", e);
+}
+
+const totalPages = Math.ceil(totalCount / LIMIT);
+
+function formatDate(str: string) {
+  const d = new Date(str);
+  return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, "0")}.${String(d.getDate()).padStart(2, "0")}`;
+}
+---
+
+<BaseLayout title="お知らせ | おいらの森" description="おいらの森からのお知らせ一覧です。">
+  <div class="min-h-screen bg-[#f4f5f2] pb-24">
+    <div class="mx-auto max-w-3xl px-5">
+
+      <div class="pt-16 pb-10">
+        <p class="text-xs tracking-[0.28em] text-zinc-400 uppercase">News</p>
+        <h1 class="mt-3 text-2xl font-semibold text-zinc-800 md:text-3xl">お知らせ</h1>
+      </div>
+
+      {items.length === 0 ? (
+        <p class="text-sm text-zinc-500">現在お知らせはありません。</p>
+      ) : (
+        <ul class="divide-y divide-zinc-300 border-t border-zinc-300">
+          {items.map((item) => (
+            <li>
+              <a href={`/news/${item.id}/`} class="group block py-7 transition hover:bg-zinc-100/60 -mx-2 px-2">
+                <div class="flex flex-wrap items-center gap-3 mb-2">
+                  <time class="text-xs tracking-[0.12em] text-zinc-400" datetime={item.date}>
+                    {formatDate(item.date)}
+                  </time>
+                  {item.category && (
+                    <span class="text-xs tracking-[0.1em] text-zinc-500 border border-zinc-300 px-2 py-0.5">
+                      {item.category}
+                    </span>
+                  )}
+                </div>
+                <p class="text-sm font-medium text-zinc-800 leading-snug group-hover:text-[color:var(--forest-700)]">
+                  {item.title}
+                </p>
+                {item.description && (
+                  <p class="mt-1.5 text-xs leading-loose text-zinc-500 line-clamp-2">
+                    {item.description}
+                  </p>
+                )}
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {/* ページネーション */}
+      {totalPages > 1 && (
+        <nav class="mt-12 flex items-center justify-between border-t border-zinc-300 pt-8 text-sm">
+          <span class="opacity-0 pointer-events-none">← 前へ</span>
+          {page < totalPages && (
+            <a
+              href="/news/page/2/"
+              class="flex items-center gap-1.5 text-zinc-600 transition hover:text-zinc-900"
+            >
+              次へ
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14"/><path d="M13 6l6 6-6 6"/>
+              </svg>
+            </a>
+          )}
+        </nav>
+      )}
+
+    </div>
+  </div>
+</BaseLayout>
