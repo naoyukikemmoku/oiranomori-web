@@ -208,31 +208,8 @@ import PageLayout from "../../layouts/PageLayout.astro";
   {/* キャンセルポリシー */}
   <section id="cancellation" class="mb-14">
     <h2 class="mb-5 text-xl font-semibold text-zinc-800">キャンセルポリシー</h2>
-    <div class="overflow-x-auto border-y border-zinc-200">
-      <table class="w-full min-w-[400px] text-sm">
-        <thead>
-          <tr class="border-b border-zinc-200 bg-zinc-50">
-            <th class="px-4 py-3 text-left font-medium text-zinc-600">キャンセル期間</th>
-            <th class="px-4 py-3 text-center font-medium text-zinc-600">キャンセル料</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-zinc-100">
-          {[
-            { period: "8日以前",            fee: "無料" },
-            { period: "3〜7日前",           fee: "30%" },
-            { period: "前日",               fee: "50%" },
-            { period: "当日・無断キャンセル", fee: "100%" },
-          ].map((row) => (
-            <tr class="hover:bg-zinc-50 transition">
-              <td class="px-4 py-3 text-zinc-700">{row.period}</td>
-              <td class="px-4 py-3 text-center font-semibold text-zinc-800">{row.fee}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-    <p class="mt-3 text-xs text-zinc-400">
-      ※ キャンセルポリシーはプランにより異なる場合があります。予約ページにてご確認ください。
+    <p class="text-sm text-zinc-600">
+      キャンセルポリシーについては<a href="/policy/#cancel" class="underline underline-offset-2 hover:text-zinc-900 transition">利用規約</a>をご確認ください。
     </p>
   </section>
 
