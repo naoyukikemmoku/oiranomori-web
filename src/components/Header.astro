@@ -7,41 +7,29 @@ const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.s
 ---
 
 <header id="site-header" class="site-header">
-  <div class="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
+
+  {/* Row 1: ロゴ ／ [PCのみ切り替えタブ] ／ 天気 ＋ ハンバーガー */}
+  <div class="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-2 md:py-3">
     <a href="/" class="flex items-center gap-2 shrink-0" aria-label="おいらの森トップへ">
-      <img src="/images/logo/logo-w512.png" alt="おいらの森ロゴ" class="h-8 w-auto" />
+      <img src="/images/logo/logo-w512.png" alt="おいらの森ロゴ" class="h-8 md:h-10 w-auto" />
       <span class="sr-only">おいらの森</span>
     </a>
 
-    <nav class="header-switch min-w-0 border-b border-zinc-300/80" aria-label="森の切り替え">
+    {/* PC のみ: Row 1 中央に切り替えタブ */}
+    <nav class="header-switch hidden md:grid" aria-label="森の切り替え">
       {topSwitch.map((item) => (
         <a
           href={item.href}
           class={`header-switch__item ${isActive(item.href) ? "is-active" : ""}`}
           aria-current={isActive(item.href) ? "page" : undefined}
         >
-          <span class="hidden sm:inline">{item.href === "/" ? "ライトフォレスト" : "ディープフォレスト"}</span>
-          <span class="sm:hidden text-center leading-tight">
-            {item.href === "/" ? (
-              <>
-                Light
-                <br />
-                Forest
-              </>
-            ) : (
-              <>
-                Deep
-                <br />
-                Forest
-              </>
-            )}
-          </span>
+          {item.label}
         </a>
       ))}
     </nav>
 
     <div class="flex items-center gap-2 shrink-0">
-      <a href="/now/" class="header-weather hidden sm:inline-flex" aria-label="現在の天気">
+      <a href="/now/" class="header-weather inline-flex" aria-label="現在の天気">
         <span id="header-weather-icon" aria-hidden="true">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="4"></circle>
@@ -60,6 +48,20 @@ const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.s
       <HamburgerMenu />
     </div>
   </div>
+
+  {/* Row 2: スマホのみ・切り替えタブ（横幅100% × 2等分、高コントラスト） */}
+  <nav class="md:hidden grid grid-cols-2 border-t border-zinc-200/70" aria-label="森の切り替え">
+    {topSwitch.map((item) => (
+      <a
+        href={item.href}
+        class={`header-switch-mobile__item ${isActive(item.href) ? "is-active" : ""}`}
+        aria-current={isActive(item.href) ? "page" : undefined}
+      >
+        {item.label}
+      </a>
+    ))}
+  </nav>
+
 </header>
 
 <script>

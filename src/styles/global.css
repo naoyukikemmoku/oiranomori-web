@@ -5,8 +5,14 @@
   --forest-700: #1f2820;
   --forest-600: #2d3a30;
   --forest-100: #eef1ec;
-  --header-height: 72px;
+  --header-height: 82px; /* mobile: 2-row */
   --header-offset: calc(var(--header-height) + 10px);
+}
+
+@media (min-width: 768px) {
+  :root {
+    --header-height: 72px; /* PC: 1-row */
+  }
 }
 
 @layer base {
@@ -56,6 +62,14 @@
 
   .header-weather {
     @apply items-center gap-2 rounded-full border border-zinc-300 px-3 py-1.5 text-sm text-zinc-700 transition hover:border-zinc-400 hover:bg-white;
+  }
+
+  .header-switch-mobile__item {
+    @apply block py-2 px-2 text-center text-xs font-medium tracking-wide leading-snug text-zinc-400 bg-zinc-100/70 transition;
+  }
+
+  .header-switch-mobile__item.is-active {
+    @apply bg-[color:var(--forest-700)] text-white font-semibold;
   }
 
   .menu-toggle,
