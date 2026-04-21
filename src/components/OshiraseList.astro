@@ -2,34 +2,23 @@
 type Item = {
   id: string;
   title: string;
-  description?: string;
-  content?: string;
-  date: string;
-  category: string;
+  subtitle?: string;
+  publishedAt: string;
+  category?: string | string[];
 };
 
 const { items } = Astro.props as { items: Item[] };
 
-const fmt = (iso: string) => (iso ? iso.slice(0, 10) : "");
-
-const clip = (s: string, n = 20) => {
-  const t = (s ?? "").trim();
-  return t.length > n ? t.slice(0, n) + "…" : t;
+const fmt = (iso: string) => {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return "";
+  return iso.slice(0, 10);
 };
 
-// リッチエディタ（HTML）からテキスト化（簡易）
-const stripHtml = (html: string) =>
-  (html ?? "")
-    .replace(/<[^>]*>/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-
-const getPreview = (it: Item) => {
-  const base =
-    it.description && it.description.trim()
-      ? it.description
-      : stripHtml(it.content ?? "");
-  return clip(base || "（内容なし）", 20);
+const categoryLabel = (cat?: string | string[]) => {
+  if (!cat) return "";
+  return Array.isArray(cat) ? cat.join(" / ") : cat;
 };
 ---
 
@@ -49,14 +38,18 @@ const getPreview = (it: Item) => {
             title={it.title}
           >
             <div class="flex items-center gap-3 min-w-0">
-              <span class="shrink-0">{fmt(it.date)}</span>
-              <span class="shrink-0 px-2 py-0.5 rounded border border-gray-300 bg-white/70">
-                {it.category}
-              </span>
+              <span class="shrink-0">{fmt(it.publishedAt)}</span>
+              {it.category && (
+                <span class="shrink-0 px-2 py-0.5 rounded border border-gray-300 bg-white/70">
+                  {categoryLabel(it.category)}
+                </span>
+              )}
               <span class="shrink-0">{it.title}</span>
-              <span class="min-w-0 truncate">
-                {getPreview(it)}
-              </span>
+              {it.subtitle && (
+                <span class="min-w-0 truncate text-zinc-500">
+                  {it.subtitle}
+                </span>
+              )}
             </div>
           </a>
         </li>
