@@ -183,8 +183,10 @@ const spotsJson = JSON.stringify(spots);
     }
     const color = PIN_COLORS[view] ?? "#555";
     const bounds = new google.maps.LatLngBounds();
+    let singlePos = null;
     catSpots.forEach(function(spot) {
       const pos = { lat: spot.lat, lng: spot.lng };
+      singlePos = pos;
       const marker = new google.maps.marker.AdvancedMarkerElement({
         map: gmap,
         position: pos,
@@ -208,7 +210,7 @@ const spotsJson = JSON.stringify(spots);
       bounds.extend(pos);
     });
     if (catSpots.length === 1) {
-      gmap.setCenter(pos);
+      gmap.setCenter(singlePos);
       gmap.setZoom(17);
     } else {
       gmap.fitBounds(bounds, 60);

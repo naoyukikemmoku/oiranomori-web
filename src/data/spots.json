@@ -1,0 +1,105 @@
+{
+  "_meta": {
+    "description": "おいらの森 /map/ ページ用ピンデータ",
+    "categories": {
+      "light": "Light Forest（場内）",
+      "food": "食事",
+      "bath": "お風呂",
+      "shopping": "買い物",
+      "sightseeing": "観光",
+      "emergency": "緊急・医療"
+    },
+    "note": "緯度経度はWGS84。commentは「おいらのひとこと」として口語で。"
+  },
+
+  "light": [
+    {
+      "id": "light-reception",
+      "name": "受付",
+      "lat": 36.639896,
+      "lng": 140.068402,
+      "comment": "チェックインはこちら。17時までにお越しください。"
+    },
+    {
+      "id": "light-toilet",
+      "name": "水洗トイレ",
+      "lat": 36.640474,
+      "lng": 140.067743,
+      "comment": "24時間利用可。夜間も照明あります。"
+    },
+    {
+      "id": "light-sink-heater",
+      "name": "給湯器付き流し",
+      "lat": 36.640800,
+      "lng": 140.067340,
+      "comment": "お湯が出ます。飲用可。"
+    },
+    {
+      "id": "light-sink-2",
+      "name": "流し2",
+      "lat": 36.640887,
+      "lng": 140.068303,
+      "comment": "飲用可。夜間も使えます。"
+    }
+  ],
+
+  "food": [
+    { "id": "food-01", "name": "", "lat": 0, "lng": 0, "comment": "" },
+    { "id": "food-02", "name": "", "lat": 0, "lng": 0, "comment": "" },
+    { "id": "food-03", "name": "", "lat": 0, "lng": 0, "comment": "" },
+    { "id": "food-04", "name": "", "lat": 0, "lng": 0, "comment": "" },
+    { "id": "food-05", "name": "", "lat": 0, "lng": 0, "comment": "" },
+    { "id": "food-06", "name": "", "lat": 0, "lng": 0, "comment": "" },
+    { "id": "food-07", "name": "", "lat": 0, "lng": 0, "comment": "" },
+    { "id": "food-08", "name": "", "lat": 0, "lng": 0, "comment": "" },
+    { "id": "food-09", "name": "", "lat": 0, "lng": 0, "comment": "" },
+    { "id": "food-10", "name": "", "lat": 0, "lng": 0, "comment": "" }
+  ],
+
+  "bath": [
+    { "id": "bath-01", "name": "", "lat": 0, "lng": 0, "comment": "" },
+    { "id": "bath-02", "name": "", "lat": 0, "lng": 0, "comment": "" },
+    { "id": "bath-03", "name": "", "lat": 0, "lng": 0, "comment": "" },
+    { "id": "bath-04", "name": "", "lat": 0, "lng": 0, "comment": "" },
+    { "id": "bath-05", "name": "", "lat": 0, "lng": 0, "comment": "" },
+    { "id": "bath-06", "name": "", "lat": 0, "lng": 0, "comment": "" },
+    { "id": "bath-07", "name": "", "lat": 0, "lng": 0, "comment": "" },
+    { "id": "bath-08", "name": "", "lat": 0, "lng": 0, "comment": "" },
+    { "id": "bath-09", "name": "", "lat": 0, "lng": 0, "comment": "" },
+    { "id": "bath-10", "name": "", "lat": 0, "lng": 0, "comment": "" }
+  ],
+
+  "shopping": [
+    { "id": "shop-01", "name": "", "lat": 0, "lng": 0, "comment": "" },
+    { "id": "shop-02", "name": "", "lat": 0, "lng": 0, "comment": "" },
+    { "id": "shop-03", "name": "", "lat": 0, "lng": 0, "comment": "" },
+    { "id": "shop-04", "name": "", "lat": 0, "lng": 0, "comment": "" },
+    { "id": "shop-05", "name": "", "lat": 0, "lng": 0, "comment": "" },
+    { "id": "shop-06", "name": "", "lat": 0, "lng": 0, "comment": "" },
+    { "id": "shop-07", "name": "", "lat": 0, "lng": 0, "comment": "" },
+    { "id": "shop-08", "name": "", "lat": 0, "lng": 0, "comment": "" },
+    { "id": "shop-09", "name": "", "lat": 0, "lng": 0, "comment": "" },
+    { "id": "shop-10", "name": "", "lat": 0, "lng": 0, "comment": "" }
+  ],
+
+  "sightseeing": [
+    { "id": "sight-01", "name": "", "lat": 0, "lng": 0, "comment": "" },
+    { "id": "sight-02", "name": "", "lat": 0, "lng": 0, "comment": "" },
+    { "id": "sight-03", "name": "", "lat": 0, "lng": 0, "comment": "" },
+    { "id": "sight-04", "name": "", "lat": 0, "lng": 0, "comment": "" },
+    { "id": "sight-05", "name": "", "lat": 0, "lng": 0, "comment": "" },
+    { "id": "sight-06", "name": "", "lat": 0, "lng": 0, "comment": "" },
+    { "id": "sight-07", "name": "", "lat": 0, "lng": 0, "comment": "" },
+    { "id": "sight-08", "name": "", "lat": 0, "lng": 0, "comment": "" },
+    { "id": "sight-09", "name": "", "lat": 0, "lng": 0, "comment": "" },
+    { "id": "sight-10", "name": "", "lat": 0, "lng": 0, "comment": "" }
+  ],
+
+  "emergency": [
+    { "id": "emg-hospital-01", "name": "", "lat": 0, "lng": 0, "comment": "夜間救急対応。" },
+    { "id": "emg-clinic-01", "name": "", "lat": 0, "lng": 0, "comment": "" },
+    { "id": "emg-pharmacy-01", "name": "", "lat": 0, "lng": 0, "comment": "" },
+    { "id": "emg-police-01", "name": "", "lat": 0, "lng": 0, "comment": "" },
+    { "id": "emg-fire-01", "name": "", "lat": 0, "lng": 0, "comment": "" }
+  ]
+}
