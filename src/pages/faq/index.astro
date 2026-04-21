@@ -1,0 +1,500 @@
+---
+import PageLayout from "../../layouts/PageLayout.astro";
+
+const categories = [
+  { id: "reservation",    label: "予約・キャンセル" },
+  { id: "checkin",        label: "チェックイン・アウト" },
+  { id: "site-selection", label: "サイト選び・初めての方" },
+  { id: "facility-rules", label: "設備・ルール" },
+  { id: "light-forest",   label: "ライトフォレスト" },
+  { id: "deep-forest",    label: "ディープフォレスト" },
+  { id: "shop",           label: "薪・レンタル・売店" },
+  { id: "access",         label: "アクセス・周辺" },
+  { id: "nature",         label: "自然・生き物" },
+  { id: "others",         label: "その他" },
+];
+---
+
+<PageLayout title="よくある質問 | おいらの森">
+
+  {/* ページヘッダー */}
+  <div class="mb-10 border-b border-zinc-200 pb-8">
+    <p class="text-xs tracking-[0.26em] text-zinc-400 uppercase">FAQ</p>
+    <h1 class="mt-3 text-3xl font-semibold text-zinc-800 md:text-4xl">よくある質問</h1>
+    <p class="mt-4 max-w-2xl text-base leading-loose text-zinc-600">
+      ご利用前に寄せられることの多いご質問をまとめました。
+      より詳しい内容は各ページへのリンクをご確認ください。
+    </p>
+    <nav class="mt-6 flex flex-wrap gap-3 text-sm" aria-label="カテゴリ目次">
+      {categories.map((cat) => (
+        <a
+          href={`#${cat.id}`}
+          class="rounded-full border border-zinc-300 px-4 py-1.5 text-zinc-600 transition hover:border-zinc-500 hover:text-zinc-800"
+        >
+          {cat.label}
+        </a>
+      ))}
+    </nav>
+  </div>
+
+  {/* 予約・キャンセル */}
+  <section id="reservation" class="mb-14 scroll-mt-20">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">予約・キャンセル</h2>
+    <div class="divide-y divide-zinc-100 border-y border-zinc-200">
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. 予約はどこからできますか？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          当HPの予約ボタン、または楽天トラベルキャンプからご予約いただけます。会員登録（無料）をすると、次回以降の入力省略・複数プラン同時予約・ポイント付与などの特典があります。
+        </p>
+        <p class="mt-2 text-sm">
+          <a href="/reservation-guide/" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">詳しくは予約ガイドへ →</a>
+        </p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. 当日予約はできますか？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          サイトに空きがあれば、お電話のみで当日受付いたします。ただし料金は当日料金となり、HP表示の料金とは異なります。事前のご予約をおすすめします。
+        </p>
+        <p class="mt-2 text-sm text-zinc-600">
+          TEL: <a href="tel:05036471047" class="underline underline-offset-2 transition hover:text-zinc-900">050-3647-1047</a>
+        </p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. 予約の内容を変更したい。</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          軽微な変更（人数・車台数）は当日清算で対応します。サイト追加は新規予約としてお手続きください。日程変更やサイト数の減少は、一度キャンセルしてから再予約、またはお電話でご相談ください。
+        </p>
+        <p class="mt-2 text-sm">
+          <a href="/reservation-guide/#change" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">詳しくは予約ガイドへ →</a>
+        </p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. キャンセルしたい。</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          予約確認メールに記載のリンクからキャンセル手続きができます。<strong class="text-zinc-800">当日キャンセルのみキャンセル料100%</strong>を申し受けます（それ以前は無料）。無断キャンセルは100%請求となります。
+        </p>
+        <p class="mt-2 text-sm">
+          <a href="/policy/#cancel" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">キャンセルポリシーの詳細 →</a>
+        </p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. 予約日を間違えた。</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          気づいた時点でキャンセルし、正しい日程で再予約してください。当日扱いになる前であればキャンセル料はかかりません。間に合わない場合はすぐにお電話ください。
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  {/* チェックイン・アウト */}
+  <section id="checkin" class="mb-14 scroll-mt-20">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">チェックイン・チェックアウト</h2>
+    <div class="divide-y divide-zinc-100 border-y border-zinc-200">
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. チェックイン・チェックアウトの時間は？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          チェックイン 12:00〜17:00 / チェックアウト 12:00 です。17時以降のチェックイン・合流・夜間の出入りはできません。
+        </p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. アーリーチェックインはできますか？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          エリアに余裕がある場合に限り、9:00から無料でアーリーチェックインが可能です。前日までに<a href="/contact/" class="underline underline-offset-2 transition hover:text-zinc-900">お問い合わせフォーム</a>またはお電話よりご連絡ください。
+        </p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. 早朝にチェックアウトしたい。</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          6:00前のチェックアウトはできません（ディープフォレストは7:00前不可）。事前にご相談ください。
+        </p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. チェックイン後の外出はできますか？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          6:00〜18:00まで自由に出入りいただけます。<strong class="text-zinc-800">門限18:00</strong>以降は車の移動ができません。お風呂や買い物は早めにお願いします。
+        </p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. デイキャンプで延長利用したい。</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          空きがあれば宿泊からの延長は日帰り料金で18:00まで可能です。18時以降は宿泊料金、翌6:00まで出入り不可となります。
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  {/* サイト選び・初めての方 */}
+  <section id="site-selection" class="mb-14 scroll-mt-20">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">サイト選び・初めての方</h2>
+    <div class="divide-y divide-zinc-100 border-y border-zinc-200">
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. どのサイトを選んだらよいかわからない。</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">ざっくりの目安は以下の通りです。</p>
+        <ul class="mt-3 space-y-2 text-sm leading-loose text-zinc-600">
+          <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400"></span><span><strong class="text-zinc-800">ファミリー・グループ（4人以上・車あり）</strong> → ライトフォレストのオートサイト L・LL・XL</span></li>
+          <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400"></span><span><strong class="text-zinc-800">カップル・2〜3人</strong> → ライトフォレストのオート M・Sサイズ</span></li>
+          <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400"></span><span><strong class="text-zinc-800">ソロで静かに過ごしたい</strong> → ライトフォレストのSSサイズ（ソロ区画）</span></li>
+          <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400"></span><span><strong class="text-zinc-800">ソロで直火・野営感</strong> → ライトフォレストのソロ区画3〜11番（直火OK）または区画C</span></li>
+          <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400"></span><span><strong class="text-zinc-800">愛犬と一緒に</strong> → ドッグランサイト（貸切1組限定・ノーリードOK）</span></li>
+          <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400"></span><span><strong class="text-zinc-800">車を持たない</strong> → 電車キャンパー歓迎プラン（送迎無料）</span></li>
+          <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400"></span><span><strong class="text-zinc-800">ブッシュクラフト・上級者・静寂重視</strong> → ディープフォレスト（18歳以上限定）</span></li>
+        </ul>
+        <p class="mt-3 text-sm text-zinc-600">迷う場合はお電話でご相談ください。</p>
+        <p class="mt-2 text-sm">
+          <a href="/light-guide/" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">ライトフォレスト利用案内</a>
+          <span class="mx-1 text-zinc-400">／</span>
+          <a href="/deep-guide/" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">ディープフォレスト利用案内</a>
+        </p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. キャンプが初めてですが大丈夫ですか？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          大丈夫です。ライトフォレストはおいら家族が敷地内に常駐しており、初心者・女性・ファミリーも安心してご利用いただけます。売店で薪・焚き火台・斧などのレンタル・販売もあります（食材のみご持参ください）。まずはオートサイト（車横付け可）がおすすめです。
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  {/* 設備・ルール */}
+  <section id="facility-rules" class="mb-14 scroll-mt-20">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">設備・ルール</h2>
+    <div class="divide-y divide-zinc-100 border-y border-zinc-200">
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. シャワーはありますか？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          <strong class="text-zinc-800">ありません</strong>。車で10分以内の範囲に日帰り温泉が複数あるため、そちらをご利用ください。
+        </p>
+        <p class="mt-2 text-sm">
+          <a href="/access/#area" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">周辺案内へ →</a>
+        </p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. トイレは？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          ライトフォレストは水洗・洋式の新築トイレ（男女各2室）があります。ディープフォレスト内にはトイレがないため、ライトフォレスト管理棟の水洗トイレをご利用ください。
+        </p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. Wi-Fi・携帯電波は？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          ライトフォレストでは無料Wi-Fiが利用可能です（ソロ区画・オートA・Bはエリア外）。携帯電波は両フィールドとも入ります。
+        </p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. AC電源は使えますか？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          ライトフォレストの一部サイトで有料オプションとしてご利用いただけます（消費電力600Wまで）。ディープフォレストにはありません。
+        </p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. 発電機は使えますか？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          <strong class="text-zinc-800">両フィールドとも使用禁止</strong>です。
+        </p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. 花火はできますか？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          <strong class="text-zinc-800">打ち上げ花火は両フィールドとも禁止</strong>です。（※手持ち花火の可否は要確認）
+        </p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. BBQはできますか？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          できます。ライトフォレストは全サイトで焚き火台使用可、ソロ区画3〜11番と区画Cは直火も可能です。ディープフォレストは全面直火可能。食材はお持ち込みください。
+        </p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. ゴミは捨てられますか？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          灰以外はすべてお持ち帰りください。灰は指定のペール缶（ライトフォレスト薪小屋の黒ペール缶）に蓋をして入れてください。
+        </p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. ペットは連れて来られますか？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          ライトフォレストのドッグランサイトはノーリードOK、その他のサイトはリード必須です。ふんの処理・管理は飼い主の責任でお願いします。ディープフォレストのペット可否は要確認。
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  {/* ライトフォレスト */}
+  <section id="light-forest" class="mb-14 scroll-mt-20">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">ライトフォレスト</h2>
+    <div class="divide-y divide-zinc-100 border-y border-zinc-200">
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. ライトフォレストはどんなフィールドですか？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          コナラ・クヌギの明るい落葉広葉樹林に囲まれたキャンプサイト。管理人家族が敷地内に常駐しており、初心者・女性・ファミリーも安心です。敷地18,000坪・収容約120人。所在地は栃木県那須烏山市福岡。
+        </p>
+        <p class="mt-2 text-sm">
+          <a href="/light-guide/" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">ライトフォレスト利用案内 →</a>
+        </p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. どんなサイトがありますか？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          オートサイト（車乗り入れ可）、区画サイト（近隣駐車場）、ソロ区画、ドッグランサイト、区画外（お好きな場所でキャンプ）があります。
+        </p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. 直火はできますか？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          オートサイトは焚き火台使用。区画サイトC・ソロ区画3〜11番は直火可能です。
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  {/* ディープフォレスト */}
+  <section id="deep-forest" class="mb-14 scroll-mt-20">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">ディープフォレスト</h2>
+    <div class="divide-y divide-zinc-100 border-y border-zinc-200">
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. ディープフォレストはどんなフィールドですか？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          樹齢80年のスギ・ヒノキの針葉樹林、敷地14,000坪（東京ドームほぼ同サイズ）。野営・ブッシュクラフト・静寂を求める上級者向けフィールドです。ライトフォレストから車で約7分。
+        </p>
+        <p class="mt-2 text-sm">
+          <a href="/deep-guide/" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">ディープフォレスト利用案内 →</a>
+        </p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. 誰でも利用できますか？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          <strong class="text-zinc-800">18歳以上限定</strong>です。入場時に年齢確認書類（免許証・パスポート等）のご提示が必要です。未成年の方はいかなる理由でも入場できません。
+        </p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. 直火はできますか？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          <strong class="text-zinc-800">全面直火可能</strong>です。ただし火消し壺の持参が必須（受付で500円レンタルあり）、立木の枯れ枝・積んである丸太の使用は厳禁です。
+        </p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. 設備は？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          <strong class="text-zinc-800">仮設トイレのみ。水道・電源・売店はありません</strong>。自己完結型のフィールドです。飲料水・必要物資はライトフォレストで調達してください。
+        </p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. 場所はどこですか？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          場所は非公開です。ライトフォレスト管理棟で受付・案内を受けた後、現地へ移動していただきます。
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  {/* 薪・レンタル・売店 */}
+  <section id="shop" class="mb-14 scroll-mt-20">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">薪・レンタル・売店</h2>
+    <div class="divide-y divide-zinc-100 border-y border-zinc-200">
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. 売店の営業時間は？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">9:00〜17:30（季節延長営業あり）。</p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. 薪は買えますか？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          はい。おいらが自家生産した薪を割安で販売しています。
+        </p>
+        <p class="mt-2 text-sm">
+          <a href="/firewood/" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">おいらの薪 →</a>
+        </p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. 何が買えますか？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          生ビール・缶ビール・ソフトドリンク・薪・炭・焚き火台・斧・ログスプリッターなど。食材の販売はありません。
+        </p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. 手ぶらキャンプはできますか？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">可能です（食材のみご持参ください）。</p>
+      </div>
+
+    </div>
+  </section>
+
+  {/* アクセス・周辺 */}
+  <section id="access" class="mb-14 scroll-mt-20">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">アクセス・周辺</h2>
+    <div class="divide-y divide-zinc-100 border-y border-zinc-200">
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. 場所はどこですか？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          栃木県那須烏山市、東京から車で約2時間です。
+        </p>
+        <p class="mt-2 text-sm">
+          <a href="/access/" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">アクセスページ →</a>
+        </p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. おいらの森がカーナビに出てこない。</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">以下の住所でご検索ください。</p>
+        <ul class="mt-3 space-y-2 text-sm leading-loose text-zinc-600">
+          <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400"></span><span><strong class="text-zinc-800">ライトフォレスト</strong>：栃木県那須烏山市福岡</span></li>
+          <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400"></span><span><strong class="text-zinc-800">ディープフォレスト</strong>：場所非公開のため、ライトフォレストで受付後に現地案内</span></li>
+        </ul>
+        <p class="mt-3 text-sm text-zinc-600">それでも到達できない場合はお電話ください。</p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. 電車で行けますか？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          JR烏山線「滝駅」が最寄りです。電車キャンパー向けに駅送迎プランがあります。
+        </p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. 周辺の温泉は？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">車で10分以内に複数の日帰り温泉があります。</p>
+        <p class="mt-2 text-sm">
+          <a href="/access/#area" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">周辺案内 →</a>
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  {/* 自然・生き物 */}
+  <section id="nature" class="mb-14 scroll-mt-20">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">自然・生き物</h2>
+    <div class="divide-y divide-zinc-100 border-y border-zinc-200">
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. クマはいますか？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">いません。</p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. 虫はいますか？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          います。森ならではの昆虫に出会えるのが魅力のひとつです。昆虫採集もOKですが、持ち帰りはご自身で飼育できる範囲までにしてください。
+        </p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. 蛇・スズメバチは？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          います。森の中では当たり前の存在です。見かけても慌てず、距離を取って行動してください。
+        </p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. 蛍は見られますか？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          見られます。ライトフォレストの谷で<strong class="text-zinc-800">6月頃</strong>にゲンジボタルが飛びます。毎年「ホタル観賞会」イベントも開催しています。
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  {/* その他 */}
+  <section id="others" class="mb-14 scroll-mt-20">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">その他</h2>
+    <div class="divide-y divide-zinc-100 border-y border-zinc-200">
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. 管理人はいますか？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          ライトフォレストにはおいら家族が敷地内に常駐しています。ディープフォレストは無人管理で、受付はライトフォレストで行います。
+        </p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. 雨でも営業していますか？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          基本的に営業します。台風等の荒天時は事前にお知らせします。
+        </p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. 団体・撮影・貸し切りは可能ですか？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          「団体・貸し切り・撮影会プラン」があります。ご予約ページからどうぞ。
+        </p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. 問い合わせ先は？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          TEL: <a href="tel:05036471047" class="underline underline-offset-2 transition hover:text-zinc-900">050-3647-1047</a><br />
+          Mail: <a href="mailto:oira@oiranomori.jp" class="underline underline-offset-2 transition hover:text-zinc-900">oira@oiranomori.jp</a>
+        </p>
+        <p class="mt-2 text-sm">
+          <a href="/contact/" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">お問い合わせフォーム →</a>
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  {/* CTA */}
+  <div class="mt-12 bg-[color:var(--forest-100)] px-8 py-10 text-center">
+    <p class="text-sm text-zinc-500">ご不明な点は</p>
+    <p class="mt-2 text-xl font-semibold text-zinc-800">お気軽にお問い合わせください</p>
+    <p class="mt-3 text-sm leading-loose text-zinc-600">
+      電話・メール・フォームで受け付けています。
+    </p>
+    <div class="mt-6 flex flex-wrap justify-center gap-3">
+      <a
+        href="/contact/"
+        class="inline-flex items-center justify-center rounded-full bg-[color:var(--forest-600)] px-8 py-3 text-sm text-white shadow-sm transition hover:bg-[color:var(--forest-700)]"
+      >
+        お問い合わせフォーム
+      </a>
+      <a
+        href="tel:05036471047"
+        class="inline-flex items-center justify-center rounded-full border border-zinc-400 px-8 py-3 text-sm text-zinc-700 transition hover:border-zinc-600"
+      >
+        050-3647-1047
+      </a>
+    </div>
+  </div>
+
+</PageLayout>
