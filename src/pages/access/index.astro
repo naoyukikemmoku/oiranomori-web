@@ -2,7 +2,10 @@
 import LpLayout from "../../layouts/LpLayout.astro";
 ---
 
-<LpLayout title="アクセス・場内マップ | おいらの森">
+<LpLayout
+  title="アクセス・場内マップ | おいらの森"
+  description="那須烏山の里山パークおいらの森へのアクセス。JR烏山線・お車でのルート、カーナビの注意点、鴻野山駅からの送迎プランなど。道に迷ったらTEL 050-3647-1047へ。"
+>
 
   {/* Hero */}
   <section
@@ -47,7 +50,15 @@ import LpLayout from "../../layouts/LpLayout.astro";
       <p class="text-xs tracking-[0.32em] text-amber-400 uppercase">Important</p>
       <h2 class="mt-4 text-2xl font-semibold text-white md:text-3xl">必読：来場前に確認してください</h2>
 
-      <div class="mt-10 grid gap-6 md:grid-cols-2">
+      {/* 電話番号 */}
+      <div class="mt-8 flex items-center gap-4 rounded-2xl border border-zinc-700 bg-zinc-800 px-7 py-5">
+        <span class="text-zinc-400 text-sm shrink-0">道に迷ったら・たどり着けない場合</span>
+        <a href="tel:05036471047" class="text-lg font-semibold tracking-wider text-white transition hover:text-zinc-300">
+          TEL 050-3647-1047
+        </a>
+      </div>
+
+      <div class="mt-6 grid gap-6 md:grid-cols-2">
 
         {/* カーナビ禁止 */}
         <div class="rounded-2xl border border-amber-400/30 bg-amber-400/5 p-7">
@@ -94,6 +105,7 @@ import LpLayout from "../../layouts/LpLayout.astro";
   </section>
 
   {/* お車・バイクでのアクセス */}
+
   <section id="car" class="bg-[#f4f4f5] py-20 md:py-28">
     <div class="mx-auto max-w-6xl px-5">
       <p class="text-xs tracking-[0.32em] text-zinc-400 uppercase">By Car / Motorbike</p>

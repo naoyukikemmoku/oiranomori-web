@@ -2,7 +2,10 @@
 import PageLayout from "../../layouts/PageLayout.astro";
 ---
 
-<PageLayout title="予約ガイド | おいらの森">
+<PageLayout
+  title="予約ガイド | おいらの森"
+  description="那須烏山・里山パークおいらの森の予約ガイド。オンライン予約の手順、会員登録のメリット、キャンセルポリシーをわかりやすく解説します。"
+>
 
   <div class="mb-10 border-b border-zinc-200 pb-8">
     <p class="text-xs tracking-[0.26em] text-zinc-400 uppercase">Reservation Guide</p>
@@ -13,12 +16,11 @@ import PageLayout from "../../layouts/PageLayout.astro";
     </p>
     <nav class="mt-6 flex flex-wrap gap-3 text-sm">
       {[
-        { href: "#steps",        label: "予約の手順" },
-        { href: "#online",       label: "ネット予約の特徴" },
-        { href: "#member",       label: "会員制度・ポイント" },
-        { href: "#change",       label: "変更・キャンセル" },
-        { href: "#phone",        label: "電話予約について" },
-        { href: "#cancellation", label: "キャンセルポリシー" },
+        { href: "#steps",  label: "予約の手順" },
+        { href: "#online", label: "ネット予約の特徴" },
+        { href: "#member", label: "会員制度・ポイント" },
+        { href: "#change", label: "変更・キャンセル" },
+        { href: "#phone",  label: "電話予約について" },
       ].map((item) => (
         <a
           href={item.href}

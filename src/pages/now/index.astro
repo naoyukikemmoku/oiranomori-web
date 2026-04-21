@@ -3,7 +3,10 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import Header from "../../components/Header.astro";
 ---
 
-<BaseLayout title="森のいま | おいらの森">
+<BaseLayout
+  title="森のいま | おいらの森"
+  description="那須烏山の里山パークおいらの森の今の天気・気象情報。注意報・警報、アメダス現況、週間天気予報をまとめて確認できます。"
+>
 
   <link
     slot="head"
@@ -23,7 +26,7 @@ import Header from "../../components/Header.astro";
           <h1 class="mt-1 text-2xl font-semibold text-zinc-800">森のいま</h1>
         </div>
         <div class="flex items-center gap-3">
-          <p class="text-xs text-zinc-400">自動更新しません</p>
+          <p class="text-xs text-zinc-400">ページを開いた時点の情報です</p>
           <button
             id="btn-refresh"
             class="border border-zinc-300 bg-white px-4 py-2 text-xs tracking-[0.14em] text-zinc-600 transition hover:border-zinc-500 hover:text-zinc-800"

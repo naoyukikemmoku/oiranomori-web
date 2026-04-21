@@ -17,9 +17,9 @@ const menuGroups = [
       { label: "森のいま", href: "/now/", active: true },
       { label: "ライトフォレスト 利用案内", href: "/light-guide/", active: true },
       { label: "ディープフォレスト 利用案内", href: "/deep-guide/", active: true },
-      { label: "場内マップ(Light)", href: "/access/#light-detail", active: true },
-      { label: "場内マップ(Deep)", href: "/access/#deep", active: true },
-      { label: "周辺案内", href: "/access/#area", active: true },
+      { label: "場内マップ(Light)", href: "/access/#light-detail", active: false },
+      { label: "場内マップ(Deep)", href: "/access/#deep", active: false },
+      { label: "周辺案内", href: "/access/#area", active: false },
       { label: "アクセス", href: "/access/", active: true },
     ],
   },
@@ -27,14 +27,14 @@ const menuGroups = [
     title: "薪・レンタル・チケット",
     items: [
       { label: "おいらの薪", href: "/firewood/", active: true },
-      { label: "レンタル・売店", href: "/firewood/#rental", active: true },
+      { label: "レンタル・売店", href: "/firewood/#rental", active: false },
       { label: "年間パスポート・回数券", href: "/passport/", active: true },
     ],
   },
   {
     title: "森を体験する",
     items: [
-      { label: "オイラーズ", href: "/oilers/", active: true },
+      { label: "オイラーズ", href: "/oiras/", active: true },
     ],
   },
   {
@@ -53,8 +53,8 @@ const menuGroups = [
       { label: "お問い合わせ", href: "/contact/", active: true },
       { label: "よくある質問", href: "/faq/", active: true },
       { label: "キャンセルポリシー", href: "/policy/#cancel", active: true },
-      { label: "利用規約", href: "/policy/#terms", active: false },
-      { label: "プライバシーポリシー", href: "/policy/#privacy", active: false },
+      { label: "利用規約", href: "/policy/#terms", active: true },
+      { label: "プライバシーポリシー", href: "/policy/#privacy", active: true },
     ],
   },
 ];
