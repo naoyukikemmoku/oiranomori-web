@@ -1,7 +1,42 @@
 ---
 import LpLayout from "../../layouts/LpLayout.astro";
 import { Image } from "astro:assets";
-import deepHeroImg from "../../assets/images/deep_hero.jpg";
+import deepHeroImg       from "../../assets/images/deep_hero.jpg";
+import deepSilentImg     from "../../assets/images/deep_silentforest.JPEG";
+import deepNightImg      from "../../assets/images/deep_night.JPEG";
+import deepFaceImg       from "../../assets/images/deep_face.JPEG";
+import deepAnimalImg     from "../../assets/images/deep_animal.JPEG";
+
+const experiences = [
+  {
+    no: "01",
+    title: "耳がキーンとするほどの静寂",
+    desc: "日常から切り離された場所にだけ存在する、完全な静寂。スピーカーも、エンジン音も、他人の声も届かない。ただ、風と葉擦れと、自分の呼吸だけ。",
+    img: deepSilentImg,
+    alt: "静まり返ったおいらの森ディープフォレストの針葉樹林",
+  },
+  {
+    no: "02",
+    title: "本物の闇に包まれる夜",
+    desc: "街灯も、コンビニの灯りも届かない深い森の夜。目が慣れるまで、真っ暗な闇がある。炎の明かりがいかに人を安心させるかを、ここで初めて知る人がいる。",
+    img: deepNightImg,
+    alt: "焚火の灯だけが揺れるディープフォレストの野営地の夜",
+  },
+  {
+    no: "03",
+    title: "変化する森の表情",
+    desc: "朝霧の中で目覚め、木漏れ日の下で朝を過ごし、夕暮れに樹齢80年のスギが金色に染まるのを見る。同じ場所が、何度も別の場所になる。",
+    img: deepFaceImg,
+    alt: "朝霧と木漏れ日が交錯するディープフォレストの森の表情",
+  },
+  {
+    no: "04",
+    title: "野生との境界線",
+    desc: "獣道があり、夜には生き物の気配がある。人間が手を加えていない自然の中に立つこと。それだけで、日常の感覚が少し変わって帰ってくる。",
+    img: deepAnimalImg,
+    alt: "おいらの森ディープフォレストに生きる野生動物の気配",
+  },
+];
 ---
 
 <LpLayout
@@ -97,33 +132,25 @@ import deepHeroImg from "../../assets/images/deep_hero.jpg";
       <p class="text-xs tracking-[0.28em] text-zinc-500 uppercase">Experiences</p>
       <h2 class="mt-4 text-3xl font-semibold text-white md:text-4xl">4つの情緒的体験</h2>
 
-      <div class="mt-12 grid gap-8 sm:grid-cols-2">
-        {[
-          {
-            no: "01",
-            title: "耳がキーンとするほどの静寂",
-            desc: "日常から切り離された場所にだけ存在する、完全な静寂。スピーカーも、エンジン音も、他人の声も届かない。ただ、風と葉擦れと、自分の呼吸だけ。",
-          },
-          {
-            no: "02",
-            title: "本物の闇に包まれる夜",
-            desc: "街灯も、コンビニの灯りも届かない深い森の夜。目が慣れるまで、真っ暗な闇がある。炎の明かりがいかに人を安心させるかを、ここで初めて知る人がいる。",
-          },
-          {
-            no: "03",
-            title: "変化する森の表情",
-            desc: "朝霧の中で目覚め、木漏れ日の下で朝を過ごし、夕暮れに樹齢80年のスギが金色に染まるのを見る。同じ場所が、何度も別の場所になる。",
-          },
-          {
-            no: "04",
-            title: "野生との境界線",
-            desc: "獣道があり、夜には生き物の気配がある。人間が手を加えていない自然の中に立つこと。それだけで、日常の感覚が少し変わって帰ってくる。",
-          },
-        ].map((item) => (
-          <div class="border-t border-zinc-700 pt-8">
-            <p class="text-3xl font-semibold text-zinc-700">{item.no}</p>
-            <h3 class="mt-3 text-lg font-semibold text-white">{item.title}</h3>
-            <p class="mt-3 text-sm leading-loose text-zinc-400">{item.desc}</p>
+      <div class="mt-12 grid gap-1 sm:grid-cols-2">
+        {experiences.map((item) => (
+          <div class="group relative overflow-hidden" style="aspect-ratio:4/3;">
+            <Image
+              src={item.img}
+              alt={item.alt}
+              width={800}
+              height={600}
+              quality={80}
+              loading="lazy"
+              decoding="async"
+              class="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent"></div>
+            <div class="absolute bottom-0 p-6">
+              <p class="text-2xl font-semibold text-zinc-700">{item.no}</p>
+              <h3 class="mt-1 text-base font-semibold text-white">{item.title}</h3>
+              <p class="mt-2 text-xs leading-loose text-zinc-400">{item.desc}</p>
+            </div>
           </div>
         ))}
       </div>
