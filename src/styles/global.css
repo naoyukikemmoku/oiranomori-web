@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@plugin "daisyui";
 
 :root {
   --forest-700: #1f2820;
