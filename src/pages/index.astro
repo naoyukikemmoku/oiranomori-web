@@ -2,9 +2,15 @@
 import LpLayout from "../layouts/LpLayout.astro";
 import OshiraseList from "../components/OshiraseList.astro";
 import SeasonSlider from "../components/SeasonSlider.astro";
+import { Image } from "astro:assets";
 import { getOshirase } from "../lib/oshirase";
 
-let contents = [];
+import planStandard from "../assets/images/plan_standard.JPEG";
+import planDogrun from "../assets/images/plan_dogrun.JPEG";
+import planDaycamp from "../assets/images/plan_daycamp.JPEG";
+import planTrain from "../assets/images/plan_train.JPEG";
+
+let contents: any[] = [];
 
 try {
   const response = await getOshirase(3);
@@ -12,6 +18,45 @@ try {
 } catch (error) {
   console.warn("Failed to fetch news from microCMS.", error);
 }
+
+const plans = [
+  {
+    name: "スタンダード・\nオートサイト",
+    price: "¥3,300/サイト〜",
+    ci: "IN 9:00〜17:00",
+    co: "OUT 12:00",
+    id: 4,
+    img: planStandard,
+    alt: "那須烏山 里山パークおいらの森 スタンダード・オートサイトのキャンプサイト",
+  },
+  {
+    name: "貸切\nドッグランサイト",
+    price: "¥4,400/サイト〜",
+    ci: "IN 9:00〜17:00",
+    co: "OUT 12:00",
+    id: 7,
+    img: planDogrun,
+    alt: "那須烏山 里山パークおいらの森 貸切ドッグランサイトのキャンプサイト",
+  },
+  {
+    name: "日帰り\nデイキャンプ",
+    price: "¥1,100〜",
+    ci: "IN 9:00〜13:00",
+    co: "OUT 18:00",
+    id: 14,
+    img: planDaycamp,
+    alt: "那須烏山 里山パークおいらの森 日帰りデイキャンプのキャンプサイト",
+  },
+  {
+    name: "電車\nプラン",
+    price: "¥2,200/人〜",
+    ci: "IN 9:00〜17:00",
+    co: "OUT 12:00",
+    id: 23,
+    img: planTrain,
+    alt: "那須烏山 里山パークおいらの森 電車キャンパー歓迎プランのキャンプサイト",
+  },
+];
 ---
 
 <LpLayout
@@ -91,48 +136,23 @@ try {
       <h2 class="mt-3 text-2xl font-semibold text-zinc-800 md:text-3xl">プランを選ぶ</h2>
 
       <div class="mt-10 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
-        {[
-          {
-            name: "スタンダード・\nオートサイト",
-            price: "¥3,300/サイト〜",
-            ci: "IN 9:00〜17:00",
-            co: "OUT 12:00",
-            bg: "bg-[#2d3a30]",
-            id: 4,
-          },
-          {
-            name: "貸切\nドッグランサイト",
-            price: "¥4,400/サイト〜",
-            ci: "IN 9:00〜17:00",
-            co: "OUT 12:00",
-            bg: "bg-[#3a3228]",
-            id: 7,
-          },
-          {
-            name: "日帰り\nデイキャンプ",
-            price: "¥1,100〜",
-            ci: "IN 9:00〜13:00",
-            co: "OUT 18:00",
-            bg: "bg-[#38342a]",
-            id: 14,
-          },
-          {
-            name: "電車\nプラン",
-            price: "¥2,200/人〜",
-            ci: "IN 9:00〜17:00",
-            co: "OUT 12:00",
-            bg: "bg-[#2a3530]",
-            id: 23,
-          },
-        ].map((plan) => (
+        {plans.map((plan) => (
           <a
             href={`https://www.489pro-x.com/ja/s/oiranomori/plan/${plan.id}/`}
             target="_blank"
             rel="noopener noreferrer"
-            class={`group relative flex flex-col justify-end overflow-hidden ${plan.bg}`}
+            class="group relative flex flex-col justify-end overflow-hidden bg-zinc-900"
             style="aspect-ratio: 3/4;"
           >
-            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent transition group-hover:from-black/80"></div>
+            <Image
+              src={plan.img}
+              alt={plan.alt}
+              width={600}
+              height={800}
+              loading="lazy"
+              class="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent transition group-hover:from-black/85"></div>
             <div class="relative z-10 p-4">
               <p class="whitespace-pre-line text-sm font-medium leading-snug text-white md:text-base">
                 {plan.name}

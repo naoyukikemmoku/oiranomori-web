@@ -1,5 +1,7 @@
 ---
 import LpLayout from "../../layouts/LpLayout.astro";
+import { Image } from "astro:assets";
+import deepHeroImg from "../../assets/images/deep_hero.jpg";
 ---
 
 <LpLayout
@@ -10,9 +12,16 @@ import LpLayout from "../../layouts/LpLayout.astro";
   {/* Hero */}
   <section
     id="top"
-    class="relative flex min-h-[90vh] items-center bg-cover bg-center"
-    style="background-image:url('/images/lp/hero.jpg');"
+    class="relative flex min-h-[90vh] items-center"
   >
+    <Image
+      src={deepHeroImg}
+      alt="ディープフォレスト 樹齢80年のスギ・ヒノキが立ち並ぶ針葉樹林"
+      width={1920}
+      height={1080}
+      loading="eager"
+      class="absolute inset-0 h-full w-full object-cover"
+    />
     <div class="absolute inset-0 bg-black/70"></div>
     <div class="relative z-10 mx-auto max-w-6xl px-5 py-28">
       <p class="text-xs tracking-[0.32em] text-zinc-400 uppercase">Deep Forest</p>
@@ -150,6 +159,17 @@ import LpLayout from "../../layouts/LpLayout.astro";
       </p>
     </div>
   </section>
+
+  {/* ビジュアルブレイク */}
+  <div class="relative h-[300px] overflow-hidden">
+    <img
+      src="/images/lp/scene-01.jpg"
+      alt="ディープフォレストの森"
+      loading="lazy"
+      class="absolute inset-0 h-full w-full object-cover"
+    />
+    <div class="absolute inset-0 bg-black/50"></div>
+  </div>
 
   {/* Plans */}
   <section id="plans" class="bg-[color:var(--forest-700)] py-16 md:py-20">

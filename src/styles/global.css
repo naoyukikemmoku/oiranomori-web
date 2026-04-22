@@ -5,6 +5,9 @@
   --forest-700: #1f2820;
   --forest-600: #2d3a30;
   --forest-100: #eef1ec;
+  --light-accent: #7da329;       /* ライトフォレスト: 広葉樹林の陽光グリーン */
+  --light-accent-hover: #699020;
+  --light-accent-text: #1e3506;  /* --light-accent 上の濃いテキスト */
   --header-height: 82px; /* mobile: 2-row */
   --header-offset: calc(var(--header-height) + 10px);
 }
@@ -49,15 +52,22 @@
   }
 
   .header-switch {
-    @apply grid grid-cols-2 overflow-hidden rounded-xl border border-zinc-300 bg-white/90;
+    @apply grid grid-cols-2 overflow-hidden rounded-xl border border-zinc-300;
   }
 
   .header-switch__item {
-    @apply min-w-[106px] px-3 py-2 text-center text-xs sm:text-sm font-medium text-zinc-600 transition;
+    @apply min-w-[106px] px-3 py-2 text-center text-xs sm:text-sm font-medium transition bg-zinc-100/80 text-zinc-400;
   }
 
-  .header-switch__item.is-active {
-    @apply bg-[color:var(--forest-100)] text-[color:var(--forest-700)] shadow-sm;
+  .header-switch__item.is-light.is-active {
+    background: var(--light-accent);
+    color: var(--light-accent-text);
+    @apply font-semibold;
+  }
+
+  .header-switch__item.is-deep.is-active {
+    background: var(--forest-700);
+    @apply text-white font-semibold;
   }
 
   .header-weather {
@@ -68,8 +78,15 @@
     @apply block py-2 px-2 text-center text-xs font-medium tracking-wide leading-snug text-zinc-400 bg-zinc-100/70 transition;
   }
 
-  .header-switch-mobile__item.is-active {
-    @apply bg-[color:var(--forest-700)] text-white font-semibold;
+  .header-switch-mobile__item.is-light.is-active {
+    background: var(--light-accent);
+    color: var(--light-accent-text);
+    @apply font-semibold;
+  }
+
+  .header-switch-mobile__item.is-deep.is-active {
+    background: var(--forest-700);
+    @apply text-white font-semibold;
   }
 
   .menu-toggle,
@@ -114,7 +131,13 @@
   }
 
   .reserve-cta {
-    @apply inline-flex items-center gap-2 rounded-full bg-[color:var(--forest-600)] px-7 py-3 text-sm text-white shadow-lg shadow-black/20 transition hover:-translate-y-0.5 hover:bg-[color:var(--forest-700)];
+    background: var(--light-accent);
+    color: var(--light-accent-text);
+    @apply inline-flex items-center gap-2 rounded-full px-7 py-3 text-sm font-semibold shadow-lg shadow-black/20 transition hover:-translate-y-0.5;
+  }
+
+  .reserve-cta:hover {
+    background: var(--light-accent-hover);
   }
 
   .reserve-cta svg {
@@ -159,7 +182,13 @@
   }
 
   .lp-btn-primary {
-    @apply inline-flex items-center justify-center rounded-full bg-[color:var(--forest-600)] px-7 py-3 text-sm text-white shadow-md transition hover:-translate-y-0.5 hover:bg-[color:var(--forest-700)];
+    background: var(--light-accent);
+    color: var(--light-accent-text);
+    @apply inline-flex items-center justify-center rounded-full px-7 py-3 text-sm font-semibold shadow-md transition hover:-translate-y-0.5;
+  }
+
+  .lp-btn-primary:hover {
+    background: var(--light-accent-hover);
   }
 
   .lp-btn-outline {
@@ -167,14 +196,14 @@
   }
 
   .lp-footer {
-    @apply border-t border-zinc-200 bg-[#f6f7f5] text-zinc-700;
+    @apply border-t border-zinc-800 bg-[#111914] text-zinc-400;
   }
 
   .footer-link {
-    @apply text-zinc-600 transition hover:text-zinc-900;
+    @apply text-zinc-500 transition hover:text-zinc-200;
   }
 
   .footer-sns {
-    @apply rounded-full border border-zinc-300 px-4 py-2 text-xs tracking-[0.12em] text-zinc-700 transition hover:border-zinc-500 hover:bg-white;
+    @apply rounded-full border border-zinc-700 px-4 py-2 text-xs tracking-[0.12em] text-zinc-500 transition hover:border-zinc-500 hover:text-zinc-200;
   }
 }

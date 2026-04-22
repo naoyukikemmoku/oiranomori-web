@@ -20,7 +20,7 @@ const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.s
       {topSwitch.map((item) => (
         <a
           href={item.href}
-          class={`header-switch__item ${isActive(item.href) ? "is-active" : ""}`}
+          class={`header-switch__item ${item.href === "/" ? "is-light" : "is-deep"} ${isActive(item.href) ? "is-active" : ""}`}
           aria-current={isActive(item.href) ? "page" : undefined}
         >
           {item.label}
@@ -54,7 +54,7 @@ const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.s
     {topSwitch.map((item) => (
       <a
         href={item.href}
-        class={`header-switch-mobile__item ${isActive(item.href) ? "is-active" : ""}`}
+        class={`header-switch-mobile__item ${item.href === "/" ? "is-light" : "is-deep"} ${isActive(item.href) ? "is-active" : ""}`}
         aria-current={isActive(item.href) ? "page" : undefined}
       >
         {item.label}
