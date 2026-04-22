@@ -60,52 +60,89 @@ const menuGroups = [
 ];
 ---
 
-<div class="drawer drawer-end">
-  <input id="site-menu-drawer" type="checkbox" class="drawer-toggle" />
+{/* 開くボタン */}
+<button id="menu-open-btn" class="menu-toggle" aria-label="メニューを開く" aria-expanded="false">
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+    <path d="M2 4h16M2 10h16M2 16h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+  </svg>
+</button>
 
-  <div class="drawer-content">
-    <label for="site-menu-drawer" class="menu-toggle" aria-label="メニューを開く">
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-        <path d="M2 4h16M2 10h16M2 16h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
-      </svg>
-    </label>
+{/* オーバーレイ */}
+<div
+  id="menu-overlay"
+  class="fixed inset-0 z-[64] bg-black/50 opacity-0 pointer-events-none transition-opacity duration-300"
+  aria-hidden="true"
+></div>
+
+{/* パネル */}
+<aside
+  id="menu-panel"
+  class="menu-panel fixed right-0 top-0 z-[65] translate-x-full transition-transform duration-300"
+  aria-hidden="true"
+>
+  <div class="mb-5 flex items-center justify-between">
+    <p class="text-sm tracking-[0.2em] uppercase text-zinc-500">Menu</p>
+    <button id="menu-close-btn" class="menu-close" aria-label="メニューを閉じる">✕</button>
   </div>
 
-  <div class="drawer-side z-[65]">
-    <label for="site-menu-drawer" aria-label="メニューを閉じる" class="drawer-overlay"></label>
-    <aside class="menu-panel">
-      <div class="mb-5 flex items-center justify-between">
-        <p class="text-sm tracking-[0.2em] uppercase text-zinc-500">Menu</p>
-        <label for="site-menu-drawer" class="menu-close" aria-label="メニューを閉じる">✕</label>
-      </div>
-
-      <div class="menu-grid">
-        {menuGroups.map((group) => (
-          <section>
-            <p class="menu-group-title">{group.title}</p>
-            <div class="menu-items">
-              {group.items.map((item) =>
-                item.active ? (
-                  <a
-                    class="menu-link"
-                    href={item.href}
-                    target={item.external ? "_blank" : undefined}
-                    rel={item.external ? "noopener" : undefined}
-                  >
-                    {item.label}
-                    {item.external && <span class="text-xs opacity-50">↗</span>}
-                  </a>
-                ) : (
-                  <span class="menu-link is-disabled" aria-disabled="true">
-                    {item.label}
-                    <span class="text-xs">(準備中)</span>
-                  </span>
-                )
-              )}
-            </div>
-          </section>
-        ))}
-      </div>
-    </aside>
+  <div class="menu-grid">
+    {menuGroups.map((group) => (
+      <section>
+        <p class="menu-group-title">{group.title}</p>
+        <div class="menu-items">
+          {group.items.map((item) =>
+            item.active ? (
+              <a
+                class="menu-link"
+                href={item.href}
+                target={item.external ? "_blank" : undefined}
+                rel={item.external ? "noopener" : undefined}
+              >
+                {item.label}
+                {item.external && <span class="text-xs opacity-50">↗</span>}
+              </a>
+            ) : (
+              <span class="menu-link is-disabled" aria-disabled="true">
+                {item.label}
+                <span class="text-xs">(準備中)</span>
+              </span>
+            )
+          )}
+        </div>
+      </section>
+    ))}
   </div>
-</div>
+</aside>
+
+<script>
+  const openBtn  = document.getElementById("menu-open-btn");
+  const closeBtn = document.getElementById("menu-close-btn");
+  const overlay  = document.getElementById("menu-overlay");
+  const panel    = document.getElementById("menu-panel");
+
+  function openMenu() {
+    panel?.classList.remove("translate-x-full");
+    panel?.setAttribute("aria-hidden", "false");
+    overlay?.classList.remove("opacity-0", "pointer-events-none");
+    overlay?.classList.add("opacity-100");
+    openBtn?.setAttribute("aria-expanded", "true");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeMenu() {
+    panel?.classList.add("translate-x-full");
+    panel?.setAttribute("aria-hidden", "true");
+    overlay?.classList.add("opacity-0", "pointer-events-none");
+    overlay?.classList.remove("opacity-100");
+    openBtn?.setAttribute("aria-expanded", "false");
+    document.body.style.overflow = "";
+  }
+
+  openBtn?.addEventListener("click", openMenu);
+  closeBtn?.addEventListener("click", closeMenu);
+  overlay?.addEventListener("click", closeMenu);
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeMenu();
+  });
+</script>
