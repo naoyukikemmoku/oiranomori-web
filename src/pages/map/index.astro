@@ -3,8 +3,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import Header from "../../components/Header.astro";
 import spotsRaw from "../../data/spots.json";
 
-// APIキーはGoogleCloudコンソールでドメイン制限済みのため直書き
-const API_KEY = import.meta.env.PUBLIC_GMAPS_API_KEY || "AIzaSyB5bZhitM81id3rdD0C-SNBkPD4qwXh_Fs";
+const API_KEY = import.meta.env.PUBLIC_GMAPS_API_KEY ?? "";
 
 const CATEGORIES = [
   { key: "light",       label: "Light Forest" },
