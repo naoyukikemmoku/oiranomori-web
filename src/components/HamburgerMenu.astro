@@ -116,10 +116,15 @@ const menuGroups = [
 </aside>
 
 <script>
+  // site-header has backdrop-filter which makes fixed children relative to the
+  // header instead of the viewport. Move overlay and panel to <body> to restore
+  // correct fixed positioning.
+  const overlay = document.getElementById("menu-overlay");
+  const panel   = document.getElementById("menu-panel");
+  if (overlay && panel) document.body.append(overlay, panel);
+
   const openBtn  = document.getElementById("menu-open-btn");
   const closeBtn = document.getElementById("menu-close-btn");
-  const overlay  = document.getElementById("menu-overlay");
-  const panel    = document.getElementById("menu-panel");
 
   function openMenu() {
     panel?.classList.remove("translate-x-full");
