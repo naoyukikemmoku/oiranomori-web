@@ -1,0 +1,208 @@
+---
+import PageLayout from "../../layouts/PageLayout.astro";
+
+const rentalCategories = [
+  {
+    emoji: "🏕",
+    title: "テント・タープ",
+    items: [
+      { name: "Coleman ツーリングドーム",  price: "¥2,700" },
+      { name: "Snowpeak アメニティドームL", price: "¥6,100" },
+      { name: "Snowpeak ヘキサイーズ",     price: "¥6,700" },
+      { name: "BUNDOK ソロベースEX",       price: "¥4,100" },
+      { name: "OneTigris コニファー",      price: "¥3,800" },
+      { name: "DOD ショウネンテントTC",    price: "¥4,900" },
+      { name: "DDタープ",                 price: "¥1,100" },
+      { name: "DDハンモック",              price: "¥1,100" },
+    ],
+  },
+  {
+    emoji: "💤",
+    title: "寝具",
+    items: [
+      { name: "シュラフ（3シーズン）",        price: "¥1,100" },
+      { name: "シュラフ（寒冷地用 Coleman）", price: "¥3,000" },
+      { name: "キャンピングベッド",            price: "¥1,100" },
+      { name: "マット",                       price: "¥300" },
+    ],
+  },
+  {
+    emoji: "💡",
+    title: "照明",
+    items: [
+      { name: "LEDランタン",              price: "¥220" },
+      { name: "ガソリンランタン（Coleman）", price: "¥900" },
+      { name: "オイルランタン",            price: "¥500" },
+      { name: "LEDヘッドライト",           price: "¥110" },
+      { name: "ランタンスタンド",          price: "¥300" },
+    ],
+  },
+  {
+    emoji: "🪑",
+    title: "家具",
+    items: [
+      { name: "キャンピングチェア",  price: "¥300" },
+      { name: "キャンピングテーブル", price: "¥500" },
+    ],
+  },
+  {
+    emoji: "🍳",
+    title: "調理ギア",
+    items: [
+      { name: "BBQコンロ",                price: "¥1,100" },
+      { name: "七輪（燃料付）",            price: "¥1,500" },
+      { name: "コッヘルセット（6人用）",    price: "¥1,000" },
+      { name: "シェラケトル",              price: "¥200" },
+      { name: "ハンドルケトル",            price: "¥200" },
+      { name: "肉厚ミニ鉄板",              price: "¥100" },
+      { name: "カセットコンロ（ガス買取）", price: "¥900" },
+      { name: "ホットサンドメーカー",       price: "¥300" },
+      { name: "タイ焼きメーカー",          price: "¥300" },
+      { name: "コーヒーロースターセット",   price: "¥1,500" },
+    ],
+  },
+  {
+    emoji: "🔥",
+    title: "焚き火",
+    items: [
+      { name: "Colemanファイアーディスク",   price: "¥800" },
+      { name: "Colemanボンファイアーツール", price: "¥300" },
+      { name: "墨壺",                       price: "¥500" },
+    ],
+  },
+  {
+    emoji: "❄️",
+    title: "冬期限定",
+    items: [
+      { name: "薪ストーブ",  price: "¥1,800" },
+      { name: "石油ストーブ", price: "¥1,100" },
+    ],
+    note: "冬期のみの取り扱いです",
+  },
+  {
+    emoji: "🧊",
+    title: "その他",
+    items: [
+      { name: "クーラーボックス", price: "¥500" },
+    ],
+  },
+];
+
+const setupService = [
+  { label: "設営（小型テント）", price: "¥1,000" },
+  { label: "設営（中型テント）", price: "¥1,500" },
+  { label: "設営（大型テント）", price: "¥2,000" },
+  { label: "撤収（小型テント）", price: "¥1,500" },
+  { label: "撤収（中型テント）", price: "¥2,000" },
+  { label: "撤収（大型テント）", price: "¥3,000" },
+];
+
+const returnRules = [
+  { title: "返却時間", body: "翌朝10:00までに管理棟へ" },
+  { title: "清掃", body: "薪ストーブ・BBQコンロ等は、灰を捨て軽く清掃した状態でお戻しください" },
+  { title: "破損・紛失", body: "速やかにスタッフまでお申し出ください" },
+];
+---
+
+<PageLayout
+  title="レンタル | おいらの森"
+  description="那須烏山・里山パークおいらの森のレンタルアイテム一覧。テント・寝具・ランタン・調理器具・焚き火台など、キャンプに必要な道具を1泊単位でお貸しします。"
+>
+
+  {/* ページヘッダー */}
+  <div class="mb-10 border-b border-zinc-200 pb-8">
+    <p class="text-xs tracking-[0.26em] text-zinc-400 uppercase">Rental</p>
+    <h1 class="mt-3 text-3xl font-semibold text-zinc-800 md:text-4xl">レンタル</h1>
+    <p class="mt-4 max-w-2xl text-base leading-loose text-zinc-600">
+      手ぶらでも、足りないものだけでも。<br />
+      森で使う道具を、必要な分だけお貸しします。
+    </p>
+  </div>
+
+  {/* お申し込み方法 */}
+  <section class="mb-14">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">お申し込み方法</h2>
+    <dl class="divide-y divide-zinc-100 border-y border-zinc-200 text-sm">
+      <div class="grid grid-cols-[7rem_1fr] gap-4 py-4 sm:grid-cols-[10rem_1fr]">
+        <dt class="font-semibold text-zinc-700">テント</dt>
+        <dd class="leading-loose text-zinc-600">予約システムのオプション項目から選択してください。</dd>
+      </div>
+      <div class="grid grid-cols-[7rem_1fr] gap-4 py-4 sm:grid-cols-[10rem_1fr]">
+        <dt class="font-semibold text-zinc-700">その他の道具</dt>
+        <dd class="leading-loose text-zinc-600">
+          ご予約時の備考欄に、ご希望のアイテムを記載してください。
+          当日受付でのリクエストも可能ですが、数に限りがありますので事前のご連絡をおすすめします。
+        </dd>
+      </div>
+    </dl>
+  </section>
+
+  {/* レンタルアイテム */}
+  <section class="mb-14">
+    <h2 class="mb-2 text-xl font-semibold text-zinc-800">レンタルアイテム</h2>
+    <p class="mb-6 text-xs text-zinc-400">※ 価格は1泊あたり（税込）です。</p>
+
+    <div class="space-y-0">
+      {rentalCategories.map((cat) => (
+        <div class="border-t border-zinc-200 pt-6 pb-2">
+          <h3 class="mb-3 text-base font-semibold text-zinc-700">
+            {cat.emoji}&nbsp;{cat.title}
+          </h3>
+          {cat.note && (
+            <p class="mb-2 text-xs text-zinc-400">{cat.note}</p>
+          )}
+          <div class="overflow-x-auto">
+            <table class="w-full min-w-[280px] text-sm">
+              <tbody class="divide-y divide-zinc-100">
+                {cat.items.map((item) => (
+                  <tr class="transition hover:bg-zinc-50">
+                    <td class="py-2.5 pr-4 text-zinc-600">{item.name}</td>
+                    <td class="py-2.5 text-right font-medium tabular-nums text-zinc-700">{item.price}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ))}
+      <div class="border-t border-zinc-200" />
+    </div>
+  </section>
+
+  {/* テント設営・撤収サービス */}
+  <section class="mb-14">
+    <h2 class="mb-2 text-xl font-semibold text-zinc-800">テント設営・撤収サービス</h2>
+    <p class="mb-5 text-sm text-zinc-500">ご自身での設営・撤収が難しい方向けのサービスです。</p>
+    <div class="overflow-x-auto border-y border-zinc-200">
+      <table class="w-full min-w-[280px] text-sm">
+        <tbody class="divide-y divide-zinc-100">
+          {setupService.map((row) => (
+            <tr class="transition hover:bg-zinc-50">
+              <td class="py-3 pl-4 text-zinc-600">{row.label}</td>
+              <td class="py-3 pr-4 text-right font-medium tabular-nums text-zinc-700">{row.price}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  {/* 返却ルール */}
+  <section class="mb-14">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">返却ルール</h2>
+    <dl class="divide-y divide-zinc-100 border-y border-zinc-200 text-sm">
+      {returnRules.map((rule) => (
+        <div class="grid grid-cols-[6rem_1fr] gap-4 py-4 sm:grid-cols-[9rem_1fr]">
+          <dt class="font-semibold text-zinc-700">{rule.title}</dt>
+          <dd class="leading-loose text-zinc-600">{rule.body}</dd>
+        </div>
+      ))}
+    </dl>
+  </section>
+
+  {/* お問い合わせ */}
+  <p class="text-sm text-zinc-500">
+    数量・在庫のご確認はお気軽にスタッフまで。
+  </p>
+
+</PageLayout>

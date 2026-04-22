@@ -1,0 +1,148 @@
+---
+import PageLayout from "../../layouts/PageLayout.astro";
+
+const checkoutSteps = [
+  { step: "SCAN",    desc: "店頭のQRコードを読み取る" },
+  { step: "SELECT",  desc: "オンラインストアで商品を選び、決済する" },
+  { step: "PICK UP", desc: "商品をお持ち帰りください" },
+];
+
+const shopCategories = [
+  {
+    emoji: "🍺",
+    title: "ドリンク",
+    lines: [
+      "ビール：生ビール、サッポロ黒ラベル、ハイネケン、コロナ、各種缶ビール",
+      "ハイボール・チューハイ：ハイボール（S/M/L/メガ）、氷結、本絞り、翠ジンソーダ、ホワイトホース",
+      "ノンアルコール：ゼロイチ",
+      "ソフトドリンク：コカ・コーラ、ファンタ、アクエリアス、お〜いお茶、カルピス、ライフガード、龍門サイダー、タリーズコーヒー、炭酸水、ミネラルウォーター",
+    ],
+  },
+  {
+    emoji: "🔥",
+    title: "焚き火・着火",
+    lines: [
+      "着火剤、ジェル型着火剤、文化焚き付け、チャッカマスター、ハイチャッカー、マッチ",
+    ],
+  },
+  {
+    emoji: "⛽",
+    title: "燃料・ガス・炭",
+    lines: [
+      "ガス缶：CB缶（IWATANI / SOTO）、OD缶（250ml / 500ml / SOTOトリプル）",
+      "炭：木炭3kg、おが備長炭3kg、キングスフォードチャコール、ウェーバーチャコール",
+    ],
+  },
+  {
+    emoji: "🥬",
+    title: "産直食材",
+    lines: [
+      "とちおとめ、カボチャ※、スイカ※、シチュー※、金時、サツマイモ、サトイモ、ナシ、原木舞茸、名古屋コーチンの卵、新鮮たまご、アユ",
+    ],
+    note: "※は時価",
+  },
+  {
+    emoji: "🕯",
+    title: "ローソク・灯り",
+    lines: [
+      "ローソク、サクラの円盤ローソク、エクストラバージンオイル",
+    ],
+  },
+  {
+    emoji: "🛠",
+    title: "消耗品・その他",
+    lines: [
+      "BBQアミ、丸アミ、乾電池（時価）、氷、マシュマロ、コーヒー生豆、蚊取り線香、ミニスウェーデントーチ、ヤギの餌",
+    ],
+  },
+];
+
+const bulkSales = [
+  { item: "生ビール",                 unit: "1ml", price: "¥1",   note: "マイグラス持参歓迎" },
+  { item: "ハイボール",               unit: "1ml", price: "¥1",   note: "マイグラス持参歓迎" },
+  { item: "パラフィンオイル（燃料用）", unit: "1g",  price: "¥3",   note: "オイルランタン用" },
+  { item: "灯油",                     unit: "1L",  price: "¥150", note: "家庭用20L缶から給油" },
+];
+---
+
+<PageLayout
+  title="売店 | おいらの森"
+  description="那須烏山・里山パークおいらの森の売店。ビール・ソフトドリンク・炭・産直食材・量り売りなど、キャンプに必要なものを取り揃えています。"
+>
+
+  {/* ページヘッダー */}
+  <div class="mb-10 border-b border-zinc-200 pb-8">
+    <p class="text-xs tracking-[0.26em] text-zinc-400 uppercase">Shop</p>
+    <h1 class="mt-3 text-3xl font-semibold text-zinc-800 md:text-4xl">売店</h1>
+    <p class="mt-4 max-w-2xl text-base leading-loose text-zinc-600">
+      キャンプに必要なひと通りを揃えています。
+    </p>
+  </div>
+
+  {/* セルフ精算の流れ */}
+  <section class="mb-14">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">セルフ精算の流れ</h2>
+    <ol class="divide-y divide-zinc-100 border-y border-zinc-200">
+      {checkoutSteps.map((s, i) => (
+        <li class="grid grid-cols-[1.5rem_5rem_1fr] items-baseline gap-4 py-5 sm:grid-cols-[1.5rem_7rem_1fr]">
+          <span class="text-sm tabular-nums text-zinc-400">{i + 1}</span>
+          <span class="text-sm font-semibold tracking-[0.14em] text-zinc-700">{s.step}</span>
+          <span class="text-sm leading-relaxed text-zinc-600">{s.desc}</span>
+        </li>
+      ))}
+    </ol>
+    <p class="mt-3 text-xs leading-relaxed text-zinc-400">
+      ※ オンラインストアは検索エンジンには公開していません。店頭のQRコードからのみアクセスできます。
+    </p>
+  </section>
+
+  {/* 取り扱い商品 */}
+  <section class="mb-14">
+    <h2 class="mb-6 text-xl font-semibold text-zinc-800">取り扱い</h2>
+    <div class="space-y-0">
+      {shopCategories.map((cat) => (
+        <div class="border-t border-zinc-200 py-6">
+          <h3 class="mb-3 text-base font-semibold text-zinc-700">
+            {cat.emoji}&nbsp;{cat.title}
+          </h3>
+          <div class="space-y-2">
+            {cat.lines.map((line) => (
+              <p class="text-sm leading-loose text-zinc-600">{line}</p>
+            ))}
+          </div>
+          {cat.note && (
+            <p class="mt-2 text-xs text-zinc-400">{cat.note}</p>
+          )}
+        </div>
+      ))}
+      <div class="border-t border-zinc-200" />
+    </div>
+  </section>
+
+  {/* 量り売り */}
+  <section class="mb-14">
+    <h2 class="mb-1 text-xl font-semibold text-zinc-800">⚗️&nbsp;量り売り</h2>
+    <p class="mb-5 text-sm text-zinc-500">計量販売。必要な分だけを、余さず。</p>
+    <div class="overflow-x-auto border-y border-zinc-200">
+      <table class="w-full min-w-[320px] text-sm">
+        <tbody class="divide-y divide-zinc-100">
+          {bulkSales.map((row) => (
+            <tr class="transition hover:bg-zinc-50">
+              <td class="py-3 pl-4 pr-2 text-zinc-700">{row.item}</td>
+              <td class="py-3 px-2 text-zinc-400">{row.note}</td>
+              <td class="py-3 pl-2 pr-4 text-right font-medium text-zinc-700">
+                {row.price}&thinsp;<span class="font-normal text-zinc-400">/ {row.unit}</span>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  {/* お問い合わせ */}
+  <p class="text-sm text-zinc-500">
+    商品の在庫・リクエストなどはスタッフまでお声がけください。
+  </p>
+
+</PageLayout>
