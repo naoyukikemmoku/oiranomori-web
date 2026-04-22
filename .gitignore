@@ -1,0 +1,32 @@
+# 環境変数・機密
+.env
+.env.local
+.env.*.local
+.env.production
+.env.development
+
+# Astro ビルド成果物
+dist/
+.astro/
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# IDE・エディタ
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Wrangler / Cloudflare
+.wrangler/
