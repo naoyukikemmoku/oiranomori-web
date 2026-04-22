@@ -5,9 +5,9 @@
   --forest-700: #1f2820;
   --forest-600: #2d3a30;
   --forest-100: #eef1ec;
-  --light-accent: #7da329;       /* ライトフォレスト: 広葉樹林の陽光グリーン */
-  --light-accent-hover: #699020;
-  --light-accent-text: #1e3506;  /* --light-accent 上の濃いテキスト */
+  --light-accent: #488B37;       /* ライトフォレスト テーマカラー */
+  --light-accent-hover: #3d7a2e;
+  --light-accent-text: #ffffff;
   --header-height: 82px; /* mobile: 2-row */
   --header-offset: calc(var(--header-height) + 10px);
 }
