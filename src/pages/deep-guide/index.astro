@@ -13,25 +13,30 @@ const facilities = [
 ];
 ---
 
+<style is:global>
+  /* ディープフォレスト利用案内ページ専用：ダーク基調 */
+  body { background-color: #111914; }
+</style>
+
 <PageLayout
   title="ディープフォレスト 利用案内 | おいらの森"
   description="那須烏山・里山パークおいらの森のディープフォレスト利用案内。18歳以上限定フィールドのチェックイン・設備・禁止事項・基本4鉄則を詳しく解説します。"
 >
 
   {/* ページ見出し */}
-  <div class="mb-10 border-b border-zinc-200 pb-8">
-    <p class="text-xs tracking-[0.26em] text-zinc-400 uppercase">Deep Forest</p>
-    <h1 class="mt-3 text-3xl font-semibold text-zinc-800 md:text-4xl">ディープフォレスト<br class="sm:hidden" /> 利用案内</h1>
+  <div class="mb-10 border-b border-zinc-700 pb-8">
+    <p class="text-xs tracking-[0.26em] text-zinc-500 uppercase">Deep Forest</p>
+    <h1 class="mt-3 text-3xl font-semibold text-white md:text-4xl">ディープフォレスト<br class="sm:hidden" /> 利用案内</h1>
 
     {/* 18歳以上の注意書き */}
-    <div class="mt-5 border-l-2 border-zinc-400 pl-5">
-      <p class="text-sm leading-loose text-zinc-700">
-        <strong class="text-zinc-800">ディープフォレストは18歳以上限定のフィールドです。</strong><br />
+    <div class="mt-5 border-l-2 border-zinc-600 pl-5">
+      <p class="text-sm leading-loose text-zinc-300">
+        <strong class="text-white">ディープフォレストは18歳以上限定のフィールドです。</strong><br />
         入場時に年齢確認書類（免許証・パスポート等）をご提示ください。未成年者の入場はいかなる理由でも不可です。
       </p>
     </div>
 
-    <p class="mt-5 max-w-2xl text-base leading-loose text-zinc-600">
+    <p class="mt-5 max-w-2xl text-base leading-loose text-zinc-400">
       樹齢80年のスギ・ヒノキが立ち並ぶ深い針葉樹林。直火、ブッシュクラフト、圧倒的な静寂。
       整備された快適さよりも、自然との真剣な対話を求める方のためのフィールドです。
     </p>
@@ -41,15 +46,15 @@ const facilities = [
 
     <nav class="mt-6 flex flex-wrap gap-3 text-sm">
       {[
-        { href: "#checkin",  label: "チェックイン" },
-        { href: "#checkout", label: "チェックアウト" },
-        { href: "#facility", label: "設備・スペック" },
-        { href: "#rules",    label: "禁止事項" },
+        { href: "#checkin",    label: "チェックイン" },
+        { href: "#checkout",   label: "チェックアウト" },
+        { href: "#facility",   label: "設備・スペック" },
+        { href: "#rules",      label: "禁止事項" },
         { href: "#principles", label: "基本4鉄則" },
       ].map((item) => (
         <a
           href={item.href}
-          class="rounded-full border border-zinc-300 px-4 py-1.5 text-zinc-600 transition hover:border-zinc-500 hover:text-zinc-800"
+          class="rounded-full border border-zinc-700 px-4 py-1.5 text-zinc-500 transition hover:border-zinc-500 hover:text-zinc-200"
         >
           {item.label}
         </a>
@@ -59,17 +64,17 @@ const facilities = [
 
   {/* チェックイン */}
   <section id="checkin" class="mb-14">
-    <h2 class="mb-5 text-xl font-semibold text-zinc-800">チェックイン</h2>
-    <dl class="divide-y divide-zinc-100 border-y border-zinc-200 text-sm">
+    <h2 class="mb-5 text-xl font-semibold text-white">チェックイン</h2>
+    <dl class="divide-y divide-zinc-800 border-y border-zinc-700 text-sm">
       {[
-        { label: "通常チェックイン",  value: "12:00〜17:00。受付場所はライトフォレスト管理棟。管理棟にて支払いと利用説明を受け、手続き完了となります。" },
+        { label: "通常チェックイン",    value: "12:00〜17:00。受付場所はライトフォレスト管理棟。管理棟にて支払いと利用説明を受け、手続き完了となります。" },
         { label: "アーリーチェックイン", value: "09:00〜。エリアに余裕がある場合に限り可能、追加料金なし。前日までに電話または問い合わせフォームより要連絡。" },
         { label: "チェックインリミット", value: "17:00（厳守）。超過時は入場不可。連絡なき場合は無断キャンセル扱いとし、キャンセル料を請求します。遅れる場合は必ず連絡してください。" },
-        { label: "直接入場特例",      value: "年間半年パスポート保持者のみ、管理棟を通らず直接入場可能です。" },
+        { label: "直接入場特例",        value: "年間半年パスポート保持者のみ、管理棟を通らず直接入場可能です。" },
       ].map((item) => (
         <div class="grid grid-cols-[10rem_1fr] gap-4 py-5 sm:grid-cols-[14rem_1fr]">
           <dt class="text-zinc-500">{item.label}</dt>
-          <dd class="text-zinc-700">{item.value}</dd>
+          <dd class="text-zinc-300">{item.value}</dd>
         </div>
       ))}
     </dl>
@@ -77,8 +82,8 @@ const facilities = [
 
   {/* チェックアウト */}
   <section id="checkout" class="mb-14">
-    <h2 class="mb-5 text-xl font-semibold text-zinc-800">チェックアウト・延長</h2>
-    <dl class="divide-y divide-zinc-100 border-y border-zinc-200 text-sm">
+    <h2 class="mb-5 text-xl font-semibold text-white">チェックアウト・延長</h2>
+    <dl class="divide-y divide-zinc-800 border-y border-zinc-700 text-sm">
       {[
         { label: "通常チェックアウト", value: "12:00。専用のチェックアウトフォーム（HPアイコンクリック）より手続きを行ってください。管理棟へ寄る必要はありませんが、薪袋・バケツ等はライトフォレストへ返却してください。" },
         { label: "早朝出発",          value: "07:00前にチェックアウトする場合は事前にお知らせください。" },
@@ -86,7 +91,7 @@ const facilities = [
       ].map((item) => (
         <div class="grid grid-cols-[10rem_1fr] gap-4 py-5 sm:grid-cols-[14rem_1fr]">
           <dt class="text-zinc-500">{item.label}</dt>
-          <dd class="text-zinc-700">{item.value}</dd>
+          <dd class="text-zinc-300">{item.value}</dd>
         </div>
       ))}
     </dl>
@@ -94,27 +99,27 @@ const facilities = [
 
   {/* 設備・スペック */}
   <section id="facility" class="mb-14">
-    <h2 class="mb-2 text-xl font-semibold text-zinc-800">設備・スペック</h2>
+    <h2 class="mb-2 text-xl font-semibold text-white">設備・スペック</h2>
     <p class="mb-5 text-sm text-zinc-500">
       ディープフォレストの設備は意図的に最小限にとどめています。自然の中で完結する準備を整えてお越しください。
     </p>
-    <dl class="divide-y divide-zinc-100 border-y border-zinc-200 text-sm">
+    <dl class="divide-y divide-zinc-800 border-y border-zinc-700 text-sm">
       {facilities.map((item) => (
         <div class="grid grid-cols-[9rem_1fr] gap-4 py-4 sm:grid-cols-[12rem_1fr]">
           <dt class="flex items-center gap-2 text-zinc-500">
             <span
-              class={`h-1.5 w-1.5 rounded-full shrink-0 ${item.avail ? "bg-[color:var(--forest-600)]" : "bg-zinc-300"}`}
+              class={`h-1.5 w-1.5 rounded-full shrink-0 ${item.avail ? "bg-[color:var(--light-accent)]" : "bg-zinc-700"}`}
             ></span>
             {item.label}
           </dt>
-          <dd class="text-zinc-700">{item.value}</dd>
+          <dd class="text-zinc-300">{item.value}</dd>
         </div>
       ))}
     </dl>
 
-    <div class="mt-6 border-l-2 border-amber-400 pl-5">
-      <p class="text-sm font-semibold text-zinc-800">車両乗り入れについて</p>
-      <p class="mt-2 text-sm leading-loose text-zinc-600">
+    <div class="mt-6 border-l-2 border-zinc-600 pl-5">
+      <p class="text-sm font-semibold text-white">車両乗り入れについて</p>
+      <p class="mt-2 text-sm leading-loose text-zinc-400">
         日没（18:00）以降の広場への車両乗り入れ、ドアの開閉、エンジン始動は禁止です。
         広場から先は車両進入禁止。傾斜がありキャリーカーの使用は困難なため、バックパックが便利です。
       </p>
@@ -123,7 +128,7 @@ const facilities = [
 
   {/* 禁止事項 */}
   <section id="rules" class="mb-14">
-    <h2 class="mb-5 text-xl font-semibold text-zinc-800">禁止事項（厳守）</h2>
+    <h2 class="mb-5 text-xl font-semibold text-white">禁止事項（厳守）</h2>
 
     <div class="grid gap-5 sm:grid-cols-2">
       {[
@@ -159,12 +164,12 @@ const facilities = [
           ],
         },
       ].map((section) => (
-        <div class="border-t border-zinc-200 pt-5">
-          <p class="mb-3 font-semibold text-zinc-700">{section.category}</p>
+        <div class="border-t border-zinc-700 pt-5">
+          <p class="mb-3 font-semibold text-zinc-300">{section.category}</p>
           <ul class="space-y-2">
             {section.items.map((item) => (
-              <li class="flex items-start gap-2 text-sm leading-snug text-zinc-600">
-                <span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400"></span>
+              <li class="flex items-start gap-2 text-sm leading-snug text-zinc-500">
+                <span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-600"></span>
                 {item}
               </li>
             ))}
@@ -176,10 +181,10 @@ const facilities = [
 
   {/* 基本4鉄則 */}
   <section id="principles" class="mb-14">
-    <h2 class="mb-5 text-xl font-semibold text-zinc-800">この森の基本4鉄則</h2>
-    <p class="mb-6 text-sm text-zinc-600">利用者が守るべき、この森の精神的基盤です。</p>
+    <h2 class="mb-5 text-xl font-semibold text-white">この森の基本4鉄則</h2>
+    <p class="mb-6 text-sm text-zinc-500">利用者が守るべき、この森の精神的基盤です。</p>
 
-    <div class="divide-y divide-zinc-200 border-y border-zinc-200">
+    <div class="divide-y divide-zinc-800 border-y border-zinc-700">
       {[
         "森の静寂と闇夜、自然の音を楽しむこと。",
         "現地で使用可能なものは「落葉・落枝」のみ。",
@@ -187,8 +192,8 @@ const facilities = [
         "トイレ以外の場所での排泄（野外排泄）は厳禁。",
       ].map((rule, i) => (
         <div class="grid grid-cols-[2rem_1fr] gap-4 py-5 text-sm">
-          <p class="text-lg font-semibold text-zinc-200">{i + 1}</p>
-          <p class="text-zinc-700">{rule}</p>
+          <p class="text-lg font-semibold text-zinc-700">{i + 1}</p>
+          <p class="text-zinc-300">{rule}</p>
         </div>
       ))}
     </div>
@@ -196,8 +201,8 @@ const facilities = [
 
   {/* ご利用ワンポイント */}
   <section class="mb-14">
-    <h2 class="mb-5 text-xl font-semibold text-zinc-800">ご利用ワンポイント（重要事項）</h2>
-    <p class="mb-5 text-sm text-zinc-600">一般的なキャンプ場との違いを認識の上、期待値を調整してお越しください。</p>
+    <h2 class="mb-5 text-xl font-semibold text-white">ご利用ワンポイント（重要事項）</h2>
+    <p class="mb-5 text-sm text-zinc-500">一般的なキャンプ場との違いを認識の上、期待値を調整してお越しください。</p>
 
     <div class="grid gap-4 sm:grid-cols-2">
       {[
@@ -209,19 +214,19 @@ const facilities = [
         { title: "足元の備え",   desc: "雨後はぬかるみやすいため、長靴の携行を推奨します。" },
         { title: "装備の選択",   desc: "傾斜がありキャリーカーの使用は困難です。大容量のバックパックでの来場を推奨します。" },
       ].map((item) => (
-        <div class="border-t border-zinc-200 pt-5">
-          <h3 class="text-sm font-semibold text-zinc-800">{item.title}</h3>
-          <p class="mt-2 text-sm leading-loose text-zinc-600">{item.desc}</p>
+        <div class="border-t border-zinc-700 pt-5">
+          <h3 class="text-sm font-semibold text-zinc-200">{item.title}</h3>
+          <p class="mt-2 text-sm leading-loose text-zinc-500">{item.desc}</p>
         </div>
       ))}
     </div>
   </section>
 
   {/* 予約CTA */}
-  <div class="mt-12 bg-[color:var(--forest-100)] px-8 py-10 text-center">
+  <div class="mt-12 border border-zinc-700 bg-[color:var(--forest-700)] px-8 py-10 text-center">
     <p class="text-sm text-zinc-500">ご予約・詳細料金の確認</p>
-    <p class="mt-2 text-xl font-semibold text-zinc-800">予約は当方の予約システムから</p>
-    <p class="mt-3 text-sm leading-loose text-zinc-600">
+    <p class="mt-2 text-xl font-semibold text-white">予約は当方の予約システムから</p>
+    <p class="mt-3 text-sm leading-loose text-zinc-400">
       会員登録で複数プラン・複数日程の同時予約が可能です。
     </p>
     <div class="mt-6 flex flex-wrap justify-center gap-3">
@@ -229,13 +234,14 @@ const facilities = [
         href="https://www.489pro-x.com/ja/s/oiranomori/planlist/"
         target="_blank"
         rel="noopener noreferrer"
-        class="inline-flex items-center justify-center rounded-full bg-[color:var(--forest-600)] px-8 py-3 text-sm text-white shadow-sm transition hover:bg-[color:var(--forest-700)]"
+        class="inline-flex items-center justify-center rounded-full px-8 py-3 text-sm font-semibold shadow-sm transition hover:opacity-90"
+        style="background:var(--light-accent);color:var(--light-accent-text);"
       >
         予約する ↗
       </a>
       <a
         href="/reservation-guide/"
-        class="inline-flex items-center justify-center rounded-full border border-zinc-400 px-8 py-3 text-sm text-zinc-700 transition hover:border-zinc-600"
+        class="inline-flex items-center justify-center rounded-full border border-zinc-600 px-8 py-3 text-sm text-zinc-400 transition hover:border-zinc-400 hover:text-zinc-200"
       >
         予約ガイドを見る
       </a>
