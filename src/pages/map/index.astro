@@ -3,7 +3,8 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import Header from "../../components/Header.astro";
 import spotsRaw from "../../data/spots.json";
 
-const API_KEY = import.meta.env.PUBLIC_GMAPS_API_KEY ?? "";
+// APIキーはGoogleCloudコンソールでドメイン制限済みのため直書き
+const API_KEY = import.meta.env.PUBLIC_GMAPS_API_KEY || "AIzaSyB5bZhitM81id3rdD0C-SNBkPD4qwXh_Fs";
 
 const CATEGORIES = [
   { key: "light",       label: "Light Forest" },
@@ -14,13 +15,11 @@ const CATEGORIES = [
   { key: "emergency",   label: "緊急・医療" },
 ] as const;
 
-type CatKey = typeof CATEGORIES[number]["key"];
-
 type Spot = { id: string; name: string; lat: number; lng: number; comment: string };
 
 const spots: Record<string, Spot[]> = {};
 for (const cat of CATEGORIES) {
-  const raw = (spotsRaw as Record<string, Spot[]>)[cat.key] ?? [];
+  const raw = ((spotsRaw as any)[cat.key] as Spot[]) ?? [];
   spots[cat.key] = raw.filter((s) => s.name !== "" && s.lat !== 0 && s.lng !== 0);
 }
 
