@@ -13,7 +13,7 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
     define: {
-      'import.meta.env.PUBLIC_GMAPS_API_KEY': JSON.stringify(process.env.PUBLIC_GMAPS_API_KEY ?? ""),
+      __GMAPS_API_KEY__: JSON.stringify(process.env.PUBLIC_GMAPS_API_KEY ?? ""),
     },
   },
 });
