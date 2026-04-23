@@ -9,7 +9,15 @@
       "sightseeing": "観光",
       "emergency": "緊急・医療"
     },
-    "note": "緯度経度はWGS84。commentは「おいらのひとこと」として口語で。"
+    "note": "緯度経度はWGS84。commentは「おいらのひとこと」として口語で。status: 'closed' で休業中扱い（省略可）。"
+  },
+
+  "home": {
+    "id": "home",
+    "name": "おいらの森",
+    "lat": 36.639896,
+    "lng": 140.068402,
+    "comment": "おいらの森のキャンプ場本体です。"
   },
 
   "light": [
@@ -39,7 +47,8 @@
       "name": "流し2",
       "lat": 36.640887,
       "lng": 140.068303,
-      "comment": "飲用可。夜間も使えます。"
+      "comment": "飲用可。夜間も使えます。",
+      "status": "closed"
     }
   ],
 

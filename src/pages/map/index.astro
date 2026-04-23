@@ -14,7 +14,9 @@ const CATEGORIES = [
   { key: "emergency",   label: "緊急・医療" },
 ] as const;
 
-type Spot = { id: string; name: string; lat: number; lng: number; comment: string };
+type Spot = { id: string; name: string; lat: number; lng: number; comment: string; status?: string };
+
+const homeSpot = (spotsRaw as any).home as { id: string; name: string; lat: number; lng: number; comment: string } | undefined;
 
 const spots: Record<string, Spot[]> = {};
 for (const cat of CATEGORIES) {
@@ -23,251 +25,725 @@ for (const cat of CATEGORIES) {
 }
 
 const spotsJson = JSON.stringify(spots);
+const homeJson = JSON.stringify(homeSpot ?? null);
 ---
 
 <BaseLayout
   title="マップ｜おいらの森"
   description="那須烏山・里山パークおいらの森の場内施設マップ、および周辺の食事・お風呂・買い物・観光・緊急スポットをご案内します。"
 >
-
   <Header />
 
-  <main class="min-h-screen bg-[#f4f5f2] pb-24 pt-[var(--header-offset)]">
-    <div class="mx-auto max-w-5xl px-5">
+  <main id="map-main">
 
-      <div class="pt-10 pb-6">
-        <p class="text-xs tracking-[0.28em] text-zinc-400 uppercase">Map</p>
-        <h1 class="mt-3 text-2xl font-semibold text-zinc-800 md:text-3xl">マップ</h1>
-        <p class="mt-2 text-sm text-zinc-500">場内の施設や周辺のおすすめスポットをご案内します。</p>
+    {/* ─── タブバー ─── */}
+    <div id="tab-row">
+      <span class="map-label">Map</span>
+      <div id="tab-scroll">
+        {CATEGORIES.map((cat) => (
+          <button type="button" data-tab={cat.key} class="tab-btn">
+            {cat.label}
+          </button>
+        ))}
+      </div>
+    </div>
+
+    {/* ─── マップ + リスト ─── */}
+    <div id="map-list-area">
+
+      {/* マップ */}
+      <div id="map-wrapper">
+        <div id="map-skeleton" aria-hidden="true">
+          <svg class="spin-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+          </svg>
+          <span>読み込み中</span>
+        </div>
+        <div id="map-error">
+          <p>マップの読み込みに失敗しました</p>
+        </div>
+        <div id="map"></div>
       </div>
 
-      {/* タブ */}
-      <div class="relative -mx-5 overflow-x-auto px-5 md:mx-0 md:px-0">
-        <div id="tab-bar" class="flex min-w-max gap-0 border-b border-zinc-300">
-          {CATEGORIES.map((cat) => (
-            <button
-              type="button"
-              data-tab={cat.key}
-              class="tab-btn relative shrink-0 px-4 py-3 text-sm tracking-wide text-zinc-500 transition hover:text-zinc-800"
-            >
-              {cat.label}
-            </button>
-          ))}
-        </div>
+      {/* Mobile: ハンドルバー */}
+      <div id="mobile-handle">
+        <div class="handle-bar"></div>
+        <span id="handle-icon">∧</span>
       </div>
 
-      {/* 準備中メッセージ */}
-      <div id="no-data-msg" class="hidden mt-4 text-sm text-zinc-400 tracking-wide">
-        このカテゴリは準備中です。
-      </div>
+      {/* PC: 境界トグルボタン */}
+      <button id="pc-toggle" aria-label="リストパネルを切り替え">
+        <span id="pc-toggle-icon">◀</span>
+      </button>
 
-      {/* マップ本体 */}
-      <div class="relative mt-4 w-full overflow-hidden rounded-none" style="height:65vh; min-height:300px; max-height:720px;">
-
-        {/* スケルトン */}
-        <div
-          id="map-skeleton"
-          class="absolute inset-0 flex items-center justify-center bg-zinc-200"
-          aria-hidden="true"
-        >
-          <div class="flex flex-col items-center gap-3 text-zinc-400">
-            <svg class="animate-spin" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
-            </svg>
-            <span class="text-xs tracking-widest">読み込み中</span>
-          </div>
+      {/* リストパネル */}
+      <div id="list-panel">
+        <div id="list-scroll">
+          <div id="no-data-msg">このカテゴリは準備中です。</div>
+          <ul id="spot-list"></ul>
         </div>
-
-        {/* エラー */}
-        <div
-          id="map-error"
-          class="absolute inset-0 hidden items-center justify-center bg-zinc-800 text-zinc-300"
-        >
-          <p class="text-sm tracking-wide">マップの読み込みに失敗しました</p>
-        </div>
-
-        {/* マップ */}
-        <div id="map" class="absolute inset-0"></div>
-
       </div>
 
     </div>
+
   </main>
 
 </BaseLayout>
 
 <style>
-  .tab-btn.is-active {
-    color: #2d5a27;
-    font-weight: 600;
-  }
-  .tab-btn.is-active::after {
-    content: "";
-    position: absolute;
-    bottom: -1px;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: #2d5a27;
+/* ═══ Main ═══ */
+#map-main {
+  height: 100vh;
+  height: 100dvh;
+  padding-top: var(--header-offset);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #f4f5f2;
+}
+
+/* ═══ Tab row ═══ */
+#tab-row {
+  flex-shrink: 0;
+  display: flex;
+  align-items: stretch;
+  border-bottom: 1px solid #d4d4d4;
+  background: #f4f5f2;
+}
+.map-label {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  color: #a0a0a0;
+  text-transform: uppercase;
+  border-right: 1px solid #d4d4d4;
+}
+#tab-scroll {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+#tab-scroll::-webkit-scrollbar { display: none; }
+.tab-btn {
+  flex-shrink: 0;
+  padding: 10px 13px;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  color: #71717a;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.15s;
+}
+.tab-btn:hover { color: #1a2421; }
+.tab-btn.is-active { color: #2d3a30; font-weight: 600; }
+.tab-btn.is-active::after {
+  content: "";
+  position: absolute;
+  bottom: -1px; left: 0; right: 0;
+  height: 2px;
+  background: #2d3a30;
+}
+
+/* ═══ Map+List area ═══ */
+#map-list-area {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* ═══ Map wrapper ═══ */
+#map-wrapper {
+  position: relative;
+  overflow: hidden;
+  transition: height 0.25s ease;
+  background: #d1d5db;
+}
+#map { position: absolute; inset: 0; }
+
+#map-skeleton {
+  position: absolute; inset: 0; z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #e0e0dc;
+  color: #9ca3af;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+}
+.spin-icon { animation: spin 1.2s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+#map-error {
+  position: absolute; inset: 0; z-index: 1;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: #1a2421;
+  color: #c0c0c0;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+}
+
+/* ═══ Mobile handle ═══ */
+#mobile-handle {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 7px 0 5px;
+  background: #e8e8e4;
+  border-top: 1px solid #d4d4d4;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s;
+}
+#mobile-handle:hover { background: #dededa; }
+.handle-bar {
+  width: 32px; height: 3px;
+  background: #b0b0a8;
+  border-radius: 2px;
+}
+#handle-icon {
+  font-size: 9px;
+  line-height: 1;
+  color: #9ca3af;
+}
+
+/* ═══ PC toggle ═══ */
+#pc-toggle {
+  display: none;
+}
+
+/* ═══ List panel ═══ */
+#list-panel {
+  overflow: hidden;
+  background: #f4f5f2;
+  transition: height 0.25s ease, opacity 0.2s ease;
+}
+#list-scroll {
+  height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+#no-data-msg {
+  display: none;
+  padding: 20px;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: #9ca3af;
+}
+
+#spot-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* ─── List item ─── */
+.list-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 13px 18px;
+  border-bottom: 1px solid #e4e4e0;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.12s;
+}
+.list-item:hover { background: #edede9; }
+.list-item.is-selected { background: #e6ede4; }
+.list-item.is-selected::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: #2d3a30;
+}
+.list-item.is-closed {
+  opacity: 0.45;
+  cursor: default;
+}
+.list-item.is-closed:hover { background: transparent; }
+
+.list-num {
+  flex-shrink: 0;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: #4a5d4e;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+  transition: background 0.12s;
+}
+.list-item.is-closed .list-num { background: #aaa; }
+.list-item.is-selected .list-num { background: #2d3a30; }
+
+.list-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.list-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a2421;
+  line-height: 1.3;
+}
+.list-item.is-closed .list-name { color: #888; }
+.closed-badge {
+  display: inline-block;
+  font-size: 10px;
+  color: #b91c1c;
+  border: 1px solid #b91c1c;
+  padding: 0 4px;
+  line-height: 1.7;
+  align-self: flex-start;
+}
+.list-comment {
+  font-size: 11px;
+  color: #7a7a7a;
+  line-height: 1.5;
+}
+
+/* ═══ PC layout (md+) ═══ */
+@media (min-width: 768px) {
+  #map-list-area { flex-direction: row; }
+
+  #map-wrapper {
+    flex: 7;
+    height: 100% !important;
+    transition: flex 0.25s ease;
   }
 
-  @media (min-height: 600px) {
-    #map { height: 70vh; }
+  #mobile-handle { display: none; }
+
+  #pc-toggle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 18px;
+    background: #e8e8e4;
+    border: none;
+    border-left: 1px solid #d4d4d4;
+    border-right: 1px solid #d4d4d4;
+    color: #71717a;
+    cursor: pointer;
+    font-size: 9px;
+    transition: background 0.15s, color 0.15s;
+    z-index: 2;
   }
+  #pc-toggle:hover { background: #d8d8d4; color: #1a2421; }
+
+  #list-panel {
+    flex: 0 0 30%;
+    max-width: 360px;
+    height: 100% !important;
+    border-left: none;
+    overflow: hidden;
+    transition: flex-basis 0.25s ease, opacity 0.2s ease;
+    opacity: 1;
+  }
+  #list-panel.panel-hidden-pc {
+    flex: 0 0 0px;
+    opacity: 0;
+    pointer-events: none;
+  }
+  #list-scroll {
+    overflow-y: auto;
+  }
+}
+
+/* InfoWindow override */
+.gm-style-iw-d { overflow: hidden !important; }
+.gm-style-iw { padding: 0 !important; }
+.gm-style-iw-c { padding: 12px 14px !important; border-radius: 0 !important; }
 </style>
 
-<script define:vars={{ API_KEY, spotsJson }}>
+<script is:inline define:vars={{ API_KEY, spotsJson, homeJson }}>
   const spots = JSON.parse(spotsJson);
+  const homeSpot = JSON.parse(homeJson);
 
   const VALID_VIEWS = ["light", "food", "bath", "shopping", "sightseeing", "emergency"];
-  const PIN_COLORS = {
-    light:       "#2d5a27",
-    food:        "#d4761e",
-    bath:        "#3a8fa8",
-    shopping:    "#7254b8",
-    sightseeing: "#b83232",
-    emergency:   "#7a0000",
-  };
+  const PIN_COLOR = "#4a5d4e";
+  const PIN_SELECTED = "#7c4d2a";
+  const PIN_CLOSED = "#888";
   const DEFAULT_CENTER = { lat: 36.6399, lng: 140.0684 };
 
   let gmap = null;
   let markers = [];
+  let homeMarker = null;
   let openInfoWindow = null;
+  let selectedIndex = null;
+  let listOpen = true;
 
-  function getView() {
-    const v = new URLSearchParams(window.location.search).get("view") ?? "light";
-    return VALID_VIEWS.includes(v) ? v : "light";
+  // DOM refs (set in DOMContentLoaded)
+  let mapMain, mapListArea, mapWrapperEl, listPanelEl, mobileHandleEl, handleIconEl;
+  let pcToggleEl, pcToggleIconEl, spotListEl, noDataMsgEl;
+
+  // ── SVG pin helpers ──
+
+  function pinSvg(label, color) {
+    return `<svg width="32" height="44" viewBox="0 0 32 44" xmlns="http://www.w3.org/2000/svg">`
+      + `<path d="M16 42C16 42 3 27 3 16A13 13 0 0 1 29 16C29 27 16 42 16 42Z"`
+      + ` fill="${color}" stroke="rgba(255,255,255,0.85)" stroke-width="1.5"/>`
+      + `<text x="16" y="16" text-anchor="middle" dominant-baseline="central"`
+      + ` fill="white" font-family="'Helvetica Neue',Arial,sans-serif" font-weight="700" font-size="12">${label}</text>`
+      + `</svg>`;
   }
 
-  function setTab(view) {
-    document.querySelectorAll("[data-tab]").forEach(function(el) {
-      el.classList.toggle("is-active", el.dataset.tab === view);
-    });
-    const noData = document.getElementById("no-data-msg");
-    if (noData) {
-      const hasSpots = (spots[view] ?? []).length > 0;
-      noData.classList.toggle("hidden", hasSpots);
+  function makePinEl(number, color) {
+    const el = document.createElement("div");
+    el.style.cssText = "cursor:pointer;transform-origin:bottom center;transition:transform 0.15s ease;";
+    el.innerHTML = pinSvg(number, color);
+    return el;
+  }
+
+  function makeHomePinEl() {
+    const el = document.createElement("div");
+    el.style.cssText = "cursor:pointer;transform-origin:bottom center;filter:drop-shadow(0 3px 8px rgba(0,0,0,0.4));";
+    el.innerHTML = `<svg width="44" height="58" viewBox="0 0 44 58" xmlns="http://www.w3.org/2000/svg">`
+      + `<path d="M22 56C22 56 3 37 3 22A19 19 0 0 1 41 22C41 37 22 56 22 56Z"`
+      + ` fill="#1a2421" stroke="rgba(255,255,255,0.9)" stroke-width="2"/>`
+      + `<path d="M22 10L34 26H10Z" fill="white"/>`
+      + `<rect x="18" y="26" width="8" height="8" fill="rgba(255,255,255,0.75)"/>`
+      + `</svg>`;
+    return el;
+  }
+
+  // ── InfoWindow content ──
+
+  function infoContent(spot) {
+    const url = "https://www.google.com/maps/search/?api=1&query="
+      + encodeURIComponent(spot.name) + "+" + spot.lat + "," + spot.lng;
+    const badge = spot.status === "closed"
+      ? `<span style="font-size:10px;color:#b91c1c;border:1px solid #b91c1c;padding:0 4px;line-height:1.7;margin-left:6px;">休業中</span>`
+      : "";
+    return `<div style="font-family:sans-serif;max-width:220px;">`
+      + `<div style="display:flex;align-items:center;flex-wrap:wrap;margin-bottom:5px;">`
+      + `<strong style="font-size:13px;color:#1a2421;">${spot.name}</strong>${badge}`
+      + `</div>`
+      + (spot.comment ? `<p style="margin:0 0 8px;font-size:12px;color:#555;line-height:1.6;">${spot.comment}</p>` : "")
+      + `<a href="${url}" target="_blank" rel="noopener"`
+      + ` style="font-size:11px;color:#4a5d4e;border-bottom:1px solid #4a5d4e;padding-bottom:1px;text-decoration:none;">`
+      + `Google Mapsで開く →</a>`
+      + `</div>`;
+  }
+
+  function homeInfoContent() {
+    if (!homeSpot) return "";
+    return `<div style="font-family:sans-serif;max-width:220px;">`
+      + `<strong style="font-size:13px;color:#1a2421;">${homeSpot.name}</strong>`
+      + (homeSpot.comment ? `<p style="margin:6px 0 0;font-size:12px;color:#555;line-height:1.6;">${homeSpot.comment}</p>` : "")
+      + `</div>`;
+  }
+
+  // ── Selection ──
+
+  function selectByIndex(idx) {
+    if (!gmap || !markers[idx]) return;
+    deselectAll();
+    selectedIndex = idx;
+    const entry = markers[idx];
+    const isClosed = entry.spot.status === "closed";
+    if (!isClosed) {
+      entry.el.innerHTML = pinSvg(idx + 1, PIN_SELECTED);
+      entry.el.style.transform = "scale(1.3)";
+      entry.el.style.zIndex = "10";
     }
+    const li = spotListEl.querySelector(`[data-index="${idx}"]`);
+    if (li) {
+      li.classList.add("is-selected");
+      li.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    }
+    openIw(entry.spot, entry.marker);
+    gmap.panTo(entry.marker.position);
   }
 
-  function clearMarkers() {
-    markers.forEach(function(m) { m.map = null; });
-    markers = [];
+  function deselectAll() {
+    if (selectedIndex !== null) {
+      const prev = markers[selectedIndex];
+      if (prev) {
+        const isClosed = prev.spot.status === "closed";
+        prev.el.innerHTML = pinSvg(selectedIndex + 1, isClosed ? PIN_CLOSED : PIN_COLOR);
+        prev.el.style.transform = "";
+        prev.el.style.zIndex = "";
+      }
+    }
+    selectedIndex = null;
+    if (spotListEl) spotListEl.querySelectorAll(".is-selected").forEach(function(el) { el.classList.remove("is-selected"); });
     if (openInfoWindow) { openInfoWindow.close(); openInfoWindow = null; }
   }
 
-  function makePinEl(color) {
-    const el = document.createElement("div");
-    el.style.cssText = [
-      "width:22px", "height:22px",
-      "border-radius:50% 50% 50% 0",
-      "background:" + color,
-      "border:2px solid #fff",
-      "transform:rotate(-45deg)",
-      "box-shadow:0 2px 6px rgba(0,0,0,.45)",
-      "cursor:pointer",
-    ].join(";");
-    return el;
+  function openIw(spot, marker) {
+    if (openInfoWindow) openInfoWindow.close();
+    const iw = new google.maps.InfoWindow({ content: infoContent(spot) });
+    iw.open({ anchor: marker, map: gmap });
+    openInfoWindow = iw;
+  }
+
+  // ── Markers ──
+
+  function clearMarkers() {
+    markers.forEach(function(m) { m.marker.map = null; });
+    markers = [];
+  }
+
+  function placeHomeMarker() {
+    if (!homeSpot || homeMarker) return;
+    const el = makeHomePinEl();
+    homeMarker = new google.maps.marker.AdvancedMarkerElement({
+      map: gmap,
+      position: { lat: homeSpot.lat, lng: homeSpot.lng },
+      content: el,
+      title: homeSpot.name,
+      zIndex: 100,
+    });
+    homeMarker.addListener("click", function() {
+      deselectAll();
+      if (openInfoWindow) openInfoWindow.close();
+      const iw = new google.maps.InfoWindow({ content: homeInfoContent() });
+      iw.open({ anchor: homeMarker, map: gmap });
+      openInfoWindow = iw;
+    });
   }
 
   function showCategory(view) {
     if (!gmap) return;
     clearMarkers();
     const catSpots = spots[view] ?? [];
+    const bounds = new google.maps.LatLngBounds();
+    if (homeSpot) bounds.extend({ lat: homeSpot.lat, lng: homeSpot.lng });
+
     if (catSpots.length === 0) {
       gmap.setCenter(DEFAULT_CENTER);
       gmap.setZoom(12);
       return;
     }
-    const color = PIN_COLORS[view] ?? "#555";
-    const bounds = new google.maps.LatLngBounds();
-    let singlePos = null;
-    catSpots.forEach(function(spot) {
-      const pos = { lat: spot.lat, lng: spot.lng };
-      singlePos = pos;
+    catSpots.forEach(function(spot, i) {
+      const isClosed = spot.status === "closed";
+      const el = makePinEl(i + 1, isClosed ? PIN_CLOSED : PIN_COLOR);
       const marker = new google.maps.marker.AdvancedMarkerElement({
         map: gmap,
-        position: pos,
-        content: makePinEl(color),
+        position: { lat: spot.lat, lng: spot.lng },
+        content: el,
         title: spot.name,
       });
-      marker.addListener("click", function() {
-        if (openInfoWindow) openInfoWindow.close();
-        const iw = new google.maps.InfoWindow({
-          content: "<div style='font-family:sans-serif;max-width:200px;padding:2px 4px'>"
-            + "<strong style='font-size:13px;color:#222'>" + spot.name + "</strong>"
-            + (spot.comment
-              ? "<p style='margin:5px 0 0;font-size:12px;color:#555;line-height:1.5'>" + spot.comment + "</p>"
-              : "")
-            + "</div>",
-        });
-        iw.open({ anchor: marker, map: gmap });
-        openInfoWindow = iw;
-      });
-      markers.push(marker);
-      bounds.extend(pos);
+      marker.addListener("click", (function(idx) {
+        return function() { selectByIndex(idx); };
+      })(i));
+      markers.push({ marker: marker, el: el, spot: spot, index: i });
+      bounds.extend({ lat: spot.lat, lng: spot.lng });
     });
-    if (catSpots.length === 1) {
-      gmap.setCenter(singlePos);
+    if (catSpots.length === 1 && !homeSpot) {
+      gmap.setCenter({ lat: catSpots[0].lat, lng: catSpots[0].lng });
       gmap.setZoom(17);
     } else {
       gmap.fitBounds(bounds, 60);
     }
   }
 
+  // ── List ──
+
+  function renderList(view) {
+    const catSpots = spots[view] ?? [];
+    if (catSpots.length === 0) {
+      spotListEl.innerHTML = "";
+      noDataMsgEl.style.display = "block";
+      return;
+    }
+    noDataMsgEl.style.display = "none";
+    spotListEl.innerHTML = catSpots.map(function(spot, i) {
+      const isClosed = spot.status === "closed";
+      return `<li class="list-item${isClosed ? " is-closed" : ""}" data-index="${i}">`
+        + `<span class="list-num">${i + 1}</span>`
+        + `<div class="list-text">`
+        + `<span class="list-name">${spot.name}</span>`
+        + (isClosed ? `<span class="closed-badge">休業中</span>` : "")
+        + (spot.comment ? `<span class="list-comment">${spot.comment}</span>` : "")
+        + `</div></li>`;
+    }).join("");
+    spotListEl.querySelectorAll(".list-item:not(.is-closed)").forEach(function(li) {
+      li.addEventListener("click", function() {
+        selectByIndex(parseInt(li.dataset.index, 10));
+      });
+    });
+  }
+
+  // ── Tab ──
+
+  function setTabActive(view) {
+    document.querySelectorAll("[data-tab]").forEach(function(el) {
+      el.classList.toggle("is-active", el.dataset.tab === view);
+    });
+  }
+
   function switchTab(view) {
-    setTab(view);
+    setTabActive(view);
+    deselectAll();
     history.pushState({ view: view }, "", "/map/?view=" + view);
+    renderList(view);
     showCategory(view);
+  }
+
+  // ── Panel toggle ──
+
+  function isMobile() { return window.innerWidth < 768; }
+
+  function applyMobileLayout(open) {
+    const totalH = mapListArea.offsetHeight;
+    const handleH = mobileHandleEl.offsetHeight;
+    if (open) {
+      const mapH = Math.round(totalH * 0.55);
+      const listH = totalH - mapH - handleH;
+      mapWrapperEl.style.height = mapH + "px";
+      listPanelEl.style.height = listH + "px";
+      listPanelEl.style.opacity = "1";
+      listPanelEl.style.pointerEvents = "";
+      handleIconEl.textContent = "∧";
+    } else {
+      mapWrapperEl.style.height = (totalH - handleH) + "px";
+      listPanelEl.style.height = "0";
+      listPanelEl.style.opacity = "0";
+      listPanelEl.style.pointerEvents = "none";
+      handleIconEl.textContent = "∨";
+    }
+  }
+
+  function applyPcLayout(open) {
+    if (open) {
+      listPanelEl.classList.remove("panel-hidden-pc");
+      mapWrapperEl.style.flex = "";
+      pcToggleIconEl.textContent = "◀";
+    } else {
+      listPanelEl.classList.add("panel-hidden-pc");
+      mapWrapperEl.style.flex = "1";
+      pcToggleIconEl.textContent = "▶";
+    }
+  }
+
+  function setListOpen(open) {
+    listOpen = open;
+    if (isMobile()) {
+      applyMobileLayout(open);
+    } else {
+      applyPcLayout(open);
+    }
+    setTimeout(function() {
+      if (gmap) google.maps.event.trigger(gmap, "resize");
+    }, 270);
+  }
+
+  // ── Google Maps init ──
+
+  function getView() {
+    const v = new URLSearchParams(window.location.search).get("view") ?? "light";
+    return VALID_VIEWS.includes(v) ? v : "light";
   }
 
   window.__initGoogleMaps = function() {
     google.maps.importLibrary("maps").then(function(mapsLib) {
       return google.maps.importLibrary("marker").then(function() {
-        const mapEl = document.getElementById("map");
-        gmap = new mapsLib.Map(mapEl, {
+        gmap = new mapsLib.Map(document.getElementById("map"), {
           center: DEFAULT_CENTER,
           zoom: 15,
           mapId: "DEMO_MAP_ID",
           zoomControl: true,
           mapTypeControl: false,
           streetViewControl: false,
-          fullscreenControl: true,
+          fullscreenControl: false,
+          clickableIcons: false,
         });
+        gmap.addListener("click", function() { deselectAll(); });
+
         const skeleton = document.getElementById("map-skeleton");
         if (skeleton) skeleton.remove();
+
+        placeHomeMarker();
         const view = getView();
-        setTab(view);
+        setTabActive(view);
+        renderList(view);
         showCategory(view);
+        // Apply initial mobile layout after map loads
+        if (isMobile()) applyMobileLayout(listOpen);
       });
     }).catch(function() {
-      document.getElementById("map-skeleton")?.remove();
+      const sk = document.getElementById("map-skeleton");
+      if (sk) sk.remove();
       const errEl = document.getElementById("map-error");
       if (errEl) errEl.style.display = "flex";
     });
   };
 
-  document.addEventListener("DOMContentLoaded", function() {
-    const initialView = getView();
-    setTab(initialView);
+  // ── DOM ready ──
 
+  document.addEventListener("DOMContentLoaded", function() {
+    mapMain = document.getElementById("map-main");
+    mapListArea = document.getElementById("map-list-area");
+    mapWrapperEl = document.getElementById("map-wrapper");
+    listPanelEl = document.getElementById("list-panel");
+    mobileHandleEl = document.getElementById("mobile-handle");
+    handleIconEl = document.getElementById("handle-icon");
+    pcToggleEl = document.getElementById("pc-toggle");
+    pcToggleIconEl = document.getElementById("pc-toggle-icon");
+    spotListEl = document.getElementById("spot-list");
+    noDataMsgEl = document.getElementById("no-data-msg");
+
+    const initialView = getView();
+    setTabActive(initialView);
+    renderList(initialView);
+
+    // Initial mobile layout (before map loads)
+    if (isMobile()) applyMobileLayout(listOpen);
+
+    // Tab clicks
     document.querySelectorAll("[data-tab]").forEach(function(el) {
       el.addEventListener("click", function() { switchTab(el.dataset.tab); });
     });
 
+    // Handle / toggle
+    mobileHandleEl.addEventListener("click", function() { setListOpen(!listOpen); });
+    pcToggleEl.addEventListener("click", function() { setListOpen(!listOpen); });
+
+    // Resize: recompute mobile heights
+    window.addEventListener("resize", function() {
+      if (isMobile()) applyMobileLayout(listOpen);
+    });
+
+    // Popstate
     window.addEventListener("popstate", function(e) {
       const view = (e.state && e.state.view) ? e.state.view : getView();
-      setTab(view);
+      setTabActive(view);
+      deselectAll();
+      renderList(view);
       showCategory(view);
     });
 
+    // Load Google Maps
     if (!API_KEY) {
-      document.getElementById("map-skeleton")?.remove();
+      const sk = document.getElementById("map-skeleton");
+      if (sk) sk.remove();
       const errEl = document.getElementById("map-error");
       if (errEl) errEl.style.display = "flex";
       return;
     }
-
     const s = document.createElement("script");
     s.src = "https://maps.googleapis.com/maps/api/js?key=" + API_KEY
       + "&libraries=marker&v=weekly&loading=async&callback=__initGoogleMaps";
