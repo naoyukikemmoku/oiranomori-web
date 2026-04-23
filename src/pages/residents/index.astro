@@ -1,0 +1,141 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/Header.astro";
+import { reserveCta } from "../../config/nav";
+---
+
+<BaseLayout
+  title="森の住人 | フォレストパークおいらの森"
+  description="おいらの森をつくる二人の話。草刈りが変態的に好きな森主と、熊本から那須烏山に移住した森のおかみ。"
+>
+  <Header />
+
+  {/* ─── 1. イントロ ─── */}
+  <section class="flex min-h-[60vh] items-end bg-[#1A2421] px-6 pb-16 pt-[var(--header-offset)] md:px-12 md:pb-24">
+    <div class="max-w-2xl">
+      <p class="mb-2 text-xs tracking-[0.28em] text-[#4A5D4E] uppercase">Residents</p>
+      <h1 class="text-3xl font-semibold leading-snug text-white md:text-5xl">
+        この森には、住人がいる。
+      </h1>
+      <p class="mt-4 text-xl font-light leading-relaxed text-zinc-400 md:text-2xl">
+        管理して、整えて、迎える人間が。
+      </p>
+    </div>
+  </section>
+
+  {/* ─── 2. おいら ─── */}
+  <section>
+    {/* 写真 */}
+    <div class="relative aspect-[16/7] w-full bg-[#2d3a30] md:aspect-[21/9]">
+      <img
+        src="/images/residents/oira.jpg"
+        alt="おいら — 森主"
+        class="absolute inset-0 h-full w-full object-cover"
+        loading="lazy"
+        onerror="this.style.opacity='0'"
+      />
+    </div>
+
+    {/* テキスト */}
+    <div class="bg-[#f4f5f2] px-6 py-16 md:px-12 md:py-24">
+      <div class="mx-auto max-w-2xl">
+        <p class="mb-6 text-xs tracking-[0.28em] text-[#4A5D4E] uppercase">Oira / Forest Owner</p>
+        <h2 class="mb-8 text-2xl font-semibold text-zinc-800 md:text-3xl">おいらのこと</h2>
+
+        <div class="space-y-5 text-base leading-[2] text-zinc-700">
+          <p class="text-lg font-medium text-zinc-800">草刈りが、変態的に好きだ。</p>
+          <p>
+            2017年に山を買って、最初の数年はひたすら篠を刈っていた。里山は放っておくと荒れる。手を入れると応える。その手応えが好きで、気づいたらキャンプ場になっていた。
+          </p>
+          <p>
+            大学で林業を学んだ。だから森の"癖"が見える。風が抜ける場所、湿りやすい場所、落枝が起きやすい場所。そういうのを知った上で、下草の管理、倒木のチェック、危険木の判断を毎日コツコツやっている。地味だけど、それがこの場所の安心を作っている。
+          </p>
+          <p>
+            車も機械も道具も、業者を呼ぶ前に手が動くタイプだ。キャンプ場って毎日が小さな事件の連続で、「問題が起きない」より「起きても収まる」に強い場所にしたい。
+          </p>
+          <p>
+            必要以上に距離は詰めない。でも困ったときはすぐ届く距離にいる。ライトフォレストもディープフォレストも、おいらの作品だ。ここに来た人が「また来たいな」と思って帰れるように、今日も森に入っている。
+          </p>
+        </div>
+
+        <p class="mt-10 text-sm">
+          <a
+            href="#"
+            class="inline-flex items-center gap-2 border-b border-[#4A5D4E] pb-0.5 text-[#4A5D4E] transition hover:border-[#2d3a30] hover:text-[#2d3a30]"
+          >
+            <span>▸ もう少し個人的な話はNoteで</span>
+            <span>「俺の山なんだよ。」</span>
+          </a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  {/* ─── 3. おかみ ─── */}
+  <section>
+    {/* 写真 */}
+    <div class="relative aspect-[16/7] w-full bg-[#2d3a30] md:aspect-[21/9]">
+      <img
+        src="/images/residents/okami.jpg"
+        alt="おかみ — 橋本佳子"
+        class="absolute inset-0 h-full w-full object-cover"
+        loading="lazy"
+        onerror="this.style.opacity='0'"
+      />
+    </div>
+
+    {/* テキスト */}
+    <div class="bg-white px-6 py-16 md:px-12 md:py-24">
+      <div class="mx-auto max-w-2xl">
+        <p class="mb-6 text-xs tracking-[0.28em] text-[#4A5D4E] uppercase">Okami / Forest Manager</p>
+        <h2 class="mb-2 text-2xl font-semibold text-zinc-800 md:text-3xl">森のおかみのこと</h2>
+        <p class="mb-8 text-sm tracking-wide text-zinc-400">橋本佳子</p>
+
+        <div class="space-y-5 text-base leading-[2] text-zinc-700">
+          <p>熊本県出身。趣味は山登りとスキー。</p>
+          <p>
+            那須烏山市の自然豊かな環境に惹かれて、2020年春、東京から移住してきました。
+          </p>
+          <p>
+            人と自然が共生する里山の魅力を感じていただけるよう、森づくりに励んでいます。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* ─── 4. 締め ─── */}
+  <section class="relative flex min-h-[60vh] items-center justify-center bg-[#1A2421]">
+    {/* 背景画像 */}
+    <div class="absolute inset-0">
+      <img
+        src="/images/residents/forest.jpg"
+        alt=""
+        aria-hidden="true"
+        class="h-full w-full object-cover opacity-40"
+        loading="lazy"
+        onerror="this.style.display='none'"
+      />
+    </div>
+
+    {/* テキスト + CTA */}
+    <div class="relative z-10 px-6 text-center">
+      <p class="mb-10 text-2xl font-semibold text-white md:text-4xl">
+        森で、待っています。
+      </p>
+      <a
+        href={reserveCta.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-2 border border-white/60 px-8 py-3 text-sm tracking-[0.14em] text-white transition hover:bg-white hover:text-[#1A2421]"
+      >
+        {reserveCta.label}
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M5 12h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+  </section>
+
+</BaseLayout>
