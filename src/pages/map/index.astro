@@ -90,7 +90,7 @@ const homeJson = JSON.stringify(homeSpot ?? null);
 
 </BaseLayout>
 
-<style>
+<style is:global>
 /* ═══ Main ═══ */
 #map-main {
   height: 100vh;
@@ -234,6 +234,7 @@ const homeJson = JSON.stringify(homeSpot ?? null);
   height: 100%;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  padding-top: 4px;
 }
 
 #no-data-msg {
