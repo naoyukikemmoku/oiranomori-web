@@ -1,0 +1,123 @@
+---
+import PageLayout from "../../layouts/PageLayout.astro";
+
+const companies = [
+  {
+    type: "運営会社",
+    eyebrow: "Operating Company",
+    name: "株式会社 橋本商事",
+    desc: "フォレストパークおいらの森の運営主体。",
+    rows: [
+      { label: "代表取締役", value: "橋本佳子" },
+      { label: "設立",       value: "2020年（令和2年）6月15日" },
+      { label: "所在地",     value: "栃木県那須烏山市福岡1047" },
+      { label: "取引銀行",   value: "栃木銀行" },
+      { label: "ウェブサイト", value: "https://hashimoto1047.co.jp", href: "https://hashimoto1047.co.jp" },
+    ],
+  },
+  {
+    type: "関連会社",
+    eyebrow: "Related Company",
+    name: "株式会社 やつだファーム",
+    desc: "橋本佳子が代表を務める農業法人。那須烏山市の里山で、甘みの強いかぼちゃやサトイモを育てています。森の隣に畑がある。おいらの森の食の思想と地続きの事業です。",
+    rows: [
+      { label: "代表取締役", value: "橋本佳子" },
+      { label: "事業",       value: "農業（かぼちゃ・サトイモ等）" },
+      { label: "Instagram",  value: "instagram.com/minami.satoyama", href: "https://www.instagram.com/minami.satoyama/" },
+    ],
+  },
+  {
+    type: "関連団体",
+    eyebrow: "Related Organization",
+    name: "やつびと100年の森",
+    desc: "ナオ（おいら）が代表を務める任意団体。2025年設立。那須烏山市の里山景観の保全と林業を主たる活動とし、森林・山村の多面的な機能を地域で共同して発揮することを目的としています。「100年の森をつくる」という言葉は、この団体の思想とおいらの森のコンセプトが重なるところから来ています。",
+    rows: [
+      { label: "代表",   value: "ナオ（おいら）" },
+      { label: "形態",   value: "任意団体" },
+      { label: "設立",   value: "2025年" },
+      { label: "活動",   value: "里山景観の保全・林業" },
+    ],
+  },
+];
+---
+
+<PageLayout
+  title="運営会社・関連組織 | おいらの森"
+  description="フォレストパークおいらの森を運営する株式会社橋本商事、関連会社・団体についてご案内します。"
+>
+
+  {/* ページヘッダー */}
+  <div class="mb-10 border-b border-zinc-200 pb-8">
+    <p class="text-xs tracking-[0.26em] text-zinc-400 uppercase">About</p>
+    <h1 class="mt-3 text-3xl font-semibold text-zinc-800 md:text-4xl">運営会社・関連組織</h1>
+    <p class="mt-4 max-w-2xl text-base leading-loose text-zinc-600">
+      フォレストパークおいらの森は、栃木県那須烏山市に根を張る複数の事業体によって運営されています。森づくり・農・キャンプ場。それぞれが独立しながら、ひとつの思想を共有しています。「100年先の森を育てる」。
+    </p>
+  </div>
+
+  {/* 各組織セクション */}
+  {companies.map((org) => (
+    <section class="mb-14">
+      <div class="mb-5">
+        <p class="text-xs tracking-[0.22em] text-[#4A5D4E] uppercase">{org.eyebrow}</p>
+        <h2 class="mt-1 text-xl font-semibold text-zinc-800">{org.name}</h2>
+        <p class="mt-3 max-w-2xl text-sm leading-loose text-zinc-600">{org.desc}</p>
+      </div>
+
+      <div class="overflow-x-auto border-y border-zinc-200">
+        <table class="w-full min-w-[300px] text-sm">
+          <tbody class="divide-y divide-zinc-100">
+            {org.rows.map((row) => (
+              <tr class="transition hover:bg-zinc-50">
+                <td class="w-32 py-3 pl-0 pr-4 text-zinc-500 sm:w-40">{row.label}</td>
+                <td class="py-3 text-zinc-700">
+                  {row.href ? (
+                    <a
+                      href={row.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="underline underline-offset-2 transition hover:text-zinc-900"
+                    >
+                      {row.value}
+                    </a>
+                  ) : (
+                    row.value
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  ))}
+
+  {/* 運営者について */}
+  <section class="mb-14">
+    <p class="text-xs tracking-[0.22em] text-[#4A5D4E] uppercase">The People</p>
+    <h2 class="mt-1 text-xl font-semibold text-zinc-800">運営者について</h2>
+    <p class="mt-3 max-w-2xl text-sm leading-loose text-zinc-600">
+      おいらの森をつくっているのは、おいら と おかみの二人です。会社の話より、もっと人間的な部分が気になる方はこちら。
+    </p>
+    <p class="mt-4 text-sm">
+      <a href="/residents/" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">
+        森の住人について →
+      </a>
+    </p>
+  </section>
+
+  {/* お問い合わせ */}
+  <section class="mb-10">
+    <p class="text-xs tracking-[0.22em] text-[#4A5D4E] uppercase">Contact</p>
+    <h2 class="mt-1 text-xl font-semibold text-zinc-800">お問い合わせ</h2>
+    <p class="mt-3 max-w-2xl text-sm leading-loose text-zinc-600">
+      取材・協業・その他のお問い合わせはフォームよりどうぞ。
+    </p>
+    <p class="mt-4 text-sm">
+      <a href="/contact/" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">
+        お問い合わせ →
+      </a>
+    </p>
+  </section>
+
+</PageLayout>
