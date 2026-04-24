@@ -3,15 +3,15 @@ import LpLayout from "../../layouts/LpLayout.astro";
 ---
 
 <LpLayout
-  title="アクセス・場内マップ | おいらの森"
+  title="アクセス | おいらの森"
   description="那須烏山の里山パークおいらの森へのアクセス。JR烏山線・お車でのルート、カーナビの注意点、鴻野山駅からの送迎プランなど。道に迷ったらTEL 050-3647-1047へ。"
 >
 
   {/* ページタイトル */}
   <div class="border-b border-zinc-200 bg-white px-5 py-14 md:py-20">
     <div class="mx-auto max-w-6xl">
-      <p class="text-xs tracking-[0.32em] text-zinc-400 uppercase">Access &amp; Map</p>
-      <h1 class="mt-4 text-3xl font-semibold text-zinc-800 md:text-5xl">アクセス・場内マップ</h1>
+      <p class="text-xs tracking-[0.32em] text-zinc-400 uppercase">Access</p>
+      <h1 class="mt-4 text-3xl font-semibold text-zinc-800 md:text-5xl">アクセス</h1>
       <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-600">
         那須烏山の山の中にあるキャンプ場です。カーナビの案内では絶対にたどり着けません。必ずこのページの案内に従ってお越しください。
       </p>
@@ -37,10 +37,10 @@ import LpLayout from "../../layouts/LpLayout.astro";
             { from: "宇都宮方面", via: "宇都宮上三川IC", time: "約 50 分" },
             { from: "宇都宮市内", via: "中心部より", time: "約 45 分" },
           ].map((item) => (
-            <div class="rounded-2xl bg-white p-6 shadow-sm">
+            <div class="border border-zinc-200 bg-white p-4">
               <p class="text-xs tracking-[0.14em] text-zinc-400">{item.via}</p>
               <p class="mt-1 text-sm font-medium text-zinc-700">{item.from}</p>
-              <p class="mt-3 text-2xl font-semibold text-[color:var(--forest-700)]">{item.time}</p>
+              <p class="mt-2 text-xl font-semibold text-[color:var(--forest-700)]">{item.time}</p>
             </div>
           ))}
         </div>
@@ -115,7 +115,7 @@ import LpLayout from "../../layouts/LpLayout.astro";
             method: "徒歩",
             station: "各駅より",
             detail: "鴻野山駅 → ライトフォレスト：約53分\n大金駅 → ディープフォレスト：約32分",
-            note: "荷物がある場合は非推奨",
+            note: "",
           },
         ].map((item) => (
           <div class="rounded-2xl border border-zinc-200 p-6">
@@ -150,84 +150,6 @@ import LpLayout from "../../layouts/LpLayout.astro";
     </div>
   </section>
 
-  {/* フィールド別アクセス */}
-  <section id="light" class="bg-[#f4f4f5] py-20 md:py-28">
-    <div class="mx-auto max-w-6xl px-5">
-      <p class="text-xs tracking-[0.32em] text-zinc-400 uppercase">Field Guide</p>
-      <h2 class="mt-4 text-3xl font-semibold text-zinc-800 md:text-4xl">フィールド別アクセス</h2>
-
-      <div class="mt-12 grid gap-8 lg:grid-cols-2">
-
-        {/* ライトフォレスト */}
-        <div id="light-detail" class="rounded-2xl bg-white p-8">
-          <p class="text-xs tracking-[0.24em] text-zinc-400 uppercase">Light Forest</p>
-          <h3 class="mt-3 text-xl font-semibold text-zinc-800">ライトフォレスト</h3>
-          <div class="mt-5 space-y-4 text-sm leading-loose text-zinc-600">
-            <p>入り口には看板がありません。下の空から案内図を参照してお越しください。</p>
-            <p>
-              出入口は未舗装の急勾配です。アクセルを踏みすぎず、スリップした場合は一度バックして勢いをつけて登り直してください。
-            </p>
-          </div>
-          <div class="mt-6 overflow-hidden rounded-xl">
-            <img
-              src="https://oiranomori.jp/wp-content/uploads/2022/12/Lightforest-field-areialmap-1-1024x678.jpg"
-              alt="ライトフォレスト 空から案内図"
-              class="w-full object-cover"
-            />
-          </div>
-          <p class="mt-3 text-center text-xs text-zinc-400">ライトフォレスト 空から案内図</p>
-        </div>
-
-        {/* ディープフォレスト */}
-        <div id="deep" class="rounded-2xl bg-zinc-900 p-8">
-          <p class="text-xs tracking-[0.24em] text-zinc-400 uppercase">Deep Forest</p>
-          <h3 class="mt-3 text-xl font-semibold text-white">ディープフォレスト</h3>
-          <div class="mt-5 space-y-4 text-sm leading-loose text-zinc-300">
-            <p>
-              ディープフォレストは<strong class="text-white">場所を非公表</strong>としています。
-            </p>
-            <p>
-              必ず<strong class="text-white">ライトフォレスト管理棟にて受付</strong>を済ませてください。
-              受付後に詳細な場所をご案内します。直接現地へ向かうことはできません。
-            </p>
-          </div>
-          <div class="mt-8 rounded-xl border border-zinc-700 bg-zinc-800 p-5">
-            <p class="mb-2 text-xs tracking-[0.16em] text-zinc-400">アクセス手順</p>
-            <ol class="space-y-3 text-sm text-zinc-300">
-              {[
-                "Google Mapで「おいらの森」と検索",
-                "まずライトフォレストへ向かう",
-                "管理棟にて受付を完了させる",
-                "スタッフの案内に従いディープフォレストへ",
-              ].map((step, i) => (
-                <li class="flex items-start gap-3">
-                  <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-zinc-700 text-xs font-bold text-zinc-300">
-                    {i + 1}
-                  </span>
-                  <span>{step}</span>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </div>
-
-      </div>
-
-      {/* 周辺ガイドマップ */}
-      <div id="area" class="mt-16">
-        <h3 class="mb-6 text-xl font-semibold text-zinc-800">周辺案内図</h3>
-        <div class="overflow-hidden rounded-2xl">
-          <img
-            src="https://oiranomori.jp/wp-content/uploads/2022/12/Neighborhood-guide.png"
-            alt="周辺ガイドマップ"
-            class="w-full object-cover"
-          />
-        </div>
-      </div>
-
-    </div>
-  </section>
-
   {/* 重要なお知らせ */}
   <section id="important" class="bg-[#f4f4f5] py-16 md:py-20">
     <div class="mx-auto max-w-6xl px-5">
@@ -248,7 +170,7 @@ import LpLayout from "../../layouts/LpLayout.astro";
         <div class="border border-zinc-300 bg-white p-7">
           <div class="mb-4 flex items-start gap-4">
             <span class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-zinc-100 text-sm text-zinc-600">!</span>
-            <h3 class="text-lg font-semibold text-zinc-800">カーナビ・住所検索は絶対使用禁止</h3>
+            <h3 class="text-lg font-semibold text-zinc-800">カーナビ・住所検索では正しく案内されません</h3>
           </div>
           <p class="text-sm leading-loose text-zinc-600">
             車据え付け型のカーナビや住所検索では<strong class="text-zinc-800">全く別の場所に案内されます</strong>。
@@ -271,11 +193,11 @@ import LpLayout from "../../layouts/LpLayout.astro";
         <div class="border border-zinc-300 bg-white p-7">
           <div class="mb-4 flex items-start gap-4">
             <span class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-zinc-100 text-sm text-zinc-600">!</span>
-            <h3 class="text-lg font-semibold text-zinc-800">近接排気音100dB以上は入場不可</h3>
+            <h3 class="text-lg font-semibold text-zinc-800">近接排気音100dB以上の車両はご遠慮ください</h3>
           </div>
           <p class="text-sm leading-loose text-zinc-600">
-            車検非対応レベルの爆音車両での入場は<strong class="text-zinc-800">禁止</strong>です。
-            該当車両で来場した場合はその場で退去となります。
+            車検非対応レベルの爆音車両でのご来場は<strong class="text-zinc-800">ご遠慮ください</strong>。
+            該当車両でご来場の場合はその場でご退去いただく場合があります。
           </p>
           <div class="mt-5 bg-zinc-50 p-4">
             <p class="text-sm text-zinc-600">
