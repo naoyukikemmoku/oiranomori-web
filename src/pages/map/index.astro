@@ -3,7 +3,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import Header from "../../components/Header.astro";
 import spotsRaw from "../../data/spots.json";
 
-const API_KEY = __GMAPS_API_KEY__;
+const API_KEY = import.meta.env.PUBLIC_GMAPS_API_KEY ?? "";
 
 const CATEGORIES = [
   { key: "light",       label: "Light Forest" },
@@ -25,7 +25,7 @@ for (const cat of CATEGORIES) {
 }
 
 const spotsJson = JSON.stringify(spots);
-const homeJson = JSON.stringify(homeSpot ?? null);
+const homeJson  = JSON.stringify(homeSpot ?? null);
 ---
 
 <BaseLayout
@@ -36,7 +36,7 @@ const homeJson = JSON.stringify(homeSpot ?? null);
 
   <main id="map-main">
 
-    {/* ─── タブバー ─── */}
+    <!-- タブバー -->
     <div id="tab-row">
       <span class="map-label">Map</span>
       <div id="tab-scroll">
@@ -48,10 +48,10 @@ const homeJson = JSON.stringify(homeSpot ?? null);
       </div>
     </div>
 
-    {/* ─── マップ + リスト ─── */}
+    <!-- マップ + リスト -->
     <div id="map-list-area">
 
-      {/* マップ */}
+      <!-- マップ -->
       <div id="map-wrapper">
         <div id="map-skeleton" aria-hidden="true">
           <svg class="spin-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -65,32 +65,36 @@ const homeJson = JSON.stringify(homeSpot ?? null);
         <div id="map"></div>
       </div>
 
-      {/* Mobile: ハンドルバー */}
-      <div id="mobile-handle">
+      <!-- Mobile: ハンドルバー -->
+      <div id="mobile-handle" role="button" aria-label="リストパネルを切り替え" tabindex="0">
         <div class="handle-bar"></div>
-        <span id="handle-icon">∧</span>
+        <span id="handle-icon" aria-hidden="true">∧</span>
       </div>
 
-      {/* PC: 境界トグルボタン */}
+      <!-- PC: 境界トグルボタン -->
       <button id="pc-toggle" aria-label="リストパネルを切り替え">
         <span id="pc-toggle-icon">◀</span>
       </button>
 
-      {/* リストパネル */}
-      <div id="list-panel">
+      <!-- リストパネル -->
+      <div id="list-panel" role="region" aria-label="スポット一覧">
         <div id="list-scroll">
           <div id="no-data-msg">このカテゴリは準備中です。</div>
-          <ul id="spot-list"></ul>
+          <ul id="spot-list" role="list"></ul>
         </div>
       </div>
 
     </div>
-
   </main>
 
 </BaseLayout>
 
 <style is:global>
+/* ═══ Reset / global ═══ */
+#map-main *,
+#map-main *::before,
+#map-main *::after { box-sizing: border-box; }
+
 /* ═══ Main ═══ */
 #map-main {
   height: 100vh;
@@ -162,7 +166,7 @@ const homeJson = JSON.stringify(homeSpot ?? null);
 #map-wrapper {
   position: relative;
   overflow: hidden;
-  transition: height 0.25s ease;
+  transition: height 0.25s ease, flex 0.25s ease;
   background: #d1d5db;
 }
 #map { position: absolute; inset: 0; }
@@ -274,8 +278,8 @@ const homeJson = JSON.stringify(homeSpot ?? null);
 .list-item.is-closed {
   opacity: 0.45;
   cursor: default;
+  pointer-events: none;
 }
-.list-item.is-closed:hover { background: transparent; }
 
 .list-num {
   flex-shrink: 0;
@@ -357,7 +361,6 @@ const homeJson = JSON.stringify(homeSpot ?? null);
     flex: 0 0 30%;
     max-width: 360px;
     height: 100% !important;
-    border-left: none;
     overflow: hidden;
     transition: flex-basis 0.25s ease, opacity 0.2s ease;
     opacity: 1;
@@ -367,160 +370,216 @@ const homeJson = JSON.stringify(homeSpot ?? null);
     opacity: 0;
     pointer-events: none;
   }
-  #list-scroll {
-    overflow-y: auto;
-  }
+  #list-scroll { overflow-y: auto; }
 }
 
-/* InfoWindow override */
+/* ═══ InfoWindow overrides ═══ */
 .gm-style-iw-d { overflow: hidden !important; }
-.gm-style-iw { padding: 0 !important; }
+.gm-style-iw   { padding: 0 !important; }
 .gm-style-iw-c { padding: 12px 14px !important; border-radius: 0 !important; }
 </style>
 
 <script is:inline define:vars={{ API_KEY, spotsJson, homeJson }}>
-  const spots = JSON.parse(spotsJson);
-  const homeSpot = JSON.parse(homeJson);
+  var spots    = JSON.parse(spotsJson);
+  var homeSpot = JSON.parse(homeJson);
 
-  const VALID_VIEWS = ["light", "food", "bath", "shopping", "sightseeing", "emergency"];
-  const PIN_COLOR = "#4a5d4e";
-  const PIN_SELECTED = "#7c4d2a";
-  const PIN_CLOSED = "#888";
-  const DEFAULT_CENTER = { lat: 36.6399, lng: 140.0684 };
+  var VALID_VIEWS    = ["light","food","bath","shopping","sightseeing","emergency"];
+  var PIN_COLOR      = "#4a5d4e";
+  var PIN_HOVER      = "#2d3a30";
+  var PIN_SELECTED   = "#7c4d2a";
+  var PIN_CLOSED     = "#888888";
+  var HOME_COLOR     = "#1a2421";
+  var DEFAULT_CENTER = { lat: 36.6399, lng: 140.0684 };
 
-  let gmap = null;
-  let markers = [];
-  let homeMarker = null;
-  let openInfoWindow = null;
-  let selectedIndex = null;
-  let listOpen = true;
+  var gmap           = null;
+  var markers        = [];    // [{marker, el, spot, index}]
+  var homeMarker     = null;
+  var openInfoWindow = null;
+  var selectedIndex  = null;
+  var listOpen       = true;
 
-  // DOM refs (set in DOMContentLoaded)
-  let mapMain, mapListArea, mapWrapperEl, listPanelEl, mobileHandleEl, handleIconEl;
-  let pcToggleEl, pcToggleIconEl, spotListEl, noDataMsgEl;
+  // DOM refs
+  var mapListArea, mapWrapperEl, listPanelEl;
+  var mobileHandleEl, handleIconEl, pcToggleEl, pcToggleIconEl;
+  var spotListEl, noDataMsgEl;
 
-  // ── SVG pin helpers ──
+  // ────────────────────────────────────────────────
+  // SVG pin builders
+  // ────────────────────────────────────────────────
 
   function pinSvg(label, color) {
-    return `<svg width="32" height="44" viewBox="0 0 32 44" xmlns="http://www.w3.org/2000/svg">`
-      + `<path d="M16 42C16 42 3 27 3 16A13 13 0 0 1 29 16C29 27 16 42 16 42Z"`
-      + ` fill="${color}" stroke="rgba(255,255,255,0.85)" stroke-width="1.5"/>`
-      + `<text x="16" y="16" text-anchor="middle" dominant-baseline="central"`
-      + ` fill="white" font-family="'Helvetica Neue',Arial,sans-serif" font-weight="700" font-size="12">${label}</text>`
-      + `</svg>`;
+    return '<svg width="36" height="48" viewBox="0 0 36 48" xmlns="http://www.w3.org/2000/svg">'
+      + '<path d="M18 46C18 46 4 32 4 18A14 14 0 0 1 32 18C32 32 18 46 18 46Z"'
+      + ' fill="' + color + '" stroke="rgba(255,255,255,0.85)" stroke-width="1.5"/>'
+      + '<text x="18" y="18" text-anchor="middle" dominant-baseline="central"'
+      + ' fill="white" font-family="\'Helvetica Neue\',Arial,sans-serif"'
+      + ' font-weight="700" font-size="12">' + label + '</text>'
+      + '</svg>';
   }
 
-  function makePinEl(number, color) {
-    const el = document.createElement("div");
-    el.style.cssText = "cursor:pointer;transform-origin:bottom center;transition:transform 0.15s ease;";
+  function makePinEl(number, color, isClosed) {
+    var el = document.createElement("div");
+    el.style.cssText = "cursor:pointer;transform-origin:bottom center;"
+      + "transition:transform 0.15s ease,filter 0.15s ease;";
     el.innerHTML = pinSvg(number, color);
+    el._selected = false;
+
+    if (!isClosed) {
+      el.addEventListener("mouseover", function () {
+        if (!el._selected) {
+          el.style.transform = "scale(1.15)";
+          el.style.filter    = "brightness(0.82)";
+        }
+      });
+      el.addEventListener("mouseout", function () {
+        if (!el._selected) {
+          el.style.transform = "";
+          el.style.filter    = "";
+        }
+      });
+    }
     return el;
   }
 
   function makeHomePinEl() {
-    const el = document.createElement("div");
-    el.style.cssText = "cursor:pointer;transform-origin:bottom center;filter:drop-shadow(0 3px 8px rgba(0,0,0,0.4));";
-    el.innerHTML = `<svg width="44" height="58" viewBox="0 0 44 58" xmlns="http://www.w3.org/2000/svg">`
-      + `<path d="M22 56C22 56 3 37 3 22A19 19 0 0 1 41 22C41 37 22 56 22 56Z"`
-      + ` fill="#1a2421" stroke="rgba(255,255,255,0.9)" stroke-width="2"/>`
-      + `<path d="M22 10L34 26H10Z" fill="white"/>`
-      + `<rect x="18" y="26" width="8" height="8" fill="rgba(255,255,255,0.75)"/>`
-      + `</svg>`;
+    var el = document.createElement("div");
+    el.style.cssText = "cursor:pointer;transform-origin:bottom center;"
+      + "filter:drop-shadow(0 3px 8px rgba(0,0,0,0.4));"
+      + "transition:transform 0.15s ease,filter 0.15s ease;";
+    el.innerHTML =
+      '<svg width="48" height="64" viewBox="0 0 48 64" xmlns="http://www.w3.org/2000/svg">'
+      + '<path d="M24 62C24 62 4 44 4 24A20 20 0 0 1 44 24C44 44 24 62 24 62Z"'
+      + ' fill="' + HOME_COLOR + '" stroke="rgba(255,255,255,0.9)" stroke-width="2"/>'
+      + '<path d="M24 12L37 28H11Z" fill="white"/>'
+      + '<rect x="20" y="28" width="8" height="9" fill="rgba(255,255,255,0.75)"/>'
+      + '</svg>';
+    el.addEventListener("mouseover", function () {
+      el.style.transform = "scale(1.1)";
+    });
+    el.addEventListener("mouseout", function () {
+      el.style.transform = "";
+    });
     return el;
   }
 
-  // ── InfoWindow content ──
+  // ────────────────────────────────────────────────
+  // InfoWindow content
+  // ────────────────────────────────────────────────
 
   function infoContent(spot) {
-    const url = "https://www.google.com/maps/search/?api=1&query="
+    var mapsUrl = "https://www.google.com/maps/search/?api=1&query="
       + encodeURIComponent(spot.name) + "+" + spot.lat + "," + spot.lng;
-    const badge = spot.status === "closed"
-      ? `<span style="font-size:10px;color:#b91c1c;border:1px solid #b91c1c;padding:0 4px;line-height:1.7;margin-left:6px;">休業中</span>`
+    var badge = (spot.status === "closed")
+      ? '<span style="font-size:10px;color:#b91c1c;border:1px solid #b91c1c;'
+        + 'padding:0 4px;line-height:1.7;margin-left:6px;">休業中</span>'
       : "";
-    return `<div style="font-family:sans-serif;max-width:220px;">`
-      + `<div style="display:flex;align-items:center;flex-wrap:wrap;margin-bottom:5px;">`
-      + `<strong style="font-size:13px;color:#1a2421;">${spot.name}</strong>${badge}`
-      + `</div>`
-      + (spot.comment ? `<p style="margin:0 0 8px;font-size:12px;color:#555;line-height:1.6;">${spot.comment}</p>` : "")
-      + `<a href="${url}" target="_blank" rel="noopener"`
-      + ` style="font-size:11px;color:#4a5d4e;border-bottom:1px solid #4a5d4e;padding-bottom:1px;text-decoration:none;">`
-      + `Google Mapsで開く →</a>`
-      + `</div>`;
+    return '<div style="font-family:sans-serif;max-width:220px;line-height:1;">'
+      + '<div style="display:flex;align-items:center;flex-wrap:wrap;margin-bottom:5px;">'
+      + '<strong style="font-size:13px;color:#1a2421;">' + spot.name + '</strong>' + badge
+      + '</div>'
+      + (spot.comment
+        ? '<p style="margin:0 0 9px;font-size:12px;color:#555;line-height:1.6;">'
+          + spot.comment + '</p>'
+        : "")
+      + '<a href="' + mapsUrl + '" target="_blank" rel="noopener"'
+      + ' style="font-size:11px;color:#4a5d4e;border-bottom:1px solid #4a5d4e;'
+      + 'padding-bottom:1px;text-decoration:none;">'
+      + 'Google Mapsで開く →</a>'
+      + '</div>';
   }
 
   function homeInfoContent() {
     if (!homeSpot) return "";
-    return `<div style="font-family:sans-serif;max-width:220px;">`
-      + `<strong style="font-size:13px;color:#1a2421;">${homeSpot.name}</strong>`
-      + (homeSpot.comment ? `<p style="margin:6px 0 0;font-size:12px;color:#555;line-height:1.6;">${homeSpot.comment}</p>` : "")
-      + `</div>`;
+    return '<div style="font-family:sans-serif;max-width:220px;">'
+      + '<strong style="font-size:13px;color:#1a2421;">' + homeSpot.name + '</strong>'
+      + (homeSpot.comment
+        ? '<p style="margin:6px 0 0;font-size:12px;color:#555;line-height:1.6;">'
+          + homeSpot.comment + '</p>'
+        : "")
+      + '</div>';
   }
 
-  // ── Selection ──
+  // ────────────────────────────────────────────────
+  // Selection management
+  // ────────────────────────────────────────────────
+
+  function deselectAll() {
+    if (selectedIndex !== null) {
+      var prev = markers[selectedIndex];
+      if (prev) {
+        var wasClosed = prev.spot.status === "closed";
+        prev.el._selected = false;
+        prev.el.innerHTML = pinSvg(selectedIndex + 1, wasClosed ? PIN_CLOSED : PIN_COLOR);
+        prev.el.style.transform = "";
+        prev.el.style.filter    = "";
+        prev.el.style.zIndex    = "";
+      }
+    }
+    selectedIndex = null;
+    if (spotListEl) {
+      spotListEl.querySelectorAll(".is-selected").forEach(function (li) {
+        li.classList.remove("is-selected");
+      });
+    }
+    if (openInfoWindow) {
+      openInfoWindow.close();
+      openInfoWindow = null;
+    }
+  }
+
+  function openIw(spot, marker) {
+    if (openInfoWindow) openInfoWindow.close();
+    var iw = new google.maps.InfoWindow({ content: infoContent(spot) });
+    iw.open({ anchor: marker, map: gmap });
+    openInfoWindow = iw;
+  }
 
   function selectByIndex(idx) {
     if (!gmap || !markers[idx]) return;
     deselectAll();
     selectedIndex = idx;
-    const entry = markers[idx];
-    const isClosed = entry.spot.status === "closed";
+    var entry    = markers[idx];
+    var isClosed = entry.spot.status === "closed";
     if (!isClosed) {
-      entry.el.innerHTML = pinSvg(idx + 1, PIN_SELECTED);
+      entry.el._selected   = true;
+      entry.el.innerHTML   = pinSvg(idx + 1, PIN_SELECTED);
       entry.el.style.transform = "scale(1.3)";
-      entry.el.style.zIndex = "10";
+      entry.el.style.filter    = "";
+      entry.el.style.zIndex    = "10";
     }
-    const li = spotListEl.querySelector(`[data-index="${idx}"]`);
+    var li = spotListEl ? spotListEl.querySelector('[data-index="' + idx + '"]') : null;
     if (li) {
       li.classList.add("is-selected");
       li.scrollIntoView({ block: "nearest", behavior: "smooth" });
     }
     openIw(entry.spot, entry.marker);
     gmap.panTo(entry.marker.position);
+    // Slight zoom-in if currently zoomed out
+    if (gmap.getZoom() < 14) gmap.setZoom(16);
   }
 
-  function deselectAll() {
-    if (selectedIndex !== null) {
-      const prev = markers[selectedIndex];
-      if (prev) {
-        const isClosed = prev.spot.status === "closed";
-        prev.el.innerHTML = pinSvg(selectedIndex + 1, isClosed ? PIN_CLOSED : PIN_COLOR);
-        prev.el.style.transform = "";
-        prev.el.style.zIndex = "";
-      }
-    }
-    selectedIndex = null;
-    if (spotListEl) spotListEl.querySelectorAll(".is-selected").forEach(function(el) { el.classList.remove("is-selected"); });
-    if (openInfoWindow) { openInfoWindow.close(); openInfoWindow = null; }
-  }
-
-  function openIw(spot, marker) {
-    if (openInfoWindow) openInfoWindow.close();
-    const iw = new google.maps.InfoWindow({ content: infoContent(spot) });
-    iw.open({ anchor: marker, map: gmap });
-    openInfoWindow = iw;
-  }
-
-  // ── Markers ──
+  // ────────────────────────────────────────────────
+  // Markers
+  // ────────────────────────────────────────────────
 
   function clearMarkers() {
-    markers.forEach(function(m) { m.marker.map = null; });
+    markers.forEach(function (m) { m.marker.map = null; });
     markers = [];
   }
 
   function placeHomeMarker() {
     if (!homeSpot || homeMarker) return;
-    const el = makeHomePinEl();
+    var el = makeHomePinEl();
     homeMarker = new google.maps.marker.AdvancedMarkerElement({
-      map: gmap,
+      map:      gmap,
       position: { lat: homeSpot.lat, lng: homeSpot.lng },
-      content: el,
-      title: homeSpot.name,
-      zIndex: 100,
+      content:  el,
+      title:    homeSpot.name,
+      zIndex:   100,
     });
-    homeMarker.addListener("click", function() {
+    homeMarker.addListener("click", function () {
       deselectAll();
-      if (openInfoWindow) openInfoWindow.close();
-      const iw = new google.maps.InfoWindow({ content: homeInfoContent() });
+      var iw = new google.maps.InfoWindow({ content: homeInfoContent() });
       iw.open({ anchor: homeMarker, map: gmap });
       openInfoWindow = iw;
     });
@@ -529,30 +588,42 @@ const homeJson = JSON.stringify(homeSpot ?? null);
   function showCategory(view) {
     if (!gmap) return;
     clearMarkers();
-    const catSpots = spots[view] ?? [];
-    const bounds = new google.maps.LatLngBounds();
+    var catSpots = spots[view] || [];
+    var bounds   = new google.maps.LatLngBounds();
     if (homeSpot) bounds.extend({ lat: homeSpot.lat, lng: homeSpot.lng });
 
     if (catSpots.length === 0) {
-      gmap.setCenter(DEFAULT_CENTER);
+      // Empty category: center on home pin at zoom 12
+      if (homeSpot) {
+        gmap.setCenter({ lat: homeSpot.lat, lng: homeSpot.lng });
+      } else {
+        gmap.setCenter(DEFAULT_CENTER);
+      }
       gmap.setZoom(12);
       return;
     }
-    catSpots.forEach(function(spot, i) {
-      const isClosed = spot.status === "closed";
-      const el = makePinEl(i + 1, isClosed ? PIN_CLOSED : PIN_COLOR);
-      const marker = new google.maps.marker.AdvancedMarkerElement({
-        map: gmap,
+
+    catSpots.forEach(function (spot, i) {
+      var isClosed = spot.status === "closed";
+      var el = makePinEl(i + 1, isClosed ? PIN_CLOSED : PIN_COLOR, isClosed);
+      var marker = new google.maps.marker.AdvancedMarkerElement({
+        map:      gmap,
         position: { lat: spot.lat, lng: spot.lng },
-        content: el,
-        title: spot.name,
+        content:  el,
+        title:    spot.name,
       });
-      marker.addListener("click", (function(idx) {
-        return function() { selectByIndex(idx); };
-      })(i));
+      // Closure to capture correct index
+      (function (idx) {
+        marker.addListener("click", function () {
+          if (spots[view][idx].status !== "closed") {
+            selectByIndex(idx);
+          }
+        });
+      })(i);
       markers.push({ marker: marker, el: el, spot: spot, index: i });
       bounds.extend({ lat: spot.lat, lng: spot.lng });
     });
+
     if (catSpots.length === 1 && !homeSpot) {
       gmap.setCenter({ lat: catSpots[0].lat, lng: catSpots[0].lng });
       gmap.setZoom(17);
@@ -561,37 +632,44 @@ const homeJson = JSON.stringify(homeSpot ?? null);
     }
   }
 
-  // ── List ──
+  // ────────────────────────────────────────────────
+  // List panel
+  // ────────────────────────────────────────────────
 
   function renderList(view) {
-    const catSpots = spots[view] ?? [];
+    var catSpots = spots[view] || [];
     if (catSpots.length === 0) {
       spotListEl.innerHTML = "";
       noDataMsgEl.style.display = "block";
       return;
     }
     noDataMsgEl.style.display = "none";
-    spotListEl.innerHTML = catSpots.map(function(spot, i) {
-      const isClosed = spot.status === "closed";
-      return `<li class="list-item${isClosed ? " is-closed" : ""}" data-index="${i}">`
-        + `<span class="list-num">${i + 1}</span>`
-        + `<div class="list-text">`
-        + `<span class="list-name">${spot.name}</span>`
-        + (isClosed ? `<span class="closed-badge">休業中</span>` : "")
-        + (spot.comment ? `<span class="list-comment">${spot.comment}</span>` : "")
-        + `</div></li>`;
+    spotListEl.innerHTML = catSpots.map(function (spot, i) {
+      var isClosed = spot.status === "closed";
+      return '<li class="list-item' + (isClosed ? " is-closed" : "") + '" data-index="' + i + '"'
+        + (isClosed ? ' aria-disabled="true"' : "")
+        + ' role="listitem">'
+        + '<span class="list-num">' + (i + 1) + '</span>'
+        + '<div class="list-text">'
+        + '<span class="list-name">' + spot.name + '</span>'
+        + (isClosed ? '<span class="closed-badge">休業中</span>' : "")
+        + (spot.comment ? '<span class="list-comment">' + spot.comment + '</span>' : "")
+        + '</div></li>';
     }).join("");
-    spotListEl.querySelectorAll(".list-item:not(.is-closed)").forEach(function(li) {
-      li.addEventListener("click", function() {
+
+    spotListEl.querySelectorAll(".list-item:not(.is-closed)").forEach(function (li) {
+      li.addEventListener("click", function () {
         selectByIndex(parseInt(li.dataset.index, 10));
       });
     });
   }
 
-  // ── Tab ──
+  // ────────────────────────────────────────────────
+  // Tab
+  // ────────────────────────────────────────────────
 
   function setTabActive(view) {
-    document.querySelectorAll("[data-tab]").forEach(function(el) {
+    document.querySelectorAll("[data-tab]").forEach(function (el) {
       el.classList.toggle("is-active", el.dataset.tab === view);
     });
   }
@@ -604,38 +682,40 @@ const homeJson = JSON.stringify(homeSpot ?? null);
     showCategory(view);
   }
 
-  // ── Panel toggle ──
+  // ────────────────────────────────────────────────
+  // Panel toggle
+  // ────────────────────────────────────────────────
 
   function isMobile() { return window.innerWidth < 768; }
 
   function applyMobileLayout(open) {
-    const totalH = mapListArea.offsetHeight;
-    const handleH = mobileHandleEl.offsetHeight;
+    var totalH  = mapListArea.offsetHeight;
+    var handleH = mobileHandleEl.offsetHeight;
     if (open) {
-      const mapH = Math.round(totalH * 0.55);
-      const listH = totalH - mapH - handleH;
-      mapWrapperEl.style.height = mapH + "px";
-      listPanelEl.style.height = listH + "px";
-      listPanelEl.style.opacity = "1";
+      var mapH  = Math.round(totalH * 0.55);
+      var listH = totalH - mapH - handleH;
+      mapWrapperEl.style.height   = mapH + "px";
+      listPanelEl.style.height    = listH + "px";
+      listPanelEl.style.opacity   = "1";
       listPanelEl.style.pointerEvents = "";
-      handleIconEl.textContent = "∧";
+      handleIconEl.textContent    = "∧";
     } else {
-      mapWrapperEl.style.height = (totalH - handleH) + "px";
-      listPanelEl.style.height = "0";
-      listPanelEl.style.opacity = "0";
+      mapWrapperEl.style.height   = (totalH - handleH) + "px";
+      listPanelEl.style.height    = "0";
+      listPanelEl.style.opacity   = "0";
       listPanelEl.style.pointerEvents = "none";
-      handleIconEl.textContent = "∨";
+      handleIconEl.textContent    = "∨";
     }
   }
 
   function applyPcLayout(open) {
     if (open) {
       listPanelEl.classList.remove("panel-hidden-pc");
-      mapWrapperEl.style.flex = "";
+      mapWrapperEl.style.flex  = "";
       pcToggleIconEl.textContent = "◀";
     } else {
       listPanelEl.classList.add("panel-hidden-pc");
-      mapWrapperEl.style.flex = "1";
+      mapWrapperEl.style.flex  = "1";
       pcToggleIconEl.textContent = "▶";
     }
   }
@@ -647,105 +727,112 @@ const homeJson = JSON.stringify(homeSpot ?? null);
     } else {
       applyPcLayout(open);
     }
-    setTimeout(function() {
+    setTimeout(function () {
       if (gmap) google.maps.event.trigger(gmap, "resize");
     }, 270);
   }
 
-  // ── Google Maps init ──
+  // ────────────────────────────────────────────────
+  // Google Maps init
+  // ────────────────────────────────────────────────
 
   function getView() {
-    const v = new URLSearchParams(window.location.search).get("view") ?? "light";
-    return VALID_VIEWS.includes(v) ? v : "light";
+    var v = new URLSearchParams(window.location.search).get("view") || "light";
+    return VALID_VIEWS.indexOf(v) !== -1 ? v : "light";
   }
 
-  window.__initGoogleMaps = function() {
-    google.maps.importLibrary("maps").then(function(mapsLib) {
-      return google.maps.importLibrary("marker").then(function() {
+  window.__initGoogleMaps = function () {
+    google.maps.importLibrary("maps").then(function (mapsLib) {
+      return google.maps.importLibrary("marker").then(function () {
         gmap = new mapsLib.Map(document.getElementById("map"), {
-          center: DEFAULT_CENTER,
-          zoom: 15,
-          mapId: "DEMO_MAP_ID",
-          zoomControl: true,
-          mapTypeControl: false,
+          center:            DEFAULT_CENTER,
+          zoom:              15,
+          mapId:             "DEMO_MAP_ID",
+          zoomControl:       true,
+          mapTypeControl:    false,
           streetViewControl: false,
           fullscreenControl: false,
-          clickableIcons: false,
+          clickableIcons:    false,
         });
-        gmap.addListener("click", function() { deselectAll(); });
 
-        const skeleton = document.getElementById("map-skeleton");
+        gmap.addListener("click", function () { deselectAll(); });
+
+        var skeleton = document.getElementById("map-skeleton");
         if (skeleton) skeleton.remove();
 
         placeHomeMarker();
-        const view = getView();
+        var view = getView();
         setTabActive(view);
         renderList(view);
         showCategory(view);
-        // Apply initial mobile layout after map loads
+
         if (isMobile()) applyMobileLayout(listOpen);
       });
-    }).catch(function() {
-      const sk = document.getElementById("map-skeleton");
+    }).catch(function () {
+      var sk = document.getElementById("map-skeleton");
       if (sk) sk.remove();
-      const errEl = document.getElementById("map-error");
+      var errEl = document.getElementById("map-error");
       if (errEl) errEl.style.display = "flex";
     });
   };
 
-  // ── DOM ready ──
+  // ────────────────────────────────────────────────
+  // DOM ready
+  // ────────────────────────────────────────────────
 
-  document.addEventListener("DOMContentLoaded", function() {
-    mapMain = document.getElementById("map-main");
-    mapListArea = document.getElementById("map-list-area");
-    mapWrapperEl = document.getElementById("map-wrapper");
-    listPanelEl = document.getElementById("list-panel");
+  document.addEventListener("DOMContentLoaded", function () {
+    mapListArea    = document.getElementById("map-list-area");
+    mapWrapperEl   = document.getElementById("map-wrapper");
+    listPanelEl    = document.getElementById("list-panel");
     mobileHandleEl = document.getElementById("mobile-handle");
-    handleIconEl = document.getElementById("handle-icon");
-    pcToggleEl = document.getElementById("pc-toggle");
+    handleIconEl   = document.getElementById("handle-icon");
+    pcToggleEl     = document.getElementById("pc-toggle");
     pcToggleIconEl = document.getElementById("pc-toggle-icon");
-    spotListEl = document.getElementById("spot-list");
-    noDataMsgEl = document.getElementById("no-data-msg");
+    spotListEl     = document.getElementById("spot-list");
+    noDataMsgEl    = document.getElementById("no-data-msg");
 
-    const initialView = getView();
+    var initialView = getView();
     setTabActive(initialView);
     renderList(initialView);
-
-    // Initial mobile layout (before map loads)
     if (isMobile()) applyMobileLayout(listOpen);
 
     // Tab clicks
-    document.querySelectorAll("[data-tab]").forEach(function(el) {
-      el.addEventListener("click", function() { switchTab(el.dataset.tab); });
+    document.querySelectorAll("[data-tab]").forEach(function (el) {
+      el.addEventListener("click", function () { switchTab(el.dataset.tab); });
     });
 
-    // Handle / toggle
-    mobileHandleEl.addEventListener("click", function() { setListOpen(!listOpen); });
-    pcToggleEl.addEventListener("click", function() { setListOpen(!listOpen); });
+    // Mobile handle
+    mobileHandleEl.addEventListener("click", function () { setListOpen(!listOpen); });
+    mobileHandleEl.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setListOpen(!listOpen); }
+    });
 
-    // Resize: recompute mobile heights
-    window.addEventListener("resize", function() {
+    // PC toggle
+    pcToggleEl.addEventListener("click", function () { setListOpen(!listOpen); });
+
+    // Resize
+    window.addEventListener("resize", function () {
       if (isMobile()) applyMobileLayout(listOpen);
     });
 
-    // Popstate
-    window.addEventListener("popstate", function(e) {
-      const view = (e.state && e.state.view) ? e.state.view : getView();
+    // Popstate (browser back/forward)
+    window.addEventListener("popstate", function (e) {
+      var view = (e.state && e.state.view) ? e.state.view : getView();
       setTabActive(view);
       deselectAll();
       renderList(view);
       showCategory(view);
     });
 
-    // Load Google Maps
+    // Load Google Maps API
     if (!API_KEY) {
-      const sk = document.getElementById("map-skeleton");
+      var sk = document.getElementById("map-skeleton");
       if (sk) sk.remove();
-      const errEl = document.getElementById("map-error");
+      var errEl = document.getElementById("map-error");
       if (errEl) errEl.style.display = "flex";
       return;
     }
-    const s = document.createElement("script");
+    var s = document.createElement("script");
     s.src = "https://maps.googleapis.com/maps/api/js?key=" + API_KEY
       + "&libraries=marker&v=weekly&loading=async&callback=__initGoogleMaps";
     s.async = true;
