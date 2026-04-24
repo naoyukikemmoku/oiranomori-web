@@ -4,6 +4,7 @@ import Header from "../../components/Header.astro";
 import spotsRaw from "../../data/spots.json";
 
 const API_KEY = import.meta.env.PUBLIC_GMAPS_API_KEY ?? "";
+const MAP_ID  = import.meta.env.PUBLIC_GMAPS_MAP_ID  ?? "";
 
 const CATEGORIES = [
   { key: "light",       label: "Light Forest" },
@@ -379,7 +380,7 @@ const homeJson  = JSON.stringify(homeSpot ?? null);
 .gm-style-iw-c { padding: 12px 14px !important; border-radius: 0 !important; }
 </style>
 
-<script is:inline define:vars={{ API_KEY, spotsJson, homeJson }}>
+<script is:inline define:vars={{ API_KEY, MAP_ID, spotsJson, homeJson }}>
   var spots    = JSON.parse(spotsJson);
   var homeSpot = JSON.parse(homeJson);
 
@@ -744,16 +745,21 @@ const homeJson  = JSON.stringify(homeSpot ?? null);
   window.__initGoogleMaps = function () {
     google.maps.importLibrary("maps").then(function (mapsLib) {
       return google.maps.importLibrary("marker").then(function () {
-        gmap = new mapsLib.Map(document.getElementById("map"), {
+        var mapOptions = {
           center:            DEFAULT_CENTER,
           zoom:              15,
-          mapId:             "DEMO_MAP_ID",
           zoomControl:       true,
           mapTypeControl:    false,
           streetViewControl: false,
           fullscreenControl: false,
           clickableIcons:    false,
-        });
+        };
+        if (MAP_ID) {
+          mapOptions.mapId = MAP_ID;
+        } else {
+          console.warn("PUBLIC_GMAPS_MAP_ID is not set. Advanced Markers will not render.");
+        }
+        gmap = new mapsLib.Map(document.getElementById("map"), mapOptions);
 
         gmap.addListener("click", function () { deselectAll(); });
 
