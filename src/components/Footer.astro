@@ -6,50 +6,43 @@ const footerGroups = [
       { label: "予約する", href: "https://www.489pro-x.com/ja/s/oiranomori/planlist/", external: true, active: true },
       { label: "予約ガイド", href: "/reservation-guide/", active: true },
       { label: "ご予約確認", href: "https://www.489pro-x.com/ja/s/oiranomori/booking/login/", external: true, active: true },
-      { label: "チェックアウト", href: "/checkout/", active: true },
+      { label: "会員ログイン", href: "https://www.489pro-x.com/ja/s/oiranomori/member/login/", external: true, active: true },
+      { label: "新規会員登録", href: "https://www.489pro-x.com/ja/s/oiranomori/member/input/", external: true, active: true },
+      { label: "チェックアウトの連絡", href: "/checkout/", active: true },
+      { label: "キャンセルポリシー", href: "/reservation-guide/#cancellation", active: true },
     ],
   },
   {
-    title: "フィールド案内",
+    title: "おいらの森でキャンプする",
     items: [
-      { label: "森のいま", href: "/now/", active: true },
-      { label: "ライトフォレスト", href: "/light-guide/", active: true },
-      { label: "ディープフォレスト", href: "/deep-guide/", active: true },
-      { label: "アクセス", href: "/access/", active: true },
-    ],
-  },
-  {
-    title: "場内の設備",
-    items: [
-      { label: "売店", href: "/shop/", active: true },
-      { label: "レンタル", href: "/rental/", active: true },
+      { label: "ライトフォレスト 利用案内", href: "/light-guide/", active: true },
+      { label: "ディープフォレスト 利用案内", href: "/deep-guide/", active: true },
+      { label: "場内マップ（ライト）", href: "/map/?view=light", active: true },
+      { label: "場内マップ（ディープ）", href: "/map/?view=deep", active: true },
       { label: "おいらの薪", href: "/firewood/", active: true },
-      { label: "年間パスポート", href: "/passport/", active: true },
+      { label: "レンタル・売店", href: "/firewood/#rental", active: true },
+      { label: "年間パスポート・回数券", href: "/passport/", active: true },
+      { label: "よくある質問", href: "/faq/", active: true },
     ],
   },
   {
-    title: "森を体験",
+    title: "おいらの森",
     items: [
-      { label: "オイラーズ", href: "/oiras/", active: true },
-    ],
-  },
-  {
-    title: "物語・記録",
-    items: [
-      { label: "Note", href: "https://note.com/oiranomori", external: true, active: true },
-      { label: "Instagram", href: "https://instagram.com/oiranomori", external: true, active: true },
-      { label: "Facebook", href: "https://facebook.com/oiranomori", external: true, active: true },
-      { label: "X (Twitter)", href: "https://x.com/oiranomori", external: true, active: true },
-    ],
-  },
-  {
-    title: "サポート",
-    items: [
+      { label: "アクセス", href: "/access/", active: true },
+      { label: "周辺案内", href: "/map/?view=area", active: true },
+      { label: "森のいま", href: "/now/", active: true },
       { label: "お知らせ", href: "/news/", active: true },
       { label: "お問い合わせ", href: "/contact/", active: true },
-      { label: "よくある質問", href: "/faq/", active: true },
       { label: "利用規約", href: "/policy/#terms", active: true },
       { label: "プライバシーポリシー", href: "/policy/#privacy", active: true },
+    ],
+  },
+  {
+    title: "おいらと森と",
+    items: [
+      { label: "森の住人", href: "/residents/", active: true },
+      { label: "オイラーズ", href: "/oiras/", active: true },
+      { label: "The 森 Chronicles", href: "https://note.com/oiranomori/m/m820d8cac57a3", external: true, active: true },
       { label: "運営会社・関連組織", href: "/about/", active: true },
     ],
   },
@@ -71,7 +64,7 @@ const footerGroups = [
       </div>
     </div>
 
-    <div class="grid grid-cols-2 gap-6 lg:grid-cols-3 xl:grid-cols-6">
+    <div class="grid grid-cols-2 gap-6 lg:grid-cols-4">
       {footerGroups.map((group) => (
         <div>
           <h3 class="mb-3 text-sm font-semibold tracking-[0.16em] text-zinc-400">{group.title}</h3>
