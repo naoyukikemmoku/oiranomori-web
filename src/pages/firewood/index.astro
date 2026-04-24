@@ -36,9 +36,9 @@ const stars = (n: number) => "★".repeat(n) + "☆".repeat(5 - n);
         </p>
         <nav class="mt-10 flex flex-wrap gap-3">
           {[
-            { href: "#sales",   label: "購入方法" },
-            { href: "#species", label: "樹種を選ぶ" },
-            { href: "#guide",   label: "量り売りの手順" },
+            { href: "#species", label: "薪の種類" },
+            { href: "#sales",   label: "薪の買い方" },
+            { href: "#process", label: "薪の作り方" },
             { href: "#quality", label: "おいらの薪とは" },
           ].map((item) => (
             <a
@@ -51,67 +51,14 @@ const stars = (n: number) => "★".repeat(n) + "☆".repeat(5 - n);
         </nav>
       </div>
     </div>
-    <a href="#sales" class="lp-scroll">Scroll</a>
+    <a href="#species" class="lp-scroll">Scroll</a>
   </section>
 
-  <!-- Sales Menu -->
-  <section id="sales" class="bg-[#f4f4f5] py-20 md:py-28">
-    <div class="mx-auto max-w-6xl px-5">
-      <p class="text-xs tracking-[0.32em] text-zinc-400">HOW TO BUY</p>
-      <h2 class="mt-4 text-3xl font-semibold text-zinc-800 md:text-4xl">お買い求め方法</h2>
-      <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-600">
-        キャンプのスタイルに合わせて、3つの買い方をご用意しています。
-      </p>
-
-      <div class="mt-14 divide-y divide-zinc-300 border-y border-zinc-300">
-        {[
-          {
-            no: "01",
-            title: "セルフ量り売り",
-            subtitle: "広葉樹ミックス",
-            price: "¥100 / kg",
-            note: "100円未満切り捨て",
-            desc: "好きな薪を、必要な分だけ。少量からでもご購入いただけます。迷ったらこれが一番のおすすめです。薪棚から自分で選ぶ愉しみを。",
-          },
-          {
-            no: "02",
-            title: "おいらチョイス",
-            subtitle: "おまかせブレンド",
-            price: "予約時オプション",
-            note: "当日現地での変更も可",
-            desc: "その日の薪の状態を見て、おいらが最高の組み合わせをセレクトします。予約時に必要量を選択いただき、当日現地での変更も可能です。",
-          },
-          {
-            no: "03",
-            title: "樹種別ネット売り",
-            subtitle: "パッキング済み",
-            price: "¥770 〜",
-            note: "樹種・サイズにより異なる",
-            desc: "各樹種ごとにパッキング済み。手軽に持ち運びたい方、特定の樹種を指定したい方へ。",
-          },
-        ].map((item) => (
-          <div class="grid gap-4 py-8 md:grid-cols-[2.5rem_1fr_auto] md:items-start">
-            <p class="text-4xl font-semibold text-zinc-200 leading-none">{item.no}</p>
-            <div>
-              <p class="text-xs tracking-[0.22em] text-zinc-400">{item.subtitle}</p>
-              <h3 class="mt-1 text-xl font-semibold text-zinc-800">{item.title}</h3>
-              <p class="mt-3 max-w-lg text-sm leading-loose text-zinc-600">{item.desc}</p>
-            </div>
-            <div class="md:text-right">
-              <p class="text-2xl font-semibold text-zinc-800">{item.price}</p>
-              <p class="text-xs text-zinc-400">{item.note}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- Firewood Selection -->
+  <!-- 薪の種類 -->
   <section id="species" class="bg-zinc-800 py-20 md:py-28">
     <div class="mx-auto max-w-6xl px-5">
       <p class="text-xs tracking-[0.32em] text-zinc-500">FIREWOOD SELECTION</p>
-      <h2 class="mt-4 text-3xl font-semibold text-white md:text-4xl">樹種の個性を知る</h2>
+      <h2 class="mt-4 text-3xl font-semibold text-white md:text-4xl">薪の種類</h2>
       <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-400">
         「針葉樹は良くない」というのは誤解です。目的や時間帯に合わせて使い分けることで、焚き火の質は劇的に変わります。
       </p>
@@ -188,36 +135,95 @@ const stars = (n: number) => "★".repeat(n) + "☆".repeat(5 - n);
     </div>
   </section>
 
-  <!-- Purchase Guide & Combination -->
-  <section id="guide" class="bg-[#f4f4f5] py-20 md:py-28">
+  <!-- 薪の買い方 -->
+  <section id="sales" class="bg-[#f4f4f5] py-20 md:py-28">
     <div class="mx-auto max-w-6xl px-5">
-      <p class="text-xs tracking-[0.32em] text-zinc-400">PURCHASE GUIDE</p>
-      <h2 class="mt-4 text-3xl font-semibold text-zinc-800 md:text-4xl">セルフ量り売りの手順</h2>
-      <p class="mt-4 text-sm text-zinc-600">現地での購入は、以下の手順です。</p>
+      <p class="text-xs tracking-[0.32em] text-zinc-400">HOW TO BUY</p>
+      <h2 class="mt-4 text-3xl font-semibold text-zinc-800 md:text-4xl">薪の買い方</h2>
+      <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-600">
+        キャンプのスタイルに合わせて、3つの買い方をご用意しています。
+      </p>
+
+      <!-- セルフレジ案内 -->
+      <div class="mt-8 border-l-4 border-[color:var(--light-accent)] pl-5">
+        <p class="text-sm font-semibold text-zinc-700">セルフレジ対応 — 営業時間外でも購入できます</p>
+        <p class="mt-1 text-sm leading-loose text-zinc-600">
+          薪小屋のセルフレジは17:30以降も利用可能です。計量・精算をお一人で行えるので、チェックイン後でも安心してお買い求めいただけます。
+        </p>
+      </div>
 
       <div class="mt-14 divide-y divide-zinc-300 border-y border-zinc-300">
         {[
-          { no: "1", title: "道具の準備",   desc: "薪バッグまたはバケツを選び、秤（はかり）の電源を入れます。" },
-          { no: "2", title: "風袋引き",     desc: "空の容器を秤に乗せ「ゼロ設定」ボタンを押します。" },
-          { no: "3", title: "セレクト",     desc: "M1ボタンを押して単価（¥100/kg）をセット。好きな薪を棚から選び、容器に詰めます。" },
-          { no: "4", title: "記録",         desc: "金額が表示された画面をスマートフォンで撮影してください。" },
-          { no: "5", title: "精算",         desc: "管理棟で撮影画面をスタッフに提示し、お支払いください。秤の電源オフにご協力ください。" },
-          { no: "6", title: "道具を元へ",   desc: "ご利用になられた薪バッグやバケツは、使用後はたたんで元の場所へお戻しください。" },
-        ].map((step) => (
-          <div class="grid grid-cols-[2.5rem_1fr] gap-4 py-6">
-            <p class="text-3xl font-semibold text-zinc-200 leading-none">{step.no}</p>
+          {
+            no: "01",
+            title: "セルフ量り売り",
+            subtitle: "広葉樹ミックス",
+            price: "¥100 / kg",
+            note: "100円未満切り捨て",
+            desc: "好きな薪を、必要な分だけ。少量からでもご購入いただけます。迷ったらこれが一番のおすすめです。薪棚から自分で選ぶ愉しみを。",
+          },
+          {
+            no: "02",
+            title: "おいらチョイス",
+            subtitle: "おまかせブレンド",
+            price: "予約時オプション",
+            note: "当日現地での変更も可",
+            desc: "その日の薪の状態を見て、おいらが最高の組み合わせをセレクトします。予約時に必要量を選択いただき、当日現地での変更も可能です。",
+          },
+          {
+            no: "03",
+            title: "樹種別ネット売り",
+            subtitle: "パッキング済み",
+            price: "¥770 〜",
+            note: "樹種・サイズにより異なる",
+            desc: "各樹種ごとにパッキング済み。手軽に持ち運びたい方、特定の樹種を指定したい方へ。",
+          },
+        ].map((item) => (
+          <div class="grid gap-4 py-8 md:grid-cols-[2.5rem_1fr_auto] md:items-start">
+            <p class="text-4xl font-semibold text-zinc-200 leading-none">{item.no}</p>
             <div>
-              <h3 class="font-semibold text-zinc-800">{step.title}</h3>
-              <p class="mt-2 text-sm leading-loose text-zinc-600">{step.desc}</p>
+              <p class="text-xs tracking-[0.22em] text-zinc-400">{item.subtitle}</p>
+              <h3 class="mt-1 text-xl font-semibold text-zinc-800">{item.title}</h3>
+              <p class="mt-3 max-w-lg text-sm leading-loose text-zinc-600">{item.desc}</p>
+            </div>
+            <div class="md:text-right">
+              <p class="text-2xl font-semibold text-zinc-800">{item.price}</p>
+              <p class="text-xs text-zinc-400">{item.note}</p>
             </div>
           </div>
         ))}
       </div>
 
+      <!-- セルフ量り売りの手順 -->
+      <div class="mt-20">
+        <p class="text-xs tracking-[0.32em] text-zinc-400">PURCHASE GUIDE</p>
+        <h3 class="mt-4 text-2xl font-semibold text-zinc-800">セルフ量り売りの手順</h3>
+        <p class="mt-4 text-sm text-zinc-600">現地での購入は、以下の手順です。</p>
+
+        <div class="mt-10 divide-y divide-zinc-300 border-y border-zinc-300">
+          {[
+            { no: "1", title: "道具の準備",   desc: "薪バッグまたはバケツを選び、秤（はかり）の電源を入れます。" },
+            { no: "2", title: "風袋引き",     desc: "空の容器を秤に乗せ「ゼロ設定」ボタンを押します。" },
+            { no: "3", title: "セレクト",     desc: "M1ボタンを押して単価（¥100/kg）をセット。好きな薪を棚から選び、容器に詰めます。" },
+            { no: "4", title: "記録",         desc: "金額が表示された画面をスマートフォンで撮影してください。" },
+            { no: "5", title: "精算",         desc: "管理棟で撮影画面をスタッフに提示し、お支払いください。17:30以降はセルフレジでのお支払いとなります。秤の電源オフにご協力ください。" },
+            { no: "6", title: "道具を元へ",   desc: "ご利用になられた薪バッグやバケツは、使用後はたたんで元の場所へお戻しください。" },
+          ].map((step) => (
+            <div class="grid grid-cols-[2.5rem_1fr] gap-4 py-6">
+              <p class="text-3xl font-semibold text-zinc-200 leading-none">{step.no}</p>
+              <div>
+                <h3 class="font-semibold text-zinc-800">{step.title}</h3>
+                <p class="mt-2 text-sm leading-loose text-zinc-600">{step.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
       <!-- 組み合わせ提案 -->
       <div class="mt-20">
         <p class="text-xs tracking-[0.32em] text-zinc-400">RECOMMENDED COMBINATION</p>
-        <h2 class="mt-4 text-2xl font-semibold text-zinc-800">失敗しない「黄金比率」</h2>
+        <h3 class="mt-4 text-2xl font-semibold text-zinc-800">失敗しない「黄金比率」</h3>
         <p class="mt-4 text-sm leading-loose text-zinc-600">
           薪は「混ぜる」ことで真価を発揮します。スギで素早く火を熾し、丸枝を挟んで、最後にクヌギへ繋ぐ。
           これで焚き火が途切れることはありません。
@@ -252,6 +258,39 @@ const stars = (n: number) => "★".repeat(n) + "☆".repeat(5 - n);
             </div>
           ))}
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 薪の作り方 -->
+  <section id="process" class="bg-[color:var(--forest-600)] py-20 md:py-28">
+    <div class="mx-auto max-w-6xl px-5">
+      <p class="text-xs tracking-[0.32em] text-zinc-500">THE PROCESS</p>
+      <h2 class="mt-4 text-3xl font-semibold text-white md:text-4xl">薪の作り方</h2>
+      <p class="mt-4 text-sm leading-loose text-zinc-400">伐採から、あなたの焚き火台まで。</p>
+
+      <div class="mt-14 grid gap-8 sm:grid-cols-2 md:grid-cols-4">
+        {[
+          { no: "01", title: "伐採",         desc: "森の光と風の通り道を考え、1本ずつ木を選定。チェーンソーで丁寧に伐採します。" },
+          { no: "02", title: "玉切り・運搬",  desc: "軽トラやトラクターで運び出し、玉切り台でまとめて薪の長さにカット。" },
+          { no: "03", title: "薪割り",        desc: "断面を出すことで乾燥を促進。おかみも協力して割っています。" },
+          { no: "04", title: "乾燥",          desc: "薪棚で風に当て、じっくりと熟成。水分計で全数チェックし、含水率15%以下で出荷。" },
+        ].map((step) => (
+          <div>
+            <p class="text-4xl font-semibold text-zinc-600 leading-none">{step.no}</p>
+            <h3 class="mt-3 font-semibold text-white">{step.title}</h3>
+            <p class="mt-2 text-sm leading-loose text-zinc-400">{step.desc}</p>
+          </div>
+        ))}
+      </div>
+
+      <div class="mt-20 border-t border-zinc-600 pt-14">
+        <h3 class="text-2xl font-semibold text-white">薪から始まる、100年の森作り。</h3>
+        <p class="mt-5 max-w-2xl text-sm leading-loose text-zinc-400">
+          あなたが今日燃やす薪は、おいらの森を整備する過程で生まれたものです。<br />
+          木を切り、光を入れ、また芽吹かせる「薪炭林（しんたんりん）」のサイクル。<br />
+          薪を買うという行為が、この森の100年後の姿を支える資金になります。
+        </p>
       </div>
     </div>
   </section>
@@ -296,39 +335,6 @@ const stars = (n: number) => "★".repeat(n) + "☆".repeat(5 - n);
     </div>
   </section>
 
-  <!-- Process -->
-  <section class="bg-[color:var(--forest-600)] py-20 md:py-28">
-    <div class="mx-auto max-w-6xl px-5">
-      <p class="text-xs tracking-[0.32em] text-zinc-500">THE PROCESS</p>
-      <h2 class="mt-4 text-3xl font-semibold text-white md:text-4xl">薪ができるまで</h2>
-      <p class="mt-4 text-sm leading-loose text-zinc-400">伐採から、あなたの焚き火台まで。</p>
-
-      <div class="mt-14 grid gap-8 sm:grid-cols-2 md:grid-cols-4">
-        {[
-          { no: "01", title: "伐採",         desc: "森の光と風の通り道を考え、1本ずつ木を選定。チェーンソーで丁寧に伐採します。" },
-          { no: "02", title: "玉切り・運搬",  desc: "軽トラやトラクターで運び出し、玉切り台でまとめて薪の長さにカット。" },
-          { no: "03", title: "薪割り",        desc: "断面を出すことで乾燥を促進。おかみも協力して割っています。" },
-          { no: "04", title: "乾燥",          desc: "薪棚で風に当て、じっくりと熟成。水分計で全数チェックし、含水率15%以下で出荷。" },
-        ].map((step) => (
-          <div>
-            <p class="text-4xl font-semibold text-zinc-600 leading-none">{step.no}</p>
-            <h3 class="mt-3 font-semibold text-white">{step.title}</h3>
-            <p class="mt-2 text-sm leading-loose text-zinc-400">{step.desc}</p>
-          </div>
-        ))}
-      </div>
-
-      <div class="mt-20 border-t border-zinc-600 pt-14">
-        <h3 class="text-2xl font-semibold text-white">薪から始まる、100年の森作り。</h3>
-        <p class="mt-5 max-w-2xl text-sm leading-loose text-zinc-400">
-          あなたが今日燃やす薪は、おいらの森を整備する過程で生まれたものです。<br />
-          木を切り、光を入れ、また芽吹かせる「薪炭林（しんたんりん）」のサイクル。<br />
-          薪を買うという行為が、この森の100年後の姿を支える資金になります。
-        </p>
-      </div>
-    </div>
-  </section>
-
   <!-- FAQ -->
   <section class="bg-[#f4f4f5] py-20 md:py-24">
     <div class="mx-auto max-w-6xl px-5">
@@ -351,7 +357,7 @@ const stars = (n: number) => "★".repeat(n) + "☆".repeat(5 - n);
           },
           {
             q: "受付・売店の時間は？",
-            a: "受付・売店は9:00〜17:30。薪の販売は17:30で終了します。遅い到着予定の方はアーリーチェックインや薪の事前手配をご検討ください。",
+            a: "受付・売店は9:00〜17:30。薪のセルフレジは17:30以降も利用可能です。遅い到着予定の方もセルフで購入いただけます。",
           },
         ].map((item) => (
           <div class="py-6">

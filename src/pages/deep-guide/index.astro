@@ -2,9 +2,9 @@
 import PageLayout from "../../layouts/PageLayout.astro";
 
 const facilities = [
-  { label: "トイレ",    value: "水洗（ライトフォレスト管理棟内）。ディープフォレスト内にはトイレ以外の場所での排泄厳禁。", avail: true  },
+  { label: "トイレ",    value: "仮設トイレのみ（様式便座設置済み）",                                                      avail: true  },
   { label: "水道・流し", value: "なし（炊事場不設置）。飲料水はライトフォレストで調達してください。",                  avail: false },
-  { label: "直火",      value: "可。ただし立木の枯れ枝・積んである丸太の使用は厳禁。",                                avail: true  },
+  { label: "直火・焚き火", value: "可。枯れた木の伐採、丸太の使用はご遠慮ください。",                              avail: true  },
   { label: "火消し壺",  value: "持参必須（未持参の場合は利用不可）。受付にてレンタルあり（500円）。",                  avail: true  },
   { label: "AC電源",    value: "なし。発電機の持ち込み・使用禁止。",                                                    avail: false },
   { label: "駐車場",    value: "1予約につき1台まで広場駐車可（先着計4台）。以降は下駐車場を利用。",                    avail: true  },
@@ -32,12 +32,12 @@ const facilities = [
     <div class="mt-5 border-l-2 border-zinc-600 pl-5">
       <p class="text-sm leading-loose text-zinc-300">
         <strong class="text-white">ディープフォレストは18歳以上限定のフィールドです。</strong><br />
-        入場時に年齢確認書類（免許証・パスポート等）をご提示ください。未成年者の入場はいかなる理由でも不可です。
+        未成年者の入場はいかなる理由でも不可です。
       </p>
     </div>
 
     <p class="mt-5 max-w-2xl text-base leading-loose text-zinc-400">
-      樹齢80年のスギ・ヒノキが立ち並ぶ深い針葉樹林。直火、ブッシュクラフト、圧倒的な静寂。
+      樹齢80年以上のスギ・ヒノキが立ち並ぶ深い針葉樹林。直火、ブッシュクラフト、圧倒的な静寂。
       整備された快適さよりも、自然との真剣な対話を求める方のためのフィールドです。
     </p>
     <p class="mt-3 max-w-2xl text-sm leading-loose text-zinc-500">
@@ -51,6 +51,7 @@ const facilities = [
         { href: "#facility",   label: "設備・スペック" },
         { href: "#rules",      label: "禁止事項" },
         { href: "#principles", label: "基本4鉄則" },
+        { href: "#map",        label: "場内マップ" },
       ].map((item) => (
         <a
           href={item.href}
@@ -159,7 +160,7 @@ const facilities = [
         {
           category: "環境破壊",
           items: [
-            "樹木の損傷（立木の枯れ枝・積んである丸太の使用を含む）",
+            "樹木の損傷",
             "不法投棄",
           ],
         },
@@ -189,7 +190,7 @@ const facilities = [
         "森の静寂と闇夜、自然の音を楽しむこと。",
         "現地で使用可能なものは「落葉・落枝」のみ。",
         "利用後は現状回復し、足跡以外の痕跡を残さないこと。",
-        "トイレ以外の場所での排泄（野外排泄）は厳禁。",
+        "野グソ禁止。トイレ以外での排泄は厳禁。",
       ].map((rule, i) => (
         <div class="grid grid-cols-[2rem_1fr] gap-4 py-5 text-sm">
           <p class="text-lg font-semibold text-zinc-700">{i + 1}</p>
@@ -220,6 +221,30 @@ const facilities = [
         </div>
       ))}
     </div>
+  </section>
+
+  {/* 場内マップ */}
+  <section id="map" class="mb-14">
+    <h2 class="mb-5 text-xl font-semibold text-white">場内マップ</h2>
+    <div class="overflow-hidden border border-zinc-700">
+      <img
+        src="/images/deep-field-map.jpg"
+        alt="ディープフォレスト場内マップ"
+        class="w-full"
+        loading="lazy"
+        onerror="this.parentElement.style.display='none'"
+      />
+    </div>
+    <p class="mt-4 text-right text-sm">
+      <a
+        href="/pdf/deep-field-map.pdf"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-zinc-500 underline underline-offset-2 transition hover:text-zinc-300"
+      >
+        PDFをダウンロード →
+      </a>
+    </p>
   </section>
 
   {/* 予約CTA */}

@@ -25,7 +25,7 @@ const experiences = [
   {
     no: "03",
     title: "変化する森の表情",
-    desc: "朝霧の中で目覚め、木漏れ日の下で朝を過ごし、夕暮れに樹齢80年のスギが金色に染まるのを見る。同じ場所が、何度も別の場所になる。",
+    desc: "朝霧の中で目覚め、木漏れ日の下で朝を過ごし、夕暮れに樹齢80年以上のスギが金色に染まるのを見る。同じ場所が、何度も別の場所になる。",
     img: deepFaceImg,
     alt: "朝霧と木漏れ日が交錯するディープフォレストの森の表情",
   },
@@ -103,26 +103,12 @@ const experiences = [
     <div class="mx-auto max-w-6xl px-5">
       <p class="text-xs tracking-[0.28em] text-zinc-500 uppercase">Concept</p>
       <h2 class="mt-5 text-3xl font-semibold text-white md:text-4xl">
-        樹齢80年のスギ・ヒノキが創り出す、<br />圧倒的な静寂と闇。
+        樹齢80年以上のスギ・ヒノキが創り出す、<br />圧倒的な静寂と闇。
       </h2>
       <p class="mt-6 max-w-2xl text-base leading-loose text-zinc-400">
         ディープフォレストは、コンビニも整備された炊事場もない。あるのは深い森と、直火と、静寂だけ。
         「キャンプ」ではなく「野営」を求める人のためのフィールドです。
       </p>
-
-      <div class="mt-12 grid gap-px border border-zinc-700 sm:grid-cols-4">
-        {[
-          { head: "静寂",       body: "耳がキーンとするほどの静寂。針葉樹の密林が音を吸い込む。" },
-          { head: "闇",         body: "本物の闇に包まれる夜。人工の光が届かない深い森の夜。" },
-          { head: "変化",       body: "変化する森の表情。朝霧、木漏れ日、風の音、季節の移ろい。" },
-          { head: "野生",       body: "野生との境界線。管理された快適さの外側にある、本物の自然。" },
-        ].map((item) => (
-          <div class="bg-[color:var(--forest-600)] p-8">
-            <p class="text-xs tracking-[0.2em] text-zinc-500 uppercase">{item.head}</p>
-            <p class="mt-4 text-sm leading-loose text-zinc-400">{item.body}</p>
-          </div>
-        ))}
-      </div>
     </div>
   </section>
 
@@ -169,7 +155,7 @@ const experiences = [
           "森の静寂と闇夜、自然の音を楽しむこと。",
           "現地で使用可能なものは「落葉・落枝」のみ。",
           "利用後は現状回復し、足跡以外の痕跡を残さないこと。",
-          "トイレ以外の場所での排泄（野外排泄）は厳禁。",
+          "野グソ禁止。トイレ以外での排泄は厳禁。",
         ].map((rule, i) => (
           <div class="grid grid-cols-[2rem_1fr] gap-4 py-5 text-sm sm:grid-cols-[3rem_1fr]">
             <dt class="text-xl font-semibold text-zinc-600">{i + 1}</dt>
@@ -211,7 +197,7 @@ const experiences = [
           { label: "利用制限",         value: "18歳以上のみ（入場時に年齢確認書類を提示）" },
           { label: "チェックイン",     value: "12:00〜17:00（ライトフォレスト管理棟にて受付）" },
           { label: "チェックアウト",   value: "12:00（空きがある場合、17:00まで無料延長可）" },
-          { label: "直火",             value: "可（立木の枯れ枝・積んである丸太の使用は厳禁）" },
+          { label: "直火・焚き火",     value: "可（枯れた木の伐採、丸太の使用はご遠慮ください）" },
           { label: "火消し壺",         value: "持参必須。レンタルあり（¥500）" },
           { label: "ゴミ",             value: "原則全て持ち帰り（灰のみ指定ペール缶可）" },
           { label: "発電機・スピーカー", value: "禁止" },

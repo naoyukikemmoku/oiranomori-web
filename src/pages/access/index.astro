@@ -7,105 +7,18 @@ import LpLayout from "../../layouts/LpLayout.astro";
   description="那須烏山の里山パークおいらの森へのアクセス。JR烏山線・お車でのルート、カーナビの注意点、鴻野山駅からの送迎プランなど。道に迷ったらTEL 050-3647-1047へ。"
 >
 
-  {/* Hero */}
-  <section
-    class="lp-hero"
-    style="background-image:url('https://oiranomori.jp/wp-content/uploads/2022/12/Neighborhood-guide.png'); background-size: cover; background-position: center;"
-  >
-    <div class="lp-hero__overlay" style="background:rgba(0,0,0,0.62);"></div>
-    <div class="relative z-10 mx-auto max-w-6xl px-5">
-      <div class="lp-hero__content">
-        <p class="text-xs tracking-[0.32em] text-zinc-400 uppercase">Access &amp; Map</p>
-        <h1 class="mt-6 text-4xl font-semibold leading-tight text-white md:text-6xl">
-          森への道順
-        </h1>
-        <p class="mt-6 max-w-xl text-sm leading-loose text-zinc-300 md:text-base">
-          那須烏山の山の中にあるキャンプ場です。<br />
-          カーナビの案内では絶対にたどり着けません。必ずこのページの案内に従ってお越しください。
-        </p>
-        <nav class="mt-10 flex flex-wrap gap-3">
-          {[
-            { href: "#important",  label: "重要なお知らせ" },
-            { href: "#car",        label: "お車・バイク" },
-            { href: "#train",      label: "電車・公共交通" },
-            { href: "#light",      label: "ライトフォレスト" },
-            { href: "#deep",       label: "ディープフォレスト" },
-          ].map((item) => (
-            <a
-              href={item.href}
-              class="rounded-full border border-white/30 bg-white/10 px-4 py-2 text-xs tracking-[0.18em] text-zinc-200 transition hover:bg-white/20 hover:text-white"
-            >
-              {item.label}
-            </a>
-          ))}
-        </nav>
-      </div>
+  {/* ページタイトル */}
+  <div class="border-b border-zinc-200 bg-white px-5 py-14 md:py-20">
+    <div class="mx-auto max-w-6xl">
+      <p class="text-xs tracking-[0.32em] text-zinc-400 uppercase">Access &amp; Map</p>
+      <h1 class="mt-4 text-3xl font-semibold text-zinc-800 md:text-5xl">アクセス・場内マップ</h1>
+      <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-600">
+        那須烏山の山の中にあるキャンプ場です。カーナビの案内では絶対にたどり着けません。必ずこのページの案内に従ってお越しください。
+      </p>
     </div>
-    <a href="#important" class="lp-scroll">Scroll</a>
-  </section>
-
-  {/* 重要なお知らせ */}
-  <section id="important" class="bg-zinc-900 py-16 md:py-20">
-    <div class="mx-auto max-w-6xl px-5">
-      <p class="text-xs tracking-[0.32em] text-amber-400 uppercase">Important</p>
-      <h2 class="mt-4 text-2xl font-semibold text-white md:text-3xl">必読：来場前に確認してください</h2>
-
-      {/* 電話番号 */}
-      <div class="mt-8 flex items-center gap-4 rounded-2xl border border-zinc-700 bg-zinc-800 px-7 py-5">
-        <span class="text-zinc-400 text-sm shrink-0">道に迷ったら・たどり着けない場合</span>
-        <a href="tel:05036471047" class="text-lg font-semibold tracking-wider text-white transition hover:text-zinc-300">
-          TEL 050-3647-1047
-        </a>
-      </div>
-
-      <div class="mt-6 grid gap-6 md:grid-cols-2">
-
-        {/* カーナビ禁止 */}
-        <div class="rounded-2xl border border-amber-400/30 bg-amber-400/5 p-7">
-          <div class="mb-4 flex items-start gap-4">
-            <span class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-amber-400/20 text-sm text-amber-300">!</span>
-            <h3 class="text-lg font-semibold text-amber-300">カーナビ・住所検索は絶対使用禁止</h3>
-          </div>
-          <p class="text-sm leading-loose text-zinc-300">
-            車据え付け型のカーナビや住所検索では<strong class="text-white">全く別の場所に案内されます</strong>。
-            有史以前から人が住んでいない土地のため、地図データが存在しません。
-          </p>
-          <div class="mt-5 rounded-xl bg-white/5 p-4">
-            <p class="mb-2 text-xs tracking-[0.16em] text-zinc-400">正しい方法</p>
-            <p class="text-sm text-zinc-200">
-              <strong class="text-white">Google Map</strong> または <strong class="text-white">Yahoo!地図</strong> で
-              「おいらの森」と検索してください。
-            </p>
-            <p class="mt-3 text-xs leading-relaxed text-zinc-400">
-              カーナビを使う場合は「道の駅げんきあっぷ村」または「ファミリーマートこぶし台店」を目的地に設定し、
-              到着後に地図アプリへ切り替えること。
-            </p>
-          </div>
-        </div>
-
-        {/* 騒音規制 */}
-        <div class="rounded-2xl border border-red-400/30 bg-red-400/5 p-7">
-          <div class="mb-4 flex items-start gap-4">
-            <span class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-red-400/20 text-sm text-red-300">!</span>
-            <h3 class="text-lg font-semibold text-red-300">近接排気音100dB以上は入場不可</h3>
-          </div>
-          <p class="text-sm leading-loose text-zinc-300">
-            車検非対応レベルの爆音車両での入場は<strong class="text-white">禁止</strong>です。
-            該当車両で来場した場合はその場で退去となります。
-          </p>
-          <div class="mt-5 rounded-xl bg-white/5 p-4">
-            <p class="text-sm text-zinc-300">
-              静かな森の環境を守るため、近接排気音 <strong class="text-white">100デシベル未満</strong>（車検対応レベル）の車両のみ入場可能です。
-            </p>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
+  </div>
 
   {/* お車・バイクでのアクセス */}
-
   <section id="car" class="bg-[#f4f4f5] py-20 md:py-28">
     <div class="mx-auto max-w-6xl px-5">
       <p class="text-xs tracking-[0.32em] text-zinc-400 uppercase">By Car / Motorbike</p>
@@ -210,7 +123,7 @@ import LpLayout from "../../layouts/LpLayout.astro";
             <p class="mt-2 text-sm font-semibold text-zinc-800">{item.station}</p>
             <p class="mt-3 whitespace-pre-line text-sm leading-loose text-zinc-600">{item.detail}</p>
             {item.note && (
-              <p class="mt-3 text-xs text-amber-600">{item.note}</p>
+              <p class="mt-3 text-xs text-zinc-500">{item.note}</p>
             )}
           </div>
         ))}
@@ -312,6 +225,66 @@ import LpLayout from "../../layouts/LpLayout.astro";
         </div>
       </div>
 
+    </div>
+  </section>
+
+  {/* 重要なお知らせ */}
+  <section id="important" class="bg-[#f4f4f5] py-16 md:py-20">
+    <div class="mx-auto max-w-6xl px-5">
+      <p class="text-xs tracking-[0.32em] text-zinc-500 uppercase">Important</p>
+      <h2 class="mt-4 text-2xl font-semibold text-zinc-800 md:text-3xl">来場前に確認してください</h2>
+
+      {/* 電話番号 */}
+      <div class="mt-8 flex items-center gap-4 border border-zinc-300 bg-white px-7 py-5">
+        <span class="text-zinc-500 text-sm shrink-0">道に迷ったら・たどり着けない場合</span>
+        <a href="tel:05036471047" class="text-lg font-semibold tracking-wider text-zinc-800 transition hover:text-zinc-600">
+          TEL 050-3647-1047
+        </a>
+      </div>
+
+      <div class="mt-6 grid gap-6 md:grid-cols-2">
+
+        {/* カーナビ禁止 */}
+        <div class="border border-zinc-300 bg-white p-7">
+          <div class="mb-4 flex items-start gap-4">
+            <span class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-zinc-100 text-sm text-zinc-600">!</span>
+            <h3 class="text-lg font-semibold text-zinc-800">カーナビ・住所検索は絶対使用禁止</h3>
+          </div>
+          <p class="text-sm leading-loose text-zinc-600">
+            車据え付け型のカーナビや住所検索では<strong class="text-zinc-800">全く別の場所に案内されます</strong>。
+            有史以前から人が住んでいない土地のため、地図データが存在しません。
+          </p>
+          <div class="mt-5 bg-zinc-50 p-4">
+            <p class="mb-2 text-xs tracking-[0.16em] text-zinc-400">正しい方法</p>
+            <p class="text-sm text-zinc-700">
+              <strong class="text-zinc-800">Google Map</strong> または <strong class="text-zinc-800">Yahoo!地図</strong> で
+              「おいらの森」と検索してください。
+            </p>
+            <p class="mt-3 text-xs leading-relaxed text-zinc-500">
+              カーナビを使う場合は「道の駅げんきあっぷ村」または「ファミリーマートこぶし台店」を目的地に設定し、
+              到着後に地図アプリへ切り替えること。
+            </p>
+          </div>
+        </div>
+
+        {/* 騒音規制 */}
+        <div class="border border-zinc-300 bg-white p-7">
+          <div class="mb-4 flex items-start gap-4">
+            <span class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-zinc-100 text-sm text-zinc-600">!</span>
+            <h3 class="text-lg font-semibold text-zinc-800">近接排気音100dB以上は入場不可</h3>
+          </div>
+          <p class="text-sm leading-loose text-zinc-600">
+            車検非対応レベルの爆音車両での入場は<strong class="text-zinc-800">禁止</strong>です。
+            該当車両で来場した場合はその場で退去となります。
+          </p>
+          <div class="mt-5 bg-zinc-50 p-4">
+            <p class="text-sm text-zinc-600">
+              静かな森の環境を守るため、近接排気音 <strong class="text-zinc-800">100デシベル未満</strong>（車検対応レベル）の車両のみ入場可能です。
+            </p>
+          </div>
+        </div>
+
+      </div>
     </div>
   </section>
 
