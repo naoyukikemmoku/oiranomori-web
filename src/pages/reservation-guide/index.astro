@@ -1,5 +1,30 @@
 ---
 import PageLayout from "../../layouts/PageLayout.astro";
+
+const proXPlanlist = "https://www.489pro-x.com/ja/s/oiranomori/planlist/";
+
+const steps = [
+  {
+    no: "2",
+    title: "プランを選択",
+    desc: "プランページから、ご希望のプランと日程を選択します。",
+  },
+  {
+    no: "3",
+    title: "買い物カゴに追加",
+    desc: "複数のプランや日程を買い物カゴに入れて、まとめて予約・決済が可能です。グループでの別々予約や長期滞在も1回の手続きで完了します。",
+  },
+  {
+    no: "4",
+    title: "決済",
+    desc: "決済は現地決済のみ",
+  },
+  {
+    no: "5",
+    title: "前日リマインドメール",
+    desc: "ご来場前日に、チェックイン方法や周辺の買い出し情報をまとめたリマインドメールをお送りします。チェックイン・チェックアウトに必要な予約番号コードが記載されていますので、必ず受信をご確認ください。",
+  },
+];
 ---
 
 <PageLayout
@@ -19,6 +44,7 @@ import PageLayout from "../../layouts/PageLayout.astro";
         { href: "#steps",  label: "予約の手順" },
         { href: "#phone",  label: "電話予約について" },
         { href: "#change", label: "変更・キャンセル" },
+        { href: "#merit",  label: "公式予約のメリット" },
         { href: "#member", label: "会員制度・ポイント" },
         { href: "#online", label: "ネット予約の特徴" },
       ].map((item) => (
@@ -37,33 +63,32 @@ import PageLayout from "../../layouts/PageLayout.astro";
     <h2 class="mb-5 text-xl font-semibold text-zinc-800">予約の基本ステップ</h2>
 
     <div class="divide-y divide-zinc-100 border-y border-zinc-200">
-      {[
-        {
-          no: "1",
-          title: "会員登録・ログイン",
-          desc: "公式予約ページにて会員登録を行い、ログイン状態にしてください。",
-        },
-        {
-          no: "2",
-          title: "プランを選択",
-          desc: "ライトフォレスト・ディープフォレストそれぞれのプランページから、ご希望のプランと日程を選択します。",
-        },
-        {
-          no: "3",
-          title: "買い物カゴに追加",
-          desc: "複数のプランや日程を買い物カゴに入れて、まとめて予約・決済が可能です。グループでの別々予約や長期滞在も1回の手続きで完了します。",
-        },
-        {
-          no: "4",
-          title: "決済",
-          desc: "クレジットカード等で決済が完了すると、予約完了メールが届きます。内容に間違いがないかご確認ください。",
-        },
-        {
-          no: "5",
-          title: "前日リマインドメール",
-          desc: "ご来場の前日に、チェックイン方法や周辺の買い出し情報をまとめたリマインドメールをお送りします。",
-        },
-      ].map((step) => (
+
+      {/* STEP 1 — 特殊レンダリング */}
+      <div class="grid grid-cols-[2.5rem_1fr] gap-4 py-6">
+        <p class="text-2xl font-semibold text-zinc-200 leading-none">1</p>
+        <div>
+          <p class="font-semibold text-zinc-800">おいらの森公式予約サイト</p>
+          <p class="mt-2 text-sm leading-loose text-zinc-600">
+            <a
+              href={proXPlanlist}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80"
+            >予約する</a>ボタンを押してください
+          </p>
+          <div class="mt-3 border-l-2 border-zinc-200 pl-4 text-xs leading-loose text-zinc-500">
+            <p class="font-medium text-zinc-600">※会員登録・ログイン</p>
+            <p>
+              公式予約ページにて会員登録を行い、ログイン状態で予約すると特典があります。
+              <a href="#member" class="ml-1 underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">会員について →</a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* STEPs 2–5 */}
+      {steps.map((step) => (
         <div class="grid grid-cols-[2.5rem_1fr] gap-4 py-6">
           <p class="text-2xl font-semibold text-zinc-200 leading-none">{step.no}</p>
           <div>
@@ -72,11 +97,12 @@ import PageLayout from "../../layouts/PageLayout.astro";
           </div>
         </div>
       ))}
+
     </div>
 
     <div class="mt-6">
       <a
-        href="https://www.489pro-x.com/ja/s/oiranomori/planlist/"
+        href={proXPlanlist}
         target="_blank"
         rel="noopener noreferrer"
         class="inline-flex items-center justify-center rounded-full bg-[color:var(--forest-600)] px-8 py-3 text-sm text-white shadow-sm transition hover:bg-[color:var(--forest-700)]"
@@ -94,11 +120,11 @@ import PageLayout from "../../layouts/PageLayout.astro";
       {[
         {
           title: "電話予約は「当日のみ」",
-          desc: "お電話によるご予約受付は、ご来場当日のみ承っております。当日以外のご予約については、聞き間違い等のトラブルを防止するため、お電話では一切受け付けておりません。必ず公式サイトよりお手続きをお願いいたします。",
+          desc: "お電話によるご予約受付は、ご来場当日のみ承っております。当日以外のご予約については、聞き間違い等のトラブル防止のため、お電話では一切受け付けておりません。",
         },
         {
           title: "当日予約の料金について",
-          desc: "当日予約（お電話または現地受付）の場合、ネット予約とは料金体系が異なります。事前のネット予約がおトクになるよう設定されています。",
+          desc: "当日予約（お電話または現地受付）はネット予約と料金体系が異なります。ネット予約の方がおトクですのでご検討ください。",
         },
       ].map((item) => (
         <div class="border-t border-zinc-200 pt-5">
@@ -116,11 +142,11 @@ import PageLayout from "../../layouts/PageLayout.astro";
       {[
         {
           label: "マイページでの手続き",
-          value: "期限内であれば、マイページからご自身でキャンセルや予約内容の変更が可能です。",
+          value: "マイページからご自身でキャンセルや予約内容の変更が可能です。",
         },
         {
           label: "直前の変更・キャンセル",
-          value: "オンライン操作期限を過ぎた直前の変更・キャンセルについては、お電話またはメールにて直接ご連絡ください。",
+          value: "オンライン操作期限を過ぎた直前の変更・キャンセルについては、お電話またはメールにて直接ご連絡ください。人数の変更は現地にて承ります。",
         },
       ].map((item) => (
         <div class="grid grid-cols-[10rem_1fr] gap-4 py-5 sm:grid-cols-[14rem_1fr]">
@@ -131,18 +157,13 @@ import PageLayout from "../../layouts/PageLayout.astro";
     </dl>
   </section>
 
-  {/* 会員制度・ポイント */}
-  <section id="member" class="mb-14">
-    <h2 class="mb-5 text-xl font-semibold text-zinc-800">公式予約のメリット（会員制度）</h2>
-    <p class="mb-6 text-sm text-zinc-600">泊まるほどにおトクになる仕組みです。まずは会員登録をおすすめします。</p>
+  {/* 公式予約のメリット */}
+  <section id="merit" class="mb-14">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">公式予約のメリット</h2>
 
-    {/* おすすめ：事前ログインの案内 */}
-    <div class="mb-8 rounded-lg border-l-4 border-[color:var(--forest-500)] bg-[color:var(--forest-50)] p-5 text-sm text-zinc-800 shadow-sm">
-      <p class="font-bold text-[color:var(--forest-800)] text-base">【おすすめ】ご予約前の会員登録でお得に</p>
-      <p class="mt-2 leading-relaxed text-zinc-700">
-        会員登録をしてからご予約いただくと、宿泊実績やポイントが確実に貯まり、次回以降のご利用がお得になります。<br>
-        <span class="text-xs text-zinc-500">※「ゲスト予約」のまま手続きを進めると、システム上後からポイントを紐付けることができません。ぜひ事前のログインをお願いいたします。</span>
-      </p>
+    <div class="mb-8 bg-[color:var(--forest-600)] px-6 py-5">
+      <p class="text-lg font-semibold text-white">おいらの森の公式サイトが最安です！</p>
+      <p class="mt-2 text-sm leading-loose text-zinc-300">楽天等の外部サイトより公式直接予約がおトク。会員登録でさらにポイントが貯まります。</p>
     </div>
 
     <div class="grid gap-6 sm:grid-cols-2">
@@ -161,6 +182,41 @@ import PageLayout from "../../layouts/PageLayout.astro";
           <p class="mt-3 text-sm leading-loose text-zinc-600">{item.desc}</p>
         </div>
       ))}
+    </div>
+  </section>
+
+  {/* 会員制度 */}
+  <section id="member" class="mb-14">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">会員制度について</h2>
+    <p class="mb-6 text-sm text-zinc-600">泊まるほどにおトクになる仕組みです。まずは会員登録をおすすめします。</p>
+
+    <div class="mb-8 border-l-4 border-[color:var(--forest-600)] pl-5">
+      <p class="text-sm font-semibold text-zinc-700">【おすすめ】ご予約前の会員登録でお得に</p>
+      <p class="mt-2 text-sm leading-loose text-zinc-600">
+        会員登録をしてからご予約いただくと、宿泊実績やポイントが確実に貯まり、次回以降のご利用がお得になります。
+      </p>
+      <p class="mt-2 text-xs text-zinc-400">
+        ※「ゲスト予約」のまま手続きを進めると、システム上後からポイントを紐付けることができません。ぜひ事前のログインをお願いいたします。
+      </p>
+    </div>
+
+    <div class="flex flex-wrap gap-3">
+      <a
+        href="https://www.489pro-x.com/ja/s/oiranomori/member/input/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center justify-center rounded-full bg-[color:var(--forest-600)] px-6 py-2.5 text-sm text-white shadow-sm transition hover:bg-[color:var(--forest-700)]"
+      >
+        新規会員登録 ↗
+      </a>
+      <a
+        href="https://www.489pro-x.com/ja/s/oiranomori/member/login/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center justify-center rounded-full border border-zinc-400 px-6 py-2.5 text-sm text-zinc-700 transition hover:border-zinc-600"
+      >
+        ログイン ↗
+      </a>
     </div>
   </section>
 
@@ -226,7 +282,7 @@ import PageLayout from "../../layouts/PageLayout.astro";
     </p>
     <div class="mt-6 flex flex-wrap justify-center gap-3">
       <a
-        href="https://www.489pro-x.com/ja/s/oiranomori/planlist/"
+        href={proXPlanlist}
         target="_blank"
         rel="noopener noreferrer"
         class="inline-flex items-center justify-center rounded-full bg-[color:var(--forest-600)] px-8 py-3 text-sm text-white shadow-sm transition hover:bg-[color:var(--forest-700)]"
