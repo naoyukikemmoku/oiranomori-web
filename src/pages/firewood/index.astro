@@ -1,15 +1,15 @@
 ---
 import LpLayout from "../../layouts/LpLayout.astro";
 
-const species = [
-  { name: "スギ",               bag: "黄袋", size: "40cm", weight: "3kg",    price: "¥770",   durability: 1, power: 5, ignition: 5, ember: 1, density: "0.38" },
-  { name: "ヒノキ",             bag: "黄袋", size: "40cm", weight: "3kg",    price: "¥770",   durability: 2, power: 5, ignition: 4, ember: 1, density: "0.42" },
-  { name: "ヤマザクラ",         bag: "赤袋", size: "40cm", weight: "5kg",    price: "¥880",   durability: 3, power: 4, ignition: 3, ember: 3, density: "0.60" },
-  { name: "コナラ",             bag: "青袋", size: "40cm", weight: "5kg",    price: "¥880",   durability: 4, power: 3, ignition: 2, ember: 4, density: "0.62" },
-  { name: "クヌギ",             bag: "緑袋", size: "40cm", weight: "6kg",    price: "¥1,100", durability: 5, power: 4, ignition: 2, ember: 5, density: "0.82" },
-  { name: "クヌギ・コナラ ショート", bag: "緑袋", size: "30cm以下", weight: "6kg", price: "¥1,100", durability: 5, power: 4, ignition: 2, ember: 5, density: "0.6〜0.8" },
-  { name: "ショート薪ミックス", bag: "赤袋", size: "30cm以下", weight: "5kg", price: "¥880",  durability: 4, power: 3, ignition: 3, ember: 3, density: "—" },
-  { name: "小割り針葉樹",       bag: "透明袋", size: "—",  weight: "—",     price: "¥300",   durability: 1, power: 5, ignition: 5, ember: 2, density: "—" },
+const speciesCards = [
+  { name: "スギ",               bag: "黄袋", size: "40cm",    weight: "3kg",  price: "¥770",   durability: 1, power: 5, ignition: 5, ember: 1, desc: "燃えやすさNo.1。焚きつけに最適。一気に火力を上げたい時に。" },
+  { name: "ヒノキ",             bag: "黄袋", size: "40cm",    weight: "3kg",  price: "¥770",   durability: 2, power: 5, ignition: 4, ember: 1, desc: "燃えやすいがスギより長持ち。割った瞬間に広がる爽やかな香りは、準備の時間を豊かにします。" },
+  { name: "ヤマザクラ",         bag: "赤袋", size: "40cm",    weight: "5kg",  price: "¥880",   durability: 3, power: 4, ignition: 3, ember: 3, desc: "煙の刺激が少なく、料理（ピザ・燻製）にも。焚き火の香りに彩りを添えるオールマイティな一束。" },
+  { name: "コナラ",             bag: "青袋", size: "40cm",    weight: "5kg",  price: "¥880",   durability: 4, power: 3, ignition: 2, ember: 4, desc: "「薪の王道」。密度が高く、安定した熱量が長時間続きます。迷ったらこれ。" },
+  { name: "クヌギ",             bag: "緑袋", size: "40cm",    weight: "6kg",  price: "¥1,100", durability: 5, power: 4, ignition: 2, ember: 5, desc: "広葉樹の最高峰。圧倒的な火持ちとおき火の美しさ。じっくりと火と対話する夜に。" },
+  { name: "クヌギ・コナラ ショート", bag: "緑袋", size: "30cm以下", weight: "6kg", price: "¥1,100", durability: 5, power: 4, ignition: 2, ember: 5, desc: "小型焚き火台・薪ストーブに。クヌギ・コナラの火持ちはそのままに、30cm以下にカット。" },
+  { name: "ショート薪ミックス", bag: "赤袋", size: "30cm以下", weight: "5kg",  price: "¥880",   durability: 4, power: 3, ignition: 3, ember: 3, desc: "コンパクトな焚き火台でも扱いやすい混合束。広葉樹のバランスを少量で楽しみたい方へ。" },
+  { name: "小割り針葉樹",       bag: "透明袋", size: "—",    weight: "—",    price: "¥300",   durability: 1, power: 5, ignition: 5, ember: 2, desc: "細く割ってあり、最初の一火を確実に起こしたい時に。焚き付けや追加着火に。" },
 ];
 
 const stars = (n: number) => "★".repeat(n) + "☆".repeat(5 - n);
@@ -27,7 +27,7 @@ const stars = (n: number) => "★".repeat(n) + "☆".repeat(5 - n);
       <div class="lp-hero__content">
         <p class="text-xs tracking-[0.32em] text-zinc-400">OIRA NO MAKI</p>
         <h1 class="mt-6 text-4xl font-semibold leading-tight text-white md:text-6xl">
-          100年後の森を、燃やす。
+          100年後の森を、創る。
         </h1>
         <p class="mt-6 max-w-xl text-sm leading-loose text-zinc-300 md:text-base">
           おいらの薪は、森を育てる過程で生まれた「副産物」ではありません。<br />
@@ -36,9 +36,9 @@ const stars = (n: number) => "★".repeat(n) + "☆".repeat(5 - n);
         </p>
         <nav class="mt-10 flex flex-wrap gap-3">
           {[
+            { href: "#sales",   label: "販売形態" },
             { href: "#species", label: "薪の種類" },
-            { href: "#sales",   label: "薪の買い方" },
-            { href: "#process", label: "薪の作り方" },
+            { href: "#steps",   label: "量り売りの手順" },
             { href: "#quality", label: "おいらの薪とは" },
           ].map((item) => (
             <a
@@ -51,100 +51,18 @@ const stars = (n: number) => "★".repeat(n) + "☆".repeat(5 - n);
         </nav>
       </div>
     </div>
-    <a href="#species" class="lp-scroll">Scroll</a>
+    <a href="#sales" class="lp-scroll">Scroll</a>
   </section>
 
-  <!-- 薪の種類 -->
-  <section id="species" class="bg-zinc-800 py-20 md:py-28">
-    <div class="mx-auto max-w-6xl px-5">
-      <p class="text-xs tracking-[0.32em] text-zinc-500">FIREWOOD SELECTION</p>
-      <h2 class="mt-4 text-3xl font-semibold text-white md:text-4xl">薪の種類</h2>
-      <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-400">
-        「針葉樹は良くない」というのは誤解です。目的や時間帯に合わせて使い分けることで、焚き火の質は劇的に変わります。
-      </p>
-
-      <!-- スペック比較表 -->
-      <div class="mt-12 overflow-x-auto">
-        <table class="w-full min-w-[600px] text-sm">
-          <thead>
-            <tr class="border-b border-zinc-600">
-              <th class="pb-3 text-left font-normal tracking-[0.14em] text-zinc-500">樹種（袋の色）</th>
-              <th class="pb-3 text-center font-normal tracking-[0.14em] text-zinc-500">価格</th>
-              <th class="pb-3 text-center font-normal tracking-[0.14em] text-zinc-500">火持ち</th>
-              <th class="pb-3 text-center font-normal tracking-[0.14em] text-zinc-500">火力</th>
-              <th class="pb-3 text-center font-normal tracking-[0.14em] text-zinc-500">着火性</th>
-              <th class="pb-3 text-center font-normal tracking-[0.14em] text-zinc-500">おき火</th>
-              <th class="pb-3 text-center font-normal tracking-[0.14em] text-zinc-500">比重</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-zinc-700">
-            {species.map((s) => (
-              <tr>
-                <td class="py-4 font-medium text-white">
-                  {s.name}
-                  <span class="ml-2 text-xs text-zinc-500">({s.bag})</span>
-                </td>
-                <td class="py-4 text-center text-zinc-300">{s.price}</td>
-                <td class="py-4 text-center text-zinc-400 tracking-tight">{stars(s.durability)}</td>
-                <td class="py-4 text-center text-zinc-400 tracking-tight">{stars(s.power)}</td>
-                <td class="py-4 text-center text-zinc-400 tracking-tight">{stars(s.ignition)}</td>
-                <td class="py-4 text-center text-zinc-400 tracking-tight">{stars(s.ember)}</td>
-                <td class="py-4 text-center text-zinc-500">{s.density}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <!-- 各樹種詳細 -->
-      <div class="mt-16 grid gap-8 md:grid-cols-2">
-        {[
-          { name: "スギ",         tag: "黄袋 / 40cm", desc: "燃えやすさNo.1。焚きつけに最適。一気に火力を上げたい時に。" },
-          { name: "ヒノキ",       tag: "黄袋 / 40cm", desc: "燃えやすいがスギより長持ち。割った瞬間に広がる爽やかな香りは準備の時間を豊かにします。" },
-          { name: "ヤマザクラ",   tag: "赤袋 / 40cm", desc: "煙の刺激が少なく、料理（ピザ・燻製）にも。焚き火の香りに彩りを添えるオールマイティな一束。" },
-          { name: "コナラ",       tag: "青袋 / 40cm", desc: "「薪の王道」。密度が高く、安定した熱量が長時間続きます。迷ったらこれ。" },
-          { name: "クヌギ",       tag: "緑袋 / 40cm", desc: "広葉樹の最高峰。圧倒的な火持ちとおき火の美しさ。じっくりと火と対話する夜に。" },
-          { name: "小割り針葉樹", tag: "透明袋 / ¥300", desc: "細く割ってあり、最初の「一火」を確実に起こしたい時に。焚き付けや追加着火に。" },
-        ].map((s) => (
-          <div class="border-t border-zinc-700 pt-6">
-            <p class="text-xs tracking-[0.18em] text-zinc-500">{s.tag}</p>
-            <h3 class="mt-2 text-lg font-semibold text-white">{s.name}</h3>
-            <p class="mt-2 text-sm leading-loose text-zinc-400">{s.desc}</p>
-          </div>
-        ))}
-      </div>
-
-      <!-- 密度比較 -->
-      <div class="mt-16 border-t border-zinc-700 pt-10">
-        <p class="text-xs tracking-[0.22em] text-zinc-500">DENSITY COMPARISON</p>
-        <h3 class="mt-4 text-xl font-semibold text-white">密度の違いを「量」で見る</h3>
-        <p class="mt-2 text-sm text-zinc-500">同じ10kgを買ったとき、これだけのボリュームの差があります。</p>
-        <div class="mt-6 grid gap-4 sm:grid-cols-2">
-          {[
-            { name: "クヌギ 10kg",  count: "約 7本",  note: "火持ち重視・ずっしり重い" },
-            { name: "スギ 10kg",    count: "約 17本", note: "火力重視・軽くて嵩張る" },
-          ].map((item) => (
-            <div class="bg-zinc-700 px-6 py-5">
-              <p class="text-xs tracking-[0.18em] text-zinc-400">{item.name}</p>
-              <p class="mt-1 text-3xl font-semibold text-white">{item.count}</p>
-              <p class="mt-1 text-xs text-zinc-500">{item.note}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 薪の買い方 -->
+  <!-- 販売している薪の種類 -->
   <section id="sales" class="bg-[#f4f4f5] py-20 md:py-28">
     <div class="mx-auto max-w-6xl px-5">
       <p class="text-xs tracking-[0.32em] text-zinc-400">HOW TO BUY</p>
-      <h2 class="mt-4 text-3xl font-semibold text-zinc-800 md:text-4xl">薪の買い方</h2>
+      <h2 class="mt-4 text-3xl font-semibold text-zinc-800 md:text-4xl">販売している薪の種類</h2>
       <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-600">
         キャンプのスタイルに合わせて、3つの買い方をご用意しています。
       </p>
 
-      <!-- セルフレジ案内 -->
       <div class="mt-8 border-l-4 border-[color:var(--light-accent)] pl-5">
         <p class="text-sm font-semibold text-zinc-700">セルフレジ対応 — 営業時間外でも購入できます</p>
         <p class="mt-1 text-sm leading-loose text-zinc-600">
@@ -193,31 +111,73 @@ const stars = (n: number) => "★".repeat(n) + "☆".repeat(5 - n);
           </div>
         ))}
       </div>
+    </div>
+  </section>
 
-      <!-- セルフ量り売りの手順 -->
-      <div class="mt-20">
-        <p class="text-xs tracking-[0.32em] text-zinc-400">PURCHASE GUIDE</p>
-        <h3 class="mt-4 text-2xl font-semibold text-zinc-800">セルフ量り売りの手順</h3>
-        <p class="mt-4 text-sm text-zinc-600">現地での購入は、以下の手順です。</p>
+  <!-- 薪の種類（カード型） -->
+  <section id="species" class="bg-zinc-800 py-20 md:py-28">
+    <div class="mx-auto max-w-6xl px-5">
+      <p class="text-xs tracking-[0.32em] text-zinc-500">FIREWOOD SELECTION</p>
+      <h2 class="mt-4 text-3xl font-semibold text-white md:text-4xl">薪の種類</h2>
+      <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-400">
+        「針葉樹は良くない」というのは誤解です。目的や時間帯に合わせて使い分けることで、焚き火の質は劇的に変わります。
+      </p>
 
-        <div class="mt-10 divide-y divide-zinc-300 border-y border-zinc-300">
-          {[
-            { no: "1", title: "道具の準備",   desc: "薪バッグまたはバケツを選び、秤（はかり）の電源を入れます。" },
-            { no: "2", title: "風袋引き",     desc: "空の容器を秤に乗せ「ゼロ設定」ボタンを押します。" },
-            { no: "3", title: "セレクト",     desc: "M1ボタンを押して単価（¥100/kg）をセット。好きな薪を棚から選び、容器に詰めます。" },
-            { no: "4", title: "記録",         desc: "金額が表示された画面をスマートフォンで撮影してください。" },
-            { no: "5", title: "精算",         desc: "管理棟で撮影画面をスタッフに提示し、お支払いください。17:30以降はセルフレジでのお支払いとなります。秤の電源オフにご協力ください。" },
-            { no: "6", title: "道具を元へ",   desc: "ご利用になられた薪バッグやバケツは、使用後はたたんで元の場所へお戻しください。" },
-          ].map((step) => (
-            <div class="grid grid-cols-[2.5rem_1fr] gap-4 py-6">
-              <p class="text-3xl font-semibold text-zinc-200 leading-none">{step.no}</p>
-              <div>
-                <h3 class="font-semibold text-zinc-800">{step.title}</h3>
-                <p class="mt-2 text-sm leading-loose text-zinc-600">{step.desc}</p>
-              </div>
+      <div class="mt-12 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
+        {speciesCards.map((s) => (
+          <div class="bg-zinc-700 p-4">
+            <p class="text-xs tracking-[0.12em] text-zinc-500">{s.bag} / {s.size}</p>
+            <h3 class="mt-1 text-base font-semibold leading-snug text-white">{s.name}</h3>
+            <p class="mt-0.5 text-sm font-semibold text-zinc-300">
+              {s.price}
+              {s.weight !== "—" && <span class="ml-1 text-xs font-normal text-zinc-500">/ {s.weight}</span>}
+            </p>
+
+            <div class="mt-3 space-y-1 text-xs">
+              {[
+                { label: "火持ち", val: s.durability },
+                { label: "火力",   val: s.power },
+                { label: "着火性", val: s.ignition },
+                { label: "おき火", val: s.ember },
+              ].map((r) => (
+                <div class="flex items-center justify-between gap-2">
+                  <span class="shrink-0 text-zinc-500">{r.label}</span>
+                  <span class="tracking-tight text-zinc-300">{stars(r.val)}</span>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+
+            <p class="mt-3 text-xs leading-relaxed text-zinc-400">{s.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- セルフ量り売りの手順 -->
+  <section id="steps" class="bg-[#f4f4f5] py-20 md:py-28">
+    <div class="mx-auto max-w-6xl px-5">
+      <p class="text-xs tracking-[0.32em] text-zinc-400">PURCHASE GUIDE</p>
+      <h2 class="mt-4 text-3xl font-semibold text-zinc-800 md:text-4xl">セルフ量り売りの手順</h2>
+      <p class="mt-4 text-sm text-zinc-600">現地での購入は、以下の手順です。</p>
+
+      <div class="mt-10 divide-y divide-zinc-300 border-y border-zinc-300">
+        {[
+          { no: "1", title: "道具の準備",   desc: "薪バッグまたはバケツを選び、秤（はかり）の電源を入れます。" },
+          { no: "2", title: "風袋引き",     desc: "空の容器を秤に乗せ「ゼロ設定」ボタンを押します。" },
+          { no: "3", title: "セレクト",     desc: "M1ボタンを押して単価（¥100/kg）をセット。好きな薪を棚から選び、容器に詰めます。" },
+          { no: "4", title: "記録",         desc: "金額が表示された画面をスマートフォンで撮影してください。" },
+          { no: "5", title: "精算",         desc: "管理棟で撮影画面をスタッフに提示し、お支払いください。17:30以降はセルフレジでのお支払いとなります。秤の電源オフにご協力ください。" },
+          { no: "6", title: "道具を元へ",   desc: "ご利用になられた薪バッグやバケツは、使用後はたたんで元の場所へお戻しください。" },
+        ].map((step) => (
+          <div class="grid grid-cols-[2.5rem_1fr] gap-4 py-6">
+            <p class="text-3xl font-semibold leading-none text-zinc-200">{step.no}</p>
+            <div>
+              <h3 class="font-semibold text-zinc-800">{step.title}</h3>
+              <p class="mt-2 text-sm leading-loose text-zinc-600">{step.desc}</p>
+            </div>
+          </div>
+        ))}
       </div>
 
       <!-- 組み合わせ提案 -->
@@ -262,22 +222,58 @@ const stars = (n: number) => "★".repeat(n) + "☆".repeat(5 - n);
     </div>
   </section>
 
-  <!-- 薪の作り方 -->
+  <!-- なぜおいらの薪はよく燃えるのか -->
+  <section id="quality" class="bg-[color:var(--forest-700)] py-20 md:py-28">
+    <div class="mx-auto max-w-6xl px-5">
+      <p class="text-xs tracking-[0.32em] text-zinc-500">WHY OIRA NO MAKI</p>
+      <h2 class="mt-4 text-3xl font-semibold text-white md:text-4xl">
+        なぜ、おいらの薪はよく燃えるのか。
+      </h2>
+      <p class="mt-5 max-w-2xl text-sm leading-loose text-zinc-400">
+        ホームセンターの薪で苦労した経験はありませんか？
+        おいらの薪は、伐採から乾燥まで全ての工程を管理し、木材水分計で全数チェックを行っています。
+      </p>
+
+      <div class="mt-14 divide-y divide-zinc-700 border-t border-zinc-700">
+        {[
+          {
+            title: "林業のプロが、一束ずつ管理",
+            desc: "おいらは那須烏山で林業を営むプロフェッショナル。木を選び、切り、割り、乾燥させる全工程を自ら手がけています。均一な品質は、専門家の目と手が生む信頼の証です。",
+          },
+          {
+            title: "含水率15%以下",
+            desc: "芯まで乾燥させ、含水率を15%程度まで下げてから提供しています。乾燥不十分な薪は煙が多く、爆ぜやすく、テントを傷めます。",
+          },
+          {
+            title: "地元・那須烏山産の広葉樹",
+            desc: "おいらの森の開拓・整備過程で出た木材を活用。コナラ・クヌギを中心とした地元の広葉樹で、ホームセンター品とは一線を画す火持ちと安定性があります。",
+          },
+        ].map((item) => (
+          <div class="py-8">
+            <h3 class="text-lg font-semibold text-white">{item.title}</h3>
+            <p class="mt-3 max-w-2xl text-sm leading-loose text-zinc-400">{item.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 薪ができるまで -->
   <section id="process" class="bg-[color:var(--forest-600)] py-20 md:py-28">
     <div class="mx-auto max-w-6xl px-5">
       <p class="text-xs tracking-[0.32em] text-zinc-500">THE PROCESS</p>
-      <h2 class="mt-4 text-3xl font-semibold text-white md:text-4xl">薪の作り方</h2>
+      <h2 class="mt-4 text-3xl font-semibold text-white md:text-4xl">薪ができるまで</h2>
       <p class="mt-4 text-sm leading-loose text-zinc-400">伐採から、あなたの焚き火台まで。</p>
 
       <div class="mt-14 grid gap-8 sm:grid-cols-2 md:grid-cols-4">
         {[
-          { no: "01", title: "伐採",         desc: "森の光と風の通り道を考え、1本ずつ木を選定。チェーンソーで丁寧に伐採します。" },
-          { no: "02", title: "玉切り・運搬",  desc: "軽トラやトラクターで運び出し、玉切り台でまとめて薪の長さにカット。" },
-          { no: "03", title: "薪割り",        desc: "断面を出すことで乾燥を促進。おかみも協力して割っています。" },
-          { no: "04", title: "乾燥",          desc: "薪棚で風に当て、じっくりと熟成。水分計で全数チェックし、含水率15%以下で出荷。" },
+          { no: "01", title: "伐採",        desc: "森の光と風の通り道を考え、1本ずつ木を選定。チェーンソーで丁寧に伐採します。" },
+          { no: "02", title: "玉切り・運搬", desc: "軽トラやトラクターで運び出し、玉切り台でまとめて薪の長さにカット。" },
+          { no: "03", title: "薪割り",       desc: "断面を出すことで乾燥を促進。おかみも協力して割っています。" },
+          { no: "04", title: "乾燥",         desc: "薪棚で風に当て、じっくりと熟成。水分計で全数チェックし、含水率15%以下で出荷。" },
         ].map((step) => (
           <div>
-            <p class="text-4xl font-semibold text-zinc-600 leading-none">{step.no}</p>
+            <p class="text-4xl font-semibold leading-none text-zinc-600">{step.no}</p>
             <h3 class="mt-3 font-semibold text-white">{step.title}</h3>
             <p class="mt-2 text-sm leading-loose text-zinc-400">{step.desc}</p>
           </div>
@@ -291,46 +287,6 @@ const stars = (n: number) => "★".repeat(n) + "☆".repeat(5 - n);
           木を切り、光を入れ、また芽吹かせる「薪炭林（しんたんりん）」のサイクル。<br />
           薪を買うという行為が、この森の100年後の姿を支える資金になります。
         </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Quality -->
-  <section id="quality" class="bg-[color:var(--forest-700)] py-20 md:py-28">
-    <div class="mx-auto max-w-6xl px-5">
-      <p class="text-xs tracking-[0.32em] text-zinc-500">WHY OIRA NO MAKI</p>
-      <h2 class="mt-4 text-3xl font-semibold text-white md:text-4xl">
-        なぜ、おいらの薪は「爆ぜない」のか。
-      </h2>
-      <p class="mt-5 max-w-2xl text-sm leading-loose text-zinc-400">
-        ホームセンターの薪で苦労した経験はありませんか？
-        おいらの薪は、伐採から乾燥まで全ての工程を管理し、木材水分計で全数チェックを行っています。
-      </p>
-
-      <div class="mt-14 divide-y divide-zinc-700 border-t border-zinc-700">
-        {[
-          {
-            title: "含水率15%以下",
-            desc: "芯まで乾燥させ、含水率を15%程度まで下げてから提供しています。乾燥不十分な薪は煙が多く、爆ぜやすく、テントを傷めます。",
-          },
-          {
-            title: "爆ぜない・消えない",
-            desc: "しっかり乾いた薪は、静かに長く燃え続けます。不快な突発音や火の粉も極限まで抑えられ、焚き火に集中できます。",
-          },
-          {
-            title: "服に匂いがつきにくい",
-            desc: "質の良い乾燥は不快な刺激臭を抑えます。翌日、服に匂いが残りにくいのは、含水率の低さが直接の理由です。",
-          },
-          {
-            title: "地元・那須烏山産の広葉樹",
-            desc: "おいらの森の開拓・整備過程で出た木材を活用。コナラ・クヌギを中心とした地元の広葉樹で、ホームセンター品とは一線を画す火持ちと安定性があります。",
-          },
-        ].map((item) => (
-          <div class="py-8">
-            <h3 class="text-lg font-semibold text-white">{item.title}</h3>
-            <p class="mt-3 max-w-2xl text-sm leading-loose text-zinc-400">{item.desc}</p>
-          </div>
-        ))}
       </div>
     </div>
   </section>
