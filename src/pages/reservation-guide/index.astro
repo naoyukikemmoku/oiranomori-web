@@ -11,16 +11,16 @@ import PageLayout from "../../layouts/PageLayout.astro";
     <p class="text-xs tracking-[0.26em] text-zinc-400 uppercase">Reservation Guide</p>
     <h1 class="mt-3 text-3xl font-semibold text-zinc-800 md:text-4xl">予約ガイド</h1>
     <p class="mt-4 max-w-2xl text-base leading-loose text-zinc-600">
-      おいらの森は当方の予約システムを通じてネット予約を受け付けています。
-      会員登録でさらに便利にご利用いただけます。
+      おいらの森は公式予約サイトを通じてネット予約を受け付けています。
+      ポイントが貯まる会員登録をしてからのご利用がおすすめです。
     </p>
     <nav class="mt-6 flex flex-wrap gap-3 text-sm">
       {[
         { href: "#steps",  label: "予約の手順" },
-        { href: "#online", label: "ネット予約の特徴" },
-        { href: "#member", label: "会員制度・ポイント" },
-        { href: "#change", label: "変更・キャンセル" },
         { href: "#phone",  label: "電話予約について" },
+        { href: "#change", label: "変更・キャンセル" },
+        { href: "#member", label: "会員制度・ポイント" },
+        { href: "#online", label: "ネット予約の特徴" },
       ].map((item) => (
         <a
           href={item.href}
@@ -34,17 +34,14 @@ import PageLayout from "../../layouts/PageLayout.astro";
 
   {/* 予約の基本ステップ */}
   <section id="steps" class="mb-14">
-    <h2 class="mb-2 text-xl font-semibold text-zinc-800">予約の基本ステップ</h2>
-    <p class="mb-6 text-sm text-zinc-500">
-      会員登録を済ませてから予約を開始することが重要です。ゲストのまま進めると宿泊実績・ポイントが紐付きません。
-    </p>
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">予約の基本ステップ</h2>
 
     <div class="divide-y divide-zinc-100 border-y border-zinc-200">
       {[
         {
           no: "1",
           title: "会員登録・ログイン",
-          desc: "当方の予約システムにて会員登録を完了させてからご予約を開始してください。登録を完了させずにゲスト予約で進めると、宿泊実績やポイントが会員情報に紐付きません。",
+          desc: "公式予約ページにて会員登録を行い、ログイン状態にしてください。",
         },
         {
           no: "2",
@@ -89,50 +86,22 @@ import PageLayout from "../../layouts/PageLayout.astro";
     </div>
   </section>
 
-  {/* ネット予約の特徴 */}
-  <section id="online" class="mb-14">
-    <h2 class="mb-5 text-xl font-semibold text-zinc-800">ネット予約の便利な機能</h2>
+  {/* 電話予約 */}
+  <section id="phone" class="mb-14">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">電話予約・当日予約について</h2>
 
     <div class="grid gap-6 sm:grid-cols-2">
       {[
         {
-          title: "「買い物カゴ」機能でまとめて予約",
-          desc: "異なる日程や複数エリア（ライトフォレストとディープフォレスト等）を買い物カゴに入れ、一度に決済可能です。グループでの別々予約や長期滞在も1回の手続きで完了します。",
+          title: "電話予約は「当日のみ」",
+          desc: "お電話によるご予約受付は、ご来場当日のみ承っております。当日以外のご予約については、聞き間違い等のトラブルを防止するため、お電話では一切受け付けておりません。必ず公式サイトよりお手続きをお願いいたします。",
         },
         {
-          title: "「キャンセル待ち」でチャンスを逃さない",
-          desc: "希望の日が満室でも、キャンセル待ちに登録しておけば、空きが出た際にメールでお知らせが届きます。人気の週末・連休を狙いたい方に有効な機能です。",
+          title: "当日予約の料金について",
+          desc: "当日予約（お電話または現地受付）の場合、ネット予約とは料金体系が異なります。事前のネット予約がおトクになるよう設定されています。",
         },
       ].map((item) => (
         <div class="border-t border-zinc-200 pt-5">
-          <h3 class="font-semibold text-zinc-800">{item.title}</h3>
-          <p class="mt-3 text-sm leading-loose text-zinc-600">{item.desc}</p>
-        </div>
-      ))}
-    </div>
-  </section>
-
-  {/* 会員制度・ポイント */}
-  <section id="member" class="mb-14 -mx-4 bg-[color:var(--forest-100)] px-4 py-10 md:-mx-8 md:px-8">
-    <h2 class="mb-6 text-xl font-semibold text-zinc-800">会員制度とポイント特典</h2>
-    <p class="mb-6 text-sm text-zinc-600">泊まるほどにおトクになる仕組みです。</p>
-
-    <div class="grid gap-8 sm:grid-cols-3">
-      {[
-        {
-          title: "宿泊回数で上がる「会員ランク」",
-          desc: "会員登録してマイページを作成すると、宿泊回数に応じて会員ランクが上がります。ランクアップに伴い予約時のポイント付与率もアップ。リピーターほど優遇される仕組みです。",
-        },
-        {
-          title: "賢く貯まる「ポイント制度」",
-          desc: "ご予約時の利用金額に応じてポイントが貯まります。貯まったポイントは「1ポイント＝1円」として次回予約代金に充当可能です。オイラーズ活動への参加でも貯まります。",
-        },
-        {
-          title: "【重要】登録のタイミング",
-          desc: "会員登録を完了させずにゲスト予約のまま進めると、その予約情報と会員情報が紐付きません。宿泊実績・ポイントを正しく反映させるため、必ず「会員登録・ログイン」を済ませてから予約を開始してください。",
-        },
-      ].map((item) => (
-        <div>
           <h3 class="font-semibold text-zinc-800">{item.title}</h3>
           <p class="mt-3 text-sm leading-loose text-zinc-600">{item.desc}</p>
         </div>
@@ -162,19 +131,52 @@ import PageLayout from "../../layouts/PageLayout.astro";
     </dl>
   </section>
 
-  {/* 電話予約 */}
-  <section id="phone" class="mb-14">
-    <h2 class="mb-5 text-xl font-semibold text-zinc-800">電話予約・当日予約について</h2>
+  {/* 会員制度・ポイント */}
+  <section id="member" class="mb-14">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">公式予約のメリット（会員制度）</h2>
+    <p class="mb-6 text-sm text-zinc-600">泊まるほどにおトクになる仕組みです。まずは会員登録をおすすめします。</p>
+
+    {/* おすすめ：事前ログインの案内 */}
+    <div class="mb-8 rounded-lg border-l-4 border-[color:var(--forest-500)] bg-[color:var(--forest-50)] p-5 text-sm text-zinc-800 shadow-sm">
+      <p class="font-bold text-[color:var(--forest-800)] text-base">【おすすめ】ご予約前の会員登録でお得に</p>
+      <p class="mt-2 leading-relaxed text-zinc-700">
+        会員登録をしてからご予約いただくと、宿泊実績やポイントが確実に貯まり、次回以降のご利用がお得になります。<br>
+        <span class="text-xs text-zinc-500">※「ゲスト予約」のまま手続きを進めると、システム上後からポイントを紐付けることができません。ぜひ事前のログインをお願いいたします。</span>
+      </p>
+    </div>
 
     <div class="grid gap-6 sm:grid-cols-2">
       {[
         {
-          title: "電話予約は「当日のみ」",
-          desc: "お電話によるご予約受付は、ご来場当日のみ承っております。当日以外のご予約については、聞き間違い等のトラブルを防止するため、お電話では一切受け付けておりません。必ず公式サイトよりお手続きをお願いいたします。",
+          title: "宿泊回数で上がる「会員ランク」",
+          desc: "会員登録してマイページを作成すると、宿泊回数に応じて会員ランクが上がります。ランクアップに伴い予約時のポイント付与率もアップ。リピーターほど優遇される仕組みです。",
         },
         {
-          title: "当日予約の料金について",
-          desc: "当日予約（お電話または現地受付）の場合、ネット予約とは料金体系が異なります。事前のネット予約がおトクになるよう設定されています。",
+          title: "賢く貯まる「ポイント制度」",
+          desc: "ご予約時の利用金額に応じてポイントが貯まります。貯まったポイントは「1ポイント＝1円」として次回予約代金に充当可能です。オイラーズ活動への参加でも貯まります。",
+        },
+      ].map((item) => (
+        <div class="rounded-xl border border-zinc-200 bg-zinc-50 p-6">
+          <h3 class="font-semibold text-zinc-800">{item.title}</h3>
+          <p class="mt-3 text-sm leading-loose text-zinc-600">{item.desc}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  {/* ネット予約の特徴 */}
+  <section id="online" class="mb-14">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">ネット予約の便利な機能</h2>
+
+    <div class="grid gap-6 sm:grid-cols-2">
+      {[
+        {
+          title: "「買い物カゴ」機能でまとめて予約",
+          desc: "異なる日程や複数エリア（ライトフォレストとディープフォレスト等）を買い物カゴに入れ、一度に決済可能です。グループでの別々予約や長期滞在も1回の手続きで完了します。",
+        },
+        {
+          title: "「キャンセル待ち」でチャンスを逃さない",
+          desc: "希望の日が満室でも、キャンセル待ちに登録しておけば、空きが出た際にメールでお知らせが届きます。人気の週末・連休を狙いたい方に有効な機能です。",
         },
       ].map((item) => (
         <div class="border-t border-zinc-200 pt-5">
@@ -218,7 +220,7 @@ import PageLayout from "../../layouts/PageLayout.astro";
   {/* CTA */}
   <div class="mt-12 bg-[color:var(--forest-100)] px-8 py-10 text-center">
     <p class="text-sm text-zinc-500">準備が整いましたら</p>
-    <p class="mt-2 text-xl font-semibold text-zinc-800">予約は当方の予約システムから</p>
+    <p class="mt-2 text-xl font-semibold text-zinc-800">ご予約は公式予約サイトから</p>
     <p class="mt-3 text-sm leading-loose text-zinc-600">
       会員登録で複数プラン・複数日程の同時予約が可能です。
     </p>
