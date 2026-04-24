@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/Header.astro";
 import { getOshirasePage, getOshiraseDetail } from "../../lib/oshirase";
 
 export async function getStaticPaths() {
@@ -38,6 +39,7 @@ function formatDate(str: string) {
   title={article ? `${article.title} | おいらの森` : "お知らせ | おいらの森"}
   description={article?.description ?? "おいらの森からのお知らせです。"}
 >
+  <Header />
   <div class="min-h-screen bg-[#f4f5f2] pb-24">
     <div class="mx-auto max-w-3xl px-5">
 

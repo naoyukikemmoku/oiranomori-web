@@ -97,10 +97,19 @@ const setupService = [
   { label: "撤収（大型テント）", price: "¥3,000" },
 ];
 
-const returnRules = [
-  { title: "返却時間", body: "翌朝10:00までに管理棟へ" },
-  { title: "清掃", body: "薪ストーブ・BBQコンロ等は、灰を捨て軽く清掃した状態でお戻しください" },
-  { title: "破損・紛失", body: "速やかにスタッフまでお申し出ください" },
+const returnRules: { title: string; body?: string; items?: string[] }[] = [
+  { title: "返却時間", body: "翌朝11:00までに管理棟へお持ちください。" },
+  {
+    title: "片付け・清掃",
+    items: [
+      "テントは元通りにたたんでお戻しください。できない場合は撤収サービスをご利用ください。",
+      "寝袋は軽くたたんでいただければOKです。",
+      "薪ストーブ・BBQコンロ等は、灰を捨て軽く清掃した状態でお戻しください。水洗いはしないでください。",
+      "食器類は軽くふいてお戻しください。洗浄不要です。",
+      "その他レンタル品は元通りに戻して受付にお持ちください。",
+    ],
+  },
+  { title: "破損・紛失", body: "営業時間内に速やかにスタッフまでお申し出ください。" },
 ];
 ---
 
@@ -194,7 +203,19 @@ const returnRules = [
       {returnRules.map((rule) => (
         <div class="grid grid-cols-[6rem_1fr] gap-4 py-4 sm:grid-cols-[9rem_1fr]">
           <dt class="font-semibold text-zinc-700">{rule.title}</dt>
-          <dd class="leading-loose text-zinc-600">{rule.body}</dd>
+          <dd class="leading-loose text-zinc-600">
+            {rule.body && rule.body}
+            {rule.items && (
+              <ul class="space-y-1.5">
+                {rule.items.map((item) => (
+                  <li class="flex items-start gap-2 text-sm">
+                    <span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400"></span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </dd>
         </div>
       ))}
     </dl>
@@ -202,7 +223,8 @@ const returnRules = [
 
   {/* お問い合わせ */}
   <p class="text-sm text-zinc-500">
-    数量・在庫のご確認はお気軽にスタッフまで。
+    数量・在庫のご確認はお気軽に
+    <a href="/contact/" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">スタッフまで</a>。
   </p>
 
 </PageLayout>

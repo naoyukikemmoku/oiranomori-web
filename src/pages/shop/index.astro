@@ -2,8 +2,8 @@
 import PageLayout from "../../layouts/PageLayout.astro";
 
 const checkoutSteps = [
-  { step: "SCAN",    desc: "店頭のQRコードを読み取る" },
-  { step: "SELECT",  desc: "オンラインストアで商品を選び、決済する" },
+  { step: "SCAN",    desc: "店頭商品横のQRコードを読み取る" },
+  { step: "SELECT",  desc: "表示されたオンラインストアで商品を選び、決済する" },
   { step: "PICK UP", desc: "商品をお持ち帰りください" },
 ];
 
@@ -79,26 +79,9 @@ const bulkSales = [
     </p>
   </div>
 
-  {/* セルフ精算の流れ */}
-  <section class="mb-14">
-    <h2 class="mb-5 text-xl font-semibold text-zinc-800">セルフ精算の流れ</h2>
-    <ol class="divide-y divide-zinc-100 border-y border-zinc-200">
-      {checkoutSteps.map((s, i) => (
-        <li class="grid grid-cols-[1.5rem_5rem_1fr] items-baseline gap-4 py-5 sm:grid-cols-[1.5rem_7rem_1fr]">
-          <span class="text-sm tabular-nums text-zinc-400">{i + 1}</span>
-          <span class="text-sm font-semibold tracking-[0.14em] text-zinc-700">{s.step}</span>
-          <span class="text-sm leading-relaxed text-zinc-600">{s.desc}</span>
-        </li>
-      ))}
-    </ol>
-    <p class="mt-3 text-xs leading-relaxed text-zinc-400">
-      ※ オンラインストアは検索エンジンには公開していません。店頭のQRコードからのみアクセスできます。
-    </p>
-  </section>
-
   {/* 取り扱い商品 */}
   <section class="mb-14">
-    <h2 class="mb-6 text-xl font-semibold text-zinc-800">取り扱い</h2>
+    <h2 class="mb-6 text-xl font-semibold text-zinc-800">取り扱い商品</h2>
     <div class="space-y-0">
       {shopCategories.map((cat) => (
         <div class="border-t border-zinc-200 py-6">
@@ -117,6 +100,23 @@ const bulkSales = [
       ))}
       <div class="border-t border-zinc-200" />
     </div>
+    <p class="mt-4 text-xs leading-relaxed text-zinc-400">
+      ※ 在庫状況により売り切れの場合がございます。ご容赦ください。
+    </p>
+  </section>
+
+  {/* セルフ精算の流れ */}
+  <section class="mb-14">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">セルフ精算の流れ</h2>
+    <ol class="divide-y divide-zinc-100 border-y border-zinc-200">
+      {checkoutSteps.map((s, i) => (
+        <li class="grid grid-cols-[1.5rem_5rem_1fr] items-baseline gap-4 py-5 sm:grid-cols-[1.5rem_7rem_1fr]">
+          <span class="text-sm tabular-nums text-zinc-400">{i + 1}</span>
+          <span class="text-sm font-semibold tracking-[0.14em] text-zinc-700">{s.step}</span>
+          <span class="text-sm leading-relaxed text-zinc-600">{s.desc}</span>
+        </li>
+      ))}
+    </ol>
   </section>
 
   {/* 量り売り */}
