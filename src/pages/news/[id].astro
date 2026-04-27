@@ -1,4 +1,4 @@
----
+﻿---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Header from "../../components/Header.astro";
 import { getOshirasePage, getOshiraseDetail } from "../../lib/oshirase";
@@ -36,7 +36,7 @@ function formatDate(str: string) {
 ---
 
 <BaseLayout
-  title={article ? `${article.title} | おいらの森` : "お知らせ | おいらの森"}
+  title={article ? `${article.title} | 里山パークおいらの森` : "お知らせ | 里山パークおいらの森"}
   description={article?.description ?? "おいらの森からのお知らせです。"}
 >
   <Header />

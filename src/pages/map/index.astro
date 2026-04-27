@@ -1,4 +1,4 @@
----
+﻿---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Header from "../../components/Header.astro";
 import spotsRaw from "../../data/spots.json";
@@ -30,10 +30,11 @@ const homeJson  = JSON.stringify(homeSpot ?? null);
 ---
 
 <BaseLayout
-  title="マップ｜おいらの森"
+  title="マップ | 里山パークおいらの森"
   description="那須烏山・里山パークおいらの森の場内施設マップ、および周辺の食事・お風呂・買い物・観光・緊急スポットをご案内します。"
 >
   <Header />
+  <h1 class="sr-only">マップ | 里山パークおいらの森</h1>
 
   <main id="map-main">
 
@@ -482,7 +483,7 @@ const homeJson  = JSON.stringify(homeSpot ?? null);
         ? '<p style="margin:0 0 9px;font-size:12px;color:#555;line-height:1.6;">'
           + spot.comment + '</p>'
         : "")
-      + '<a href="' + mapsUrl + '" target="_blank" rel="noopener"'
+      + '<a href="' + mapsUrl + '" target="_blank" rel="noopener noreferrer"'
       + ' style="font-size:11px;color:#4a5d4e;border-bottom:1px solid #4a5d4e;'
       + 'padding-bottom:1px;text-decoration:none;">'
       + 'Google Mapsで開く →</a>'
