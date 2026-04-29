@@ -832,7 +832,7 @@ const homeJson  = JSON.stringify(homeSpot ?? null);
         gmap.addListener("click", function () { deselectAll(); });
 
         // DEBUG START
-        gmap.addListener("click", function (e) {
+        function __debugShowCoords(e) {
           var lat = e.latLng.lat().toFixed(8);
           var lng = e.latLng.lng().toFixed(8);
           var latEl = document.getElementById("debug-lat");
@@ -843,7 +843,9 @@ const homeJson  = JSON.stringify(homeSpot ?? null);
           if (lngEl) lngEl.textContent = "経度: " + lng;
           if (valEl) valEl.value = lat + "," + lng;
           if (btnEl) btnEl.textContent = "コピー";
-        });
+        }
+        gmap.addListener("click", __debugShowCoords);
+        gmap.addListener("rightclick", __debugShowCoords);
         // DEBUG END
 
         var skeleton = document.getElementById("map-skeleton");
