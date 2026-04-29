@@ -5,6 +5,7 @@ import Footer from "../components/Footer.astro";
 const {
   title = "おいらの森",
   description = "栃木県那須烏山の里山にある『里山パークおいらの森』。100年先の森を育てながら、森で遊び、森に泊まる体験型キャンプ場です。",
+  noindex = false,
 } = Astro.props;
 
 const breadcrumbName = title.includes(" | ") ? title.split(" | ")[0].trim() : title;
@@ -41,6 +42,7 @@ const breadcrumbJson = Astro.url.pathname !== "/" ? JSON.stringify({
     <meta property="og:locale" content="ja_JP" />
     <!-- canonical -->
     <link rel="canonical" href={Astro.url.href} />
+    {noindex && <meta name="robots" content="noindex,nofollow" />}
     <!-- BreadcrumbList -->
     {breadcrumbJson && <script is:inline type="application/ld+json" set:html={breadcrumbJson} />}
     <slot name="head" />
