@@ -6,6 +6,16 @@ const {
   title = "おいらの森",
   description = "栃木県那須烏山の里山にある『里山パークおいらの森』。100年先の森を育てながら、森で遊び、森に泊まる体験型キャンプ場です。",
 } = Astro.props;
+
+const breadcrumbName = title.includes(" | ") ? title.split(" | ")[0].trim() : title;
+const breadcrumbJson = Astro.url.pathname !== "/" ? JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "里山パークおいらの森", "item": "https://oiranomori.jp" },
+    { "@type": "ListItem", "position": 2, "name": breadcrumbName, "item": "https://oiranomori.jp" + Astro.url.pathname }
+  ]
+}) : null;
 ---
 
 <!doctype html>
@@ -31,6 +41,8 @@ const {
     <meta property="og:locale" content="ja_JP" />
     <!-- canonical -->
     <link rel="canonical" href={Astro.url.href} />
+    <!-- BreadcrumbList -->
+    {breadcrumbJson && <script is:inline type="application/ld+json" set:html={breadcrumbJson} />}
     <slot name="head" />
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-74NDHG8YJ7"></script>

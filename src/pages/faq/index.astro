@@ -19,6 +19,57 @@ const categories = [
   title="よくある質問 | 里山パークおいらの森"
   description="里山パークおいらの森のよくある質問（FAQ）。那須烏山のキャンプ場への予約・キャンセル・チェックイン・設備・ライト/ディープフォレスト別ルール・アクセスについて答えます。"
 >
+  <script is:inline type="application/ld+json" slot="head" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      { "@type": "Question", "name": "予約はどこからできますか？", "acceptedAnswer": { "@type": "Answer", "text": "当HPの予約ボタン、または楽天トラベルキャンプからご予約いただけます。会員登録（無料）をすると、次回以降の入力省略・複数プラン同時予約・ポイント付与などの特典があります。" } },
+      { "@type": "Question", "name": "当日予約はできますか？", "acceptedAnswer": { "@type": "Answer", "text": "サイトに空きがあれば、お電話のみで当日受付いたします。ただし料金は当日料金となり、HP表示の料金とは異なります。事前のご予約をおすすめします。TEL: 050-3647-1047" } },
+      { "@type": "Question", "name": "予約の内容を変更したい。", "acceptedAnswer": { "@type": "Answer", "text": "軽微な変更（人数・車台数）は当日清算で対応します。サイト追加は新規予約としてお手続きください。日程変更やサイト数の減少は、一度キャンセルしてから再予約、またはお電話でご相談ください。" } },
+      { "@type": "Question", "name": "キャンセルしたい。", "acceptedAnswer": { "@type": "Answer", "text": "予約確認メールに記載のリンクからキャンセル手続きができます。当日キャンセルのみキャンセル料100%を申し受けます（それ以前は無料）。無断キャンセルは100%請求となります。" } },
+      { "@type": "Question", "name": "予約日を間違えた。", "acceptedAnswer": { "@type": "Answer", "text": "気づいた時点でキャンセルし、正しい日程で再予約してください。当日扱いになる前であればキャンセル料はかかりません。間に合わない場合はすぐにお電話ください。" } },
+      { "@type": "Question", "name": "チェックイン・チェックアウトの時間は？", "acceptedAnswer": { "@type": "Answer", "text": "チェックイン 12:00〜17:00 / チェックアウト 12:00 です。17時以降のチェックイン・合流・夜間の出入りはできません。" } },
+      { "@type": "Question", "name": "アーリーチェックインはできますか？", "acceptedAnswer": { "@type": "Answer", "text": "エリアに余裕がある場合に限り、9:00から無料でアーリーチェックインが可能です。前日までにお問い合わせフォームまたはお電話よりご連絡ください。" } },
+      { "@type": "Question", "name": "早朝にチェックアウトしたい。", "acceptedAnswer": { "@type": "Answer", "text": "6:00前のチェックアウトはできません（ディープフォレストは7:00前不可）。事前にご相談ください。" } },
+      { "@type": "Question", "name": "チェックイン後の外出はできますか？", "acceptedAnswer": { "@type": "Answer", "text": "6:00〜18:00まで自由に出入りいただけます。門限18:00以降は車の移動ができません。お風呂や買い物は早めにお願いします。" } },
+      { "@type": "Question", "name": "デイキャンプで延長利用したい。", "acceptedAnswer": { "@type": "Answer", "text": "空きがあれば宿泊からの延長は日帰り料金で18:00まで可能です。18時以降は宿泊料金、翌6:00まで出入り不可となります。" } },
+      { "@type": "Question", "name": "どのサイトを選んだらよいかわからない。", "acceptedAnswer": { "@type": "Answer", "text": "ファミリー・グループ（4人以上・車あり）はライトフォレストのオートサイト L・LL・XL、カップル・2〜3人はオートM・Sサイズ、ソロで静かに過ごしたい方はSSサイズ、ソロで直火・野営感はソロ区画3〜11番または区画C、愛犬と一緒にはドッグランサイト、車を持たない方は電車キャンパー歓迎プラン、ブッシュクラフト・上級者・静寂重視の方はディープフォレスト（18歳以上限定）がおすすめです。" } },
+      { "@type": "Question", "name": "キャンプが初めてですが大丈夫ですか？", "acceptedAnswer": { "@type": "Answer", "text": "大丈夫です。ライトフォレストはおいら家族が敷地内に常駐しており、初心者・女性・ファミリーも安心してご利用いただけます。売店で薪・焚き火台・斧などのレンタル・販売もあります。まずはオートサイト（車横付け可）がおすすめです。" } },
+      { "@type": "Question", "name": "シャワーはありますか？", "acceptedAnswer": { "@type": "Answer", "text": "ありません。車で10分以内の範囲に日帰り温泉が複数あるため、そちらをご利用ください。" } },
+      { "@type": "Question", "name": "トイレは？", "acceptedAnswer": { "@type": "Answer", "text": "ライトフォレストは水洗・洋式の新築トイレ（男女各2室）があります。ディープフォレスト内にはトイレがないため、ライトフォレスト管理棟の水洗トイレをご利用ください。" } },
+      { "@type": "Question", "name": "Wi-Fi・携帯電波は？", "acceptedAnswer": { "@type": "Answer", "text": "ライトフォレストでは無料Wi-Fiが利用可能です（ソロ区画・オートA・Bはエリア外）。携帯電波は両フィールドとも入ります。" } },
+      { "@type": "Question", "name": "AC電源は使えますか？", "acceptedAnswer": { "@type": "Answer", "text": "ライトフォレストの一部サイトで有料オプションとしてご利用いただけます（消費電力600Wまで）。ディープフォレストにはありません。" } },
+      { "@type": "Question", "name": "発電機は使えますか？", "acceptedAnswer": { "@type": "Answer", "text": "両フィールドとも使用禁止です。" } },
+      { "@type": "Question", "name": "花火はできますか？", "acceptedAnswer": { "@type": "Answer", "text": "打ち上げ花火は両フィールドとも禁止です。手持ち花火の可否は要確認。" } },
+      { "@type": "Question", "name": "BBQはできますか？", "acceptedAnswer": { "@type": "Answer", "text": "できます。ライトフォレストは全サイトで焚き火台使用可、ソロ区画3〜11番と区画Cは直火も可能です。ディープフォレストは全面直火可能。食材はお持ち込みください。" } },
+      { "@type": "Question", "name": "ゴミは捨てられますか？", "acceptedAnswer": { "@type": "Answer", "text": "灰以外はすべてお持ち帰りください。灰は指定のペール缶（ライトフォレスト薪小屋の黒ペール缶）に蓋をして入れてください。" } },
+      { "@type": "Question", "name": "ペットは連れて来られますか？", "acceptedAnswer": { "@type": "Answer", "text": "ライトフォレストのドッグランサイトはノーリードOK、その他のサイトはリード必須です。ふんの処理・管理は飼い主の責任でお願いします。ディープフォレストのペット可否は要確認。" } },
+      { "@type": "Question", "name": "ライトフォレストはどんなフィールドですか？", "acceptedAnswer": { "@type": "Answer", "text": "コナラ・クヌギの明るい落葉広葉樹林に囲まれたキャンプサイト。管理人家族が敷地内に常駐しており、初心者・女性・ファミリーも安心です。敷地18,000坪・収容約120人。栃木県那須烏山市にあります。" } },
+      { "@type": "Question", "name": "ライトフォレストにはどんなサイトがありますか？", "acceptedAnswer": { "@type": "Answer", "text": "オートサイト（車乗り入れ可）、区画サイト（近隣駐車場）、ソロ区画、ドッグランサイト、区画外（お好きな場所でキャンプ）があります。" } },
+      { "@type": "Question", "name": "ライトフォレストで直火はできますか？", "acceptedAnswer": { "@type": "Answer", "text": "オートサイトは焚き火台使用。区画サイトC・ソロ区画3〜11番は直火可能です。" } },
+      { "@type": "Question", "name": "ディープフォレストはどんなフィールドですか？", "acceptedAnswer": { "@type": "Answer", "text": "樹齢80年のスギ・ヒノキの針葉樹林、敷地14,000坪。野営・ブッシュクラフト・静寂を求める上級者向けフィールドです。ライトフォレストから車で約7分。" } },
+      { "@type": "Question", "name": "ディープフォレストは誰でも利用できますか？", "acceptedAnswer": { "@type": "Answer", "text": "18歳以上限定です。入場時に年齢確認書類（免許証・パスポート等）のご提示が必要です。未成年の方はいかなる理由でも入場できません。" } },
+      { "@type": "Question", "name": "ディープフォレストで直火はできますか？", "acceptedAnswer": { "@type": "Answer", "text": "全面直火可能です。ただし火消し壺の持参が必須（受付で500円レンタルあり）、立木の枯れ枝・積んである丸太の使用は厳禁です。" } },
+      { "@type": "Question", "name": "ディープフォレストの設備は？", "acceptedAnswer": { "@type": "Answer", "text": "仮設トイレのみ。水道・電源・売店はありません。自己完結型のフィールドです。飲料水・必要物資はライトフォレストで調達してください。" } },
+      { "@type": "Question", "name": "ディープフォレストの場所はどこですか？", "acceptedAnswer": { "@type": "Answer", "text": "場所は非公開です。ライトフォレスト管理棟で受付・案内を受けた後、現地へ移動していただきます。" } },
+      { "@type": "Question", "name": "売店の営業時間は？", "acceptedAnswer": { "@type": "Answer", "text": "9:00〜17:30（季節延長営業あり）。" } },
+      { "@type": "Question", "name": "薪は買えますか？", "acceptedAnswer": { "@type": "Answer", "text": "はい。おいらが自家生産した薪を割安で販売しています。" } },
+      { "@type": "Question", "name": "売店では何が買えますか？", "acceptedAnswer": { "@type": "Answer", "text": "生ビール・缶ビール・ソフトドリンク・薪・炭・焚き火台・斧・ログスプリッターなど。食材の販売はありません。" } },
+      { "@type": "Question", "name": "手ぶらキャンプはできますか？", "acceptedAnswer": { "@type": "Answer", "text": "可能です（食材のみご持参ください）。" } },
+      { "@type": "Question", "name": "場所はどこですか？", "acceptedAnswer": { "@type": "Answer", "text": "栃木県那須烏山市、東京から車で約2時間です。" } },
+      { "@type": "Question", "name": "おいらの森がカーナビに出てこない。", "acceptedAnswer": { "@type": "Answer", "text": "ライトフォレストは「栃木県那須烏山市福岡1047」でご検索ください。ディープフォレストは場所非公開のため、ライトフォレストで受付後に現地案内します。それでも到達できない場合はお電話ください。" } },
+      { "@type": "Question", "name": "電車で行けますか？", "acceptedAnswer": { "@type": "Answer", "text": "JR烏山線「鴻野山駅」が最寄りです。電車キャンパー向けに駅送迎プランがあります。" } },
+      { "@type": "Question", "name": "周辺の温泉は？", "acceptedAnswer": { "@type": "Answer", "text": "車で10分以内に複数の日帰り温泉があります。" } },
+      { "@type": "Question", "name": "クマはいますか？", "acceptedAnswer": { "@type": "Answer", "text": "いません。" } },
+      { "@type": "Question", "name": "虫はいますか？", "acceptedAnswer": { "@type": "Answer", "text": "います。森ならではの昆虫に出会えるのが魅力のひとつです。昆虫採集もOKですが、持ち帰りはご自身で飼育できる範囲までにしてください。" } },
+      { "@type": "Question", "name": "蛇・スズメバチはいますか？", "acceptedAnswer": { "@type": "Answer", "text": "います。森の中では当たり前の存在です。見かけても慌てず、距離を取って行動してください。" } },
+      { "@type": "Question", "name": "蛍は見られますか？", "acceptedAnswer": { "@type": "Answer", "text": "見られます。ライトフォレストの谷で6月頃にゲンジボタルが飛びます。毎年「ホタル観賞会」イベントも開催しています。" } },
+      { "@type": "Question", "name": "管理人はいますか？", "acceptedAnswer": { "@type": "Answer", "text": "ライトフォレストにはおいら家族が敷地内に常駐しています。ディープフォレストは無人管理で、受付はライトフォレストで行います。" } },
+      { "@type": "Question", "name": "雨でも営業していますか？", "acceptedAnswer": { "@type": "Answer", "text": "基本的に営業します。台風等の荒天時は事前にお知らせします。" } },
+      { "@type": "Question", "name": "団体・撮影・貸し切りは可能ですか？", "acceptedAnswer": { "@type": "Answer", "text": "「団体・貸し切り・撮影会プラン」があります。ご予約ページからどうぞ。" } },
+      { "@type": "Question", "name": "問い合わせ先は？", "acceptedAnswer": { "@type": "Answer", "text": "TEL: 050-3647-1047 / Mail: oira@oiranomori.jp / お問い合わせフォーム: https://oiranomori.jp/contact/" } }
+    ]
+  })} />
 
   {/* ページヘッダー */}
   <div class="mb-10 border-b border-zinc-200 pb-8">
