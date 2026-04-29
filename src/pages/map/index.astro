@@ -65,6 +65,15 @@ const homeJson  = JSON.stringify(homeSpot ?? null);
           <p>マップの読み込みに失敗しました</p>
         </div>
         <div id="map"></div>
+        <!-- DEBUG START -->
+        <div id="debug-coords" style="position:fixed;top:12px;right:12px;z-index:9999;background:#fff;border:1px solid #ccc;border-radius:4px;padding:10px 14px;font-size:11px;font-family:monospace;box-shadow:0 2px 8px rgba(0,0,0,.2);min-width:220px;">
+          <div style="font-weight:bold;margin-bottom:6px;color:#555;">DEBUG: クリック座標</div>
+          <div id="debug-lat" style="margin-bottom:2px;">緯度: —</div>
+          <div id="debug-lng" style="margin-bottom:8px;">経度: —</div>
+          <button id="debug-copy" style="font-size:10px;padding:3px 8px;cursor:pointer;border:1px solid #aaa;border-radius:3px;background:#f5f5f5;" onclick="(function(){var t=document.getElementById('debug-copy-val');if(t){navigator.clipboard.writeText(t.value).then(function(){document.getElementById('debug-copy').textContent='コピーしました';setTimeout(function(){document.getElementById('debug-copy').textContent='コピー';},1500)});}})()">コピー</button>
+          <input id="debug-copy-val" type="hidden" value="" />
+        </div>
+        <!-- DEBUG END -->
       </div>
 
       <!-- Mobile: ハンドルバー -->
@@ -821,6 +830,21 @@ const homeJson  = JSON.stringify(homeSpot ?? null);
         gmap = new mapsLib.Map(document.getElementById("map"), mapOptions);
 
         gmap.addListener("click", function () { deselectAll(); });
+
+        // DEBUG START
+        gmap.addListener("click", function (e) {
+          var lat = e.latLng.lat().toFixed(8);
+          var lng = e.latLng.lng().toFixed(8);
+          var latEl = document.getElementById("debug-lat");
+          var lngEl = document.getElementById("debug-lng");
+          var valEl = document.getElementById("debug-copy-val");
+          var btnEl = document.getElementById("debug-copy");
+          if (latEl) latEl.textContent = "緯度: " + lat;
+          if (lngEl) lngEl.textContent = "経度: " + lng;
+          if (valEl) valEl.value = lat + "," + lng;
+          if (btnEl) btnEl.textContent = "コピー";
+        });
+        // DEBUG END
 
         var skeleton = document.getElementById("map-skeleton");
         if (skeleton) skeleton.remove();
