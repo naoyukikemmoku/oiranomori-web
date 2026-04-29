@@ -1049,9 +1049,8 @@ const powerFacJson    = JSON.stringify(powerFacilities);
     initCampMarkers();
     applyCheckboxState();
 
-    var bounds = new google.maps.LatLngBounds();
-    bounds.extend({ north: 36.64157, south: 36.63905, east: 140.06974, west: 140.06561 });
-    gmap.fitBounds(bounds, 20);
+    gmap.setCenter({ lat: 36.640500, lng: 140.068000 });
+    gmap.setZoom(17);
   }
 
   // ────────────────────────────────────────────────
@@ -1387,9 +1386,11 @@ const powerFacJson    = JSON.stringify(powerFacilities);
   window.__initGoogleMaps = function () {
     google.maps.importLibrary("maps").then(function (mapsLib) {
       return google.maps.importLibrary("marker").then(function () {
+        var urlViewInit = getViewFromUrl();
+        var initIsCamp  = (urlViewInit === "light" || urlViewInit === "camp");
         var mapOptions = {
-          center:            DEFAULT_CENTER,
-          zoom:              15,
+          center:            initIsCamp ? { lat: 36.640500, lng: 140.068000 } : { lat: 36.639896, lng: 140.068402 },
+          zoom:              initIsCamp ? 17 : 13,
           zoomControl:       true,
           mapTypeControl:    false,
           streetViewControl: false,
