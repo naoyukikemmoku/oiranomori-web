@@ -1,4 +1,4 @@
-﻿---
+---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Header from "../../components/Header.astro";
 import spotsRaw from "../../data/spots.json";
@@ -6,8 +6,7 @@ import spotsRaw from "../../data/spots.json";
 const API_KEY = import.meta.env.PUBLIC_GMAPS_API_KEY ?? "";
 const MAP_ID  = import.meta.env.PUBLIC_GMAPS_MAP_ID  ?? "";
 
-const CATEGORIES = [
-  { key: "light",       label: "Light Forest" },
+const SURROUND_CATS = [
   { key: "food",        label: "食事" },
   { key: "bath",        label: "お風呂" },
   { key: "shopping",    label: "買い物" },
@@ -15,18 +14,33 @@ const CATEGORIES = [
   { key: "emergency",   label: "緊急・医療" },
 ] as const;
 
-type Spot = { id: string; name: string; lat: number; lng: number; comment: string; status?: string };
+type Spot        = { id: string; name: string; lat: number; lng: number; comment: string; status?: string };
+type CampSite    = { id: string; name: string; lat: number; lng: number; desc: string; size?: string };
+type FacilityPin = { id: string; name: string; lat: number; lng: number; desc: string };
 
 const homeSpot = (spotsRaw as any).home as { id: string; name: string; lat: number; lng: number; comment: string } | undefined;
 
-const spots: Record<string, Spot[]> = {};
-for (const cat of CATEGORIES) {
+// Surround spots
+const surroundSpots: Record<string, Spot[]> = {};
+for (const cat of SURROUND_CATS) {
   const raw = ((spotsRaw as any)[cat.key] as Spot[]) ?? [];
-  spots[cat.key] = raw.filter((s) => s.name !== "" && s.lat !== 0 && s.lng !== 0);
+  surroundSpots[cat.key] = raw.filter((s) => s.name !== "" && s.lat !== 0 && s.lng !== 0);
 }
 
-const spotsJson = JSON.stringify(spots);
-const homeJson  = JSON.stringify(homeSpot ?? null);
+// Camp sites
+const autoSites  = ((spotsRaw as any).auto  as CampSite[])  ?? [];
+const blockSites = ((spotsRaw as any).block as CampSite[])  ?? [];
+const soloSites  = ((spotsRaw as any).solo  as CampSite[])  ?? [];
+const lightFacilities = ((spotsRaw as any).light as FacilityPin[]) ?? [];
+const powerFacilities = ((spotsRaw as any).facility_power as FacilityPin[]) ?? [];
+
+const surroundJson    = JSON.stringify(surroundSpots);
+const homeJson        = JSON.stringify(homeSpot ?? null);
+const autoJson        = JSON.stringify(autoSites);
+const blockJson       = JSON.stringify(blockSites);
+const soloJson        = JSON.stringify(soloSites);
+const lightFacJson    = JSON.stringify(lightFacilities);
+const powerFacJson    = JSON.stringify(powerFacilities);
 ---
 
 <BaseLayout
@@ -42,16 +56,95 @@ const homeJson  = JSON.stringify(homeSpot ?? null);
     <div id="tab-row">
       <span class="map-label">Map</span>
       <div id="tab-scroll">
-        {CATEGORIES.map((cat) => (
-          <button type="button" data-tab={cat.key} class="tab-btn">
+        <!-- 上位2択 -->
+        <button type="button" data-view="camp" class="view-btn">場内マップ</button>
+        <button type="button" data-view="surround" class="view-btn">周辺案内</button>
+        <!-- 周辺案内サブタブ（周辺案内選択時のみ表示） -->
+        <span id="surround-divider" class="tab-divider">|</span>
+        {SURROUND_CATS.map((cat) => (
+          <button type="button" data-tab={cat.key} class="tab-btn surround-tab">
             {cat.label}
           </button>
         ))}
       </div>
     </div>
 
-    <!-- マップ + リスト -->
+    <!-- マップ + パネル -->
     <div id="map-list-area">
+
+      <!-- 場内マップ: PCサイドパネル -->
+      <div id="camp-panel">
+        <div id="camp-panel-scroll">
+          <label class="cp-row cp-all">
+            <input type="checkbox" id="chk-all" checked /> 全サイト
+          </label>
+          <hr class="cp-sep" />
+
+          <div class="cp-group">
+            <label class="cp-row cp-parent">
+              <input type="checkbox" class="chk-cat" data-cat="auto" checked /> オートサイト
+            </label>
+            <div class="cp-children" id="chk-auto-children">
+              {autoSites.map((s) => (
+                <label class="cp-child">
+                  <input type="checkbox" class="chk-site" data-cat="auto" data-id={s.id} checked />
+                  {s.id}
+                </label>
+              ))}
+            </div>
+          </div>
+          <hr class="cp-sep" />
+
+          <div class="cp-group">
+            <label class="cp-row cp-parent">
+              <input type="checkbox" class="chk-cat" data-cat="block" checked /> 区画サイト
+            </label>
+            <div class="cp-children" id="chk-block-children">
+              {blockSites.map((s) => (
+                <label class="cp-child">
+                  <input type="checkbox" class="chk-site" data-cat="block" data-id={s.id} checked />
+                  {s.id}
+                </label>
+              ))}
+            </div>
+          </div>
+          <hr class="cp-sep" />
+
+          <div class="cp-group">
+            <label class="cp-row cp-parent">
+              <input type="checkbox" class="chk-cat" data-cat="solo" checked /> ソロ区画
+            </label>
+            <div class="cp-children" id="chk-solo-children">
+              {soloSites.map((s) => (
+                <label class="cp-child">
+                  <input type="checkbox" class="chk-site" data-cat="solo" data-id={s.id} checked />
+                  {s.id}
+                </label>
+              ))}
+            </div>
+          </div>
+          <hr class="cp-sep" />
+
+          <div class="cp-group">
+            <label class="cp-row cp-parent">
+              <input type="checkbox" class="chk-cat" data-cat="facility" checked /> 設備
+            </label>
+            <div class="cp-children" id="chk-facility-children">
+              <label class="cp-child">
+                <input type="checkbox" class="chk-fac" data-fac="light" checked /> トイレ・流し・受付
+              </label>
+              <label class="cp-child">
+                <input type="checkbox" class="chk-fac" data-fac="power" checked /> コンセント
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PC toggle for camp panel -->
+      <button id="camp-panel-toggle" aria-label="パネルを切り替え">
+        <span id="camp-panel-toggle-icon">◀</span>
+      </button>
 
       <!-- マップ -->
       <div id="map-wrapper">
@@ -65,33 +158,31 @@ const homeJson  = JSON.stringify(homeSpot ?? null);
           <p>マップの読み込みに失敗しました</p>
         </div>
         <div id="map"></div>
-        <!-- DEBUG START -->
-        <div id="debug-coords" style="position:fixed;top:12px;right:12px;z-index:9999;background:#fff;border:1px solid #ccc;border-radius:4px;padding:10px 14px;font-size:11px;font-family:monospace;box-shadow:0 2px 8px rgba(0,0,0,.2);min-width:220px;">
-          <div style="font-weight:bold;margin-bottom:6px;color:#555;">DEBUG: クリック座標</div>
-          <div id="debug-lat" style="margin-bottom:2px;">緯度: —</div>
-          <div id="debug-lng" style="margin-bottom:8px;">経度: —</div>
-          <button id="debug-copy" style="font-size:10px;padding:3px 8px;cursor:pointer;border:1px solid #aaa;border-radius:3px;background:#f5f5f5;" onclick="(function(){var t=document.getElementById('debug-copy-val');if(t){navigator.clipboard.writeText(t.value).then(function(){document.getElementById('debug-copy').textContent='コピーしました';setTimeout(function(){document.getElementById('debug-copy').textContent='コピー';},1500)});}})()">コピー</button>
-          <input id="debug-copy-val" type="hidden" value="" />
-        </div>
-        <!-- DEBUG END -->
       </div>
 
       <!-- Mobile: ハンドルバー -->
-      <div id="mobile-handle" role="button" aria-label="リストパネルを切り替え" tabindex="0">
+      <div id="mobile-handle" role="button" aria-label="パネルを切り替え" tabindex="0">
         <div class="handle-bar"></div>
         <span id="handle-icon" aria-hidden="true">∧</span>
       </div>
 
-      <!-- PC: 境界トグルボタン -->
+      <!-- PC: 境界トグルボタン（周辺案内リスト用） -->
       <button id="pc-toggle" aria-label="リストパネルを切り替え">
         <span id="pc-toggle-icon">◀</span>
       </button>
 
-      <!-- リストパネル -->
+      <!-- リストパネル（周辺案内用） -->
       <div id="list-panel" role="region" aria-label="スポット一覧">
         <div id="list-scroll">
           <div id="no-data-msg">このカテゴリは準備中です。</div>
           <ul id="spot-list" role="list"></ul>
+        </div>
+      </div>
+
+      <!-- Mobile: 場内マップ チェックボックスドロワー -->
+      <div id="camp-drawer">
+        <div id="camp-drawer-scroll">
+          <!-- JS でクローンを注入 -->
         </div>
       </div>
 
@@ -138,10 +229,41 @@ const homeJson  = JSON.stringify(homeSpot ?? null);
 }
 #tab-scroll {
   display: flex;
+  align-items: stretch;
   overflow-x: auto;
   scrollbar-width: none;
 }
 #tab-scroll::-webkit-scrollbar { display: none; }
+
+.view-btn {
+  flex-shrink: 0;
+  padding: 10px 14px;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  color: #71717a;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.15s;
+}
+.view-btn:hover { color: #1a2421; }
+.view-btn.is-active { color: #2d3a30; font-weight: 700; }
+.view-btn.is-active::after {
+  content: "";
+  position: absolute;
+  bottom: -1px; left: 0; right: 0;
+  height: 2px;
+  background: #2d3a30;
+}
+
+.tab-divider {
+  align-self: center;
+  color: #d4d4d4;
+  padding: 0 2px;
+  font-size: 12px;
+}
+
 .tab-btn {
   flex-shrink: 0;
   padding: 10px 13px;
@@ -164,20 +286,112 @@ const homeJson  = JSON.stringify(homeSpot ?? null);
   background: #2d3a30;
 }
 
-/* ═══ Map+List area ═══ */
+/* ═══ Map+Panel area ═══ */
 #map-list-area {
   flex: 1;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   min-height: 0;
+  position: relative;
+}
+
+/* ═══ Camp panel (PC sidebar) ═══ */
+#camp-panel {
+  display: none;
+  flex-shrink: 0;
+  width: 220px;
+  background: #f4f5f2;
+  border-right: 1px solid #d4d4d4;
+  overflow: hidden;
+  transition: width 0.25s ease, opacity 0.2s ease;
+}
+#camp-panel.panel-hidden-pc {
+  width: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+#camp-panel-scroll {
+  height: 100%;
+  overflow-y: auto;
+  padding: 12px 10px 20px;
+}
+
+/* Camp panel toggle (PC only) */
+#camp-panel-toggle {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 18px;
+  background: #e8e8e4;
+  border: none;
+  border-left: 1px solid #d4d4d4;
+  border-right: 1px solid #d4d4d4;
+  color: #71717a;
+  cursor: pointer;
+  font-size: 9px;
+  transition: background 0.15s, color 0.15s;
+  z-index: 2;
+}
+#camp-panel-toggle:hover { background: #d8d8d4; color: #1a2421; }
+
+/* Checkbox panel styles */
+.cp-all {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #1a2421;
+  cursor: pointer;
+  padding: 4px 2px;
+}
+.cp-sep {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 8px 0;
+}
+.cp-group { margin-bottom: 2px; }
+.cp-parent {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #2d3a30;
+  cursor: pointer;
+  padding: 3px 2px;
+}
+.cp-children {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+  padding: 4px 4px 4px 18px;
+}
+.cp-child {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  color: #555;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.cp-row input[type="checkbox"],
+.cp-child input[type="checkbox"] {
+  cursor: pointer;
+  accent-color: #2d3a30;
+  width: 13px;
+  height: 13px;
 }
 
 /* ═══ Map wrapper ═══ */
 #map-wrapper {
   position: relative;
+  flex: 1;
   overflow: hidden;
-  transition: height 0.25s ease, flex 0.25s ease;
   background: #d1d5db;
 }
 #map { position: absolute; inset: 0; }
@@ -211,7 +425,7 @@ const homeJson  = JSON.stringify(homeSpot ?? null);
 /* ═══ Mobile handle ═══ */
 #mobile-handle {
   flex-shrink: 0;
-  display: flex;
+  display: none;
   flex-direction: column;
   align-items: center;
   gap: 3px;
@@ -234,13 +448,29 @@ const homeJson  = JSON.stringify(homeSpot ?? null);
   color: #9ca3af;
 }
 
-/* ═══ PC toggle ═══ */
+/* ═══ PC toggle (surround list) ═══ */
 #pc-toggle {
   display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 18px;
+  background: #e8e8e4;
+  border: none;
+  border-left: 1px solid #d4d4d4;
+  border-right: 1px solid #d4d4d4;
+  color: #71717a;
+  cursor: pointer;
+  font-size: 9px;
+  transition: background 0.15s, color 0.15s;
+  z-index: 2;
 }
+#pc-toggle:hover { background: #d8d8d4; color: #1a2421; }
 
-/* ═══ List panel ═══ */
+/* ═══ List panel (surround) ═══ */
 #list-panel {
+  display: none;
   overflow: hidden;
   background: #f4f5f2;
   transition: height 0.25s ease, opacity 0.2s ease;
@@ -314,6 +544,7 @@ const homeJson  = JSON.stringify(homeSpot ?? null);
   flex-direction: column;
   gap: 3px;
   min-width: 0;
+  flex: 1;
 }
 .list-name {
   font-size: 13px;
@@ -356,38 +587,53 @@ const homeJson  = JSON.stringify(homeSpot ?? null);
 }
 .route-btn:hover { border-bottom-color: var(--forest-600, #4a7c59); }
 
+/* ═══ Mobile camp drawer ═══ */
+#camp-drawer {
+  display: none;
+  flex-shrink: 0;
+  background: #f4f5f2;
+  border-top: 1px solid #d4d4d4;
+  overflow: hidden;
+  transition: height 0.25s ease;
+}
+#camp-drawer-scroll {
+  overflow-y: auto;
+  padding: 10px 12px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  align-items: flex-start;
+}
+
 /* ═══ PC layout (md+) ═══ */
 @media (min-width: 768px) {
   #map-list-area { flex-direction: row; }
-
   #map-wrapper {
-    flex: 7;
+    flex: 1;
     height: 100% !important;
     transition: flex 0.25s ease;
   }
+  #mobile-handle { display: none !important; }
+  #camp-drawer   { display: none !important; }
 
-  #mobile-handle { display: none; }
+  #camp-panel {
+    display: flex;
+    flex-direction: column;
+    order: -1;
+    height: 100%;
+  }
+  #camp-panel-toggle {
+    display: flex;
+    order: 0;
+    height: 100%;
+  }
 
   #pc-toggle {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    width: 18px;
-    background: #e8e8e4;
-    border: none;
-    border-left: 1px solid #d4d4d4;
-    border-right: 1px solid #d4d4d4;
-    color: #71717a;
-    cursor: pointer;
-    font-size: 9px;
-    transition: background 0.15s, color 0.15s;
-    z-index: 2;
+    height: 100%;
   }
-  #pc-toggle:hover { background: #d8d8d4; color: #1a2421; }
-
   #list-panel {
+    display: block;
     flex: 0 0 30%;
     max-width: 360px;
     height: 100% !important;
@@ -409,35 +655,113 @@ const homeJson  = JSON.stringify(homeSpot ?? null);
 .gm-style-iw-c { padding: 12px 14px !important; border-radius: 0 !important; }
 </style>
 
-<script is:inline define:vars={{ API_KEY, MAP_ID, spotsJson, homeJson }}>
-  var spots    = JSON.parse(spotsJson);
-  var homeSpot = JSON.parse(homeJson);
+<script is:inline define:vars={{ API_KEY, MAP_ID, surroundJson, homeJson, autoJson, blockJson, soloJson, lightFacJson, powerFacJson }}>
+  var surroundSpots = JSON.parse(surroundJson);
+  var homeSpot      = JSON.parse(homeJson);
+  var autoSites     = JSON.parse(autoJson);
+  var blockSites    = JSON.parse(blockJson);
+  var soloSites     = JSON.parse(soloJson);
+  var lightFacilities = JSON.parse(lightFacJson);
+  var powerFacilities = JSON.parse(powerFacJson);
 
-  var VALID_VIEWS    = ["light","food","bath","shopping","sightseeing","emergency"];
-  var PIN_COLOR      = "#4a5d4e";
-  var PIN_HOVER      = "#2d3a30";
-  var PIN_SELECTED   = "#7c4d2a";
-  var PIN_CLOSED     = "#888888";
-  var HOME_COLOR     = "#C8A063";
+  var SURROUND_VIEWS = ["food","bath","shopping","sightseeing","emergency"];
+  var PIN_COLOR    = "#4a5d4e";
+  var PIN_SELECTED = "#7c4d2a";
+  var PIN_CLOSED   = "#888888";
+  var HOME_COLOR   = "#C8A063";
+  var COLOR_AUTO   = "#488B37";
+  var COLOR_BLOCK  = "#C8A063";
+  var COLOR_SOLO   = "#6B8FA3";
   var DEFAULT_CENTER = { lat: 36.6399, lng: 140.0684 };
 
   var gmap           = null;
-  var markers        = [];    // [{marker, el, spot, index}]
+  var markers        = [];
+  var campMarkers    = {};
   var homeMarker     = null;
   var openInfoWindow = null;
   var selectedIndex  = null;
   var listOpen       = true;
-  var currentView    = "light";
+  var campPanelOpen  = true;
+  var currentMode    = "camp";
+  var currentTab     = "food";
   var lightOverlay   = null;
 
   // DOM refs
   var mapListArea, mapWrapperEl, listPanelEl;
   var mobileHandleEl, handleIconEl, pcToggleEl, pcToggleIconEl;
   var spotListEl, noDataMsgEl;
+  var campPanelEl, campPanelToggleEl, campPanelToggleIconEl;
+  var campDrawerEl, campDrawerScrollEl;
+
+  // ────────────────────────────────────────────────
+  // Circled number/letter helpers
+  // ────────────────────────────────────────────────
+
+  var CIRCLED_NUMS = ["①","②","③","④","⑤","⑥","⑦","⑧","⑨","⑩",
+    "⑪","⑫","⑬","⑭","⑮","⑯","⑰","⑱","⑲","⑳",
+    "㉑","㉒","㉓","㉔","㉕","㉖","㉗","㉘","㉙","㉚",
+    "㉛","㉜","㉝","㉞","㉟","㊱","㊲","㊳","㊴","㊵"];
+  var CIRCLED_ALPHA = {"A":"Ⓐ","B":"Ⓑ","C":"Ⓒ","D":"Ⓓ","E":"Ⓔ"};
+
+  function circledLabel(id) {
+    var n = parseInt(id, 10);
+    if (!isNaN(n) && n >= 1 && n <= 40) return CIRCLED_NUMS[n - 1];
+    if (CIRCLED_ALPHA[id]) return CIRCLED_ALPHA[id];
+    return id;
+  }
 
   // ────────────────────────────────────────────────
   // SVG pin builders
   // ────────────────────────────────────────────────
+
+  function sitePinSvg(label, color) {
+    var fs = label.length > 2 ? "9" : "12";
+    return '<svg width="28" height="28" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">'
+      + '<circle cx="14" cy="14" r="13" fill="' + color + '" stroke="rgba(255,255,255,0.85)" stroke-width="1.5"/>'
+      + '<text x="14" y="14" text-anchor="middle" dominant-baseline="central"'
+      + ' fill="white" font-family="\'Helvetica Neue\',Arial,sans-serif"'
+      + ' font-weight="700" font-size="' + fs + '">' + label + '</text>'
+      + '</svg>';
+  }
+
+  function makeSitePinEl(id, color) {
+    var el = document.createElement("div");
+    el.style.cssText = "cursor:pointer;transform-origin:center center;"
+      + "transition:transform 0.15s ease,filter 0.15s ease;";
+    el.innerHTML = sitePinSvg(circledLabel(id), color);
+    el._color = color;
+    el._id = id;
+    el._selected = false;
+    el.addEventListener("mouseover", function () {
+      if (!el._selected) {
+        el.style.transform = "scale(1.2)";
+        el.style.filter    = "brightness(0.82)";
+      }
+    });
+    el.addEventListener("mouseout", function () {
+      if (!el._selected) {
+        el.style.transform = "";
+        el.style.filter    = "";
+      }
+    });
+    return el;
+  }
+
+  function facilityIconSvg(type) {
+    var icons = { toilet:"🚻", sink:"🚿", reception:"🏠", power:"⚡" };
+    var icon = icons[type] || "📍";
+    return '<div style="font-size:20px;line-height:1;filter:drop-shadow(0 1px 2px rgba(0,0,0,0.4));">' + icon + '</div>';
+  }
+
+  function makeFacPinEl(type) {
+    var el = document.createElement("div");
+    el.style.cssText = "cursor:pointer;transform-origin:center center;"
+      + "transition:transform 0.15s ease;";
+    el.innerHTML = facilityIconSvg(type);
+    el.addEventListener("mouseover", function () { el.style.transform = "scale(1.15)"; });
+    el.addEventListener("mouseout",  function () { el.style.transform = ""; });
+    return el;
+  }
 
   function pinSvg(label, color) {
     return '<svg width="22" height="29" viewBox="0 0 36 48" xmlns="http://www.w3.org/2000/svg">'
@@ -455,19 +779,12 @@ const homeJson  = JSON.stringify(homeSpot ?? null);
       + "transition:transform 0.15s ease,filter 0.15s ease;";
     el.innerHTML = pinSvg(number, color);
     el._selected = false;
-
     if (!isClosed) {
       el.addEventListener("mouseover", function () {
-        if (!el._selected) {
-          el.style.transform = "scale(1.15)";
-          el.style.filter    = "brightness(0.82)";
-        }
+        if (!el._selected) { el.style.transform = "scale(1.15)"; el.style.filter = "brightness(0.82)"; }
       });
       el.addEventListener("mouseout", function () {
-        if (!el._selected) {
-          el.style.transform = "";
-          el.style.filter    = "";
-        }
+        if (!el._selected) { el.style.transform = ""; el.style.filter = ""; }
       });
     }
     return el;
@@ -485,18 +802,34 @@ const homeJson  = JSON.stringify(homeSpot ?? null);
       + '<path d="M24 12L37 28H11Z" fill="white"/>'
       + '<rect x="20" y="28" width="8" height="9" fill="rgba(255,255,255,0.75)"/>'
       + '</svg>';
-    el.addEventListener("mouseover", function () {
-      el.style.transform = "scale(1.1)";
-    });
-    el.addEventListener("mouseout", function () {
-      el.style.transform = "";
-    });
+    el.addEventListener("mouseover", function () { el.style.transform = "scale(1.1)"; });
+    el.addEventListener("mouseout",  function () { el.style.transform = ""; });
     return el;
   }
 
   // ────────────────────────────────────────────────
   // InfoWindow content
   // ────────────────────────────────────────────────
+
+  function siteInfoContent(site) {
+    var sizeHtml = site.size ? '<span style="font-size:11px;color:#888;margin-left:6px;">サイズ: ' + site.size + '</span>' : '';
+    var descHtml = site.desc ? '<p style="margin:6px 0 0;font-size:12px;color:#555;line-height:1.6;">' + site.desc + '</p>' : '';
+    return '<div style="font-family:sans-serif;max-width:220px;line-height:1;">'
+      + '<div style="display:flex;align-items:center;flex-wrap:wrap;margin-bottom:3px;">'
+      + '<strong style="font-size:13px;color:#1a2421;">' + site.name + '</strong>' + sizeHtml
+      + '</div>'
+      + descHtml
+      + '</div>';
+  }
+
+  function facInfoContent(fac) {
+    return '<div style="font-family:sans-serif;max-width:220px;line-height:1;">'
+      + '<strong style="font-size:13px;color:#1a2421;">' + fac.name + '</strong>'
+      + (fac.comment || fac.desc
+        ? '<p style="margin:6px 0 0;font-size:12px;color:#555;line-height:1.6;">' + (fac.comment || fac.desc) + '</p>'
+        : '')
+      + '</div>';
+  }
 
   function infoContent(spot) {
     var mapsUrl = "https://www.google.com/maps/search/?api=1&query="
@@ -505,17 +838,10 @@ const homeJson  = JSON.stringify(homeSpot ?? null);
       ? '<span style="font-size:10px;color:#b91c1c;border:1px solid #b91c1c;'
         + 'padding:0 4px;line-height:1.7;margin-left:6px;">休業中</span>'
       : "";
-    var imageHtml = spot.image
-      ? '<img src="' + spot.image + '" style="width:100%;height:120px;object-fit:cover;'
-        + 'display:block;margin-bottom:8px;border-radius:2px;" loading="lazy" />'
-      : "";
-    var mapsLink = currentView !== "light"
-      ? '<a href="' + mapsUrl + '" target="_blank" rel="noopener noreferrer"'
-        + ' style="font-size:11px;color:#4a5d4e;border-bottom:1px solid #4a5d4e;'
-        + 'padding-bottom:1px;text-decoration:none;">Google Mapsで開く →</a>'
-      : "";
+    var mapsLink = '<a href="' + mapsUrl + '" target="_blank" rel="noopener noreferrer"'
+      + ' style="font-size:11px;color:#4a5d4e;border-bottom:1px solid #4a5d4e;'
+      + 'padding-bottom:1px;text-decoration:none;">Google Mapsで開く →</a>';
     return '<div style="font-family:sans-serif;max-width:220px;line-height:1;">'
-      + imageHtml
       + '<div style="display:flex;align-items:center;flex-wrap:wrap;margin-bottom:5px;">'
       + '<strong style="font-size:13px;color:#1a2421;">' + spot.name + '</strong>' + badge
       + '</div>'
@@ -539,7 +865,7 @@ const homeJson  = JSON.stringify(homeSpot ?? null);
   }
 
   // ────────────────────────────────────────────────
-  // Selection management
+  // Surround selection management
   // ────────────────────────────────────────────────
 
   function deselectAll() {
@@ -560,16 +886,13 @@ const homeJson  = JSON.stringify(homeSpot ?? null);
         li.classList.remove("is-selected");
       });
     }
-    if (openInfoWindow) {
-      openInfoWindow.close();
-      openInfoWindow = null;
-    }
+    if (openInfoWindow) { openInfoWindow.close(); openInfoWindow = null; }
   }
 
-  function openIw(spot, marker) {
+  function openIw(content, anchor) {
     if (openInfoWindow) openInfoWindow.close();
-    var iw = new google.maps.InfoWindow({ content: infoContent(spot) });
-    iw.open({ anchor: marker, map: gmap });
+    var iw = new google.maps.InfoWindow({ content: content });
+    iw.open({ anchor: anchor, map: gmap });
     openInfoWindow = iw;
   }
 
@@ -587,18 +910,14 @@ const homeJson  = JSON.stringify(homeSpot ?? null);
       entry.el.style.zIndex    = "10";
     }
     var li = spotListEl ? spotListEl.querySelector('[data-index="' + idx + '"]') : null;
-    if (li) {
-      li.classList.add("is-selected");
-      li.scrollIntoView({ block: "nearest", behavior: "smooth" });
-    }
-    openIw(entry.spot, entry.marker);
+    if (li) { li.classList.add("is-selected"); li.scrollIntoView({ block: "nearest", behavior: "smooth" }); }
+    openIw(infoContent(entry.spot), entry.marker);
     gmap.panTo(entry.marker.position);
-    // Slight zoom-in if currently zoomed out
     if (gmap.getZoom() < 14) gmap.setZoom(16);
   }
 
   // ────────────────────────────────────────────────
-  // Markers
+  // Surround markers
   // ────────────────────────────────────────────────
 
   function clearMarkers() {
@@ -606,55 +925,19 @@ const homeJson  = JSON.stringify(homeSpot ?? null);
     markers = [];
   }
 
-  function placeHomeMarker() {
-    if (!homeSpot || homeMarker) return;
-    var el = makeHomePinEl();
-    homeMarker = new google.maps.marker.AdvancedMarkerElement({
-      map:      gmap,
-      position: { lat: homeSpot.lat, lng: homeSpot.lng },
-      content:  el,
-      title:    homeSpot.name,
-      zIndex:   100,
-    });
-    homeMarker.addListener("click", function () {
-      deselectAll();
-      var iw = new google.maps.InfoWindow({ content: homeInfoContent() });
-      iw.open({ anchor: homeMarker, map: gmap });
-      openInfoWindow = iw;
-    });
-  }
-
-  function updateOverlay(view) {
-    if (view === "light") {
-      if (!lightOverlay) {
-        var imageBounds = { north: 36.64157, south: 36.63905, east: 140.06974, west: 140.06561 };
-        lightOverlay = new google.maps.GroundOverlay(
-          "/images/light-field-googlemap.jpg",
-          imageBounds,
-          { opacity: 0.7 }
-        );
-      }
-      lightOverlay.setMap(gmap);
-    } else {
-      if (lightOverlay) lightOverlay.setMap(null);
-    }
-  }
-
-  function showCategory(view) {
+  function showSurroundCategory(view) {
     if (!gmap) return;
-    updateOverlay(view);
+    if (lightOverlay) lightOverlay.setMap(null);
+    clearCampMarkers();
     clearMarkers();
-    var catSpots = spots[view] || [];
+    homeMarker && (homeMarker.map = gmap);
+
+    var catSpots = surroundSpots[view] || [];
     var bounds   = new google.maps.LatLngBounds();
     if (homeSpot) bounds.extend({ lat: homeSpot.lat, lng: homeSpot.lng });
 
     if (catSpots.length === 0) {
-      // Empty category: center on home pin at zoom 12
-      if (homeSpot) {
-        gmap.setCenter({ lat: homeSpot.lat, lng: homeSpot.lng });
-      } else {
-        gmap.setCenter(DEFAULT_CENTER);
-      }
+      gmap.setCenter(homeSpot ? { lat: homeSpot.lat, lng: homeSpot.lng } : DEFAULT_CENTER);
       gmap.setZoom(12);
       return;
     }
@@ -668,12 +951,9 @@ const homeJson  = JSON.stringify(homeSpot ?? null);
         content:  el,
         title:    spot.name,
       });
-      // Closure to capture correct index
       (function (idx) {
         marker.addListener("click", function () {
-          if (spots[view][idx].status !== "closed") {
-            selectByIndex(idx);
-          }
+          if (surroundSpots[view][idx].status !== "closed") selectByIndex(idx);
         });
       })(i);
       markers.push({ marker: marker, el: el, spot: spot, index: i });
@@ -689,11 +969,248 @@ const homeJson  = JSON.stringify(homeSpot ?? null);
   }
 
   // ────────────────────────────────────────────────
-  // List panel
+  // Camp markers
+  // ────────────────────────────────────────────────
+
+  function clearCampMarkers() {
+    Object.keys(campMarkers).forEach(function (key) {
+      campMarkers[key].forEach(function (m) { m.marker.map = null; });
+    });
+    campMarkers = {};
+  }
+
+  function getFacType(fac) {
+    if (fac.id === "light-reception") return "reception";
+    if (fac.name.indexOf("トイレ") !== -1) return "toilet";
+    if (fac.name.indexOf("流し") !== -1) return "sink";
+    return "sink";
+  }
+
+  function placeCampMarkersForSite(site, color, cat) {
+    var el = makeSitePinEl(site.id, color);
+    var marker = new google.maps.marker.AdvancedMarkerElement({
+      map:      gmap,
+      position: { lat: site.lat, lng: site.lng },
+      content:  el,
+      title:    site.name,
+      zIndex:   5,
+    });
+    marker.addListener("click", function () {
+      if (openInfoWindow) openInfoWindow.close();
+      openIw(siteInfoContent(site), marker);
+      gmap.panTo(marker.position);
+    });
+    if (!campMarkers[cat]) campMarkers[cat] = [];
+    campMarkers[cat].push({ marker: marker, el: el, site: site });
+  }
+
+  function placeFacMarker(fac, type, cat) {
+    var el = makeFacPinEl(type);
+    var marker = new google.maps.marker.AdvancedMarkerElement({
+      map:      gmap,
+      position: { lat: fac.lat, lng: fac.lng },
+      content:  el,
+      title:    fac.name,
+      zIndex:   10,
+    });
+    marker.addListener("click", function () {
+      if (openInfoWindow) openInfoWindow.close();
+      openIw(facInfoContent(fac), marker);
+      gmap.panTo(marker.position);
+    });
+    if (!campMarkers[cat]) campMarkers[cat] = [];
+    campMarkers[cat].push({ marker: marker, el: el, site: fac });
+  }
+
+  function initCampMarkers() {
+    clearCampMarkers();
+    autoSites.forEach(function (s) { placeCampMarkersForSite(s, COLOR_AUTO, "auto-" + s.id); });
+    blockSites.forEach(function (s) { placeCampMarkersForSite(s, COLOR_BLOCK, "block-" + s.id); });
+    soloSites.forEach(function (s) { placeCampMarkersForSite(s, COLOR_SOLO, "solo-" + s.id); });
+    lightFacilities.forEach(function (f) { placeFacMarker(f, getFacType(f), "fac-light-" + f.id); });
+    powerFacilities.forEach(function (f) { placeFacMarker(f, "power", "fac-power-" + f.id); });
+  }
+
+  function showCampMap() {
+    if (!gmap) return;
+    clearMarkers();
+    homeMarker && (homeMarker.map = gmap);
+
+    if (!lightOverlay) {
+      var imageBounds = { north: 36.64157, south: 36.63905, east: 140.06974, west: 140.06561 };
+      lightOverlay = new google.maps.GroundOverlay(
+        "/images/light-field-googlemap.jpg",
+        imageBounds,
+        { opacity: 0.7 }
+      );
+    }
+    lightOverlay.setMap(gmap);
+
+    initCampMarkers();
+    applyCheckboxState();
+
+    var bounds = new google.maps.LatLngBounds();
+    bounds.extend({ north: 36.64157, south: 36.63905, east: 140.06974, west: 140.06561 });
+    gmap.fitBounds(bounds, 20);
+  }
+
+  // ────────────────────────────────────────────────
+  // Checkbox state management
+  // ────────────────────────────────────────────────
+
+  function applyCheckboxState() {
+    if (!gmap) return;
+
+    var allOn = document.getElementById("chk-all") ? document.getElementById("chk-all").checked : true;
+
+    // auto sites
+    autoSites.forEach(function (s) {
+      var catChk = document.querySelector('.chk-cat[data-cat="auto"]');
+      var siteChk = document.querySelector('.chk-site[data-cat="auto"][data-id="' + s.id + '"]');
+      var visible = allOn && catChk && catChk.checked && siteChk && siteChk.checked;
+      var key = "auto-" + s.id;
+      if (campMarkers[key]) campMarkers[key].forEach(function (m) { m.marker.map = visible ? gmap : null; });
+    });
+
+    // block sites
+    blockSites.forEach(function (s) {
+      var catChk = document.querySelector('.chk-cat[data-cat="block"]');
+      var siteChk = document.querySelector('.chk-site[data-cat="block"][data-id="' + s.id + '"]');
+      var visible = allOn && catChk && catChk.checked && siteChk && siteChk.checked;
+      var key = "block-" + s.id;
+      if (campMarkers[key]) campMarkers[key].forEach(function (m) { m.marker.map = visible ? gmap : null; });
+    });
+
+    // solo sites
+    soloSites.forEach(function (s) {
+      var catChk = document.querySelector('.chk-cat[data-cat="solo"]');
+      var siteChk = document.querySelector('.chk-site[data-cat="solo"][data-id="' + s.id + '"]');
+      var visible = allOn && catChk && catChk.checked && siteChk && siteChk.checked;
+      var key = "solo-" + s.id;
+      if (campMarkers[key]) campMarkers[key].forEach(function (m) { m.marker.map = visible ? gmap : null; });
+    });
+
+    // light facilities
+    var facCatChk = document.querySelector('.chk-cat[data-cat="facility"]');
+    var lightFacChk = document.querySelector('.chk-fac[data-fac="light"]');
+    var lightVisible = allOn && facCatChk && facCatChk.checked && lightFacChk && lightFacChk.checked;
+    lightFacilities.forEach(function (f) {
+      var key = "fac-light-" + f.id;
+      if (campMarkers[key]) campMarkers[key].forEach(function (m) { m.marker.map = lightVisible ? gmap : null; });
+    });
+
+    var powerFacChk = document.querySelector('.chk-fac[data-fac="power"]');
+    var powerVisible = allOn && facCatChk && facCatChk.checked && powerFacChk && powerFacChk.checked;
+    powerFacilities.forEach(function (f) {
+      var key = "fac-power-" + f.id;
+      if (campMarkers[key]) campMarkers[key].forEach(function (m) { m.marker.map = powerVisible ? gmap : null; });
+    });
+  }
+
+  function bindCheckboxEvents(root) {
+    var allChk = root.querySelector ? root.querySelector("#chk-all") : document.getElementById("chk-all");
+    if (!allChk) allChk = document.getElementById("chk-all");
+
+    function syncAll(checked) {
+      root.querySelectorAll(".chk-cat,.chk-site,.chk-fac").forEach(function (c) { c.checked = checked; });
+      if (allChk) allChk.checked = checked;
+      applyCheckboxState();
+    }
+
+    if (allChk) {
+      allChk.addEventListener("change", function () { syncAll(this.checked); });
+    }
+
+    root.querySelectorAll(".chk-cat").forEach(function (catChk) {
+      catChk.addEventListener("change", function () {
+        var cat = this.dataset.cat;
+        root.querySelectorAll('.chk-site[data-cat="' + cat + '"],.chk-fac').forEach(function (c) {
+          if (cat === "facility") {
+            root.querySelectorAll(".chk-fac").forEach(function (f) { f.checked = catChk.checked; });
+          } else {
+            if (c.dataset.cat === cat) c.checked = catChk.checked;
+          }
+        });
+        applyCheckboxState();
+      });
+    });
+
+    root.querySelectorAll(".chk-site,.chk-fac").forEach(function (chk) {
+      chk.addEventListener("change", function () { applyCheckboxState(); });
+    });
+  }
+
+  // Mirror PC panel checkboxes state into drawer (mobile) — one-way sync
+  function syncDrawerFromPanel() {
+    var panelCheckboxes = document.querySelectorAll("#camp-panel input[type='checkbox']");
+    panelCheckboxes.forEach(function (pc) {
+      var id = pc.id || "";
+      var cls = pc.className;
+      var cat = pc.dataset.cat || "";
+      var fac = pc.dataset.fac || "";
+      var sid = pc.dataset.id || "";
+
+      var match;
+      if (id === "chk-all") {
+        match = campDrawerScrollEl.querySelector("#chk-all-drawer");
+      } else if (pc.classList.contains("chk-cat")) {
+        match = campDrawerScrollEl.querySelector('.chk-cat[data-cat="' + cat + '"]');
+      } else if (pc.classList.contains("chk-site")) {
+        match = campDrawerScrollEl.querySelector('.chk-site[data-cat="' + cat + '"][data-id="' + sid + '"]');
+      } else if (pc.classList.contains("chk-fac")) {
+        match = campDrawerScrollEl.querySelector('.chk-fac[data-fac="' + fac + '"]');
+      }
+      if (match) match.checked = pc.checked;
+    });
+  }
+
+  function buildMobileDrawer() {
+    campDrawerScrollEl.innerHTML = "";
+    var clone = document.getElementById("camp-panel-scroll").cloneNode(true);
+    // Rename chk-all id to avoid conflicts
+    var allEl = clone.querySelector("#chk-all");
+    if (allEl) allEl.id = "chk-all-drawer";
+    campDrawerScrollEl.appendChild(clone);
+    bindCheckboxEvents(campDrawerScrollEl);
+
+    // Sync drawer ↔ panel: when drawer changes, update panel and apply
+    campDrawerScrollEl.querySelectorAll("input[type='checkbox']").forEach(function (dc) {
+      dc.addEventListener("change", function () {
+        // find corresponding panel checkbox and sync
+        var cat = dc.dataset.cat || "";
+        var fac = dc.dataset.fac || "";
+        var sid = dc.dataset.id || "";
+        var match;
+        if (dc.id === "chk-all-drawer") {
+          match = document.querySelector("#camp-panel #chk-all");
+          if (match) {
+            match.checked = dc.checked;
+            document.querySelectorAll("#camp-panel .chk-cat,.chk-site,.chk-fac").forEach(function (c) { c.checked = dc.checked; });
+          }
+        } else if (dc.classList.contains("chk-cat")) {
+          match = document.querySelector('#camp-panel .chk-cat[data-cat="' + cat + '"]');
+          if (match) {
+            match.checked = dc.checked;
+            document.querySelectorAll('#camp-panel .chk-site[data-cat="' + cat + '"]').forEach(function (c) { c.checked = dc.checked; });
+          }
+        } else if (dc.classList.contains("chk-site")) {
+          match = document.querySelector('#camp-panel .chk-site[data-cat="' + cat + '"][data-id="' + sid + '"]');
+          if (match) match.checked = dc.checked;
+        } else if (dc.classList.contains("chk-fac")) {
+          match = document.querySelector('#camp-panel .chk-fac[data-fac="' + fac + '"]');
+          if (match) match.checked = dc.checked;
+        }
+        applyCheckboxState();
+      });
+    });
+  }
+
+  // ────────────────────────────────────────────────
+  // List panel (surround)
   // ────────────────────────────────────────────────
 
   function renderList(view) {
-    var catSpots = spots[view] || [];
+    var catSpots = surroundSpots[view] || [];
     if (catSpots.length === 0) {
       spotListEl.innerHTML = "";
       noDataMsgEl.style.display = "block";
@@ -702,14 +1219,14 @@ const homeJson  = JSON.stringify(homeSpot ?? null);
     noDataMsgEl.style.display = "none";
     spotListEl.innerHTML = catSpots.map(function (spot, i) {
       var isClosed = spot.status === "closed";
-      var routeHtml = (view !== "light" && !isClosed)
+      var routeHtml = !isClosed
         ? '<div class="list-routes">'
           + '<a href="https://www.google.com/maps/dir/36.639896,140.068402/' + spot.lat + ',' + spot.lng + '"'
           + ' target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"'
-          + ' class="route-btn">→ おいらの森</a>'
+          + ' class="route-btn">→ おいらの森ルート</a>'
           + '<a href="https://www.google.com/maps/dir//' + spot.lat + ',' + spot.lng + '"'
           + ' target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"'
-          + ' class="route-btn">→ 現在地</a>'
+          + ' class="route-btn">→ 現在地ルート</a>'
           + '</div>'
         : '';
       return '<li class="list-item' + (isClosed ? " is-closed" : "") + '" data-index="' + i + '"'
@@ -726,29 +1243,74 @@ const homeJson  = JSON.stringify(homeSpot ?? null);
     }).join("");
 
     spotListEl.querySelectorAll(".list-item:not(.is-closed)").forEach(function (li) {
-      li.addEventListener("click", function () {
-        selectByIndex(parseInt(li.dataset.index, 10));
+      li.addEventListener("click", function () { selectByIndex(parseInt(li.dataset.index, 10)); });
+    });
+  }
+
+  // ────────────────────────────────────────────────
+  // Mode / tab switching
+  // ────────────────────────────────────────────────
+
+  function isCampView(v) { return v === "camp" || v === "light"; }
+
+  function applyMode(mode, tab) {
+    currentMode = mode;
+
+    // View buttons
+    document.querySelectorAll(".view-btn").forEach(function (btn) {
+      btn.classList.toggle("is-active", btn.dataset.view === mode);
+    });
+
+    // Surround sub-tabs & divider visibility
+    var isSurround = mode === "surround";
+    document.getElementById("surround-divider").style.display = isSurround ? "" : "none";
+    document.querySelectorAll(".surround-tab").forEach(function (btn) {
+      btn.style.display = isSurround ? "" : "none";
+    });
+
+    if (mode === "camp") {
+      // Hide surround UI, show camp UI
+      listPanelEl.style.display = "none";
+      pcToggleEl.style.display  = "none";
+      if (window.innerWidth >= 768) {
+        campPanelEl.style.display        = "flex";
+        campPanelEl.style.flexDirection  = "column";
+        campPanelToggleEl.style.display  = "flex";
+      }
+      mobileHandleEl.style.display = "none";
+      campDrawerEl.style.display   = window.innerWidth < 768 ? "block" : "none";
+      if (window.innerWidth < 768) {
+        mapWrapperEl.style.height = "";
+        mapWrapperEl.style.flex   = "1";
+      }
+      showCampMap();
+    } else {
+      // surround
+      campPanelEl.style.display       = "none";
+      campPanelToggleEl.style.display = "none";
+      campDrawerEl.style.display      = "none";
+      listPanelEl.style.display       = "block";
+      if (window.innerWidth >= 768) {
+        pcToggleEl.style.display = "flex";
+      }
+      mobileHandleEl.style.display = window.innerWidth < 768 ? "flex" : "none";
+
+      clearCampMarkers();
+      if (lightOverlay) lightOverlay.setMap(null);
+
+      currentTab = tab;
+      document.querySelectorAll(".tab-btn[data-tab]").forEach(function (btn) {
+        btn.classList.toggle("is-active", btn.dataset.tab === tab);
       });
-    });
-  }
+      deselectAll();
+      renderList(tab);
+      showSurroundCategory(tab);
 
-  // ────────────────────────────────────────────────
-  // Tab
-  // ────────────────────────────────────────────────
+      if (window.innerWidth < 768) applyMobileLayout(listOpen);
+    }
 
-  function setTabActive(view) {
-    document.querySelectorAll("[data-tab]").forEach(function (el) {
-      el.classList.toggle("is-active", el.dataset.tab === view);
-    });
-  }
-
-  function switchTab(view) {
-    currentView = view;
-    setTabActive(view);
-    deselectAll();
-    history.pushState({ view: view }, "", "/map/?view=" + view);
-    renderList(view);
-    showCategory(view);
+    var urlView = mode === "camp" ? "light" : tab;
+    history.pushState({ view: urlView }, "", "/map/?view=" + urlView);
   }
 
   // ────────────────────────────────────────────────
@@ -764,12 +1326,14 @@ const homeJson  = JSON.stringify(homeSpot ?? null);
       var mapH  = Math.round(totalH * 0.55);
       var listH = totalH - mapH - handleH;
       mapWrapperEl.style.height   = mapH + "px";
+      mapWrapperEl.style.flex     = "";
       listPanelEl.style.height    = listH + "px";
       listPanelEl.style.opacity   = "1";
       listPanelEl.style.pointerEvents = "";
       handleIconEl.textContent    = "∧";
     } else {
       mapWrapperEl.style.height   = (totalH - handleH) + "px";
+      mapWrapperEl.style.flex     = "";
       listPanelEl.style.height    = "0";
       listPanelEl.style.opacity   = "0";
       listPanelEl.style.pointerEvents = "none";
@@ -791,23 +1355,33 @@ const homeJson  = JSON.stringify(homeSpot ?? null);
 
   function setListOpen(open) {
     listOpen = open;
-    if (isMobile()) {
-      applyMobileLayout(open);
+    if (isMobile()) applyMobileLayout(open);
+    else applyPcLayout(open);
+    setTimeout(function () { if (gmap) google.maps.event.trigger(gmap, "resize"); }, 270);
+  }
+
+  function applyCampPanelPc(open) {
+    campPanelOpen = open;
+    if (open) {
+      campPanelEl.classList.remove("panel-hidden-pc");
+      campPanelEl.style.width  = "";
+      campPanelEl.style.opacity = "";
+      campPanelToggleIconEl.textContent = "◀";
     } else {
-      applyPcLayout(open);
+      campPanelEl.style.width   = "0";
+      campPanelEl.style.opacity = "0";
+      campPanelEl.style.pointerEvents = "none";
+      campPanelToggleIconEl.textContent = "▶";
     }
-    setTimeout(function () {
-      if (gmap) google.maps.event.trigger(gmap, "resize");
-    }, 270);
+    setTimeout(function () { if (gmap) google.maps.event.trigger(gmap, "resize"); }, 270);
   }
 
   // ────────────────────────────────────────────────
   // Google Maps init
   // ────────────────────────────────────────────────
 
-  function getView() {
-    var v = new URLSearchParams(window.location.search).get("view") || "light";
-    return VALID_VIEWS.indexOf(v) !== -1 ? v : "light";
+  function getViewFromUrl() {
+    return new URLSearchParams(window.location.search).get("view") || "light";
   }
 
   window.__initGoogleMaps = function () {
@@ -822,48 +1396,34 @@ const homeJson  = JSON.stringify(homeSpot ?? null);
           fullscreenControl: false,
           clickableIcons:    false,
         };
-        if (MAP_ID) {
-          mapOptions.mapId = MAP_ID;
-        } else {
-          console.warn("PUBLIC_GMAPS_MAP_ID is not set. Advanced Markers will not render.");
-        }
+        if (MAP_ID) mapOptions.mapId = MAP_ID;
+        else console.warn("PUBLIC_GMAPS_MAP_ID is not set. Advanced Markers will not render.");
+
         gmap = new mapsLib.Map(document.getElementById("map"), mapOptions);
-
         gmap.addListener("click", function () { deselectAll(); });
-
-        // DEBUG START
-        function __debugShowCoords(e) {
-          var lat = e.latLng.lat().toFixed(8);
-          var lng = e.latLng.lng().toFixed(8);
-          var latEl = document.getElementById("debug-lat");
-          var lngEl = document.getElementById("debug-lng");
-          var valEl = document.getElementById("debug-copy-val");
-          var btnEl = document.getElementById("debug-copy");
-          if (latEl) latEl.textContent = "緯度: " + lat;
-          if (lngEl) lngEl.textContent = "経度: " + lng;
-          if (valEl) valEl.value = lat + "," + lng;
-          if (btnEl) btnEl.textContent = "コピー";
-        }
-        gmap.addListener("click", __debugShowCoords);
-        gmap.addListener("rightclick", __debugShowCoords);
-        // DEBUG END
 
         var skeleton = document.getElementById("map-skeleton");
         if (skeleton) skeleton.remove();
 
-        placeHomeMarker();
-        var view = getView();
-        currentView = view;
-        setTabActive(view);
-        renderList(view);
-        showCategory(view);
+        // Place home marker
+        if (homeSpot) {
+          var hel = makeHomePinEl();
+          homeMarker = new google.maps.marker.AdvancedMarkerElement({
+            map:      gmap,
+            position: { lat: homeSpot.lat, lng: homeSpot.lng },
+            content:  hel,
+            title:    homeSpot.name,
+            zIndex:   100,
+          });
+          homeMarker.addListener("click", function () {
+            deselectAll();
+            openIw(homeInfoContent(), homeMarker);
+          });
+        }
 
-        // ────────────────────────────────────────────────
         // 現在地ボタン
-        // ────────────────────────────────────────────────
         (function () {
           var myLocMarker = null;
-
           var SVG_NORMAL = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"'
             + ' stroke="#555" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
             + '<circle cx="12" cy="12" r="4"/>'
@@ -880,7 +1440,6 @@ const homeJson  = JSON.stringify(homeSpot ?? null);
 
           var wrapper = document.createElement("div");
           wrapper.style.cssText = "margin:0 10px 110px 0;display:flex;flex-direction:column;align-items:center;";
-
           var btn = document.createElement("button");
           btn.type  = "button";
           btn.title = "現在地を表示";
@@ -889,46 +1448,33 @@ const homeJson  = JSON.stringify(homeSpot ?? null);
             + "border-radius:2px;box-shadow:0 1px 4px rgba(0,0,0,0.3);"
             + "cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;";
           btn.innerHTML = SVG_NORMAL;
-
           btn.addEventListener("mouseover", function () { if (!btn.disabled) btn.style.background = "#f5f5f5"; });
           btn.addEventListener("mouseout",  function () { btn.style.background = "#fff"; });
 
           var errMsg = document.createElement("div");
           errMsg.style.cssText = "margin-top:4px;background:rgba(0,0,0,0.72);color:#fff;"
             + "font-size:11px;border-radius:3px;padding:3px 7px;white-space:nowrap;display:none;";
-
           function showGeoError(msg) {
-            errMsg.textContent    = msg;
-            errMsg.style.display  = "block";
+            errMsg.textContent   = msg;
+            errMsg.style.display = "block";
             setTimeout(function () { errMsg.style.display = "none"; }, 4000);
           }
-
           btn.addEventListener("click", function () {
             if (!navigator.geolocation) { showGeoError("非対応ブラウザ"); return; }
             btn.innerHTML = SVG_LOADING;
             btn.disabled  = true;
-
             navigator.geolocation.getCurrentPosition(
               function (pos) {
-                var lat = pos.coords.latitude;
-                var lng = pos.coords.longitude;
-
                 if (myLocMarker) { myLocMarker.map = null; myLocMarker = null; }
-
                 var dot = document.createElement("div");
                 dot.style.cssText = "width:16px;height:16px;border-radius:50%;"
                   + "background:#4285f4;border:2.5px solid #fff;"
                   + "box-shadow:0 0 0 4px rgba(66,133,244,0.25);";
-
                 myLocMarker = new google.maps.marker.AdvancedMarkerElement({
-                  map:      gmap,
-                  position: { lat: lat, lng: lng },
-                  content:  dot,
-                  title:    "現在地",
-                  zIndex:   200,
+                  map: gmap, position: { lat: pos.coords.latitude, lng: pos.coords.longitude },
+                  content: dot, title: "現在地", zIndex: 200,
                 });
-
-                gmap.panTo({ lat: lat, lng: lng });
+                gmap.panTo({ lat: pos.coords.latitude, lng: pos.coords.longitude });
                 if (gmap.getZoom() < 14) gmap.setZoom(16);
                 btn.innerHTML = SVG_NORMAL;
                 btn.disabled  = false;
@@ -936,8 +1482,7 @@ const homeJson  = JSON.stringify(homeSpot ?? null);
               },
               function (err) {
                 var msg = err.code === 1 ? "位置情報が許可されていません"
-                        : err.code === 2 ? "位置を取得できません"
-                        :                  "タイムアウトしました";
+                        : err.code === 2 ? "位置を取得できません" : "タイムアウトしました";
                 showGeoError(msg);
                 btn.innerHTML = SVG_NORMAL;
                 btn.disabled  = false;
@@ -945,13 +1490,22 @@ const homeJson  = JSON.stringify(homeSpot ?? null);
               { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
             );
           });
-
           wrapper.appendChild(btn);
           wrapper.appendChild(errMsg);
           gmap.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(wrapper);
         })();
 
-        if (isMobile()) applyMobileLayout(listOpen);
+        // Initial view
+        var urlView = getViewFromUrl();
+        var initMode = (urlView === "light" || urlView === "camp") ? "camp" : "surround";
+        var initTab  = initMode === "surround" ? urlView : "food";
+        applyMode(initMode, initTab);
+
+        if (initMode === "camp" && isMobile()) {
+          // mobile camp: map full height, drawer at bottom
+          campDrawerEl.style.display = "block";
+          mapWrapperEl.style.flex = "1";
+        }
       });
     }).catch(function () {
       var sk = document.getElementById("map-skeleton");
@@ -966,25 +1520,41 @@ const homeJson  = JSON.stringify(homeSpot ?? null);
   // ────────────────────────────────────────────────
 
   document.addEventListener("DOMContentLoaded", function () {
-    mapListArea    = document.getElementById("map-list-area");
-    mapWrapperEl   = document.getElementById("map-wrapper");
-    listPanelEl    = document.getElementById("list-panel");
-    mobileHandleEl = document.getElementById("mobile-handle");
-    handleIconEl   = document.getElementById("handle-icon");
-    pcToggleEl     = document.getElementById("pc-toggle");
-    pcToggleIconEl = document.getElementById("pc-toggle-icon");
-    spotListEl     = document.getElementById("spot-list");
-    noDataMsgEl    = document.getElementById("no-data-msg");
+    mapListArea         = document.getElementById("map-list-area");
+    mapWrapperEl        = document.getElementById("map-wrapper");
+    listPanelEl         = document.getElementById("list-panel");
+    mobileHandleEl      = document.getElementById("mobile-handle");
+    handleIconEl        = document.getElementById("handle-icon");
+    pcToggleEl          = document.getElementById("pc-toggle");
+    pcToggleIconEl      = document.getElementById("pc-toggle-icon");
+    spotListEl          = document.getElementById("spot-list");
+    noDataMsgEl         = document.getElementById("no-data-msg");
+    campPanelEl         = document.getElementById("camp-panel");
+    campPanelToggleEl   = document.getElementById("camp-panel-toggle");
+    campPanelToggleIconEl = campPanelToggleEl.querySelector("#camp-panel-toggle-icon");
+    campDrawerEl        = document.getElementById("camp-drawer");
+    campDrawerScrollEl  = document.getElementById("camp-drawer-scroll");
 
-    var initialView = getView();
-    setTabActive(initialView);
-    renderList(initialView);
-    if (isMobile()) applyMobileLayout(listOpen);
+    // Hide surround sub-tabs initially
+    document.getElementById("surround-divider").style.display = "none";
+    document.querySelectorAll(".surround-tab").forEach(function (btn) { btn.style.display = "none"; });
 
-    // Tab clicks
-    document.querySelectorAll("[data-tab]").forEach(function (el) {
-      el.addEventListener("click", function () { switchTab(el.dataset.tab); });
+    // View button clicks
+    document.querySelectorAll(".view-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var mode = btn.dataset.view;
+        if (mode === "camp") applyMode("camp", currentTab);
+        else applyMode("surround", currentTab);
+      });
     });
+
+    // Surround sub-tab clicks
+    document.querySelectorAll(".tab-btn[data-tab]").forEach(function (btn) {
+      btn.addEventListener("click", function () { applyMode("surround", btn.dataset.tab); });
+    });
+
+    // PC camp panel toggle
+    campPanelToggleEl.addEventListener("click", function () { applyCampPanelPc(!campPanelOpen); });
 
     // Mobile handle
     mobileHandleEl.addEventListener("click", function () { setListOpen(!listOpen); });
@@ -992,21 +1562,38 @@ const homeJson  = JSON.stringify(homeSpot ?? null);
       if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setListOpen(!listOpen); }
     });
 
-    // PC toggle
+    // PC list toggle (surround)
     pcToggleEl.addEventListener("click", function () { setListOpen(!listOpen); });
+
+    // PC panel checkbox binding
+    bindCheckboxEvents(document.getElementById("camp-panel-scroll"));
+
+    // Build mobile drawer after panel is ready
+    buildMobileDrawer();
 
     // Resize
     window.addEventListener("resize", function () {
-      if (isMobile()) applyMobileLayout(listOpen);
+      if (currentMode === "surround" && isMobile()) applyMobileLayout(listOpen);
+      if (currentMode === "camp") {
+        if (isMobile()) {
+          campPanelEl.style.display       = "none";
+          campPanelToggleEl.style.display = "none";
+          campDrawerEl.style.display      = "block";
+        } else {
+          campPanelEl.style.display       = "flex";
+          campPanelEl.style.flexDirection = "column";
+          campPanelToggleEl.style.display = "flex";
+          campDrawerEl.style.display      = "none";
+        }
+      }
     });
 
-    // Popstate (browser back/forward)
+    // Popstate
     window.addEventListener("popstate", function (e) {
-      var view = (e.state && e.state.view) ? e.state.view : getView();
-      setTabActive(view);
-      deselectAll();
-      renderList(view);
-      showCategory(view);
+      var urlView = (e.state && e.state.view) ? e.state.view : getViewFromUrl();
+      var mode = (urlView === "light" || urlView === "camp") ? "camp" : "surround";
+      var tab  = mode === "surround" ? urlView : currentTab;
+      applyMode(mode, tab);
     });
 
     // Load Google Maps API
