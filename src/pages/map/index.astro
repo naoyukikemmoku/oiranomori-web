@@ -664,7 +664,6 @@ const powerFacJson    = JSON.stringify(powerFacilities);
   var lightFacilities = JSON.parse(lightFacJson);
   var powerFacilities = JSON.parse(powerFacJson);
 
-  var SURROUND_VIEWS = ["food","bath","shopping","sightseeing","emergency"];
   var PIN_COLOR    = "#4a5d4e";
   var PIN_SELECTED = "#7c4d2a";
   var PIN_CLOSED   = "#888888";
@@ -1139,30 +1138,6 @@ const powerFacJson    = JSON.stringify(powerFacilities);
     });
   }
 
-  // Mirror PC panel checkboxes state into drawer (mobile) — one-way sync
-  function syncDrawerFromPanel() {
-    var panelCheckboxes = document.querySelectorAll("#camp-panel input[type='checkbox']");
-    panelCheckboxes.forEach(function (pc) {
-      var id = pc.id || "";
-      var cls = pc.className;
-      var cat = pc.dataset.cat || "";
-      var fac = pc.dataset.fac || "";
-      var sid = pc.dataset.id || "";
-
-      var match;
-      if (id === "chk-all") {
-        match = campDrawerScrollEl.querySelector("#chk-all-drawer");
-      } else if (pc.classList.contains("chk-cat")) {
-        match = campDrawerScrollEl.querySelector('.chk-cat[data-cat="' + cat + '"]');
-      } else if (pc.classList.contains("chk-site")) {
-        match = campDrawerScrollEl.querySelector('.chk-site[data-cat="' + cat + '"][data-id="' + sid + '"]');
-      } else if (pc.classList.contains("chk-fac")) {
-        match = campDrawerScrollEl.querySelector('.chk-fac[data-fac="' + fac + '"]');
-      }
-      if (match) match.checked = pc.checked;
-    });
-  }
-
   function buildMobileDrawer() {
     campDrawerScrollEl.innerHTML = "";
     var clone = document.getElementById("camp-panel-scroll").cloneNode(true);
@@ -1250,8 +1225,6 @@ const powerFacJson    = JSON.stringify(powerFacilities);
   // Mode / tab switching
   // ────────────────────────────────────────────────
 
-  function isCampView(v) { return v === "camp" || v === "light"; }
-
   function applyMode(mode, tab) {
     currentMode = mode;
 
@@ -1276,13 +1249,16 @@ const powerFacJson    = JSON.stringify(powerFacilities);
         campPanelEl.style.flexDirection  = "column";
         campPanelToggleEl.style.display  = "flex";
       }
-      mobileHandleEl.style.display = "none";
-      campDrawerEl.style.display   = window.innerWidth < 768 ? "block" : "none";
       if (window.innerWidth < 768) {
-        mapWrapperEl.style.height = "";
-        mapWrapperEl.style.flex   = "1";
+        mobileHandleEl.style.display = "flex";
+        campDrawerEl.style.display   = "block";
+        campDrawerEl.style.height    = "0";
+      } else {
+        mobileHandleEl.style.display = "none";
+        campDrawerEl.style.display   = "none";
       }
       showCampMap();
+      if (window.innerWidth < 768) applyMobileCampLayout(listOpen);
     } else {
       // surround
       campPanelEl.style.display       = "none";
@@ -1352,10 +1328,33 @@ const powerFacJson    = JSON.stringify(powerFacilities);
     }
   }
 
+  function applyMobileCampLayout(open) {
+    var totalH  = mapListArea.offsetHeight;
+    var handleH = mobileHandleEl.offsetHeight;
+    campDrawerEl.style.display = "block";
+    if (open) {
+      var drawerH = Math.min(Math.round(totalH * 0.38), 220);
+      var mapH    = totalH - handleH - drawerH;
+      mapWrapperEl.style.height  = mapH + "px";
+      mapWrapperEl.style.flex    = "";
+      campDrawerEl.style.height  = drawerH + "px";
+      handleIconEl.textContent   = "∧";
+    } else {
+      mapWrapperEl.style.height  = (totalH - handleH) + "px";
+      mapWrapperEl.style.flex    = "";
+      campDrawerEl.style.height  = "0";
+      handleIconEl.textContent   = "∨";
+    }
+  }
+
   function setListOpen(open) {
     listOpen = open;
-    if (isMobile()) applyMobileLayout(open);
-    else applyPcLayout(open);
+    if (isMobile()) {
+      if (currentMode === "camp") applyMobileCampLayout(open);
+      else applyMobileLayout(open);
+    } else {
+      applyPcLayout(open);
+    }
     setTimeout(function () { if (gmap) google.maps.event.trigger(gmap, "resize"); }, 270);
   }
 
@@ -1503,9 +1502,7 @@ const powerFacJson    = JSON.stringify(powerFacilities);
         applyMode(initMode, initTab);
 
         if (initMode === "camp" && isMobile()) {
-          // mobile camp: map full height, drawer at bottom
-          campDrawerEl.style.display = "block";
-          mapWrapperEl.style.flex = "1";
+          applyMobileCampLayout(listOpen);
         }
       });
     }).catch(function () {
@@ -1579,12 +1576,14 @@ const powerFacJson    = JSON.stringify(powerFacilities);
         if (isMobile()) {
           campPanelEl.style.display       = "none";
           campPanelToggleEl.style.display = "none";
-          campDrawerEl.style.display      = "block";
+          mobileHandleEl.style.display    = "flex";
+          applyMobileCampLayout(listOpen);
         } else {
           campPanelEl.style.display       = "flex";
           campPanelEl.style.flexDirection = "column";
           campPanelToggleEl.style.display = "flex";
           campDrawerEl.style.display      = "none";
+          mobileHandleEl.style.display    = "none";
         }
       }
     });
