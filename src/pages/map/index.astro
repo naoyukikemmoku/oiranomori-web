@@ -618,9 +618,9 @@ const homeJson  = JSON.stringify(homeSpot ?? null);
   function updateOverlay(view) {
     if (view === "light") {
       if (!lightOverlay) {
-        var imageBounds = { north: 36.63970, south: 36.63718, east: 140.07044, west: 140.06630 };
+        var imageBounds = { north: 36.63965, south: 36.63714, east: 140.06806, west: 140.06395 };
         lightOverlay = new google.maps.GroundOverlay(
-          "/images/light-field-map.png",
+          "/images/light-field-googlemap.jpg",
           imageBounds,
           { opacity: 0.7 }
         );
