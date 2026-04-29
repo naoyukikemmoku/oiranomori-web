@@ -33,12 +33,38 @@ function formatDate(str: string) {
   if (isNaN(d.getTime())) return "—";
   return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, "0")}.${String(d.getDate()).padStart(2, "0")}`;
 }
+
+const articleSchema = article ? {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": article.title,
+  "datePublished": article.publishedAt,
+  "dateModified": article.revisedAt ?? article.updatedAt ?? article.publishedAt,
+  ...(article.description ? { "description": article.description } : {}),
+  "author": {
+    "@type": "Organization",
+    "name": "里山パークおいらの森",
+    "url": "https://oiranomori.jp"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "里山パークおいらの森",
+    "url": "https://oiranomori.jp"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": `https://oiranomori.jp/news/${id}/`
+  }
+} : null;
 ---
 
 <BaseLayout
   title={article ? `${article.title} | 里山パークおいらの森` : "お知らせ | 里山パークおいらの森"}
   description={article?.description ?? "おいらの森からのお知らせです。"}
 >
+  {articleSchema && (
+    <script is:inline type="application/ld+json" slot="head" set:html={JSON.stringify(articleSchema)} />
+  )}
   <Header />
   <div class="min-h-screen bg-[#f4f5f2] pb-24">
     <div class="mx-auto max-w-3xl px-5">
