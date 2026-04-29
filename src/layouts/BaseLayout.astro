@@ -8,14 +8,47 @@ const {
   noindex = false,
 } = Astro.props;
 
+const BASE_URL = "https://oiranomori.jp";
 const breadcrumbName = title.includes(" | ") ? title.split(" | ")[0].trim() : title;
-const breadcrumbJson = Astro.url.pathname !== "/" ? JSON.stringify({
+
+const segmentLabels: Record<string, string> = {
+  access:              "アクセス",
+  about:               "運営会社・関連組織",
+  checkout:            "チェックアウト連絡",
+  contact:             "お問い合わせ",
+  deep:                "ディープフォレスト",
+  "deep-guide":        "ディープフォレスト 利用案内",
+  faq:                 "よくある質問",
+  firewood:            "こだわりの薪販売",
+  "light-guide":       "ライトフォレスト 利用案内",
+  map:                 "場内・周辺マップ",
+  news:                "お知らせ",
+  now:                 "森のいま",
+  oiras:               "OIRAS",
+  page:                "バックナンバー",
+  passport:            "年間パスポート・回数券",
+  policy:              "ご利用のルール",
+  rental:              "レンタル",
+  "reservation-guide": "予約ガイド",
+  residents:           "森の住人",
+  shop:                "売店",
+  thanks:              "完了",
+};
+
+const pathSegments = Astro.url.pathname.split("/").filter(Boolean);
+
+const breadcrumbJson = pathSegments.length > 0 ? JSON.stringify({
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   "itemListElement": [
-    { "@type": "ListItem", "position": 1, "name": "里山パークおいらの森", "item": "https://oiranomori.jp" },
-    { "@type": "ListItem", "position": 2, "name": breadcrumbName, "item": "https://oiranomori.jp" + Astro.url.pathname }
-  ]
+    { "@type": "ListItem", "position": 1, "name": "里山パークおいらの森", "item": BASE_URL },
+    ...pathSegments.map((seg, i) => {
+      const isLast = i === pathSegments.length - 1;
+      const cumPath = "/" + pathSegments.slice(0, i + 1).join("/") + "/";
+      const name = isLast ? breadcrumbName : (segmentLabels[seg] ?? seg);
+      return { "@type": "ListItem", "position": i + 2, "name": name, "item": BASE_URL + cumPath };
+    }),
+  ],
 }) : null;
 ---
 
