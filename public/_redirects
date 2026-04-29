@@ -1,2 +1,103 @@
-/oilers/ /oiras/ 301
-/oilers /oiras/ 301
+# =====================================================================
+# おいらの森 旧WordPress → 新Astroサイト 301リダイレクト
+# Cloudflare Pages の _redirects フォーマット
+#
+# 評価順: 上から順に最初にマッチしたものが適用される
+# 原則: 具体的なパス → ワイルドカードの順で記述する
+# =====================================================================
+
+
+# ---------- 1. 旧トップ・廃ページ ----------
+/home01/                                  /                                                       301
+/home-1-2/                                /                                                       301
+/testpage/                                /                                                       410
+/気象データテスト/                          /now/                                                  301
+
+
+# ---------- 2. /guide/ 系（案内ページ） ----------
+/guide/lightforest-field/                 /light-guide/                                           301
+/guide/deepforest-field/                  /deep-guide/                                            301
+/guide/access/                            /access/                                                301
+/guide/firewoods/                         /firewood/                                              301
+/guide/                                   /light-guide/                                           301
+
+
+# ---------- 3. /oiranomori/ 系（チェックアウト・お問い合わせ） ----------
+/oiranomori/checkout-procedure/           /checkout/                                              301
+/oiranomori/checkingout_check/            /checkout/                                              301
+/oiranomori/thanks/                       /checkout/thanks/                                       301
+/oiranomori/contacts/                     /contact/                                               301
+
+
+# ---------- 4. /activities/ 系（具体→一般の順で記述） ----------
+/activities/oiras/                        /oiras/                                                 301
+/activities/coupon-annual-passport/       /passport/                                              301
+/activities/sweetpotato-harvest-experience/   https://note.com/oiranomori                         301
+/activities/agriculture-experience/       https://note.com/oiranomori                             301
+/activities/how-to-bonfire/               https://note.com/oiranomori                             301
+/activities/solo-camp/                    /                                                       301
+/activities/auto-camp/                    /                                                       301
+/activities/all-camping-plans/workcation-plan/        https://www.489pro-x.com/ja/s/oiranomori/planlist/   301
+/activities/all-camping-plans/empty-handed-camping/   https://www.489pro-x.com/ja/s/oiranomori/planlist/   301
+/activities/all-camping-plans/after-five-plan/        https://www.489pro-x.com/ja/s/oiranomori/planlist/   301
+/activities/all-camping-plans/            https://www.489pro-x.com/ja/s/oiranomori/planlist/      301
+/activities/p/                            /                                                       301
+/activities/                              /                                                       301
+/activities/*                             /                                                       301
+
+
+# ---------- 5. /information/ 系 ----------
+/information/surroundings-maps/           /map/?view=area                                         301
+/information/recommend-campingground/     https://note.com/oiranomori                             301
+/information/wildlife-watching-diary/     https://note.com/oiranomori                             301
+/information/pioneer-diary/               https://note.com/oiranomori                             301
+/information/todays-oiras-forest/         /news/                                                  301
+/information/old-our-news/                /news/                                                  301
+/information/staff/                       /residents/                                             301
+/information/publicity/                   /                                                       301
+/information/                             /                                                       301
+/information/*                            /                                                       301
+
+
+# ---------- 6. CPT（カスタム投稿タイプ） ----------
+# /properties/ → 場内施設は新マップに統合
+/properties/*                             /map/?view=light                                        301
+/properties/                              /map/?view=light                                        301
+
+# /services/ → 体験系は当面ホームへ（/experience/ 未実装のため）
+/services/*                               /                                                       301
+/services/                                /                                                       301
+
+# /team/ → 森の住人ページに統合
+/team/*                                   /residents/                                             301
+/team/                                    /residents/                                             301
+
+# /event/ → 過去イベントはお知らせ一覧へ
+/event/*                                  /news/                                                  301
+/event/                                   /news/                                                  301
+
+
+# ---------- 7. /category/ 系 ----------
+/category/wildlife-diary/                 https://note.com/oiranomori                             301
+/category/pioneer-diary/                  https://note.com/oiranomori                             301
+/category/agri/                           https://note.com/oiranomori                             301
+/category/oiras/                          /oiras/                                                 301
+/category/our-news/                       /news/                                                  301
+/category/events-report/                  /news/                                                  301
+/category/todays-oiranomori/              /news/                                                  301
+/category/sales/                          /news/                                                  301
+/category/*                               /news/                                                  301
+
+
+# ---------- 8. ブログ記事（post-sitemap 698件をカテゴリ単位で一括） ----------
+/todays-oiranomori/*                      /news/                                                  301
+/todays-oiranomori/                       /news/                                                  301
+/pioneer-diary/*                          https://note.com/oiranomori                             301
+/wildlife-diary/*                         https://note.com/oiranomori                             301
+/agri/*                                   https://note.com/oiranomori                             301
+/events-report/*                          /news/                                                  301
+/our-news/*                               /news/                                                  301
+
+
+# ---------- 9. その他の旧URL ----------
+/camping-options/                         https://www.489pro-x.com/ja/s/oiranomori/planlist/      301
