@@ -101,3 +101,13 @@
 
 # ---------- 9. その他の旧URL ----------
 /camping-options/                         https://www.489pro-x.com/ja/s/oiranomori/planlist/      301
+
+
+# ---------- 10. 旧WPサイトマップ → 新サイトマップへ転送 ----------
+/sitemap.xml                              /sitemap-index.xml                                      301
+/sitemap.rss                              /sitemap-index.xml                                      301
+/category-sitemap.xml                     /sitemap-index.xml                                      301
+/cpt_properties-sitemap.xml               /sitemap-index.xml                                      301
+/xo_event-sitemap.xml                     /sitemap-index.xml                                      301
+/page-sitemap.xml                         /sitemap-index.xml                                      301
+/post-sitemap.xml                         /sitemap-index.xml                                      301
