@@ -46,7 +46,35 @@ const powerFacJson    = JSON.stringify(powerFacilities);
 <BaseLayout
   title="場内・周辺マップ | 里山パークおいらの森"
   description="場内施設マップと周辺スポットのご案内。食事・お風呂・買い物・観光・緊急時の医療機関など、キャンプ前に確認しておきたい情報をまとめました。"
+  lastUpdated="2026年5月"
 >
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json">{JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": ["TouristAttraction", "Place"],
+      "name": "里山パークおいらの森",
+      "description": "栃木県那須烏山市の里山キャンプ場。場内施設マップと周辺スポット（食事・温泉・買い物・観光）を提供。",
+      "url": "https://oiranomori.jp/map/",
+      "hasMap": "https://oiranomori.jp/map/",
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 36.6581,
+        "longitude": 140.1376
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "postalCode": "321-0525",
+        "addressRegion": "栃木県",
+        "addressLocality": "那須烏山市",
+        "streetAddress": "福岡1047"
+      },
+      "containedInPlace": {
+        "@type": "AdministrativeArea",
+        "name": "那須烏山市"
+      }
+    })}</script>
+  </Fragment>
+
   <Header />
   <h1 class="sr-only">場内・周辺マップ | 里山パークおいらの森</h1>
 

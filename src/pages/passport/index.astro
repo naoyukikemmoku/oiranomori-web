@@ -47,7 +47,20 @@ const repeatPrices = [
 <PageLayout
   title="年間パスポート・回数券 | 里山パークおいらの森"
   description="通えば通うほどお得になる年間パスポート・回数券制度。会員ランクに応じた割引や優先入場で、おいらの森をもっと自分の場所に。"
+  lastUpdated="2026年5月"
 >
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json">{JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": "おいらの森 年間パスポート",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "item": { "@type": "Product", "name": "年間パスポート プレミアム", "description": "サイト料¥5,500分 ＋ 薪15kg ＋ AC電源 ＋ イベント無料", "offers": { "@type": "Offer", "price": "66000", "priceCurrency": "JPY", "availability": "https://schema.org/InStock", "seller": { "@type": "Organization", "name": "里山パークおいらの森" } } } },
+        { "@type": "ListItem", "position": 2, "item": { "@type": "Product", "name": "年間パスポート スタンダード", "description": "サイト料¥4,400分 ＋ 薪10kg", "offers": { "@type": "Offer", "price": "44000", "priceCurrency": "JPY", "availability": "https://schema.org/InStock", "seller": { "@type": "Organization", "name": "里山パークおいらの森" } } } },
+        { "@type": "ListItem", "position": 3, "item": { "@type": "Product", "name": "年間パスポート シングル", "description": "サイト料¥3,300分 ＋ 薪5kg。ソロキャンパー向け。", "offers": { "@type": "Offer", "price": "33000", "priceCurrency": "JPY", "availability": "https://schema.org/InStock", "seller": { "@type": "Organization", "name": "里山パークおいらの森" } } } }
+      ]
+    })}</script>
+  </Fragment>
 
   <div class="mb-10 border-b border-zinc-200 pb-8">
     <p class="text-xs tracking-[0.26em] text-zinc-400 uppercase">Passport &amp; Coupon</p>

@@ -7,7 +7,30 @@ import { reserveCta } from "../../config/nav";
 <BaseLayout
   title="森の住人 | 里山パークおいらの森"
   description="おいらの森をつくる二人の話。草刈りが変態的に好きな森主と、熊本から那須烏山に移住してきた森のおかみ。"
+  ogImage="https://oiranomori.jp/images/residents/oira.webp"
+  lastUpdated="2026年5月"
 >
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json">{JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "おいら",
+      "alternateName": "おいら",
+      "jobTitle": "キャンパー兼キャンプ場オーナー",
+      "knowsAbout": ["キャンプ場経営", "里山管理", "森林保全", "アウトドア体験", "那須烏山の自然", "薪・焚き火", "キャンパー"],
+      "worksFor": { "@type": "Organization", "name": "里山パークおいらの森" },
+      "url": "https://oiranomori.jp/residents/"
+    })}</script>
+    <script is:inline type="application/ld+json">{JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "橋本佳子",
+      "jobTitle": "森のおかみ",
+      "knowsAbout": ["キャンプ場受付", "那須烏山の観光情報", "キャンパー", "キャンプ場経営"],
+      "worksFor": { "@type": "Organization", "name": "里山パークおいらの森" },
+      "url": "https://oiranomori.jp/residents/"
+    })}</script>
+  </Fragment>
   <Header />
 
   {/* ─── 1. イントロ ─── */}

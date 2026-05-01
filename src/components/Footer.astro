@@ -1,4 +1,5 @@
 ﻿---
+const { lastUpdated } = Astro.props;
 const footerGroups = [
   {
     title: "予約・会員",
@@ -41,6 +42,7 @@ const footerGroups = [
       { label: "森の住人", href: "/residents/", active: true },
       { label: "オイラーズ", href: "/oiras/", active: true },
       { label: "The 森 Chronicles", href: "https://note.com/oiranomori/m/m820d8cac57a3", external: true, active: true },
+      { label: "メディア・ロケ地・貸し切り", href: "/media/", active: true },
       { label: "運営会社・関連組織", href: "/about/", active: true },
       { label: "利用規約", href: "/policy/#terms", active: true },
       { label: "プライバシーポリシー", href: "/policy/#privacy", active: true },
@@ -85,8 +87,9 @@ const footerGroups = [
       ))}
     </div>
 
-    <p class="mt-10 border-t border-zinc-800 pt-6 text-center text-xs tracking-[0.14em] text-zinc-400">
-      © {new Date().getFullYear()} おいらの森 / Satoyama Park Oiranomori. All rights reserved.
-    </p>
+    <div class="mt-10 border-t border-zinc-800 pt-6 text-center text-xs tracking-[0.14em] text-zinc-400">
+      {lastUpdated && <p class="mb-1">最終更新：{lastUpdated}</p>}
+      <p>© {new Date().getFullYear()} 里山パークおいらの森 / Satoyama Park Oira no Mori. All rights reserved.</p>
+    </div>
   </div>
 </footer>

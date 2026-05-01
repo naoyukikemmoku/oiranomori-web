@@ -1,0 +1,79 @@
+---
+import PageLayout from "../../layouts/PageLayout.astro";
+---
+
+<PageLayout
+  title="メディア掲載・ロケ地・団体貸し切り | 里山パークおいらの森"
+  description="BS-TBS「ヒロシのぼっちキャンプ」ロケ地。雑誌掲載実績・撮影利用・団体貸し切りのご案内。"
+  lastUpdated="2026年5月"
+>
+
+  {/* ページヘッダー */}
+  <div class="mb-14 border-b border-zinc-200 pb-10">
+    <p class="text-xs tracking-[0.26em] text-zinc-400 uppercase">Media / Location / Group</p>
+    <h1 class="mt-3 text-3xl font-semibold text-zinc-800 md:text-4xl">メディア・ロケ地・団体貸し切り</h1>
+    <p class="mt-5 max-w-2xl text-base leading-loose text-zinc-600">
+      おいらの森は、ソロキャンプから団体利用まで、さまざまな形で使われてきました。
+      取材・撮影・貸し切りのご相談はお気軽に。
+    </p>
+  </div>
+
+  {/* MEDIA */}
+  <section class="mb-16">
+    <p class="text-xs tracking-[0.26em] text-[#4A5D4E] uppercase">Media</p>
+    <h2 class="mt-2 text-xl font-semibold text-zinc-800">メディア掲載実績</h2>
+
+    <div class="mt-8 space-y-10">
+
+      {/* BS-TBS */}
+      <div class="border-l-2 border-[#4A5D4E] pl-6">
+        <p class="text-xs tracking-[0.22em] text-zinc-400 uppercase">TV / 2023</p>
+        <h3 class="mt-2 text-lg font-semibold text-zinc-800">ヒロシのぼっちキャンプ</h3>
+        <p class="mt-1 text-sm text-zinc-500">BS-TBS｜Season 6｜#127・#128｜2023年3月22日放送</p>
+        <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-600">
+          ソロキャンプで知られる芸人・ヒロシ氏が、ディープフォレストで野営。
+          樹齢80年のスギ・ヒノキの森、全面直火可のフィールドが番組で紹介されました。
+        </p>
+      </div>
+
+      {/* 雑誌（プレースホルダー）*/}
+      <div class="border-l-2 border-zinc-200 pl-6">
+        <p class="text-xs tracking-[0.22em] text-zinc-400 uppercase">Magazine</p>
+        <p class="mt-2 text-sm text-zinc-400">雑誌掲載情報は順次追加予定です。</p>
+      </div>
+
+    </div>
+  </section>
+
+  {/* LOCATION */}
+  <section class="mb-16">
+    <p class="text-xs tracking-[0.26em] text-[#4A5D4E] uppercase">Location</p>
+    <h2 class="mt-2 text-xl font-semibold text-zinc-800">ロケ地・撮影利用</h2>
+    <p class="mt-5 max-w-2xl text-sm leading-loose text-zinc-600">
+      ライトフォレスト・ディープフォレストともに、撮影ロケ地としての利用が可能です。
+      広葉樹林の明るい森、樹齢80年の針葉樹林、焚き火、里山の風景。
+      詳細・条件はお問い合わせください。
+    </p>
+    <p class="mt-6 text-sm">
+      <a href="/contact/" class="inline-flex items-center gap-2 border-b border-[#4A5D4E] pb-0.5 text-[#4A5D4E] transition hover:border-[#2d3a30] hover:text-[#2d3a30]">
+        撮影利用のお問い合わせ →
+      </a>
+    </p>
+  </section>
+
+  {/* GROUP */}
+  <section class="mb-10">
+    <p class="text-xs tracking-[0.26em] text-[#4A5D4E] uppercase">Group</p>
+    <h2 class="mt-2 text-xl font-semibold text-zinc-800">団体貸し切り</h2>
+    <p class="mt-5 max-w-2xl text-sm leading-loose text-zinc-600">
+      企業研修・合宿・スクール・地域イベントなど、団体での貸し切り利用に対応しています。
+      フィールドの規模・設備・受け入れ条件はご相談ください。
+    </p>
+    <p class="mt-6 text-sm">
+      <a href="/contact/" class="inline-flex items-center gap-2 border-b border-[#4A5D4E] pb-0.5 text-[#4A5D4E] transition hover:border-[#2d3a30] hover:text-[#2d3a30]">
+        団体貸し切りのお問い合わせ →
+      </a>
+    </p>
+  </section>
+
+</PageLayout>

@@ -116,7 +116,23 @@ const returnRules: { title: string; body?: string; items?: string[] }[] = [
 <PageLayout
   title="キャンプ用品レンタル | 里山パークおいらの森"
   description="テント・寝具・ランタン・調理器具・焚き火台など、キャンプ道具をレンタルできます。装備が揃っていなくても、身ひとつでお越しいただけます。"
+  lastUpdated="2026年5月"
 >
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json">{JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": "おいらの森 レンタル用品",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "item": { "@type": "Product", "name": "Coleman ツーリングドーム（テント）", "offers": { "@type": "Offer", "price": "2700", "priceCurrency": "JPY", "seller": { "@type": "Organization", "name": "里山パークおいらの森" } } } },
+        { "@type": "ListItem", "position": 2, "item": { "@type": "Product", "name": "シュラフ（3シーズン）", "offers": { "@type": "Offer", "price": "1100", "priceCurrency": "JPY", "seller": { "@type": "Organization", "name": "里山パークおいらの森" } } } },
+        { "@type": "ListItem", "position": 3, "item": { "@type": "Product", "name": "LEDランタン", "offers": { "@type": "Offer", "price": "220", "priceCurrency": "JPY", "seller": { "@type": "Organization", "name": "里山パークおいらの森" } } } },
+        { "@type": "ListItem", "position": 4, "item": { "@type": "Product", "name": "BBQコンロ", "offers": { "@type": "Offer", "price": "1100", "priceCurrency": "JPY", "seller": { "@type": "Organization", "name": "里山パークおいらの森" } } } },
+        { "@type": "ListItem", "position": 5, "item": { "@type": "Product", "name": "Coleman ファイアーディスク（焚き火台）", "offers": { "@type": "Offer", "price": "800", "priceCurrency": "JPY", "seller": { "@type": "Organization", "name": "里山パークおいらの森" } } } },
+        { "@type": "ListItem", "position": 6, "item": { "@type": "Product", "name": "薪ストーブ（冬期限定）", "offers": { "@type": "Offer", "price": "1800", "priceCurrency": "JPY", "seller": { "@type": "Organization", "name": "里山パークおいらの森" } } } }
+      ]
+    })}</script>
+  </Fragment>
 
   {/* ページヘッダー */}
   <div class="mb-10 border-b border-zinc-200 pb-8">

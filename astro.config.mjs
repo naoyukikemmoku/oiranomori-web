@@ -6,7 +6,14 @@ import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   site: "https://oiranomori.jp",
-  integrations: [sitemap(), robotsTxt()],
+  integrations: [
+    sitemap({
+      filter: (page) =>
+        !page.includes('/checkout/') &&
+        !page.includes('/thanks/'),
+    }),
+    robotsTxt(),
+  ],
   image: {
     service: passthroughImageService(),
   },

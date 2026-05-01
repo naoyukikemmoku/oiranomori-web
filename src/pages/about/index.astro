@@ -44,7 +44,29 @@ const companies = [
 <PageLayout
   title="運営会社・関連組織 | 里山パークおいらの森"
   description="おいらの森の運営会社・関連団体のご案内。那須烏山の里山で100年の森づくりを続ける、橋本商事とその仲間たちについて。"
+  lastUpdated="2026年5月"
 >
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json">{JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "里山パークおいらの森",
+      "legalName": "株式会社橋本商事",
+      "url": "https://oiranomori.jp",
+      "foundingDate": "2020-06-15",
+      "address": {
+        "@type": "PostalAddress",
+        "postalCode": "321-0525",
+        "addressCountry": "JP",
+        "addressRegion": "栃木県",
+        "addressLocality": "那須烏山市",
+        "streetAddress": "福岡1047"
+      },
+      "telephone": "050-3647-1047",
+      "email": "oira@oiranomori.jp",
+      "sameAs": ["https://hashimoto1047.co.jp"]
+    })}</script>
+  </Fragment>
 
   {/* ページヘッダー */}
   <div class="mb-10 border-b border-zinc-200 pb-8">

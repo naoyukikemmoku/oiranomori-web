@@ -6,6 +6,8 @@ const {
   title = "おいらの森",
   description = "栃木県那須烏山の里山にある『里山パークおいらの森』。100年先の森を育てながら、森で遊び、森に泊まる体験型キャンプ場です。",
   noindex = false,
+  ogImage = "https://oiranomori.jp/images/lp/hero.jpg",
+  lastUpdated,
 } = Astro.props;
 
 const BASE_URL = "https://oiranomori.jp";
@@ -22,6 +24,7 @@ const segmentLabels: Record<string, string> = {
   firewood:            "こだわりの薪販売",
   "light-guide":       "ライトフォレスト 利用案内",
   map:                 "場内・周辺マップ",
+  media:               "メディア・ロケ地・団体貸し切り",
   news:                "お知らせ",
   now:                 "森のいま",
   oiras:               "OIRAS",
@@ -70,9 +73,13 @@ const breadcrumbJson = pathSegments.length > 0 ? JSON.stringify({
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description ?? ""} />
-    <meta property="og:image" content="https://oiranomori.jp/images/lp/hero.jpg" />
-    <meta property="og:site_name" content="里山パークおいらの森" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:site_name" content="Satoyama Park Oira no Mori" />
     <meta property="og:locale" content="ja_JP" />
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@oiranomori" />
+    <meta name="twitter:image" content={ogImage} />
     <!-- canonical -->
     <link rel="canonical" href={Astro.url.href} />
     {noindex && <meta name="robots" content="noindex,nofollow" />}
@@ -92,6 +99,6 @@ const breadcrumbJson = pathSegments.length > 0 ? JSON.stringify({
   <body>
     <slot />
 
-    <Footer />
+    <Footer lastUpdated={lastUpdated} />
   </body>
 </html>

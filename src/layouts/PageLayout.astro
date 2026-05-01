@@ -4,10 +4,10 @@ import Header from "../components/Header.astro";
 import FloatingNav from "../components/FloatingNav.astro";
 import ReserveCTA from "../components/ReserveCTA.astro";
 
-const { title = "おいらの森", description, heading = "" } = Astro.props;
+const { title = "おいらの森", description, heading = "", ogImage, lastUpdated } = Astro.props;
 ---
 
-<BaseLayout title={title} description={description}><Fragment slot="head"><slot name="head" /></Fragment>
+<BaseLayout title={title} description={description} ogImage={ogImage} lastUpdated={lastUpdated}><Fragment slot="head"><slot name="head" /></Fragment>
   <Header />
   <FloatingNav />
   <ReserveCTA />

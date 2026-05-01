@@ -5,7 +5,30 @@ import LpLayout from "../../layouts/LpLayout.astro";
 <LpLayout
   title="OIRAS | 里山パークおいらの森"
   description="おいらの森で森の整備・農業・運営を担う仲間たち、オイラーズ（OIRAS）。インターンシップも受け入れ中。那須烏山で100年の森作りに関わってみませんか。"
+  lastUpdated="2026年5月"
 >
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json">{JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "VolunteerOpportunity",
+      "name": "オイラーズ（OIRAS）— 里山キャンプ場の仲間",
+      "description": "おいらの森で森の整備・農業・運営を担う仲間を募集。インターンシップも受け入れ中。那須烏山で100年の森作りに関わってみませんか。",
+      "hiringOrganization": {
+        "@type": "Organization",
+        "name": "里山パークおいらの森",
+        "url": "https://oiranomori.jp"
+      },
+      "jobLocation": {
+        "@type": "Place",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "那須烏山市",
+          "addressRegion": "栃木県",
+          "addressCountry": "JP"
+        }
+      }
+    })}</script>
+  </Fragment>
 
   {/* Hero */}
   <section
@@ -187,14 +210,14 @@ import LpLayout from "../../layouts/LpLayout.astro";
   {/* Safety & Rules */}
   <section class="bg-[color:var(--forest-600)] py-16">
     <div class="mx-auto max-w-6xl px-5">
-      <p class="text-xs tracking-[0.28em] text-zinc-500 uppercase">Safety & Rules</p>
-      <h2 class="mt-4 text-2xl font-semibold text-white">安全・規律について</h2>
+      <p class="text-xs tracking-[0.28em] text-zinc-500 uppercase">Safety & Working Style</p>
+      <h2 class="mt-4 text-2xl font-semibold text-white">安全と進め方</h2>
 
       <dl class="mt-8 divide-y divide-zinc-700 border-t border-b border-zinc-700 text-sm">
         {[
-          { label: "安全優先",   value: "チェーンソー等の動力機材の使用は許可制です。" },
-          { label: "プロ意識",   value: "挨拶、安全確認、報告・連絡・相談（ホウレンソウ）を徹底してください。" },
-          { label: "心構え",     value: "レクリエーションではなく、キャンプ場を共に育てる「仕事」として取り組んでいただきます。" },
+          { label: "動力機材は許可制",   value: "チェーンソー等は使い方を共有してから。事故を起こさないことが最優先です。" },
+          { label: "報連相を大事に",     value: "挨拶、安全確認、進捗共有。一緒に動く以上、当たり前のコミュニケーションは大切にしてください。" },
+          { label: "仕事として取り組む", value: "レクリエーションではなく、キャンプ場を共に育てる仕事です。報酬を伴うのもそのため。" },
         ].map((item) => (
           <div class="grid grid-cols-[7rem_1fr] gap-4 py-5">
             <dt class="text-zinc-500">{item.label}</dt>

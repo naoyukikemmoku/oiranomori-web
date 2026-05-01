@@ -18,7 +18,24 @@ const stars = (n: number) => "★".repeat(n) + "☆".repeat(5 - n);
 <LpLayout
   title="こだわりの薪販売 | 里山パークおいらの森"
   description="自家生産の広葉樹の薪を販売中。クヌギ・コナラ中心、含水率15%以下まで乾燥済み。セルフ量り売り・パッキング済みの2種類から選べます。"
+  ogImage="https://oiranomori.jp/images/bonfire.jpg"
+  lastUpdated="2026年5月"
 >
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json">{JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": "おいらの薪 — 樹種別ラインナップ",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "item": { "@type": "Product", "name": "クヌギ薪", "description": "広葉樹の最高峰。圧倒的な火持ちとおき火の美しさ。じっくりと火と対話する夜に。", "offers": { "@type": "Offer", "price": "1100", "priceCurrency": "JPY", "availability": "https://schema.org/InStock", "seller": { "@type": "Organization", "name": "里山パークおいらの森" } } } },
+        { "@type": "ListItem", "position": 2, "item": { "@type": "Product", "name": "コナラ薪", "description": "「薪の王道」。密度が高く、安定した熱量が長時間続きます。迷ったらこれ。", "offers": { "@type": "Offer", "price": "880", "priceCurrency": "JPY", "availability": "https://schema.org/InStock", "seller": { "@type": "Organization", "name": "里山パークおいらの森" } } } },
+        { "@type": "ListItem", "position": 3, "item": { "@type": "Product", "name": "ヤマザクラ薪", "description": "煙の刺激が少なく、料理（ピザ・燻製）にも。焚き火の香りに彩りを添えるオールマイティな一束。", "offers": { "@type": "Offer", "price": "880", "priceCurrency": "JPY", "availability": "https://schema.org/InStock", "seller": { "@type": "Organization", "name": "里山パークおいらの森" } } } },
+        { "@type": "ListItem", "position": 4, "item": { "@type": "Product", "name": "スギ薪", "description": "燃えやすさNo.1。焚きつけに最適。一気に火力を上げたい時に。", "offers": { "@type": "Offer", "price": "770", "priceCurrency": "JPY", "availability": "https://schema.org/InStock", "seller": { "@type": "Organization", "name": "里山パークおいらの森" } } } },
+        { "@type": "ListItem", "position": 5, "item": { "@type": "Product", "name": "ヒノキ薪", "description": "燃えやすいがスギより長持ち。割った瞬間に広がる爽やかな香りは、準備の時間を豊かにします。", "offers": { "@type": "Offer", "price": "770", "priceCurrency": "JPY", "availability": "https://schema.org/InStock", "seller": { "@type": "Organization", "name": "里山パークおいらの森" } } } },
+        { "@type": "ListItem", "position": 6, "item": { "@type": "Product", "name": "薪セルフ量り売り（広葉樹ミックス）", "description": "好きな薪を、必要な分だけ。少量からでもご購入いただけます。", "offers": { "@type": "Offer", "price": "100", "priceCurrency": "JPY", "availability": "https://schema.org/InStock", "seller": { "@type": "Organization", "name": "里山パークおいらの森" } } } }
+      ]
+    })}</script>
+  </Fragment>
 
   <!-- Hero -->
   <section class="lp-hero" style="background-image:url('/images/bonfire.jpg');">
@@ -238,7 +255,7 @@ const stars = (n: number) => "★".repeat(n) + "☆".repeat(5 - n);
         {[
           {
             title: "林業のプロが、一束ずつ管理",
-            desc: "おいらは那須烏山で林業を営むプロフェッショナル。木を選び、切り、割り、乾燥させる全工程を自ら手がけています。均一な品質は、専門家の目と手が生む信頼の証です。",
+            desc: "おいらは那須烏山で林業を営むプロフェッショナル。木を選び、切り、割り、乾燥させる全工程を自ら手がけています。チェーンソーによる伐木等特別教育・刈払機取扱作業者に対する安全衛生教育を修了し、測量士資格を持つ。地形・境界の把握から始まる設計された林業です。",
           },
           {
             title: "含水率15%以下",

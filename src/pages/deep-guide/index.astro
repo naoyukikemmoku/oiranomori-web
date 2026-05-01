@@ -21,6 +21,7 @@ const facilities = [
 <PageLayout
   title="ディープフォレスト 利用案内 | 里山パークおいらの森"
   description="ディープフォレストの利用案内。18歳以上限定フィールドのチェックイン時間・場内設備・禁止事項・基本4鉄則を、来場前に確認してください。"
+  lastUpdated="2026年5月"
 >
 
   {/* ページ見出し */}
@@ -28,20 +29,25 @@ const facilities = [
     <p class="text-xs tracking-[0.26em] text-zinc-500 uppercase">Deep Forest</p>
     <h1 class="mt-3 text-3xl font-semibold text-white md:text-4xl">ディープフォレスト<br class="sm:hidden" /> 利用案内</h1>
 
-    {/* 18歳以上の注意書き */}
-    <div class="mt-5 border-l-2 border-zinc-600 pl-5">
-      <p class="text-sm leading-loose text-zinc-300">
-        <strong class="text-white">ディープフォレストは18歳以上限定のフィールドです。</strong><br />
-        未成年者の入場はいかなる理由でも不可です。
-      </p>
-    </div>
+    <p class="mt-5 max-w-2xl text-base leading-loose text-zinc-300">
+      ここはいわゆるキャンプ場じゃない。おいらが林業をしている森だ。<br />
+      その現場を、深い森を味わいたい人のために開放している。
+    </p>
+    <p class="mt-4 max-w-2xl text-base leading-loose text-zinc-400">
+      だから、看板もないし、設備もない。地図にも載っていないし、場所は非公開。<br />
+      ときどきおいらがチェーンソーや刈払機を持って作業していることがある。でも、めったにない。
+    </p>
+    <p class="mt-4 max-w-2xl text-base leading-loose text-zinc-400">
+      細かいことは言うつもりはない。ただ、おいらの森だから、傷つけたりゴミを捨てたりはしないでほしい。
+    </p>
 
     <p class="mt-5 max-w-2xl text-base leading-loose text-zinc-400">
-      樹齢80年以上のスギ・ヒノキが立ち並ぶ深い針葉樹林。直火、ブッシュクラフト、圧倒的な静寂。
+      ディープフォレストは18歳以上限定のフィールド。<br />
+      樹齢80年以上のスギ・ヒノキが立ち並ぶ深い針葉樹林。直火、ブッシュクラフト、圧倒的な静寂。<br />
       整備された快適さよりも、自然との真剣な対話を求める方のためのフィールドです。
     </p>
     <p class="mt-3 max-w-2xl text-sm leading-loose text-zinc-500">
-      ライトフォレストから「車で約7分」の別の山脈にあります。場所は非公開のため、受付で案内を受けてください。
+      ライトフォレストから「車で約7分」の別の山脈にあります。場所は受付で案内を受けてください。
     </p>
 
     <nav class="mt-6 flex flex-wrap gap-3 text-sm">
@@ -200,27 +206,24 @@ const facilities = [
     </div>
   </section>
 
-  {/* ご利用ワンポイント */}
+  {/* 装備と過ごし方のヒント */}
   <section class="mb-14">
-    <h2 class="mb-5 text-xl font-semibold text-white">ご利用ワンポイント（重要事項）</h2>
-    <p class="mb-5 text-sm text-zinc-500">一般的なキャンプ場との違いを認識の上、期待値を調整してお越しください。</p>
+    <h2 class="mb-5 text-xl font-semibold text-white">装備と過ごし方のヒント</h2>
 
-    <div class="grid gap-4 sm:grid-cols-2">
+    <ul class="divide-y divide-zinc-800 border-y border-zinc-700">
       {[
-        { title: "異質の環境",   desc: "キャンプ場としての人工的な整備をしていないため、一般的なキャンプ場とは全く異なります。" },
-        { title: "不便の許容",   desc: "基本的に不便な場所です。趣旨を理解の上でご利用ください。事前の下見を強く推奨します。" },
-        { title: "場所は非公開", desc: "ライトフォレストから「車で約7分」の別の山脈にあります。場所は非公開のため、受付で案内を受けてください。" },
-        { title: "無人管理",     desc: "ディープフォレストに管理人は常駐しません。受付はライトフォレストです。" },
-        { title: "静寂の遵守",   desc: "グループで騒いだり、酒宴を楽しむ場所ではありません。お静かにお過ごしください。" },
-        { title: "足元の備え",   desc: "雨後はぬかるみやすいため、長靴の携行を推奨します。" },
-        { title: "装備の選択",   desc: "傾斜がありキャリーカーの使用は困難です。大容量のバックパックでの来場を推奨します。" },
+        { title: "装備で完結する準備を",  desc: "ここで揃えられるものは限られます。下見しておくと安心です。" },
+        { title: "管理人は常駐しません",  desc: "受付はライトフォレストです。困ったときはお問い合わせください。" },
+        { title: "静かに過ごす場所",      desc: "賑やかに過ごしたい日は、ライトフォレストへどうぞ。" },
+        { title: "足元の備え",            desc: "雨後はぬかるみやすいので、長靴の携行を推奨します。" },
+        { title: "装備の運び方",          desc: "広場から先は傾斜があるため、キャリーカーは使いにくい場所です。大容量のバックパックをお持ちになるか、何度か往復して運んでください。" },
       ].map((item) => (
-        <div class="border-t border-zinc-700 pt-5">
-          <h3 class="text-sm font-semibold text-zinc-200">{item.title}</h3>
-          <p class="mt-2 text-sm leading-loose text-zinc-500">{item.desc}</p>
-        </div>
+        <li class="py-4 text-sm">
+          <span class="font-semibold text-zinc-300">・{item.title}：</span>
+          <span class="text-zinc-500">{item.desc}</span>
+        </li>
       ))}
-    </div>
+    </ul>
   </section>
 
   {/* 場内マップ */}
