@@ -45,6 +45,20 @@ const experiences = [
   ogImage="https://oiranomori.jp/images/lp/scene-01.jpg"
   lastUpdated="2026年5月"
 >
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json">{JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "TouristAttraction",
+      "name": "ディープフォレスト（里山パークおいらの森）",
+      "description": "18歳以上限定・全面直火可のフィールド。樹齢80年の針葉樹林で野営やブッシュクラフトに没頭できる、コアキャンパー向けのフィールドです。",
+      "url": "https://oiranomori.jp/deep/",
+      "containedInPlace": {
+        "@type": "Campground",
+        "name": "里山パークおいらの森",
+        "url": "https://oiranomori.jp"
+      }
+    })}</script>
+  </Fragment>
 
   {/* Hero */}
   <section

@@ -23,6 +23,20 @@ const facilities = [
   description="ディープフォレストの利用案内。18歳以上限定フィールドのチェックイン時間・場内設備・禁止事項・基本4鉄則を、来場前に確認してください。"
   lastUpdated="2026年5月"
 >
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json">{JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "ディープフォレスト 利用案内 | 里山パークおいらの森",
+      "description": "ディープフォレストの利用案内。18歳以上限定フィールドのチェックイン時間・場内設備・禁止事項・基本4鉄則を、来場前に確認してください。",
+      "url": "https://oiranomori.jp/deep-guide/",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "里山パークおいらの森",
+        "url": "https://oiranomori.jp"
+      }
+    })}</script>
+  </Fragment>
 
   {/* ページ見出し */}
   <div class="mb-10 border-b border-zinc-700 pb-8">
