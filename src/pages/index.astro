@@ -252,6 +252,62 @@ const plans: Array<{
     </div>
   </section>
 
+  {/* 【新】② 周辺便利 */}
+  <section id="neighborhood" class="py-20 md:py-28 bg-[#f4f5f2]">
+    <div class="mx-auto max-w-6xl px-6 md:px-10">
+      <div class="grid items-center gap-10 md:grid-cols-2 md:gap-16">
+        <div class="order-last md:order-none">
+          <p class="text-xs tracking-[0.32em] text-zinc-400">NEIGHBORHOOD</p>
+          <h2 class="mt-4 text-2xl font-semibold leading-snug text-zinc-800 md:text-3xl">
+            秘境じゃない、街中じゃない
+          </h2>
+          <p class="mt-5 text-sm leading-loose text-zinc-600 md:text-base">
+            森の中だけど、車で10分も走れば<br />
+            温泉、スーパー、食事処、観光スポット、だいたい揃ってる。<br />
+            忘れ物しても、温泉に浸かりに出ても、すぐ戻ってこれる距離。
+          </p>
+          <dl class="mt-8 grid grid-cols-2 gap-x-8 gap-y-4 sm:grid-cols-3">
+            {[
+              { label: "食事", count: "14件" },
+              { label: "温泉・お風呂", count: "11件" },
+              { label: "買い物", count: "20件" },
+              { label: "観光スポット", count: "13件" },
+              { label: "救急医療", count: "1件" },
+            ].map(({ label, count }) => (
+              <div>
+                <dt class="text-xs text-zinc-400">{label}</dt>
+                <dd class="mt-0.5 text-base font-semibold text-zinc-800">{count}</dd>
+              </div>
+            ))}
+          </dl>
+          <a
+            href="/map/"
+            class="mt-8 inline-flex items-center gap-2 text-sm tracking-[0.14em] text-zinc-600 transition hover:text-zinc-900"
+          >
+            周辺マップを見る
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M5 12h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+              <path d="M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+        <div class="overflow-hidden">
+          <img
+            src="/images/lp/scene-03.jpg"
+            srcset="/images/lp/scene-03.jpg 800w"
+            sizes="(max-width: 768px) 100vw, 50vw"
+            alt="那須烏山市の里山と周辺の街"
+            width="800"
+            height="600"
+            loading="lazy"
+            class="w-full object-cover"
+            style="aspect-ratio:4/3;"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
   {/* 6. ライトフォレスト紹介 ① */}
   <section class="py-20 md:py-28 bg-white">
     <div class="mx-auto max-w-6xl px-6 md:px-10">
