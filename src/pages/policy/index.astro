@@ -34,6 +34,7 @@ import PageLayout from "../../layouts/PageLayout.astro";
         { href: "#rules", label: "禁止事項" },
         { href: "#terms", label: "利用規約（条文）" },
         { href: "#privacy", label: "プライバシーポリシー" },
+        { href: "#tokushoho", label: "特商法表記" },
       ].map((item) => (
         <a
           href={item.href}
@@ -254,6 +255,86 @@ import PageLayout from "../../layouts/PageLayout.astro";
         <p class="text-zinc-600">
           里山パークおいらの森<br />
           栃木県那須烏山市
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  {/* ── 特定商取引法に基づく表記 ── */}
+  <hr class="mb-14 border-zinc-300" />
+
+  <section id="tokushoho" class="mb-14">
+    <h2 class="mb-2 text-xl font-semibold text-zinc-800">特定商取引法に基づく表記</h2>
+    <p class="mb-6 text-xs text-zinc-400">最終更新：2026年4月</p>
+
+    <dl class="mb-10 divide-y divide-zinc-100 border-y border-zinc-200 text-sm">
+      {[
+        { label: "販売事業者", value: "株式会社橋本商事" },
+        { label: "運営施設", value: "里山パークおいらの森" },
+        { label: "代表取締役", value: "橋本佳子" },
+        { label: "通信販売業務責任者", value: "橋本佳子" },
+        { label: "所在地", value: "〒321-0525 栃木県那須烏山市福岡1047" },
+        { label: "電話番号", value: "050-3647-1047（受付時間 9:00〜18:00）" },
+        { label: "メールアドレス", value: "oira@oiranomori.jp" },
+        { label: "営業", value: "通年営業" },
+        { label: "URL", value: "https://oiranomori.jp" },
+      ].map((item) => (
+        <div class="grid grid-cols-[10rem_1fr] gap-4 py-5 sm:grid-cols-[14rem_1fr]">
+          <dt class="text-zinc-500">{item.label}</dt>
+          <dd class="text-zinc-700">{item.value}</dd>
+        </div>
+      ))}
+    </dl>
+
+    <div class="space-y-8 text-sm leading-loose">
+
+      <div class="border-t border-zinc-200 pt-6">
+        <p class="mb-3 font-semibold text-zinc-800">販売価格</p>
+        <p class="text-zinc-600">
+          各宿泊・施設利用プランの予約ページに表示する金額（消費税込）。
+        </p>
+      </div>
+
+      <div class="border-t border-zinc-200 pt-6">
+        <p class="mb-3 font-semibold text-zinc-800">価格以外に必要となる料金</p>
+        <p class="text-zinc-600">
+          レンタル品・薪・追加サービス等は現地メニューに従う。ペット同伴は無料。
+        </p>
+      </div>
+
+      <div class="border-t border-zinc-200 pt-6">
+        <p class="mb-3 font-semibold text-zinc-800">支払方法・支払時期</p>
+        <p class="text-zinc-600">現地決済（チェックイン時または現地での注文発生時）。</p>
+        <p class="mt-3 text-zinc-600">決済代行サービス Square を通じて以下の決済方法に対応:</p>
+        <ul class="mt-2 space-y-1 list-disc pl-5 text-zinc-600">
+          <li>クレジットカード：Visa / Mastercard / JCB / American Express / Diners Club / Discover / UnionPay</li>
+          <li>電子マネー：交通系IC / iD / QUICPay</li>
+          <li>QRコード決済：PayPay / 楽天ペイ / au PAY / d払い / メルペイ / Alipay+ / WeChat Pay</li>
+          <li>現金</li>
+        </ul>
+      </div>
+
+      <div class="border-t border-zinc-200 pt-6">
+        <p class="mb-3 font-semibold text-zinc-800">役務の提供時期</p>
+        <p class="text-zinc-600">
+          予約時に確定したチェックイン日からチェックアウト日まで。
+          チェックイン・チェックアウト時間は<a href="#checkin" class="border-b border-zinc-400 transition hover:border-zinc-700">本ページ上部「チェックイン・チェックアウト」</a>をご参照ください。
+        </p>
+      </div>
+
+      <div class="border-t border-zinc-200 pt-6">
+        <p class="mb-3 font-semibold text-zinc-800">キャンセル・契約解除</p>
+        <p class="text-zinc-600">
+          <a href="#cancel" class="border-b border-zinc-400 transition hover:border-zinc-700">本ページ上部「キャンセルについて」</a>をご参照ください。
+          役務の性質上、サービス提供開始後の返金は不可。
+        </p>
+      </div>
+
+      <div class="border-t border-zinc-200 pt-6">
+        <p class="mb-3 font-semibold text-zinc-800">申込み方法</p>
+        <p class="text-zinc-600">
+          予約サイト <a href="https://www.489pro-x.com/ja/s/oiranomori/" target="_blank" rel="noopener noreferrer" class="border-b border-zinc-400 transition hover:border-zinc-700">ProX</a> からのオンライン予約。
         </p>
       </div>
 
