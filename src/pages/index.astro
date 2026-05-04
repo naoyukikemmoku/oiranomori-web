@@ -153,17 +153,21 @@ const plans: Array<{
     <div class="mx-auto max-w-6xl px-6 md:px-10">
       <div class="grid items-center gap-10 md:grid-cols-2 md:gap-16">
         <div class="overflow-hidden">
-          <img
-            src="/images/lp/scene-02.jpg"
-            srcset="/images/lp/scene-02.jpg 800w"
-            sizes="(max-width: 768px) 100vw, 50vw"
-            alt="おいらの森の森と空 — 気象情報・森のいまをチェック"
-            width="800"
-            height="600"
-            loading="lazy"
-            class="w-full object-cover"
-            style="aspect-ratio:4/3;"
-          />
+          <picture>
+            <source type="image/avif" srcset="/images/lp/lp-forest-now-1200.avif 1200w, /images/lp/lp-forest-now.avif 2400w" sizes="(max-width: 768px) 100vw, 50vw" />
+            <source type="image/webp" srcset="/images/lp/lp-forest-now-1200.webp 1200w, /images/lp/lp-forest-now.webp 2400w" sizes="(max-width: 768px) 100vw, 50vw" />
+            <img
+              src="/images/lp/lp-forest-now-1200.jpg"
+              srcset="/images/lp/lp-forest-now-1200.jpg 1200w, /images/lp/lp-forest-now.jpg 2400w"
+              sizes="(max-width: 768px) 100vw, 50vw"
+              alt="おいらの森の木漏れ日と空"
+              width="1200"
+              height="675"
+              loading="lazy"
+              class="w-full object-cover"
+              style="aspect-ratio:4/3;"
+            />
+          </picture>
         </div>
         <div>
           <p class="text-xs tracking-[0.32em] text-zinc-400">FOREST NOW</p>
@@ -228,13 +232,21 @@ const plans: Array<{
     <div class="mx-auto max-w-6xl px-6 md:px-10">
       <div class="grid items-center gap-10 md:grid-cols-2 md:gap-16">
         <div class="overflow-hidden">
-          <img
-            src="/images/seasons/spring.jpg"
-            alt="朝の光が差し込むおいらの森の広葉樹林"
-            loading="lazy"
-            class="w-full object-cover"
-            style="aspect-ratio:4/3;"
-          />
+          <picture>
+            <source type="image/avif" srcset="/images/lp/lp-early-checkin-1200.avif 1200w, /images/lp/lp-early-checkin.avif 2400w" sizes="(max-width: 768px) 100vw, 50vw" />
+            <source type="image/webp" srcset="/images/lp/lp-early-checkin-1200.webp 1200w, /images/lp/lp-early-checkin.webp 2400w" sizes="(max-width: 768px) 100vw, 50vw" />
+            <img
+              src="/images/lp/lp-early-checkin-1200.jpg"
+              srcset="/images/lp/lp-early-checkin-1200.jpg 1200w, /images/lp/lp-early-checkin.jpg 2400w"
+              sizes="(max-width: 768px) 100vw, 50vw"
+              alt="朝のおいらの森 — 木漏れ日の差し込む広葉樹林"
+              width="1200"
+              height="675"
+              loading="lazy"
+              class="w-full object-cover"
+              style="aspect-ratio:4/3;"
+            />
+          </picture>
         </div>
         <div>
           <p class="text-xs tracking-[0.32em] text-zinc-400">EARLY CHECK-IN</p>
@@ -292,17 +304,21 @@ const plans: Array<{
           </a>
         </div>
         <div class="overflow-hidden">
-          <img
-            src="/images/lp/scene-03.jpg"
-            srcset="/images/lp/scene-03.jpg 800w"
-            sizes="(max-width: 768px) 100vw, 50vw"
-            alt="那須烏山市の里山と周辺の街"
-            width="800"
-            height="600"
-            loading="lazy"
-            class="w-full object-cover"
-            style="aspect-ratio:4/3;"
-          />
+          <picture>
+            <source type="image/avif" srcset="/images/lp/lp-neighborhood-1200.avif 1200w, /images/lp/lp-neighborhood.avif 2400w" sizes="(max-width: 768px) 100vw, 50vw" />
+            <source type="image/webp" srcset="/images/lp/lp-neighborhood-1200.webp 1200w, /images/lp/lp-neighborhood.webp 2400w" sizes="(max-width: 768px) 100vw, 50vw" />
+            <img
+              src="/images/lp/lp-neighborhood-1200.jpg"
+              srcset="/images/lp/lp-neighborhood-1200.jpg 1200w, /images/lp/lp-neighborhood.jpg 2400w"
+              sizes="(max-width: 768px) 100vw, 50vw"
+              alt="那須烏山市の里山の風景"
+              width="1200"
+              height="801"
+              loading="lazy"
+              class="w-full object-cover"
+              style="aspect-ratio:4/3;"
+            />
+          </picture>
         </div>
       </div>
     </div>
@@ -379,9 +395,22 @@ const plans: Array<{
   {/* 【新】③ 林間の強み */}
   <section
     id="in-the-forest"
-    class="relative bg-cover bg-center py-24 md:py-32"
-    style="background-image:url('/images/lp/scene-01.jpg');"
+    class="relative overflow-hidden py-24 md:py-32"
   >
+    <picture>
+      <source type="image/avif" srcset="/images/lp/lp-in-the-forest-1200.avif 1200w, /images/lp/lp-in-the-forest.avif 2400w" sizes="100vw" />
+      <source type="image/webp" srcset="/images/lp/lp-in-the-forest-1200.webp 1200w, /images/lp/lp-in-the-forest.webp 2400w" sizes="100vw" />
+      <img
+        src="/images/lp/lp-in-the-forest-1200.jpg"
+        srcset="/images/lp/lp-in-the-forest-1200.jpg 1200w, /images/lp/lp-in-the-forest.jpg 2400w"
+        sizes="100vw"
+        alt="那須烏山 里山パークおいらの森の林間"
+        width="2365"
+        height="1330"
+        loading="lazy"
+        class="absolute inset-0 h-full w-full object-cover"
+      />
+    </picture>
     <div class="absolute inset-0 bg-black/60"></div>
     <div class="relative z-10 mx-auto max-w-6xl px-6 md:px-10">
       <div class="max-w-2xl">
@@ -407,17 +436,21 @@ const plans: Array<{
     <div class="mx-auto max-w-6xl px-6 md:px-10">
       <div class="grid items-center gap-10 md:grid-cols-2 md:gap-16">
         <div class="overflow-hidden">
-          <img
-            src="/images/lp/scene-02.jpg"
-            srcset="/images/lp/scene-02.jpg 800w"
-            sizes="(max-width: 768px) 100vw, 50vw"
-            alt="おいらの森売店の生ビールサーバー（仮）"
-            width="800"
-            height="600"
-            loading="lazy"
-            class="w-full object-cover"
-            style="aspect-ratio:4/3;"
-          />
+          <picture>
+            <source type="image/avif" srcset="/images/lp/lp-draft-beer-1200.avif 1200w, /images/lp/lp-draft-beer.avif 2400w" sizes="(max-width: 768px) 100vw, 50vw" />
+            <source type="image/webp" srcset="/images/lp/lp-draft-beer-1200.webp 1200w, /images/lp/lp-draft-beer.webp 2400w" sizes="(max-width: 768px) 100vw, 50vw" />
+            <img
+              src="/images/lp/lp-draft-beer-1200.jpg"
+              srcset="/images/lp/lp-draft-beer-1200.jpg 1200w, /images/lp/lp-draft-beer.jpg 2400w"
+              sizes="(max-width: 768px) 100vw, 50vw"
+              alt="おいらの森売店の生ビールサーバー"
+              width="675"
+              height="1200"
+              loading="lazy"
+              class="w-full object-cover"
+              style="aspect-ratio:4/3;"
+            />
+          </picture>
         </div>
         <div>
           <p class="text-xs tracking-[0.32em] text-zinc-400">DRAFT BEER</p>
