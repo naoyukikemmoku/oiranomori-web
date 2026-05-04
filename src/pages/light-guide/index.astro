@@ -90,6 +90,20 @@ const plans = [
   description="ライトフォレストの利用案内。広葉樹林に囲まれた各種サイト。自然の不便さや虫対策は必要ですが、ファミリーやビギナーでも安心して過ごせます。"
   lastUpdated="2026年5月"
 >
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json">{JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "ライトフォレスト 利用案内 | 里山パークおいらの森",
+      "description": "ライトフォレストの利用案内。広葉樹林に囲まれた各種サイト。自然の不便さや虫対策は必要ですが、ファミリーやビギナーでも安心して過ごせます。",
+      "url": "https://oiranomori.jp/light-guide/",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "里山パークおいらの森",
+        "url": "https://oiranomori.jp"
+      }
+    })}</script>
+  </Fragment>
 
   {/* ページ見出し */}
   <div class="mb-10 border-b border-zinc-200 pb-8">
