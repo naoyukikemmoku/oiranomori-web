@@ -7,6 +7,29 @@ import LpLayout from "../../layouts/LpLayout.astro";
   description="おいらの森への行き方のご案内。宇都宮市街から車で約40分。JR烏山線でのルートや、入り口の急坂などカーナビの注意点も事前に確認できます。"
   lastUpdated="2026年5月"
 >
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json">{JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Place",
+      "name": "里山パークおいらの森",
+      "url": "https://oiranomori.jp/access/",
+      "address": {
+        "@type": "PostalAddress",
+        "postalCode": "321-0525",
+        "addressCountry": "JP",
+        "addressRegion": "栃木県",
+        "addressLocality": "那須烏山市",
+        "streetAddress": "福岡1047"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 36.639896,
+        "longitude": 140.068402
+      },
+      "telephone": "050-3647-1047",
+      "hasMap": "https://maps.google.com/maps?q=里山パークおいらの森+栃木県那須烏山市福岡1047"
+    })}</script>
+  </Fragment>
 
   {/* ページタイトル */}
   <div class="border-b border-zinc-200 bg-white px-5 py-14 md:py-20">
