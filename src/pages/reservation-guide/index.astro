@@ -32,6 +32,61 @@ const steps = [
   description="はじめての方向け予約ガイド。オンライン予約の手順・会員登録のメリット・キャンセルポリシーをわかりやすく解説しています。"
   lastUpdated="2026年5月"
 >
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json">{JSON.stringify({
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebPage",
+          "name": "予約ガイド | 里山パークおいらの森",
+          "description": "はじめての方向け予約ガイド。オンライン予約の手順・会員登録のメリット・キャンセルポリシーをわかりやすく解説しています。",
+          "url": "https://oiranomori.jp/reservation-guide/",
+          "isPartOf": {
+            "@type": "WebSite",
+            "name": "里山パークおいらの森",
+            "url": "https://oiranomori.jp"
+          }
+        },
+        {
+          "@type": "HowTo",
+          "name": "里山パークおいらの森の予約手順",
+          "description": "おいらの森公式予約サイトを使ったオンライン予約の手順です。",
+          "step": [
+            {
+              "@type": "HowToStep",
+              "position": 1,
+              "name": "公式予約サイトへアクセス",
+              "text": "「予約する」ボタンを押して、おいらの森公式予約サイトにアクセスしてください。"
+            },
+            {
+              "@type": "HowToStep",
+              "position": 2,
+              "name": "プランを選択",
+              "text": "プランページから、ご希望のプランと日程を選択します。"
+            },
+            {
+              "@type": "HowToStep",
+              "position": 3,
+              "name": "買い物カゴに追加",
+              "text": "複数のプランや日程を買い物カゴに入れて、まとめて予約・決済が可能です。"
+            },
+            {
+              "@type": "HowToStep",
+              "position": 4,
+              "name": "決済",
+              "text": "決済は現地決済のみです。"
+            },
+            {
+              "@type": "HowToStep",
+              "position": 5,
+              "name": "前日リマインドメールを受信",
+              "text": "ご来場前日に、チェックイン方法や周辺の買い出し情報をまとめたリマインドメールをお送りします。予約番号コードが記載されていますので、必ず受信をご確認ください。"
+            }
+          ]
+        }
+      ]
+    })}</script>
+  </Fragment>
 
   <div class="mb-10 border-b border-zinc-200 pb-8">
     <p class="text-xs tracking-[0.26em] text-zinc-400 uppercase">Reservation Guide</p>
