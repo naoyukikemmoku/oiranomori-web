@@ -3,6 +3,20 @@ import PageLayout from "../../layouts/PageLayout.astro";
 ---
 
 <PageLayout title="ご利用のルール | 里山パークおいらの森" description="おいらの森の利用規約・プライバシーポリシー・キャンセルポリシーをまとめました。初めてのご利用前にご確認ください。" lastUpdated="2026年4月">
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json">{JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "ご利用のルール | 里山パークおいらの森",
+      "description": "おいらの森の利用規約・プライバシーポリシー・キャンセルポリシーをまとめました。初めてのご利用前にご確認ください。",
+      "url": "https://oiranomori.jp/policy/",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "里山パークおいらの森",
+        "url": "https://oiranomori.jp"
+      }
+    })}</script>
+  </Fragment>
 
   {/* ページ見出し */}
   <div class="mb-10 border-b border-zinc-200 pb-8">

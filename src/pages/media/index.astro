@@ -7,6 +7,36 @@ import PageLayout from "../../layouts/PageLayout.astro";
   description="BS-TBS「ヒロシのぼっちキャンプ」ロケ地。雑誌掲載実績・撮影利用・団体貸し切りのご案内。"
   lastUpdated="2026年5月"
 >
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json">{JSON.stringify({
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebPage",
+          "name": "メディア掲載・ロケ地・団体貸し切り | 里山パークおいらの森",
+          "description": "BS-TBS「ヒロシのぼっちキャンプ」ロケ地。雑誌掲載実績・撮影利用・団体貸し切りのご案内。",
+          "url": "https://oiranomori.jp/media/",
+          "isPartOf": {
+            "@type": "WebSite",
+            "name": "里山パークおいらの森",
+            "url": "https://oiranomori.jp"
+          }
+        },
+        {
+          "@type": "ItemList",
+          "name": "里山パークおいらの森 メディア掲載実績",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "ヒロシのぼっちキャンプ（BS-TBS）",
+              "description": "BS-TBS「ヒロシのぼっちキャンプ」Season 6 #127・#128（2023年3月22日放送）。ディープフォレストでの野営が放映されました。"
+            }
+          ]
+        }
+      ]
+    })}</script>
+  </Fragment>
 
   {/* ページヘッダー */}
   <div class="mb-14 border-b border-zinc-200 pb-10">

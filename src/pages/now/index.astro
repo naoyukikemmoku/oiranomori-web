@@ -14,6 +14,18 @@ import Header from "../../components/Header.astro";
     rel="stylesheet"
     href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
   />
+  <script slot="head" is:inline type="application/ld+json">{JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "森のいま | 里山パークおいらの森",
+    "description": "おいらの森の今の天気・気象など現地情報をお知らせ。アメダスの現況や警報、週間天気予報など、キャンプに向けた直前の準備に活用してください。",
+    "url": "https://oiranomori.jp/now/",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "里山パークおいらの森",
+      "url": "https://oiranomori.jp"
+    }
+  })}</script>
 
   <Header />
 

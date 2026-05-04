@@ -3,6 +3,40 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import Header from "../../components/Header.astro";
 ---
 <BaseLayout title="お問い合わせ | 里山パークおいらの森" description="予約・施設・アクセスなど、ご不明な点はお気軽に。TEL 050-3647-1047、またはお問い合わせフォームからどうぞ。">
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json">{JSON.stringify({
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "ContactPage",
+          "name": "お問い合わせ | 里山パークおいらの森",
+          "description": "予約・施設・アクセスなど、ご不明な点はお気軽に。TEL 050-3647-1047、またはお問い合わせフォームからどうぞ。",
+          "url": "https://oiranomori.jp/contact/",
+          "isPartOf": {
+            "@type": "WebSite",
+            "name": "里山パークおいらの森",
+            "url": "https://oiranomori.jp"
+          }
+        },
+        {
+          "@type": "Organization",
+          "name": "里山パークおいらの森",
+          "legalName": "株式会社橋本商事",
+          "url": "https://oiranomori.jp",
+          "telephone": "050-3647-1047",
+          "email": "oira@oiranomori.jp",
+          "address": {
+            "@type": "PostalAddress",
+            "postalCode": "321-0525",
+            "addressCountry": "JP",
+            "addressRegion": "栃木県",
+            "addressLocality": "那須烏山市",
+            "streetAddress": "福岡1047"
+          }
+        }
+      ]
+    })}</script>
+  </Fragment>
   <Header />
   <div class="min-h-screen bg-[#f4f5f2] pt-16 pb-24">
     <div class="mx-auto max-w-2xl px-5">
