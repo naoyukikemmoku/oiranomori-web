@@ -30,6 +30,7 @@ import PageLayout from "../../layouts/PageLayout.astro";
       {[
         { href: "#checkin", label: "チェックイン・アウト" },
         { href: "#cancel", label: "キャンセル" },
+        { href: "#lost-and-found", label: "お忘れ物" },
         { href: "#rules", label: "禁止事項" },
         { href: "#terms", label: "利用規約（条文）" },
         { href: "#privacy", label: "プライバシーポリシー" },
@@ -73,6 +74,25 @@ import PageLayout from "../../layouts/PageLayout.astro";
         { label: "無断キャンセル", value: "連絡なく当日入場されない場合も同様に100%を申し受けます。" },
         { label: "それ以外", value: "無料です。" },
         { label: "当施設都合による中止", value: "天災・悪天候・施設トラブル等による中止の場合、キャンセル料は発生しません。" },
+      ].map((item) => (
+        <div class="grid grid-cols-[10rem_1fr] gap-4 py-5 sm:grid-cols-[14rem_1fr]">
+          <dt class="text-zinc-500">{item.label}</dt>
+          <dd class="text-zinc-700">{item.value}</dd>
+        </div>
+      ))}
+    </dl>
+  </section>
+
+  {/* お忘れ物 */}
+  <section id="lost-and-found" class="mb-14">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">お忘れ物について</h2>
+    <dl class="divide-y divide-zinc-100 border-y border-zinc-200 text-sm">
+      {[
+        { label: "保管期間", value: "場内で見つかった忘れ物は3ヶ月間保管します。期限を過ぎたものは処分します。" },
+        { label: "ご連絡方法", value: "お問い合わせフォームまたはお電話でご連絡ください。ご宿泊日・サイト名・お忘れ物の内容をお知らせいただければ保管状況をお調べします。" },
+        { label: "返送", value: "返送をご希望の場合は着払いでお送りします。送料はご負担ください。" },
+        { label: "個別のご連絡", value: "プライバシー配慮のため、当施設からお客様に個別にご連絡することはありません。お心当たりのある方はお早めにお問い合わせください。" },
+        { label: "食品・飲料等", value: "衛生上問題があるものは当日中に処分します。あらかじめご了承ください。" },
       ].map((item) => (
         <div class="grid grid-cols-[10rem_1fr] gap-4 py-5 sm:grid-cols-[14rem_1fr]">
           <dt class="text-zinc-500">{item.label}</dt>
