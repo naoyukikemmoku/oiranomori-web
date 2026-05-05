@@ -64,6 +64,11 @@
 /properties/*                             /map/?view=light                                        301
 /properties/                              /map/?view=light                                        301
 
+# /properties_type/ → 旧WPカスタムタクソノミー（具体→ワイルドカードの順）
+/properties_type/deepforest/              /deep/                                                  301
+/properties_type/autosite/               /                                                        301
+/properties_type/*                        /                                                       301
+
 # /services/ → 体験系は当面ホームへ（/experience/ 未実装のため）
 /services/*                               /                                                       301
 /services/                                /                                                       301
@@ -87,6 +92,10 @@
 /category/todays-oiranomori/              /news/                                                  301
 /category/sales/                          /news/                                                  301
 /category/*                               /news/                                                  301
+
+
+# ---------- 7b. タグページ（タグ機能は新サイトに無し、すべてTOPへ） ----------
+/tag/*                                    /                                                       301
 
 
 # ---------- 8. ブログ記事（post-sitemap 698件をカテゴリ単位で一括） ----------
