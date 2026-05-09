@@ -172,12 +172,16 @@ const plans: Array<{
         </div>
         <div>
           <p class="text-xs tracking-[0.32em] text-zinc-400">FOREST NOW</p>
-          <h2 class="mt-4 text-2xl font-semibold leading-snug text-zinc-800 md:text-3xl">
+          <p class="mt-4 text-2xl font-semibold leading-snug text-zinc-800 md:text-3xl">
             森の今を、覗きに
+          </p>
+          <h2 class="mt-2 text-sm tracking-[0.16em] text-zinc-500 md:text-base">
+            栃木県那須烏山市の天気と、キャンプ場のライブカメラ
           </h2>
           <p class="mt-5 text-sm leading-loose text-zinc-600 md:text-base">
             天気、雨雲、週間予報、那須烏山アメダス。<br />
             予約の混雑状況やライブカメラも、ここで。<br />
+            ※ライブカメラは準備中、近日公開。<br />
             出かける前にも、テントの中からでも。
           </p>
           <a
@@ -208,8 +212,11 @@ const plans: Array<{
     <div class="relative z-10 mx-auto max-w-6xl px-6 md:px-10">
       <div class="max-w-2xl">
         <p class="text-xs tracking-[0.32em] text-zinc-400">CAMPFIRE</p>
-        <h2 class="mt-4 text-3xl font-semibold leading-snug text-white md:text-4xl">
+        <p class="mt-4 text-3xl font-semibold leading-snug text-white md:text-4xl">
           キャンプといえば焚火
+        </p>
+        <h2 class="mt-2 text-sm tracking-[0.16em] text-zinc-300 md:text-base">
+          おいらの森から仕立てた最高の薪で、焚き火を満喫できるキャンプ場
         </h2>
         <p class="mt-3 text-sm tracking-[0.16em] text-zinc-300 md:text-base">
           焚き火をするためにキャンプする方も
@@ -251,8 +258,11 @@ const plans: Array<{
         </div>
         <div>
           <p class="text-xs tracking-[0.32em] text-zinc-400">EARLY CHECK-IN</p>
-          <h2 class="mt-4 text-2xl font-semibold leading-snug text-zinc-800 md:text-3xl">
+          <p class="mt-4 text-2xl font-semibold leading-snug text-zinc-800 md:text-3xl">
             キャンプを存分に楽しんでもらいたい。
+          </p>
+          <h2 class="mt-2 text-sm tracking-[0.16em] text-zinc-500 md:text-base">
+            9時イン・翌12時アウト。アーリーチェックイン無料
           </h2>
           <p class="mt-5 text-sm leading-loose text-zinc-600 md:text-base">
             だからアーリーチェックインは無料にしています。<br />
@@ -271,8 +281,11 @@ const plans: Array<{
       <div class="grid items-center gap-10 md:grid-cols-2 md:gap-16">
         <div class="order-last md:order-none">
           <p class="text-xs tracking-[0.32em] text-zinc-400">NEIGHBORHOOD</p>
-          <h2 class="mt-4 text-2xl font-semibold leading-snug text-zinc-800 md:text-3xl">
+          <p class="mt-4 text-2xl font-semibold leading-snug text-zinc-800 md:text-3xl">
             秘境じゃない、街中じゃない
+          </p>
+          <h2 class="mt-2 text-sm tracking-[0.16em] text-zinc-500 md:text-base">
+            温泉もスーパーも車で10分。栃木県那須烏山市の里山キャンプ場
           </h2>
           <p class="mt-5 text-sm leading-loose text-zinc-600 md:text-base">
             森の中だけど、車で10分も走れば<br />
@@ -286,6 +299,18 @@ const plans: Array<{
               { label: "買い物", count: "20件" },
               { label: "観光スポット", count: "13件" },
               { label: "救急医療", count: "1件" },
+            ].map(({ label, count }) => (
+              <div>
+                <dt class="text-xs text-zinc-400">{label}</dt>
+                <dd class="mt-0.5 text-base font-semibold text-zinc-800">{count}</dd>
+              </div>
+            ))}
+          </dl>
+          <dl class="mt-6 grid grid-cols-3 gap-x-8 gap-y-4">
+            {[
+              { label: "東京駅から", count: "約2時間" },
+              { label: "大宮駅から", count: "約1時間40分" },
+              { label: "宇都宮駅から", count: "約40分" },
             ].map(({ label, count }) => (
               <div>
                 <dt class="text-xs text-zinc-400">{label}</dt>
@@ -340,8 +365,11 @@ const plans: Array<{
         </div>
         <div>
           <p class="text-xs tracking-[0.32em] text-zinc-400">LIGHT FOREST</p>
-          <h2 class="mt-4 text-2xl font-semibold leading-snug text-zinc-800 md:text-3xl">
-            管理人常駐の、<br />安心・安全な森。
+          <p class="mt-4 text-2xl font-semibold leading-snug text-zinc-800 md:text-3xl">
+            おいらが家族と暮らす森に、お越しください。
+          </p>
+          <h2 class="mt-2 text-sm tracking-[0.16em] text-zinc-500 md:text-base">
+            家族で住む管理人がそばにいる、女性ソロも歓迎の林間オートサイト
           </h2>
           <p class="mt-5 text-sm leading-loose text-zinc-600 md:text-base">
             おいらが家族と隣接地に住んでいる、管理人常駐のキャンプ場です。<br />
@@ -368,8 +396,11 @@ const plans: Array<{
       <div class="grid items-center gap-10 md:grid-cols-2 md:gap-16">
         <div class="order-last md:order-none">
           <p class="text-xs tracking-[0.32em] text-zinc-400">HONEST FOREST</p>
-          <h2 class="mt-4 text-2xl font-semibold leading-snug text-zinc-800 md:text-3xl">
-            ありのままの自然を、<br />そのままに。
+          <p class="mt-4 text-2xl font-semibold leading-snug text-zinc-800 md:text-3xl">
+            整えすぎず、けど、手は入っている。
+          </p>
+          <h2 class="mt-2 text-sm tracking-[0.16em] text-zinc-500 md:text-base">
+            里山の地形を活かした、水洗トイレ完備の通年営業キャンプ場
           </h2>
           <p class="mt-5 text-sm leading-loose text-zinc-600 md:text-base">
             地面は土で、夜は暗く、虫も当たり前に暮らしています。<br />
@@ -416,8 +447,11 @@ const plans: Array<{
     <div class="relative z-10 mx-auto max-w-6xl px-6 md:px-10">
       <div class="max-w-2xl">
         <p class="text-xs tracking-[0.32em] text-zinc-400">IN THE FOREST</p>
-        <h2 class="mt-4 text-3xl font-semibold leading-snug text-white md:text-4xl">
+        <p class="mt-4 text-3xl font-semibold leading-snug text-white md:text-4xl">
           森が、ちょうどよくしてくれる
+        </p>
+        <h2 class="mt-2 text-sm tracking-[0.16em] text-zinc-300 md:text-base">
+          夏は木陰、冬は風よけ。ハンモックを掛けやすい林間サイト
         </h2>
         <p class="mt-5 text-sm leading-loose text-zinc-200 md:text-base">
           高い木が強い風をいなして、地面はおだやか。<br />
@@ -455,8 +489,11 @@ const plans: Array<{
         </div>
         <div>
           <p class="text-xs tracking-[0.32em] text-zinc-400">DRAFT BEER</p>
-          <h2 class="mt-4 text-2xl font-semibold leading-snug text-zinc-800 md:text-3xl">
+          <p class="mt-4 text-2xl font-semibold leading-snug text-zinc-800 md:text-3xl">
             お気に入りのカップで、生ビールを
+          </p>
+          <h2 class="mt-2 text-sm tracking-[0.16em] text-zinc-500 md:text-base">
+            売店のサーバーから量り売り。生ビールが飲めるキャンプ場
           </h2>
           <p class="mt-5 text-sm leading-loose text-zinc-600 md:text-base">
             キリン一番搾り、または晴れ風。1グラム1円の量り売り。<br />
@@ -478,7 +515,10 @@ const plans: Array<{
   <section id="plans" class="py-20 md:py-28 bg-[#f4f5f2]">
     <div class="mx-auto max-w-6xl px-6 md:px-10">
       <p class="text-xs tracking-[0.32em] text-zinc-400">PLAN</p>
-      <h2 class="mt-3 text-2xl font-semibold text-zinc-800 md:text-3xl">プランを選ぶ</h2>
+      <p class="mt-3 text-2xl font-semibold text-zinc-800 md:text-3xl">プランを選ぶ</p>
+      <h2 class="mt-2 text-sm tracking-[0.16em] text-zinc-500 md:text-base">
+        キャンププラン一覧。1組限定の貸切ドッグランサイトあり
+      </h2>
 
       <div class="mt-10 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
         {plans.map((plan) => (
