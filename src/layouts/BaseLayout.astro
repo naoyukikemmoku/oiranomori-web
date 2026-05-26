@@ -1,11 +1,58 @@
----
+﻿---
 import "../styles/global.css";
 import Footer from "../components/Footer.astro";
 
 const {
   title = "おいらの森",
   description = "栃木県那須烏山の里山にある『里山パークおいらの森』。100年先の森を育てながら、森で遊び、森に泊まる体験型キャンプ場です。",
+  noindex = false,
+  ogImage = "https://oiranomori.jp/images/lp/hero.jpg",
+  lastUpdated,
 } = Astro.props;
+
+const BASE_URL = "https://oiranomori.jp";
+const breadcrumbName = title.includes(" | ") ? title.split(" | ")[0].trim() : title;
+
+const segmentLabels: Record<string, string> = {
+  access:              "アクセス",
+  about:               "運営会社・関連組織",
+  checkout:            "チェックアウト連絡",
+  contact:             "お問い合わせ",
+  deep:                "ディープフォレスト",
+  "deep-guide":        "ディープフォレスト 利用案内",
+  faq:                 "よくある質問",
+  firewood:            "こだわりの薪販売",
+  "light-guide":       "ライトフォレスト 利用案内",
+  map:                 "場内・周辺マップ",
+  media:               "メディア・ロケ地・団体貸し切り",
+  news:                "お知らせ",
+  now:                 "森のいま",
+  oiras:               "OIRAS",
+  page:                "バックナンバー",
+  passport:            "年間パスポート・回数券",
+  policy:              "ご利用のルール",
+  rental:              "レンタル",
+  "reservation-guide": "予約ガイド",
+  residents:           "森の住人",
+  shop:                "売店",
+  thanks:              "完了",
+};
+
+const pathSegments = Astro.url.pathname.split("/").filter(Boolean);
+
+const breadcrumbJson = pathSegments.length > 0 ? JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "里山パークおいらの森", "item": BASE_URL },
+    ...pathSegments.map((seg, i) => {
+      const isLast = i === pathSegments.length - 1;
+      const cumPath = "/" + pathSegments.slice(0, i + 1).join("/") + "/";
+      const name = isLast ? breadcrumbName : (segmentLabels[seg] ?? seg);
+      return { "@type": "ListItem", "position": i + 2, "name": name, "item": BASE_URL + cumPath };
+    }),
+  ],
+}) : null;
 ---
 
 <!doctype html>
@@ -22,6 +69,22 @@ const {
       rel="stylesheet"
     />
     <title>{title}</title>
+    <!-- OGP -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description ?? ""} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:site_name" content="Satoyama Park Oira no Mori" />
+    <meta property="og:locale" content="ja_JP" />
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@oiranomori" />
+    <meta name="twitter:image" content={ogImage} />
+    <!-- canonical -->
+    <link rel="canonical" href={Astro.url.href} />
+    {noindex && <meta name="robots" content="noindex,nofollow" />}
+    <!-- BreadcrumbList -->
+    {breadcrumbJson && <script is:inline type="application/ld+json" set:html={breadcrumbJson} />}
     <slot name="head" />
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-74NDHG8YJ7"></script>
@@ -36,6 +99,6 @@ const {
   <body>
     <slot />
 
-    <Footer />
+    <Footer lastUpdated={lastUpdated} />
   </body>
 </html>

@@ -1,0 +1,424 @@
+================================================================
+【おいらの森 E-E-A-T 分析レポート】
+分析実施日：2026-05-01
+対象URL：https://oiranomori.jp
+================================================================
+
+## ■ SECTION 1：サイト全体分析
+
+### 総評
+「経験（Experience）」「専門性（Expertise）」は firewood・residents・deep で強いシグナルを持つ。
+一方「権威性（Authoritativeness）」は外部言及の露出設計が弱く、
+「信頼性（Trust）」は特定商取引法表記の欠如・著者構造化データ未実装が主な課題。
+技術的な基盤（canonical・BreadcrumbList・FAQPage JSON-LD・GA4）は
+整っているため、コンテンツ・構造化データの整備で E-E-A-T は大きく改善できる状態。
+
+### E-E-A-T 評価サマリー
+| 要素 | 現状評価 | 主な根拠 |
+|---|---|---|
+| Experience（経験） | ★★★★☆ | residents の一人称体験談・firewood の現場プロセス・deep の情緒的体験は強い。おかみパートのみ薄い |
+| Expertise（専門性） | ★★★★☆ | 林業家としての薪知識（含水率・樹種特性）・气象API実装・フィールド固有情報が豊富。公的資格・認定情報の記述はなし |
+| Authoritativeness（権威性） | ★★☆☆☆ | テレビ東京ロケ地情報あり（deep内に埋もれている）。メディア掲載専用ページなし。Organization/Person 構造化データ未実装 |
+| Trust（信頼性） | ★★★☆☆ | 利用規約・プライバシーポリシー・キャンセルポリシー・法人情報あり。特定商取引法表記なし・更新日未表示・X Cardメタタグなし |
+
+---
+
+### 現状の問題点（全体）
+
+1. 特定商取引法表記が未実装（policy/index.astro に該当セクションなし）
+   → 薪販売・レンタル・年間パスポート等の決済が発生しているため法的リスクあり（推測）
+
+2. Person 構造化データが未実装
+   → residents/index.astro に著者プロフィールはあるが JSON-LD なし
+
+3. Organization 構造化データが未実装
+   → about/index.astro に法人情報はあるが JSON-LD なし
+
+4. og:image が全ページ固定（BaseLayout.astro L73 で hero.jpg を参照）
+   → SNS シェア時に全ページ同一画像になる
+
+5. Twitter Card（X Card）メタタグが未実装
+   → BaseLayout.astro に og: のみで twitter: がない
+
+6. 更新日・公開日が各ページに非表示
+   → sitemap.xml の lastmod は存在するが、ページ本文への表示なし
+   → policy/index.astro のみ「最終更新：2026年4月」と記載済み（これが唯一の例外）
+
+7. テレビ東京ロケ地情報が目立たない
+   → deep/index.astro の Concept セクション末尾に一行テキストのみ
+   → 権威性の最大シグナルなのに活用されていない
+
+8. news 個別記事の Article/BlogPosting 構造化データが未実装（未確認：microCMS側）
+
+9. sitemap.xml が手書きと @astrojs/sitemap（astro.config.mjs L9）の二重管理状態
+   → public/sitemap.xml（手動・20URL）と ビルド時自動生成が競合している可能性
+
+10. checkout・thanks 系ページに noindex 設定があるか未確認
+    → sitemap.xml に /checkout/ が含まれており要確認
+
+---
+
+### 改善提案（全体）優先度順
+
+🔴 HIGH：特定商取引法表記の追加（policy ページまたは about ページへ）
+  理由：薪・レンタル・年間パスポートの BtoC 販売がある。法令対応かつ Trust シグナル向上
+
+🔴 HIGH：Person 構造化データを residents/index.astro に実装
+  理由：著者情報の機械可読化は E-E-A-T の中核。実装コストが低い
+
+🔴 HIGH：og:image をページごとに最適化（各 LpLayout・PageLayout で props を追加）
+  理由：SNS 拡散時の CTR・信頼感に直結。現状は全ページ同一
+
+🟡 MID：Twitter（X）Card メタタグの追加（BaseLayout.astro）
+  理由：og: と内容は同じで良い。twitter:card / twitter:site / twitter:image の3行追加
+
+🟡 MID：Organization 構造化データを about/index.astro または BaseLayout.astro に実装
+  理由：法人名・住所・TEL の構造化が権威性に貢献
+
+🟡 MID：テレビ東京ロケ地情報を専用セクションまたは独立バッジとして露出
+  理由：現状は deep/index.astro の Concept 末尾に6ptグレーテキスト1行のみ
+
+🟡 MID：各ページに「最終更新日」を表示（Freshness シグナル）
+  理由：policy ページのみ更新日あり。他19ページには未表示
+
+🟢 LOW：sitemap.xml を @astrojs/sitemap の自動生成に一本化（public/sitemap.xml 削除）
+  理由：手動管理は更新漏れリスク。自動生成に任せることで news 個別記事も自動収録
+
+🟢 LOW：Product 構造化データを firewood/index.astro に追加
+  理由：薪の種類・価格が詳細に記述されており、Product スキーマと親和性が高い
+
+🟢 LOW：checkout・thanks ページへの noindex 設定確認・追加
+  理由：現状 sitemap.xml に /checkout/ が含まれており、インデックス管理が必要
+
+================================================================
+## ■ SECTION 2：ページ別分析
+================================================================
+
+--- ページ：/ (トップページ) ---
+ファイル：src/pages/index.astro
+
+現状の強み：
+- LocalBusiness + BreadcrumbList JSON-LD 実装済み
+- 焚火セクション・アーリーチェックイン無料の訴求
+- プラン4種のビジュアル一覧
+- GA4 実装済み（BaseLayout）
+
+現状の問題点：
+- title に「100年の森を育てるキャンプ場」が含まれるが、
+  直後の h1 下 <p> に「100年の森作りを体験するキャンプ場」があった
+  ※ 本日のトーンチューニングで削除済み
+- og:image が固定（hero.jpg）
+- 著者・運営者情報への導線なし（residents リンクなし）
+
+E-E-A-T 改善提案：
+🟡 MID：Hero セクションに residents または about へのリンクを追加（著者導線）
+🟢 LOW：og:image をページ固有の hero.jpg パスで明示
+
+---
+
+--- ページ：/residents/ (森の住人) ---
+ファイル：src/pages/residents/index.astro
+
+現状の強み：
+- おいらパートの一人称体験談が豊富（林業経歴・日常管理・キャラクター）
+- 現場写真（oira.webp・okami.webp）あり
+- note 外部リンクあり（「俺の山なんだよ。」）
+- 「森で、待っています。」の締めは Experience の核
+
+現状の問題点：
+- Person 構造化データ（JSON-LD）なし
+- おかみパートが3文のみ・体験談なし（Experience シグナルが非対称）
+- 各コンテンツページから residents へのリンクがほぼない
+- Schema.org の @type: Person に birthDate・jobTitle・knowsAbout 等が使える状態
+
+E-E-A-T 改善提案：
+🔴 HIGH：Person 構造化データを追加
+  例：{ "@type": "Person", "name": "ナオ（橋本尚行）", "jobTitle": "林業家・キャンプ場オーナー",
+       "worksFor": { "@type": "Organization", "name": "里山パークおいらの森" } }
+🟡 MID：おかみパートの体験談を追記（現状 Expertise・Experience シグナルが弱い）
+🟢 LOW：firewood / deep / oiras ページから residents へのリンクを追加
+
+---
+
+--- ページ：/firewood/ (薪販売) ---
+ファイル：src/pages/firewood/index.astro
+
+現状の強み：
+- 樹種別特性（火持ち・火力・着火性・おき火）の詳細データ ← Expertise の核
+- 含水率15%以下・全数チェックの記述 ← 一次情報・定量データ
+- 薪ができるまでのプロセス（伐採→玉切り→薪割り→乾燥）
+- 失敗しない黄金比率（クヌギ60%・中太丸枝20%・スギ20%）← 独自の一次情報
+- 「副産物ではない」という差別化フレーム
+
+現状の問題点：
+- Product 構造化データなし（樹種・価格・説明が揃っているのに未活用）
+- 林業家としての公的資格・認定情報の記述なし
+- og:image が固定（ページ固有の bonfire.jpg が使えるのに未設定）
+
+E-E-A-T 改善提案：
+🟡 MID：Product 構造化データを主要樹種に追加
+🟢 LOW：og:image を bonfire.jpg に設定
+🟢 LOW：林業士・森林組合等の外部認定情報があれば追記（Authoritativeness 向上）
+
+---
+
+--- ページ：/deep/ (ディープフォレスト LP) ---
+ファイル：src/pages/deep/index.astro
+
+現状の強み：
+- 4つの情緒的体験セクション（写真＋描写）← Experience の強いシグナル
+- 「この雰囲気は、いかないとわからない。」← 断定・一人称で強い
+- アーリーチェックイン無料の理由を語るセクション
+- テレビ東京ロケ地情報あり（deep/index.astro Concept 末尾）
+
+現状の問題点：
+- テレビ東京ロケ地情報（Season6 #127/#128）が小さい
+  `<p class="mt-4 text-xs text-zinc-600">` のサイズで埋もれている
+- og:image が固定（ページ固有の deep_hero.jpg が使えるのに未設定）
+- 著者情報（おいらが整備した森）として residents へのリンクなし
+
+E-E-A-T 改善提案：
+🟡 MID：テレビ東京ロケ地情報を視認できるサイズ・位置に引き上げ
+  例：バッジ or 別セクション「メディア掲載」として切り出す
+🟢 LOW：og:image を deep_hero.jpg のフルパスで設定
+
+---
+
+--- ページ：/deep-guide/ (ディープフォレスト利用案内) ---
+ファイル：src/pages/deep-guide/index.astro
+
+現状の強み：
+- 一人称（おいら）による利用案内の書き分け（Step 4 適用済み）
+- 設備一覧に ● / ○ による可視化
+- 基本4鉄則の明文化
+
+現状の問題点：
+- 更新日なし
+- 場内マップ画像の onerror 処理あり（画像が存在しない場合を考慮）
+  → 実際に /images/deep-field-map.jpg が public/ に存在するか要確認
+  ※ public/ には deep-field-map.jpg が存在することを確認済み
+
+E-E-A-T 改善提案：
+🟢 LOW：更新日の追加（フッターまたはヘッダーに小テキストで）
+
+---
+
+--- ページ：/light-guide/ (ライトフォレスト利用案内) ---
+ファイル：src/pages/light-guide/index.astro
+
+現状の強み：
+- タイムライン形式の時間帯別案内（Step 4 適用済み）
+- 設備一覧・サイト種別・サイズガイドが詳細
+- マナー違反・法令違反の分類（Step 4 適用済み）
+
+現状の問題点：
+- 更新日なし
+- 「おいらが家族と森の中に住んでいる」という Resident の Experience は
+  ヘッダーに記述あるが、residents ページへの誘導がない
+
+E-E-A-T 改善提案：
+🟢 LOW：ヘッダーの「おいらが家族と森の中に住んでいる」に residents ページへのリンクを追加
+
+---
+
+--- ページ：/access/ (アクセス) ---
+ファイル：src/pages/access/index.astro
+
+現状の強み：
+- 所要時間4地点の具体的なデータ
+- JR烏山線の注意事項（ICカード不可・整理券等）← 一次情報・差別化
+- 電話番号・緊急連絡先の配置
+- オーナー目線のカーナビ事情（Step 4 適用済み）
+
+現状の問題点：
+- Google Map の埋め込みなし（検索誘導のみ）
+- 実際の地図画像・ストリートビューへの誘導がない
+- WP 時代の旧ドメイン画像 URL が `<img src="http://oiranomori.jp/wp-content/...">` で残存
+  → public/_redirects による redirect 処理があれば問題ないが要確認
+
+E-E-A-T 改善提案：
+🟡 MID：旧 WP ドメインの画像 URL を public/ のローカル画像に差し替え
+  （src/pages/access/index.astro L64・L136・L143）
+🟢 LOW：Google Map 埋め込みの検討（map ページへの誘導でも可）
+
+---
+
+--- ページ：/oiras/ (オイラーズ) ---
+ファイル：src/pages/oiras/index.astro
+
+現状の強み：
+- Missions の3本柱（FOREST/FARM/OPERATION）が具体的
+- 報酬体系（1,000pt/h）の明確な記述
+- Safety & Working Style の修正済み（Step 5 適用済み）
+- ジョインフロー3ステップが明確
+
+現状の問題点：
+- 採用・参加ページとして活用できる JobPosting 構造化データなし（推測）
+- インターンシップ受入れ情報が独立ページにない（外部からの発見性低）
+
+E-E-A-T 改善提案：
+🟢 LOW：インターンシップ情報に EducationalOccupationalProgram または
+  JobPosting 構造化データの追加を検討
+
+---
+
+--- ページ：/about/ (運営会社・関連組織) ---
+ファイル：src/pages/about/index.astro
+
+現状の強み：
+- 法人名・代表者・設立日・所在地・取引銀行の記述あり
+- 関連会社（やつだファーム）・関連団体（やつびと100年の森）の記述あり
+- 会社 URL への外部リンクあり
+
+現状の問題点：
+- Organization 構造化データ（JSON-LD）なし
+- 法人番号の記述なし（Trust シグナルとして有効）
+- 特定商取引法表記への言及・リンクなし
+- 代表者（橋本佳子）と「おいら（ナオ）」の関係性がページ内で不明（別人？同一人物？）
+
+E-E-A-T 改善提案：
+🔴 HIGH：特定商取引法表記への誘導または about ページへの追記
+🟡 MID：Organization 構造化データを追加
+🟢 LOW：法人番号の追加（国税庁法人番号公表サイトからの引用）
+
+---
+
+--- ページ：/faq/ (よくある質問) ---
+ファイル：src/pages/faq/index.astro
+
+現状の強み：
+- FAQPage JSON-LD 実装済み（mainEntity に40項目以上）
+- カテゴリ別 anchor ナビゲーション
+- 各 FAQ から関連ページへの内部リンク
+
+現状の問題点：
+- 更新日なし
+- 「虫はいます。森ならではの昆虫に出会えるのが魅力のひとつです。」
+  → これは Experience シグナルの優れた記述だが、写真がない
+
+E-E-A-T 改善提案：
+🟢 LOW：更新日の追加
+
+---
+
+--- ページ：/reservation-guide/ (予約ガイド) ---
+ファイル：src/pages/reservation-guide/index.astro
+
+現状の強み：
+- 予約手順5ステップ
+- 会員制度・ポイント体系の説明
+- アーリーチェックイン無料の明記
+
+現状の問題点：
+- 「準備が整いましたら」という CTA（L285）がやや他人行儀
+- 更新日なし
+
+E-E-A-T 改善提案：
+🟢 LOW：更新日の追加
+
+---
+
+--- ページ：/policy/ (ご利用のルール) ---
+ファイル：src/pages/policy/index.astro
+
+現状の強み：
+- 利用規約（第1〜7条）・プライバシーポリシー・キャンセルポリシーが明文化
+- 更新日の記載あり（「最終更新：2026年4月」）← サイト内で唯一
+- Google Analytics の使用明記
+
+現状の問題点：
+- 特定商取引法に基づく表記が存在しない
+  → 薪・レンタル品・年間パスポートの BtoC 取引があるため法的に必要な可能性
+- プライバシーポリシーの「運営者」欄（L221-223）に
+  住所「栃木県那須烏山市」のみで番地・法人名の記述が薄い
+
+E-E-A-T 改善提案：
+🔴 HIGH：特定商取引法に基づく表記を policy ページに追加
+  最低限の記載項目：事業者名・代表者名・所在地・電話番号・
+  メールアドレス・価格表示・支払い方法・引渡し時期・返品について
+
+---
+
+--- ページ：/now/ (森のいま) ---
+ファイル：src/pages/now/index.astro
+
+現状の強み：
+- 気象庁 API（アメダス・週間予報・衛星画像）のリアルタイム取得
+- 乾燥注意報＋強風時の「林野火災リスク判定」ロジック ← 現場経験に基づく独自実装
+- キャンプ来場前の一次情報として高い Experience・Expertise シグナル
+
+現状の問題点：
+- ページとして Google 検索にインデックスされるか不明（動的コンテンツ）
+- ページとして著者情報がなく、誰が作ったページか不明
+
+E-E-A-T 改善提案：
+🟢 LOW：ページヘッダーに「おいら監修 / 現地気象データ」等の著者コンテキストを追加
+
+---
+
+--- ページ：/news/ (お知らせ) ---
+ファイル：src/pages/news/index.astro（未読）/ microCMS連携
+
+現状：microCMS から取得する動的コンテンツのため詳細未確認。
+推測として、個別記事に Article/BlogPosting 構造化データ・著者情報・
+公開日が実装されているか要確認。
+
+E-E-A-T 改善提案：
+🟡 MID：個別記事ページに Article JSON-LD（author・datePublished・dateModified）を追加
+
+---
+
+--- ページ：/shop/, /rental/, /passport/ (売店・レンタル・パスポート) ---
+ファイル：各 src/pages/*/index.astro
+
+現状の強み：
+- 取り扱い商品・価格・利用方法が詳細
+- rental の返却ルールが明確
+
+現状の問題点：
+- 機能ページのため E-E-A-T の直接的影響は低いが、
+  Product 構造化データの追加で検索結果リッチ化の余地あり
+
+E-E-A-T 改善提案：
+🟢 LOW：各ページに Product または Service 構造化データの追加を検討
+
+---
+
+--- ページ：/map/ ---
+ファイル：src/pages/map/index.astro（未読）
+
+現状：未読のため分析未実施。Google Maps 連携ページと推測。
+
+---
+
+--- ページ：/contact/, /checkout/ ---
+現状：問い合わせフォーム・チェックアウト連絡フォームのため E-E-A-T 対象外。
+/checkout/ は sitemap.xml に含まれているため noindex 設定を推奨。
+
+================================================================
+## ■ SECTION 3：優先アクションリスト（全体統合）
+================================================================
+
+### 今すぐやるべきこと（コード変更なし・テキスト・設定変更のみ）
+
+1. 特定商取引法表記を policy/index.astro に追加
+   必要事項：事業者名（株式会社橋本商事）・代表者名・所在地（番地まで）・
+   TEL・メール・サービス価格・支払い方法（現地決済）・引渡し時期・
+   返品不可の旨
+
+2. policy/index.astro の「運営者」欄（プライバシーポリシー末尾）を充実
+   現状「里山パークおいらの森 / 栃木県那須烏山市」のみ
+   → 法人名・番地・電話番号・メールアドレスを追加
+
+3. about/index.astro に法人番号を追記
+   国税庁法人番号公表サイト（https://www.houjin-bangou.nta.go.jp/）で確認の上追記
+
+4. deep/index.astro のテレビ東京ロケ地情報を視認できるサイズに変更
+   現状：`<p class="mt-4 text-xs text-zinc-600">`（6ptグレー）
+   提案：専用バッジまたは Media セクションに格上げ
+
+---
+
+### 次にやること（コード変更が必要・工数小）
+
+1. BaseLayout.astro に Twitter（X）Card メタタグを追加（3行）

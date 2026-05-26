@@ -1,0 +1,1641 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/Header.astro";
+import spotsRaw from "../../data/spots.json";
+
+const API_KEY = import.meta.env.PUBLIC_GMAPS_API_KEY ?? "";
+const MAP_ID  = import.meta.env.PUBLIC_GMAPS_MAP_ID  ?? "";
+
+const SURROUND_CATS = [
+  { key: "food",        label: "食事" },
+  { key: "bath",        label: "お風呂" },
+  { key: "shopping",    label: "買い物" },
+  { key: "sightseeing", label: "観光" },
+  { key: "emergency",   label: "緊急・医療" },
+] as const;
+
+type Spot        = { id: string; name: string; lat: number; lng: number; comment: string; status?: string };
+type CampSite    = { id: string; name: string; lat: number; lng: number; desc: string; size?: string };
+type FacilityPin = { id: string; name: string; lat: number; lng: number; desc: string };
+
+const homeSpot = (spotsRaw as any).home as { id: string; name: string; lat: number; lng: number; comment: string } | undefined;
+
+// Surround spots
+const surroundSpots: Record<string, Spot[]> = {};
+for (const cat of SURROUND_CATS) {
+  const raw = ((spotsRaw as any)[cat.key] as Spot[]) ?? [];
+  surroundSpots[cat.key] = raw.filter((s) => s.name !== "" && s.lat !== 0 && s.lng !== 0);
+}
+
+// Camp sites
+const autoSites  = ((spotsRaw as any).auto  as CampSite[])  ?? [];
+const blockSites = ((spotsRaw as any).block as CampSite[])  ?? [];
+const soloSites  = ((spotsRaw as any).solo  as CampSite[])  ?? [];
+const lightFacilities = ((spotsRaw as any).light as FacilityPin[]) ?? [];
+const powerFacilities = ((spotsRaw as any).facility_power as FacilityPin[]) ?? [];
+
+const surroundJson    = JSON.stringify(surroundSpots);
+const homeJson        = JSON.stringify(homeSpot ?? null);
+const autoJson        = JSON.stringify(autoSites);
+const blockJson       = JSON.stringify(blockSites);
+const soloJson        = JSON.stringify(soloSites);
+const lightFacJson    = JSON.stringify(lightFacilities);
+const powerFacJson    = JSON.stringify(powerFacilities);
+---
+
+<BaseLayout
+  title="場内・周辺マップ | 里山パークおいらの森"
+  description="場内施設マップと周辺スポットのご案内。食事・お風呂・買い物・観光・緊急時の医療機関など、キャンプ前に確認しておきたい情報をまとめました。"
+  lastUpdated="2026年5月"
+>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json">{JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": ["TouristAttraction", "Place"],
+      "name": "里山パークおいらの森",
+      "description": "栃木県那須烏山市の里山キャンプ場。場内施設マップと周辺スポット（食事・温泉・買い物・観光）を提供。",
+      "url": "https://oiranomori.jp/map/",
+      "hasMap": "https://oiranomori.jp/map/",
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 36.6581,
+        "longitude": 140.1376
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "postalCode": "321-0525",
+        "addressRegion": "栃木県",
+        "addressLocality": "那須烏山市",
+        "streetAddress": "福岡1047"
+      },
+      "containedInPlace": {
+        "@type": "AdministrativeArea",
+        "name": "那須烏山市"
+      }
+    })}</script>
+  </Fragment>
+
+  <Header />
+  <h1 class="sr-only">場内・周辺マップ | 里山パークおいらの森</h1>
+
+  <main id="map-main">
+
+    <!-- タブバー -->
+    <div id="tab-row">
+      <span class="map-label">Map</span>
+      <div id="tab-scroll">
+        <!-- 上位2択 -->
+        <button type="button" data-view="camp" class="view-btn">場内マップ</button>
+        <button type="button" data-view="surround" class="view-btn">周辺案内</button>
+        <!-- 周辺案内サブタブ（周辺案内選択時のみ表示） -->
+        <span id="surround-divider" class="tab-divider">|</span>
+        {SURROUND_CATS.map((cat) => (
+          <button type="button" data-tab={cat.key} class="tab-btn surround-tab">
+            {cat.label}
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <!-- マップ + パネル -->
+    <div id="map-list-area">
+
+      <!-- 場内マップ: PCサイドパネル -->
+      <div id="camp-panel">
+        <div id="camp-panel-scroll">
+          <label class="cp-row cp-all">
+            <input type="checkbox" id="chk-all" checked /> 全サイト
+          </label>
+          <hr class="cp-sep" />
+
+          <div class="cp-group">
+            <label class="cp-row cp-parent">
+              <input type="checkbox" class="chk-cat" data-cat="auto" checked /> オートサイト
+            </label>
+            <div class="cp-children" id="chk-auto-children">
+              {autoSites.map((s) => (
+                <label class="cp-child">
+                  <input type="checkbox" class="chk-site" data-cat="auto" data-id={s.id} checked />
+                  {s.id}
+                </label>
+              ))}
+            </div>
+          </div>
+          <hr class="cp-sep" />
+
+          <div class="cp-group">
+            <label class="cp-row cp-parent">
+              <input type="checkbox" class="chk-cat" data-cat="block" checked /> 区画サイト
+            </label>
+            <div class="cp-children" id="chk-block-children">
+              {blockSites.map((s) => (
+                <label class="cp-child">
+                  <input type="checkbox" class="chk-site" data-cat="block" data-id={s.id} checked />
+                  {s.id}
+                </label>
+              ))}
+            </div>
+          </div>
+          <hr class="cp-sep" />
+
+          <div class="cp-group">
+            <label class="cp-row cp-parent">
+              <input type="checkbox" class="chk-cat" data-cat="solo" checked /> ソロ区画
+            </label>
+            <div class="cp-children" id="chk-solo-children">
+              {soloSites.map((s) => (
+                <label class="cp-child">
+                  <input type="checkbox" class="chk-site" data-cat="solo" data-id={s.id} checked />
+                  {s.id}
+                </label>
+              ))}
+            </div>
+          </div>
+          <hr class="cp-sep" />
+
+          <div class="cp-group">
+            <label class="cp-row cp-parent">
+              <input type="checkbox" class="chk-cat" data-cat="facility" checked /> 設備
+            </label>
+            <div class="cp-children" id="chk-facility-children">
+              <label class="cp-child">
+                <input type="checkbox" class="chk-fac" data-fac="light" checked /> トイレ・流し・受付
+              </label>
+              <label class="cp-child">
+                <input type="checkbox" class="chk-fac" data-fac="power" checked /> コンセント
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PC toggle for camp panel -->
+      <button id="camp-panel-toggle" aria-label="パネルを切り替え">
+        <span id="camp-panel-toggle-icon">◀</span>
+      </button>
+
+      <!-- マップ -->
+      <div id="map-wrapper">
+        <div id="map-skeleton" aria-hidden="true">
+          <svg class="spin-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+          </svg>
+          <span>読み込み中</span>
+        </div>
+        <div id="map-error">
+          <p>マップの読み込みに失敗しました</p>
+        </div>
+        <div id="map"></div>
+      </div>
+
+      <!-- Mobile: ハンドルバー -->
+      <div id="mobile-handle" role="button" aria-label="パネルを切り替え" tabindex="0">
+        <div class="handle-bar"></div>
+        <span id="handle-icon" aria-hidden="true">∧</span>
+      </div>
+
+      <!-- PC: 境界トグルボタン（周辺案内リスト用） -->
+      <button id="pc-toggle" aria-label="リストパネルを切り替え">
+        <span id="pc-toggle-icon">◀</span>
+      </button>
+
+      <!-- リストパネル（周辺案内用） -->
+      <div id="list-panel" role="region" aria-label="スポット一覧">
+        <div id="list-scroll">
+          <div id="no-data-msg">このカテゴリは準備中です。</div>
+          <ul id="spot-list" role="list"></ul>
+        </div>
+      </div>
+
+      <!-- Mobile: 場内マップ チェックボックスドロワー -->
+      <div id="camp-drawer">
+        <div id="camp-drawer-scroll">
+          <!-- JS でクローンを注入 -->
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+</BaseLayout>
+
+<style is:global>
+/* ═══ Reset / global ═══ */
+#map-main *,
+#map-main *::before,
+#map-main *::after { box-sizing: border-box; }
+
+/* ═══ Main ═══ */
+#map-main {
+  height: 100vh;
+  height: 100dvh;
+  padding-top: var(--header-offset);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #f4f5f2;
+}
+
+/* ═══ Tab row ═══ */
+#tab-row {
+  flex-shrink: 0;
+  display: flex;
+  align-items: stretch;
+  border-bottom: 1px solid #d4d4d4;
+  background: #f4f5f2;
+}
+.map-label {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  color: #a0a0a0;
+  text-transform: uppercase;
+  border-right: 1px solid #d4d4d4;
+}
+#tab-scroll {
+  display: flex;
+  align-items: stretch;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+#tab-scroll::-webkit-scrollbar { display: none; }
+
+.view-btn {
+  flex-shrink: 0;
+  padding: 10px 14px;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  color: #71717a;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.15s;
+}
+.view-btn:hover { color: #1a2421; }
+.view-btn.is-active { color: #2d3a30; font-weight: 700; }
+.view-btn.is-active::after {
+  content: "";
+  position: absolute;
+  bottom: -1px; left: 0; right: 0;
+  height: 2px;
+  background: #2d3a30;
+}
+
+.tab-divider {
+  align-self: center;
+  color: #d4d4d4;
+  padding: 0 2px;
+  font-size: 12px;
+}
+
+.tab-btn {
+  flex-shrink: 0;
+  padding: 10px 13px;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  color: #71717a;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.15s;
+}
+.tab-btn:hover { color: #1a2421; }
+.tab-btn.is-active { color: #2d3a30; font-weight: 600; }
+.tab-btn.is-active::after {
+  content: "";
+  position: absolute;
+  bottom: -1px; left: 0; right: 0;
+  height: 2px;
+  background: #2d3a30;
+}
+
+/* ═══ Map+Panel area ═══ */
+#map-list-area {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  position: relative;
+}
+
+/* ═══ Camp panel (PC sidebar) ═══ */
+#camp-panel {
+  display: none;
+  flex-shrink: 0;
+  width: 220px;
+  background: #f4f5f2;
+  border-right: 1px solid #d4d4d4;
+  overflow: hidden;
+  transition: width 0.25s ease, opacity 0.2s ease;
+}
+#camp-panel.panel-hidden-pc {
+  width: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+#camp-panel-scroll {
+  height: 100%;
+  overflow-y: auto;
+  padding: 12px 10px 20px;
+}
+
+/* Camp panel toggle (PC only) */
+#camp-panel-toggle {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 18px;
+  background: #e8e8e4;
+  border: none;
+  border-left: 1px solid #d4d4d4;
+  border-right: 1px solid #d4d4d4;
+  color: #71717a;
+  cursor: pointer;
+  font-size: 9px;
+  transition: background 0.15s, color 0.15s;
+  z-index: 2;
+}
+#camp-panel-toggle:hover { background: #d8d8d4; color: #1a2421; }
+
+/* Checkbox panel styles */
+.cp-all {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #1a2421;
+  cursor: pointer;
+  padding: 4px 2px;
+}
+.cp-sep {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 8px 0;
+}
+.cp-group { margin-bottom: 2px; }
+.cp-parent {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #2d3a30;
+  cursor: pointer;
+  padding: 3px 2px;
+}
+.cp-children {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+  padding: 4px 4px 4px 18px;
+}
+.cp-child {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  color: #555;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.cp-row input[type="checkbox"],
+.cp-child input[type="checkbox"] {
+  cursor: pointer;
+  accent-color: #2d3a30;
+  width: 13px;
+  height: 13px;
+}
+
+/* ═══ Map wrapper ═══ */
+#map-wrapper {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  background: #d1d5db;
+}
+#map { position: absolute; inset: 0; }
+
+#map-skeleton {
+  position: absolute; inset: 0; z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #e0e0dc;
+  color: #9ca3af;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+}
+.spin-icon { animation: spin 1.2s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+#map-error {
+  position: absolute; inset: 0; z-index: 1;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: #1a2421;
+  color: #c0c0c0;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+}
+
+/* ═══ Mobile handle ═══ */
+#mobile-handle {
+  flex-shrink: 0;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 7px 0 5px;
+  background: #e8e8e4;
+  border-top: 1px solid #d4d4d4;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s;
+}
+#mobile-handle:hover { background: #dededa; }
+.handle-bar {
+  width: 32px; height: 3px;
+  background: #b0b0a8;
+  border-radius: 2px;
+}
+#handle-icon {
+  font-size: 9px;
+  line-height: 1;
+  color: #9ca3af;
+}
+
+/* ═══ PC toggle (surround list) ═══ */
+#pc-toggle {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 18px;
+  background: #e8e8e4;
+  border: none;
+  border-left: 1px solid #d4d4d4;
+  border-right: 1px solid #d4d4d4;
+  color: #71717a;
+  cursor: pointer;
+  font-size: 9px;
+  transition: background 0.15s, color 0.15s;
+  z-index: 2;
+}
+#pc-toggle:hover { background: #d8d8d4; color: #1a2421; }
+
+/* ═══ List panel (surround) ═══ */
+#list-panel {
+  display: none;
+  overflow: hidden;
+  background: #f4f5f2;
+  transition: height 0.25s ease, opacity 0.2s ease;
+}
+#list-scroll {
+  height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-top: 4px;
+}
+
+#no-data-msg {
+  display: none;
+  padding: 20px;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: #9ca3af;
+}
+
+#spot-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* ─── List item ─── */
+.list-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 13px 18px;
+  border-bottom: 1px solid #e4e4e0;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.12s;
+}
+.list-item:hover { background: #edede9; }
+.list-item.is-selected { background: #e6ede4; }
+.list-item.is-selected::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: #2d3a30;
+}
+.list-item.is-closed {
+  opacity: 0.45;
+  cursor: default;
+  pointer-events: none;
+}
+
+.list-num {
+  flex-shrink: 0;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: #4a5d4e;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+  transition: background 0.12s;
+}
+.list-item.is-closed .list-num { background: #aaa; }
+.list-item.is-selected .list-num { background: #2d3a30; }
+
+.list-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  flex: 1;
+}
+.list-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a2421;
+  line-height: 1.3;
+}
+.list-item.is-closed .list-name { color: #888; }
+.closed-badge {
+  display: inline-block;
+  font-size: 10px;
+  color: #b91c1c;
+  border: 1px solid #b91c1c;
+  padding: 0 4px;
+  line-height: 1.7;
+  align-self: flex-start;
+}
+.list-comment {
+  font-size: 11px;
+  color: #7a7a7a;
+  line-height: 1.5;
+}
+.list-routes {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex-shrink: 0;
+  margin-left: auto;
+  padding-left: 8px;
+  align-self: center;
+}
+.route-btn {
+  font-size: 10px;
+  color: var(--forest-600, #4a7c59);
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 2px 0;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.12s;
+}
+.route-btn:hover { border-bottom-color: var(--forest-600, #4a7c59); }
+
+/* ═══ Mobile camp drawer ═══ */
+#camp-drawer {
+  display: none;
+  flex-shrink: 0;
+  background: #f4f5f2;
+  border-top: 1px solid #d4d4d4;
+  overflow: hidden;
+  transition: height 0.25s ease;
+}
+#camp-drawer-scroll {
+  overflow-y: auto;
+  padding: 10px 12px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  align-items: flex-start;
+}
+
+/* ═══ PC layout (md+) ═══ */
+@media (min-width: 768px) {
+  #map-list-area { flex-direction: row; }
+  #map-wrapper {
+    flex: 1;
+    height: 100% !important;
+    transition: flex 0.25s ease;
+  }
+  #mobile-handle { display: none !important; }
+  #camp-drawer   { display: none !important; }
+
+  #camp-panel {
+    display: flex;
+    flex-direction: column;
+    order: -1;
+    height: 100%;
+  }
+  #camp-panel-toggle {
+    display: flex;
+    order: 0;
+    height: 100%;
+  }
+
+  #pc-toggle {
+    display: flex;
+    height: 100%;
+  }
+  #list-panel {
+    display: block;
+    flex: 0 0 30%;
+    max-width: 360px;
+    height: 100% !important;
+    overflow: hidden;
+    transition: flex-basis 0.25s ease, opacity 0.2s ease;
+    opacity: 1;
+  }
+  #list-panel.panel-hidden-pc {
+    flex: 0 0 0px;
+    opacity: 0;
+    pointer-events: none;
+  }
+  #list-scroll { overflow-y: auto; }
+}
+
+/* ═══ InfoWindow overrides ═══ */
+.gm-style-iw-d { overflow: hidden !important; }
+.gm-style-iw   { padding: 0 !important; }
+.gm-style-iw-c { padding: 12px 14px !important; border-radius: 0 !important; }
+</style>
+
+<script is:inline define:vars={{ API_KEY, MAP_ID, surroundJson, homeJson, autoJson, blockJson, soloJson, lightFacJson, powerFacJson }}>
+  var surroundSpots = JSON.parse(surroundJson);
+  var homeSpot      = JSON.parse(homeJson);
+  var autoSites     = JSON.parse(autoJson);
+  var blockSites    = JSON.parse(blockJson);
+  var soloSites     = JSON.parse(soloJson);
+  var lightFacilities = JSON.parse(lightFacJson);
+  var powerFacilities = JSON.parse(powerFacJson);
+
+  var PIN_COLOR    = "#4a5d4e";
+  var PIN_SELECTED = "#7c4d2a";
+  var PIN_CLOSED   = "#888888";
+  var HOME_COLOR   = "#C8A063";
+  var COLOR_AUTO   = "#488B37";
+  var COLOR_BLOCK  = "#C8A063";
+  var COLOR_SOLO   = "#6B8FA3";
+  var DEFAULT_CENTER = { lat: 36.6399, lng: 140.0684 };
+
+  var gmap           = null;
+  var markers        = [];
+  var campMarkers    = {};
+  var homeMarker     = null;
+  var openInfoWindow = null;
+  var selectedIndex  = null;
+  var listOpen       = true;
+  var campPanelOpen  = true;
+  var currentMode    = "camp";
+  var currentTab     = "food";
+  var lightOverlay   = null;
+
+  // DOM refs
+  var mapListArea, mapWrapperEl, listPanelEl;
+  var mobileHandleEl, handleIconEl, pcToggleEl, pcToggleIconEl;
+  var spotListEl, noDataMsgEl;
+  var campPanelEl, campPanelToggleEl, campPanelToggleIconEl;
+  var campDrawerEl, campDrawerScrollEl;
+
+  // ────────────────────────────────────────────────
+  // Circled number/letter helpers
+  // ────────────────────────────────────────────────
+
+  var CIRCLED_NUMS = ["①","②","③","④","⑤","⑥","⑦","⑧","⑨","⑩",
+    "⑪","⑫","⑬","⑭","⑮","⑯","⑰","⑱","⑲","⑳",
+    "㉑","㉒","㉓","㉔","㉕","㉖","㉗","㉘","㉙","㉚",
+    "㉛","㉜","㉝","㉞","㉟","㊱","㊲","㊳","㊴","㊵"];
+  var CIRCLED_ALPHA = {"A":"Ⓐ","B":"Ⓑ","C":"Ⓒ","D":"Ⓓ","E":"Ⓔ"};
+
+  function circledLabel(id) {
+    var n = parseInt(id, 10);
+    if (!isNaN(n) && n >= 1 && n <= 40) return CIRCLED_NUMS[n - 1];
+    if (CIRCLED_ALPHA[id]) return CIRCLED_ALPHA[id];
+    return id;
+  }
+
+  // ────────────────────────────────────────────────
+  // SVG pin builders
+  // ────────────────────────────────────────────────
+
+  function sitePinSvg(label, color) {
+    var fs = label.length > 2 ? "9" : "12";
+    return '<svg width="28" height="28" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">'
+      + '<circle cx="14" cy="14" r="13" fill="' + color + '" stroke="rgba(255,255,255,0.85)" stroke-width="1.5"/>'
+      + '<text x="14" y="14" text-anchor="middle" dominant-baseline="central"'
+      + ' fill="white" font-family="\'Helvetica Neue\',Arial,sans-serif"'
+      + ' font-weight="700" font-size="' + fs + '">' + label + '</text>'
+      + '</svg>';
+  }
+
+  function makeSitePinEl(id, color) {
+    var el = document.createElement("div");
+    el.style.cssText = "cursor:pointer;transform-origin:center center;"
+      + "transition:transform 0.15s ease,filter 0.15s ease;";
+    el.innerHTML = sitePinSvg(circledLabel(id), color);
+    el._color = color;
+    el._id = id;
+    el._selected = false;
+    el.addEventListener("mouseover", function () {
+      if (!el._selected) {
+        el.style.transform = "scale(1.2)";
+        el.style.filter    = "brightness(0.82)";
+      }
+    });
+    el.addEventListener("mouseout", function () {
+      if (!el._selected) {
+        el.style.transform = "";
+        el.style.filter    = "";
+      }
+    });
+    return el;
+  }
+
+  function facilityIconSvg(type) {
+    var icons = { toilet:"🚻", sink:"🚿", reception:"🏠", power:"⚡" };
+    var icon = icons[type] || "📍";
+    return '<div style="font-size:20px;line-height:1;filter:drop-shadow(0 1px 2px rgba(0,0,0,0.4));">' + icon + '</div>';
+  }
+
+  function makeFacPinEl(type) {
+    var el = document.createElement("div");
+    el.style.cssText = "cursor:pointer;transform-origin:center center;"
+      + "transition:transform 0.15s ease;";
+    el.innerHTML = facilityIconSvg(type);
+    el.addEventListener("mouseover", function () { el.style.transform = "scale(1.15)"; });
+    el.addEventListener("mouseout",  function () { el.style.transform = ""; });
+    return el;
+  }
+
+  function pinSvg(label, color) {
+    return '<svg width="22" height="29" viewBox="0 0 36 48" xmlns="http://www.w3.org/2000/svg">'
+      + '<path d="M18 46C18 46 4 32 4 18A14 14 0 0 1 32 18C32 32 18 46 18 46Z"'
+      + ' fill="' + color + '" stroke="rgba(255,255,255,0.85)" stroke-width="1.5"/>'
+      + '<text x="18" y="18" text-anchor="middle" dominant-baseline="central"'
+      + ' fill="white" font-family="\'Helvetica Neue\',Arial,sans-serif"'
+      + ' font-weight="700" font-size="12">' + label + '</text>'
+      + '</svg>';
+  }
+
+  function makePinEl(number, color, isClosed) {
+    var el = document.createElement("div");
+    el.style.cssText = "cursor:pointer;transform-origin:bottom center;"
+      + "transition:transform 0.15s ease,filter 0.15s ease;";
+    el.innerHTML = pinSvg(number, color);
+    el._selected = false;
+    if (!isClosed) {
+      el.addEventListener("mouseover", function () {
+        if (!el._selected) { el.style.transform = "scale(1.15)"; el.style.filter = "brightness(0.82)"; }
+      });
+      el.addEventListener("mouseout", function () {
+        if (!el._selected) { el.style.transform = ""; el.style.filter = ""; }
+      });
+    }
+    return el;
+  }
+
+  function makeHomePinEl() {
+    var el = document.createElement("div");
+    el.style.cssText = "cursor:pointer;transform-origin:bottom center;"
+      + "filter:drop-shadow(0 3px 8px rgba(0,0,0,0.4));"
+      + "transition:transform 0.15s ease,filter 0.15s ease;";
+    el.innerHTML =
+      '<svg width="29" height="38" viewBox="0 0 48 64" xmlns="http://www.w3.org/2000/svg">'
+      + '<path d="M24 62C24 62 4 44 4 24A20 20 0 0 1 44 24C44 44 24 62 24 62Z"'
+      + ' fill="' + HOME_COLOR + '" stroke="rgba(255,255,255,0.9)" stroke-width="2"/>'
+      + '<path d="M24 12L37 28H11Z" fill="white"/>'
+      + '<rect x="20" y="28" width="8" height="9" fill="rgba(255,255,255,0.75)"/>'
+      + '</svg>';
+    el.addEventListener("mouseover", function () { el.style.transform = "scale(1.1)"; });
+    el.addEventListener("mouseout",  function () { el.style.transform = ""; });
+    return el;
+  }
+
+  // ────────────────────────────────────────────────
+  // InfoWindow content
+  // ────────────────────────────────────────────────
+
+  function siteInfoContent(site) {
+    var sizeHtml = site.size ? '<span style="font-size:11px;color:#888;margin-left:6px;">サイズ: ' + site.size + '</span>' : '';
+    var descHtml = site.desc ? '<p style="margin:6px 0 0;font-size:12px;color:#555;line-height:1.6;">' + site.desc + '</p>' : '';
+    return '<div style="font-family:sans-serif;max-width:220px;line-height:1;">'
+      + '<div style="display:flex;align-items:center;flex-wrap:wrap;margin-bottom:3px;">'
+      + '<strong style="font-size:13px;color:#1a2421;">' + site.name + '</strong>' + sizeHtml
+      + '</div>'
+      + descHtml
+      + '</div>';
+  }
+
+  function facInfoContent(fac) {
+    return '<div style="font-family:sans-serif;max-width:220px;line-height:1;">'
+      + '<strong style="font-size:13px;color:#1a2421;">' + fac.name + '</strong>'
+      + (fac.comment || fac.desc
+        ? '<p style="margin:6px 0 0;font-size:12px;color:#555;line-height:1.6;">' + (fac.comment || fac.desc) + '</p>'
+        : '')
+      + '</div>';
+  }
+
+  function infoContent(spot) {
+    var mapsUrl = "https://www.google.com/maps/search/?api=1&query="
+      + encodeURIComponent(spot.name) + "+" + spot.lat + "," + spot.lng;
+    var badge = (spot.status === "closed")
+      ? '<span style="font-size:10px;color:#b91c1c;border:1px solid #b91c1c;'
+        + 'padding:0 4px;line-height:1.7;margin-left:6px;">休業中</span>'
+      : "";
+    var mapsLink = '<a href="' + mapsUrl + '" target="_blank" rel="noopener noreferrer"'
+      + ' style="font-size:11px;color:#4a5d4e;border-bottom:1px solid #4a5d4e;'
+      + 'padding-bottom:1px;text-decoration:none;">Google Mapsで開く →</a>';
+    return '<div style="font-family:sans-serif;max-width:220px;line-height:1;">'
+      + '<div style="display:flex;align-items:center;flex-wrap:wrap;margin-bottom:5px;">'
+      + '<strong style="font-size:13px;color:#1a2421;">' + spot.name + '</strong>' + badge
+      + '</div>'
+      + (spot.comment
+        ? '<p style="margin:0 0 9px;font-size:12px;color:#555;line-height:1.6;">'
+          + spot.comment + '</p>'
+        : "")
+      + mapsLink
+      + '</div>';
+  }
+
+  function homeInfoContent() {
+    if (!homeSpot) return "";
+    return '<div style="font-family:sans-serif;max-width:220px;">'
+      + '<strong style="font-size:13px;color:#1a2421;">' + homeSpot.name + '</strong>'
+      + (homeSpot.comment
+        ? '<p style="margin:6px 0 0;font-size:12px;color:#555;line-height:1.6;">'
+          + homeSpot.comment + '</p>'
+        : "")
+      + '</div>';
+  }
+
+  // ────────────────────────────────────────────────
+  // Surround selection management
+  // ────────────────────────────────────────────────
+
+  function deselectAll() {
+    if (selectedIndex !== null) {
+      var prev = markers[selectedIndex];
+      if (prev) {
+        var wasClosed = prev.spot.status === "closed";
+        prev.el._selected = false;
+        prev.el.innerHTML = pinSvg(selectedIndex + 1, wasClosed ? PIN_CLOSED : PIN_COLOR);
+        prev.el.style.transform = "";
+        prev.el.style.filter    = "";
+        prev.el.style.zIndex    = "";
+      }
+    }
+    selectedIndex = null;
+    if (spotListEl) {
+      spotListEl.querySelectorAll(".is-selected").forEach(function (li) {
+        li.classList.remove("is-selected");
+      });
+    }
+    if (openInfoWindow) { openInfoWindow.close(); openInfoWindow = null; }
+  }
+
+  function openIw(content, anchor) {
+    if (openInfoWindow) openInfoWindow.close();
+    var iw = new google.maps.InfoWindow({ content: content });
+    iw.open({ anchor: anchor, map: gmap });
+    openInfoWindow = iw;
+  }
+
+  function selectByIndex(idx) {
+    if (!gmap || !markers[idx]) return;
+    deselectAll();
+    selectedIndex = idx;
+    var entry    = markers[idx];
+    var isClosed = entry.spot.status === "closed";
+    if (!isClosed) {
+      entry.el._selected   = true;
+      entry.el.innerHTML   = pinSvg(idx + 1, PIN_SELECTED);
+      entry.el.style.transform = "scale(1.3)";
+      entry.el.style.filter    = "";
+      entry.el.style.zIndex    = "10";
+    }
+    var li = spotListEl ? spotListEl.querySelector('[data-index="' + idx + '"]') : null;
+    if (li) { li.classList.add("is-selected"); li.scrollIntoView({ block: "nearest", behavior: "smooth" }); }
+    openIw(infoContent(entry.spot), entry.marker);
+    gmap.panTo(entry.marker.position);
+    if (gmap.getZoom() < 14) gmap.setZoom(16);
+  }
+
+  // ────────────────────────────────────────────────
+  // Surround markers
+  // ────────────────────────────────────────────────
+
+  function clearMarkers() {
+    markers.forEach(function (m) { m.marker.map = null; });
+    markers = [];
+  }
+
+  function showSurroundCategory(view) {
+    if (!gmap) return;
+    if (lightOverlay) lightOverlay.setMap(null);
+    clearCampMarkers();
+    clearMarkers();
+    homeMarker && (homeMarker.map = gmap);
+
+    var catSpots = surroundSpots[view] || [];
+    var bounds   = new google.maps.LatLngBounds();
+    if (homeSpot) bounds.extend({ lat: homeSpot.lat, lng: homeSpot.lng });
+
+    if (catSpots.length === 0) {
+      gmap.setCenter(homeSpot ? { lat: homeSpot.lat, lng: homeSpot.lng } : DEFAULT_CENTER);
+      gmap.setZoom(12);
+      return;
+    }
+
+    catSpots.forEach(function (spot, i) {
+      var isClosed = spot.status === "closed";
+      var el = makePinEl(i + 1, isClosed ? PIN_CLOSED : PIN_COLOR, isClosed);
+      var marker = new google.maps.marker.AdvancedMarkerElement({
+        map:      gmap,
+        position: { lat: spot.lat, lng: spot.lng },
+        content:  el,
+        title:    spot.name,
+      });
+      (function (idx) {
+        marker.addListener("click", function () {
+          if (surroundSpots[view][idx].status !== "closed") selectByIndex(idx);
+        });
+      })(i);
+      markers.push({ marker: marker, el: el, spot: spot, index: i });
+      bounds.extend({ lat: spot.lat, lng: spot.lng });
+    });
+
+    if (catSpots.length === 1 && !homeSpot) {
+      gmap.setCenter({ lat: catSpots[0].lat, lng: catSpots[0].lng });
+      gmap.setZoom(17);
+    } else {
+      gmap.fitBounds(bounds, 60);
+    }
+  }
+
+  // ────────────────────────────────────────────────
+  // Camp markers
+  // ────────────────────────────────────────────────
+
+  function clearCampMarkers() {
+    Object.keys(campMarkers).forEach(function (key) {
+      campMarkers[key].forEach(function (m) { m.marker.map = null; });
+    });
+    campMarkers = {};
+  }
+
+  function getFacType(fac) {
+    if (fac.id === "light-reception") return "reception";
+    if (fac.name.indexOf("トイレ") !== -1) return "toilet";
+    if (fac.name.indexOf("流し") !== -1) return "sink";
+    return "sink";
+  }
+
+  function placeCampMarkersForSite(site, color, cat) {
+    var el = makeSitePinEl(site.id, color);
+    var marker = new google.maps.marker.AdvancedMarkerElement({
+      map:      gmap,
+      position: { lat: site.lat, lng: site.lng },
+      content:  el,
+      title:    site.name,
+      zIndex:   5,
+    });
+    marker.addListener("click", function () {
+      if (openInfoWindow) openInfoWindow.close();
+      openIw(siteInfoContent(site), marker);
+      gmap.panTo(marker.position);
+    });
+    if (!campMarkers[cat]) campMarkers[cat] = [];
+    campMarkers[cat].push({ marker: marker, el: el, site: site });
+  }
+
+  function placeFacMarker(fac, type, cat) {
+    var el = makeFacPinEl(type);
+    var marker = new google.maps.marker.AdvancedMarkerElement({
+      map:      gmap,
+      position: { lat: fac.lat, lng: fac.lng },
+      content:  el,
+      title:    fac.name,
+      zIndex:   10,
+    });
+    marker.addListener("click", function () {
+      if (openInfoWindow) openInfoWindow.close();
+      openIw(facInfoContent(fac), marker);
+      gmap.panTo(marker.position);
+    });
+    if (!campMarkers[cat]) campMarkers[cat] = [];
+    campMarkers[cat].push({ marker: marker, el: el, site: fac });
+  }
+
+  function initCampMarkers() {
+    clearCampMarkers();
+    autoSites.forEach(function (s) { placeCampMarkersForSite(s, COLOR_AUTO, "auto-" + s.id); });
+    blockSites.forEach(function (s) { placeCampMarkersForSite(s, COLOR_BLOCK, "block-" + s.id); });
+    soloSites.forEach(function (s) { placeCampMarkersForSite(s, COLOR_SOLO, "solo-" + s.id); });
+    lightFacilities.forEach(function (f) { placeFacMarker(f, getFacType(f), "fac-light-" + f.id); });
+    powerFacilities.forEach(function (f) { placeFacMarker(f, "power", "fac-power-" + f.id); });
+  }
+
+  function showCampMap() {
+    if (!gmap) return;
+    clearMarkers();
+    homeMarker && (homeMarker.map = gmap);
+
+    if (!lightOverlay) {
+      var imageBounds = { north: 36.64157, south: 36.63905, east: 140.06974, west: 140.06561 };
+      lightOverlay = new google.maps.GroundOverlay(
+        "/images/light-field-googlemap.jpg",
+        imageBounds,
+        { opacity: 0.7 }
+      );
+    }
+    lightOverlay.setMap(gmap);
+
+    initCampMarkers();
+    applyCheckboxState();
+
+    gmap.setCenter({ lat: 36.640500, lng: 140.068000 });
+    gmap.setZoom(17);
+  }
+
+  // ────────────────────────────────────────────────
+  // Checkbox state management
+  // ────────────────────────────────────────────────
+
+  function applyCheckboxState() {
+    if (!gmap) return;
+
+    var allOn = document.getElementById("chk-all") ? document.getElementById("chk-all").checked : true;
+
+    // auto sites
+    autoSites.forEach(function (s) {
+      var catChk = document.querySelector('.chk-cat[data-cat="auto"]');
+      var siteChk = document.querySelector('.chk-site[data-cat="auto"][data-id="' + s.id + '"]');
+      var visible = allOn && catChk && catChk.checked && siteChk && siteChk.checked;
+      var key = "auto-" + s.id;
+      if (campMarkers[key]) campMarkers[key].forEach(function (m) { m.marker.map = visible ? gmap : null; });
+    });
+
+    // block sites
+    blockSites.forEach(function (s) {
+      var catChk = document.querySelector('.chk-cat[data-cat="block"]');
+      var siteChk = document.querySelector('.chk-site[data-cat="block"][data-id="' + s.id + '"]');
+      var visible = allOn && catChk && catChk.checked && siteChk && siteChk.checked;
+      var key = "block-" + s.id;
+      if (campMarkers[key]) campMarkers[key].forEach(function (m) { m.marker.map = visible ? gmap : null; });
+    });
+
+    // solo sites
+    soloSites.forEach(function (s) {
+      var catChk = document.querySelector('.chk-cat[data-cat="solo"]');
+      var siteChk = document.querySelector('.chk-site[data-cat="solo"][data-id="' + s.id + '"]');
+      var visible = allOn && catChk && catChk.checked && siteChk && siteChk.checked;
+      var key = "solo-" + s.id;
+      if (campMarkers[key]) campMarkers[key].forEach(function (m) { m.marker.map = visible ? gmap : null; });
+    });
+
+    // light facilities
+    var facCatChk = document.querySelector('.chk-cat[data-cat="facility"]');
+    var lightFacChk = document.querySelector('.chk-fac[data-fac="light"]');
+    var lightVisible = allOn && facCatChk && facCatChk.checked && lightFacChk && lightFacChk.checked;
+    lightFacilities.forEach(function (f) {
+      var key = "fac-light-" + f.id;
+      if (campMarkers[key]) campMarkers[key].forEach(function (m) { m.marker.map = lightVisible ? gmap : null; });
+    });
+
+    var powerFacChk = document.querySelector('.chk-fac[data-fac="power"]');
+    var powerVisible = allOn && facCatChk && facCatChk.checked && powerFacChk && powerFacChk.checked;
+    powerFacilities.forEach(function (f) {
+      var key = "fac-power-" + f.id;
+      if (campMarkers[key]) campMarkers[key].forEach(function (m) { m.marker.map = powerVisible ? gmap : null; });
+    });
+  }
+
+  function bindCheckboxEvents(root) {
+    var allChk = root.querySelector ? root.querySelector("#chk-all") : document.getElementById("chk-all");
+    if (!allChk) allChk = document.getElementById("chk-all");
+
+    function syncAll(checked) {
+      root.querySelectorAll(".chk-cat,.chk-site,.chk-fac").forEach(function (c) { c.checked = checked; });
+      if (allChk) allChk.checked = checked;
+      applyCheckboxState();
+    }
+
+    if (allChk) {
+      allChk.addEventListener("change", function () { syncAll(this.checked); });
+    }
+
+    root.querySelectorAll(".chk-cat").forEach(function (catChk) {
+      catChk.addEventListener("change", function () {
+        var cat = this.dataset.cat;
+        root.querySelectorAll('.chk-site[data-cat="' + cat + '"],.chk-fac').forEach(function (c) {
+          if (cat === "facility") {
+            root.querySelectorAll(".chk-fac").forEach(function (f) { f.checked = catChk.checked; });
+          } else {
+            if (c.dataset.cat === cat) c.checked = catChk.checked;
+          }
+        });
+        applyCheckboxState();
+      });
+    });
+
+    root.querySelectorAll(".chk-site,.chk-fac").forEach(function (chk) {
+      chk.addEventListener("change", function () { applyCheckboxState(); });
+    });
+  }
+
+  function buildMobileDrawer() {
+    campDrawerScrollEl.innerHTML = "";
+    var clone = document.getElementById("camp-panel-scroll").cloneNode(true);
+    // Rename chk-all id to avoid conflicts
+    var allEl = clone.querySelector("#chk-all");
+    if (allEl) allEl.id = "chk-all-drawer";
+    campDrawerScrollEl.appendChild(clone);
+    bindCheckboxEvents(campDrawerScrollEl);
+
+    // Sync drawer ↔ panel: when drawer changes, update panel and apply
+    campDrawerScrollEl.querySelectorAll("input[type='checkbox']").forEach(function (dc) {
+      dc.addEventListener("change", function () {
+        // find corresponding panel checkbox and sync
+        var cat = dc.dataset.cat || "";
+        var fac = dc.dataset.fac || "";
+        var sid = dc.dataset.id || "";
+        var match;
+        if (dc.id === "chk-all-drawer") {
+          match = document.querySelector("#camp-panel #chk-all");
+          if (match) {
+            match.checked = dc.checked;
+            document.querySelectorAll("#camp-panel .chk-cat,.chk-site,.chk-fac").forEach(function (c) { c.checked = dc.checked; });
+          }
+        } else if (dc.classList.contains("chk-cat")) {
+          match = document.querySelector('#camp-panel .chk-cat[data-cat="' + cat + '"]');
+          if (match) {
+            match.checked = dc.checked;
+            document.querySelectorAll('#camp-panel .chk-site[data-cat="' + cat + '"]').forEach(function (c) { c.checked = dc.checked; });
+          }
+        } else if (dc.classList.contains("chk-site")) {
+          match = document.querySelector('#camp-panel .chk-site[data-cat="' + cat + '"][data-id="' + sid + '"]');
+          if (match) match.checked = dc.checked;
+        } else if (dc.classList.contains("chk-fac")) {
+          match = document.querySelector('#camp-panel .chk-fac[data-fac="' + fac + '"]');
+          if (match) match.checked = dc.checked;
+        }
+        applyCheckboxState();
+      });
+    });
+  }
+
+  // ────────────────────────────────────────────────
+  // List panel (surround)
+  // ────────────────────────────────────────────────
+
+  function renderList(view) {
+    var catSpots = surroundSpots[view] || [];
+    if (catSpots.length === 0) {
+      spotListEl.innerHTML = "";
+      noDataMsgEl.style.display = "block";
+      return;
+    }
+    noDataMsgEl.style.display = "none";
+    spotListEl.innerHTML = catSpots.map(function (spot, i) {
+      var isClosed = spot.status === "closed";
+      var routeHtml = !isClosed
+        ? '<div class="list-routes">'
+          + '<a href="https://www.google.com/maps/dir/36.639896,140.068402/' + spot.lat + ',' + spot.lng + '"'
+          + ' target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"'
+          + ' class="route-btn">→ おいらの森ルート</a>'
+          + '<a href="https://www.google.com/maps/dir//' + spot.lat + ',' + spot.lng + '"'
+          + ' target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"'
+          + ' class="route-btn">→ 現在地ルート</a>'
+          + '</div>'
+        : '';
+      return '<li class="list-item' + (isClosed ? " is-closed" : "") + '" data-index="' + i + '"'
+        + (isClosed ? ' aria-disabled="true"' : "")
+        + ' role="listitem">'
+        + '<span class="list-num">' + (i + 1) + '</span>'
+        + '<div class="list-text">'
+        + '<span class="list-name">' + spot.name + '</span>'
+        + (isClosed ? '<span class="closed-badge">休業中</span>' : "")
+        + (spot.comment ? '<span class="list-comment">' + spot.comment + '</span>' : "")
+        + '</div>'
+        + routeHtml
+        + '</li>';
+    }).join("");
+
+    spotListEl.querySelectorAll(".list-item:not(.is-closed)").forEach(function (li) {
+      li.addEventListener("click", function () { selectByIndex(parseInt(li.dataset.index, 10)); });
+    });
+  }
+
+  // ────────────────────────────────────────────────
+  // Mode / tab switching
+  // ────────────────────────────────────────────────
+
+  function applyMode(mode, tab) {
+    currentMode = mode;
+
+    // View buttons
+    document.querySelectorAll(".view-btn").forEach(function (btn) {
+      btn.classList.toggle("is-active", btn.dataset.view === mode);
+    });
+
+    // Surround sub-tabs & divider visibility
+    var isSurround = mode === "surround";
+    document.getElementById("surround-divider").style.display = isSurround ? "" : "none";
+    document.querySelectorAll(".surround-tab").forEach(function (btn) {
+      btn.style.display = isSurround ? "" : "none";
+    });
+
+    if (mode === "camp") {
+      // Hide surround UI, show camp UI
+      listPanelEl.style.display = "none";
+      pcToggleEl.style.display  = "none";
+      if (window.innerWidth >= 768) {
+        campPanelEl.style.display        = "flex";
+        campPanelEl.style.flexDirection  = "column";
+        campPanelToggleEl.style.display  = "flex";
+      }
+      if (window.innerWidth < 768) {
+        mobileHandleEl.style.display = "flex";
+        campDrawerEl.style.display   = "block";
+        campDrawerEl.style.height    = "0";
+      } else {
+        mobileHandleEl.style.display = "none";
+        campDrawerEl.style.display   = "none";
+      }
+      showCampMap();
+      if (window.innerWidth < 768) applyMobileCampLayout(listOpen);
+    } else {
+      // surround
+      campPanelEl.style.display       = "none";
+      campPanelToggleEl.style.display = "none";
+      campDrawerEl.style.display      = "none";
+      listPanelEl.style.display       = "block";
+      if (window.innerWidth >= 768) {
+        pcToggleEl.style.display = "flex";
+      }
+      mobileHandleEl.style.display = window.innerWidth < 768 ? "flex" : "none";
+
+      clearCampMarkers();
+      if (lightOverlay) lightOverlay.setMap(null);
+
+      currentTab = tab;
+      document.querySelectorAll(".tab-btn[data-tab]").forEach(function (btn) {
+        btn.classList.toggle("is-active", btn.dataset.tab === tab);
+      });
+      deselectAll();
+      renderList(tab);
+      showSurroundCategory(tab);
+
+      if (window.innerWidth < 768) applyMobileLayout(listOpen);
+    }
+
+    var urlView = mode === "camp" ? "light" : tab;
+    history.pushState({ view: urlView }, "", "/map/?view=" + urlView);
+  }
+
+  // ────────────────────────────────────────────────
+  // Panel toggle
+  // ────────────────────────────────────────────────
+
+  function isMobile() { return window.innerWidth < 768; }
+
+  function applyMobileLayout(open) {
+    var totalH  = mapListArea.offsetHeight;
+    var handleH = mobileHandleEl.offsetHeight;
+    if (open) {
+      var mapH  = Math.round(totalH * 0.55);
+      var listH = totalH - mapH - handleH;
+      mapWrapperEl.style.height   = mapH + "px";
+      mapWrapperEl.style.flex     = "";
+      listPanelEl.style.height    = listH + "px";
+      listPanelEl.style.opacity   = "1";
+      listPanelEl.style.pointerEvents = "";
+      handleIconEl.textContent    = "∧";
+    } else {
+      mapWrapperEl.style.height   = (totalH - handleH) + "px";
+      mapWrapperEl.style.flex     = "";
+      listPanelEl.style.height    = "0";
+      listPanelEl.style.opacity   = "0";
+      listPanelEl.style.pointerEvents = "none";
+      handleIconEl.textContent    = "∨";
+    }
+  }
+
+  function applyPcLayout(open) {
+    if (open) {
+      listPanelEl.classList.remove("panel-hidden-pc");
+      mapWrapperEl.style.flex  = "";
+      pcToggleIconEl.textContent = "◀";
+    } else {
+      listPanelEl.classList.add("panel-hidden-pc");
+      mapWrapperEl.style.flex  = "1";
+      pcToggleIconEl.textContent = "▶";
+    }
+  }
+
+  function applyMobileCampLayout(open) {
+    var totalH  = mapListArea.offsetHeight;
+    var handleH = mobileHandleEl.offsetHeight;
+    campDrawerEl.style.display = "block";
+    if (open) {
+      var drawerH = Math.min(Math.round(totalH * 0.38), 220);
+      var mapH    = totalH - handleH - drawerH;
+      mapWrapperEl.style.height  = mapH + "px";
+      mapWrapperEl.style.flex    = "";
+      campDrawerEl.style.height  = drawerH + "px";
+      handleIconEl.textContent   = "∧";
+    } else {
+      mapWrapperEl.style.height  = (totalH - handleH) + "px";
+      mapWrapperEl.style.flex    = "";
+      campDrawerEl.style.height  = "0";
+      handleIconEl.textContent   = "∨";
+    }
+  }
+
+  function setListOpen(open) {
+    listOpen = open;
+    if (isMobile()) {
+      if (currentMode === "camp") applyMobileCampLayout(open);
+      else applyMobileLayout(open);
+    } else {
+      applyPcLayout(open);
+    }
+    setTimeout(function () { if (gmap) google.maps.event.trigger(gmap, "resize"); }, 270);
+  }
+
+  function applyCampPanelPc(open) {
+    campPanelOpen = open;
+    if (open) {
+      campPanelEl.classList.remove("panel-hidden-pc");
+      campPanelEl.style.width  = "";
+      campPanelEl.style.opacity = "";
+      campPanelToggleIconEl.textContent = "◀";
+    } else {
+      campPanelEl.style.width   = "0";
+      campPanelEl.style.opacity = "0";
+      campPanelEl.style.pointerEvents = "none";
+      campPanelToggleIconEl.textContent = "▶";
+    }
+    setTimeout(function () { if (gmap) google.maps.event.trigger(gmap, "resize"); }, 270);
+  }
+
+  // ────────────────────────────────────────────────
+  // Google Maps init
+  // ────────────────────────────────────────────────
+
+  function getViewFromUrl() {
+    return new URLSearchParams(window.location.search).get("view") || "light";
+  }
+
+  window.__initGoogleMaps = function () {
+    google.maps.importLibrary("maps").then(function (mapsLib) {
+      return google.maps.importLibrary("marker").then(function () {
+        var urlViewInit = getViewFromUrl();
+        var initIsCamp  = (urlViewInit === "light" || urlViewInit === "camp");
+        var mapOptions = {
+          center:            initIsCamp ? { lat: 36.640500, lng: 140.068000 } : { lat: 36.639896, lng: 140.068402 },
+          zoom:              initIsCamp ? 17 : 13,
+          zoomControl:       true,
+          mapTypeControl:    false,
+          streetViewControl: false,
+          fullscreenControl: false,
+          clickableIcons:    false,
+        };
+        if (MAP_ID) mapOptions.mapId = MAP_ID;
+        else console.warn("PUBLIC_GMAPS_MAP_ID is not set. Advanced Markers will not render.");
+
+        gmap = new mapsLib.Map(document.getElementById("map"), mapOptions);
+        gmap.addListener("click", function () { deselectAll(); });
+
+        var skeleton = document.getElementById("map-skeleton");
+        if (skeleton) skeleton.remove();
+
+        // Place home marker
+        if (homeSpot) {
+          var hel = makeHomePinEl();
+          homeMarker = new google.maps.marker.AdvancedMarkerElement({
+            map:      gmap,
+            position: { lat: homeSpot.lat, lng: homeSpot.lng },
+            content:  hel,
+            title:    homeSpot.name,
+            zIndex:   100,
+          });
+          homeMarker.addListener("click", function () {
+            deselectAll();
+            openIw(homeInfoContent(), homeMarker);
+          });
+        }
+
+        // 現在地ボタン
+        (function () {
+          var myLocMarker = null;
+          var SVG_NORMAL = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"'
+            + ' stroke="#555" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
+            + '<circle cx="12" cy="12" r="4"/>'
+            + '<line x1="12" y1="2" x2="12" y2="6"/>'
+            + '<line x1="12" y1="18" x2="12" y2="22"/>'
+            + '<line x1="2" y1="12" x2="6" y2="12"/>'
+            + '<line x1="18" y1="12" x2="22" y2="12"/>'
+            + '</svg>';
+          var SVG_LOADING = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"'
+            + ' stroke="#4285f4" stroke-width="2.5" stroke-linecap="round"'
+            + ' style="animation:spin 0.9s linear infinite;transform-origin:center;">'
+            + '<path d="M12 3a9 9 0 1 0 9 9"/>'
+            + '</svg>';
+
+          var wrapper = document.createElement("div");
+          wrapper.style.cssText = "margin:0 10px 110px 0;display:flex;flex-direction:column;align-items:center;";
+          var btn = document.createElement("button");
+          btn.type  = "button";
+          btn.title = "現在地を表示";
+          btn.setAttribute("aria-label", "現在地を表示");
+          btn.style.cssText = "width:40px;height:40px;background:#fff;border:none;"
+            + "border-radius:2px;box-shadow:0 1px 4px rgba(0,0,0,0.3);"
+            + "cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;";
+          btn.innerHTML = SVG_NORMAL;
+          btn.addEventListener("mouseover", function () { if (!btn.disabled) btn.style.background = "#f5f5f5"; });
+          btn.addEventListener("mouseout",  function () { btn.style.background = "#fff"; });
+
+          var errMsg = document.createElement("div");
+          errMsg.style.cssText = "margin-top:4px;background:rgba(0,0,0,0.72);color:#fff;"
+            + "font-size:11px;border-radius:3px;padding:3px 7px;white-space:nowrap;display:none;";
+          function showGeoError(msg) {
+            errMsg.textContent   = msg;
+            errMsg.style.display = "block";
+            setTimeout(function () { errMsg.style.display = "none"; }, 4000);
+          }
+          btn.addEventListener("click", function () {
+            if (!navigator.geolocation) { showGeoError("非対応ブラウザ"); return; }
+            btn.innerHTML = SVG_LOADING;
+            btn.disabled  = true;
+            navigator.geolocation.getCurrentPosition(
+              function (pos) {
+                if (myLocMarker) { myLocMarker.map = null; myLocMarker = null; }
+                var dot = document.createElement("div");
+                dot.style.cssText = "width:16px;height:16px;border-radius:50%;"
+                  + "background:#4285f4;border:2.5px solid #fff;"
+                  + "box-shadow:0 0 0 4px rgba(66,133,244,0.25);";
+                myLocMarker = new google.maps.marker.AdvancedMarkerElement({
+                  map: gmap, position: { lat: pos.coords.latitude, lng: pos.coords.longitude },
+                  content: dot, title: "現在地", zIndex: 200,
+                });
+                gmap.panTo({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+                if (gmap.getZoom() < 14) gmap.setZoom(16);
+                btn.innerHTML = SVG_NORMAL;
+                btn.disabled  = false;
+                errMsg.style.display = "none";
+              },
+              function (err) {
+                var msg = err.code === 1 ? "位置情報が許可されていません"
+                        : err.code === 2 ? "位置を取得できません" : "タイムアウトしました";
+                showGeoError(msg);
+                btn.innerHTML = SVG_NORMAL;
+                btn.disabled  = false;
+              },
+              { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+            );
+          });
+          wrapper.appendChild(btn);
+          wrapper.appendChild(errMsg);
+          gmap.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(wrapper);
+        })();
+
+        // Initial view
+        var urlView = getViewFromUrl();
+        var initMode = (urlView === "light" || urlView === "camp") ? "camp" : "surround";
+        var initTab  = initMode === "surround" ? urlView : "food";
+        applyMode(initMode, initTab);
+
+        if (initMode === "camp" && isMobile()) {
+          applyMobileCampLayout(listOpen);
+        }
+      });
+    }).catch(function () {
+      var sk = document.getElementById("map-skeleton");
+      if (sk) sk.remove();
+      var errEl = document.getElementById("map-error");
+      if (errEl) errEl.style.display = "flex";
+    });
+  };
+
+  // ────────────────────────────────────────────────
+  // DOM ready
+  // ────────────────────────────────────────────────
+
+  document.addEventListener("DOMContentLoaded", function () {
+    mapListArea         = document.getElementById("map-list-area");
+    mapWrapperEl        = document.getElementById("map-wrapper");
+    listPanelEl         = document.getElementById("list-panel");
+    mobileHandleEl      = document.getElementById("mobile-handle");
+    handleIconEl        = document.getElementById("handle-icon");
+    pcToggleEl          = document.getElementById("pc-toggle");
+    pcToggleIconEl      = document.getElementById("pc-toggle-icon");
+    spotListEl          = document.getElementById("spot-list");
+    noDataMsgEl         = document.getElementById("no-data-msg");
+    campPanelEl         = document.getElementById("camp-panel");
+    campPanelToggleEl   = document.getElementById("camp-panel-toggle");
+    campPanelToggleIconEl = campPanelToggleEl.querySelector("#camp-panel-toggle-icon");
+    campDrawerEl        = document.getElementById("camp-drawer");
+    campDrawerScrollEl  = document.getElementById("camp-drawer-scroll");
+
+    // Hide surround sub-tabs initially
+    document.getElementById("surround-divider").style.display = "none";
+    document.querySelectorAll(".surround-tab").forEach(function (btn) { btn.style.display = "none"; });
+
+    // View button clicks
+    document.querySelectorAll(".view-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var mode = btn.dataset.view;
+        if (mode === "camp") applyMode("camp", currentTab);
+        else applyMode("surround", currentTab);
+      });
+    });
+
+    // Surround sub-tab clicks
+    document.querySelectorAll(".tab-btn[data-tab]").forEach(function (btn) {
+      btn.addEventListener("click", function () { applyMode("surround", btn.dataset.tab); });
+    });
+
+    // PC camp panel toggle
+    campPanelToggleEl.addEventListener("click", function () { applyCampPanelPc(!campPanelOpen); });
+
+    // Mobile handle
+    mobileHandleEl.addEventListener("click", function () { setListOpen(!listOpen); });
+    mobileHandleEl.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setListOpen(!listOpen); }
+    });
+
+    // PC list toggle (surround)
+    pcToggleEl.addEventListener("click", function () { setListOpen(!listOpen); });
+
+    // PC panel checkbox binding
+    bindCheckboxEvents(document.getElementById("camp-panel-scroll"));
+
+    // Build mobile drawer after panel is ready
+    buildMobileDrawer();
+
+    // Resize
+    window.addEventListener("resize", function () {
+      if (currentMode === "surround" && isMobile()) applyMobileLayout(listOpen);
+      if (currentMode === "camp") {
+        if (isMobile()) {
+          campPanelEl.style.display       = "none";
+          campPanelToggleEl.style.display = "none";
+          mobileHandleEl.style.display    = "flex";
+          applyMobileCampLayout(listOpen);
+        } else {
+          campPanelEl.style.display       = "flex";
+          campPanelEl.style.flexDirection = "column";
+          campPanelToggleEl.style.display = "flex";
+          campDrawerEl.style.display      = "none";
+          mobileHandleEl.style.display    = "none";
+        }
+      }
+    });
+
+    // Popstate
+    window.addEventListener("popstate", function (e) {
+      var urlView = (e.state && e.state.view) ? e.state.view : getViewFromUrl();
+      var mode = (urlView === "light" || urlView === "camp") ? "camp" : "surround";
+      var tab  = mode === "surround" ? urlView : currentTab;
+      applyMode(mode, tab);
+    });
+
+    // Load Google Maps API
+    if (!API_KEY) {
+      var sk = document.getElementById("map-skeleton");
+      if (sk) sk.remove();
+      var errEl = document.getElementById("map-error");
+      if (errEl) errEl.style.display = "flex";
+      return;
+    }
+    var s = document.createElement("script");
+    s.src = "https://maps.googleapis.com/maps/api/js?key=" + API_KEY
+      + "&libraries=marker&v=weekly&loading=async&callback=__initGoogleMaps";
+    s.async = true;
+    document.head.appendChild(s);
+  });
+</script>

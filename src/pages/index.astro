@@ -1,23 +1,119 @@
 ---
-import LpLayout from "../layouts/LpLayout.astro";
+import { Image } from "astro:assets";
+import planDaycamp from "../assets/images/plan_daycamp.JPEG";
+import planDogrun from "../assets/images/plan_dogrun.JPEG";
+import planStandard from "../assets/images/plan_standard.JPEG";
+import planTrain from "../assets/images/plan_train.JPEG";
 import OshiraseList from "../components/OshiraseList.astro";
 import SeasonSlider from "../components/SeasonSlider.astro";
+import LpLayout from "../layouts/LpLayout.astro";
 import { getOshirase } from "../lib/oshirase";
 
-let contents = [];
+let contents: any[] = [];
 
 try {
-  const response = await getOshirase(3);
-  contents = response.contents;
+	const response = await getOshirase(3);
+	contents = response.contents;
 } catch (error) {
-  console.warn("Failed to fetch news from microCMS.", error);
+	console.warn("Failed to fetch news from microCMS.", error);
 }
+
+const plans: Array<{
+	name: string;
+	price: string;
+	ci: string;
+	co: string;
+	id: number;
+	img: typeof planStandard;
+	alt: string;
+	badge?: string;
+	subtitle?: string;
+	body?: string;
+}> = [
+	{
+		name: "スタンダード・\nオートサイト",
+		price: "¥3,300/サイト〜",
+		ci: "IN 9:00〜17:00",
+		co: "OUT 12:00",
+		id: 4,
+		img: planStandard,
+		alt: "那須烏山 里山パークおいらの森 スタンダード・オートサイトのキャンプサイト",
+	},
+	{
+		name: "ドッグランサイト",
+		price: "¥4,400/サイト〜",
+		ci: "IN 9:00〜17:00",
+		co: "OUT 12:00",
+		id: 7,
+		img: planDogrun,
+		alt: "那須烏山 里山パークおいらの森 貸切ドッグランサイトのキャンプサイト",
+		badge: "1組限定（場内に1サイト）",
+		subtitle: "柵付き・専用区画",
+		body: "柵で囲った広めのサイトで、リードを外して愛犬と過ごせる。キャンプの間ずっと、愛犬は自由。\n\n場内のほかのサイトも犬連れOK。このサイトは「リードなし」が許される唯一の場所。",
+	},
+	{
+		name: "日帰り\nデイキャンプ",
+		price: "¥1,100〜",
+		ci: "IN 9:00〜13:00",
+		co: "OUT 18:00",
+		id: 14,
+		img: planDaycamp,
+		alt: "那須烏山 里山パークおいらの森 日帰りデイキャンプのキャンプサイト",
+	},
+	{
+		name: "電車\nプラン",
+		price: "¥2,200/人〜",
+		ci: "IN 9:00〜17:00",
+		co: "OUT 12:00",
+		id: 23,
+		img: planTrain,
+		alt: "那須烏山 里山パークおいらの森 電車キャンパー歓迎プランのキャンプサイト",
+	},
+];
 ---
 
 <LpLayout
-  title="里山パークおいらの森 | 那須烏山・100年の森のキャンプ場"
-  description="栃木県那須烏山の里山にある体験型キャンプ場「里山パークおいらの森」。適切に伐採を行い森を保ちながら、ライトフォレストとディープフォレスト2つのフィールドで100年先の森を育てています。"
+  title="里山パークおいらの森｜栃木県那須烏山市のキャンプ場"
+  description="東京埼玉から2時間。栃木県那須烏山市にある里山パーク「おいらの森」。おいらのおすすめはオートサイトとソロ区画。ファミリーから野営まで、どなたでも森の中でキャンプを楽しめます。通年営業。"
+  lastUpdated="2026年5月"
 >
+  <script is:inline type="application/ld+json" slot="head" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": ["LocalBusiness", "Campground"],
+    "name": "里山パークおいらの森",
+    "alternateName": "フォレストパークおいらの森",
+    "description": "東京埼玉から2時間。栃木県那須烏山市にある里山パークおいらの森。おいらのおすすめはオートサイトとソロ区画。ファミリーから野営まで、どなたでも森の中でキャンプを楽しめます。通年営業。",
+    "url": "https://oiranomori.jp",
+    "telephone": "050-3647-1047",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "JP",
+      "addressRegion": "栃木県",
+      "addressLocality": "那須烏山市",
+      "streetAddress": "福岡1047"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 36.639896,
+      "longitude": 140.068402
+    },
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+        "opens": "09:00",
+        "closes": "18:00"
+      }
+    ],
+    "priceRange": "¥¥",
+    "image": "https://oiranomori.jp/images/lp/hero.jpg",
+    "sameAs": [
+      "https://note.com/oiranomori",
+      "https://instagram.com/oiranomori",
+      "https://facebook.com/oiranomori",
+      "https://x.com/oiranomori"
+    ]
+  })} />
 
   {/* 1. Hero */}
   <section id="top" class="lp-hero" style="background-image:url('/images/lp/hero.jpg');">
@@ -29,15 +125,17 @@ try {
           <span class="block text-2xl md:text-3xl">里山パーク</span>
           <span class="block text-5xl md:text-7xl">おいらの森</span>
         </h1>
-        <p class="mt-5 text-sm tracking-[0.2em] text-zinc-300 md:text-base">
-          栃木県那須烏山市にある100年の森作りを体験するキャンプ場
-        </p>
         <p class="mt-8 max-w-2xl text-sm leading-[2] text-zinc-200 md:text-base">
           里山パークおいらの森は栃木県那須烏山の里山にある静かな森のキャンプ場。<br />
           森で遊び、森に泊まり、森を味わいに。<br />
-          適切に伐採を行うことで森を保ちながら、100年先の森を今、育てています。<br />
+          焚き火を眺め、朝のコーヒーを淹れ、のんびりする時間を。<br />
           明るい広葉樹林のライトフォレスト、深い針葉樹林のディープフォレスト、<br />
           2つのフィールドでお待ちしております。
+        </p>
+        <p class="mt-10 text-xs tracking-[0.18em]">
+          <a href="/residents/" class="text-zinc-400 transition hover:text-zinc-200">
+            この森をつくる人 — 森の住人 →
+          </a>
         </p>
       </div>
     </div>
@@ -48,6 +146,56 @@ try {
   <section id="news" class="py-12 md:py-16 bg-[#f4f5f2]">
     <div class="mx-auto max-w-6xl px-4">
       <OshiraseList items={contents} />
+    </div>
+  </section>
+
+  {/* 【新】① 森のいま誘導 */}
+  <section id="forest-now" class="py-20 md:py-28 bg-white">
+    <div class="mx-auto max-w-6xl px-6 md:px-10">
+      <div class="grid items-center gap-10 md:grid-cols-2 md:gap-16">
+        <div class="overflow-hidden">
+          <picture>
+            <source type="image/avif" srcset="/images/lp/lp-forest-now-1200.avif 1200w, /images/lp/lp-forest-now.avif 2400w" sizes="(max-width: 768px) 100vw, 50vw" />
+            <source type="image/webp" srcset="/images/lp/lp-forest-now-1200.webp 1200w, /images/lp/lp-forest-now.webp 2400w" sizes="(max-width: 768px) 100vw, 50vw" />
+            <img
+              src="/images/lp/lp-forest-now-1200.jpg"
+              srcset="/images/lp/lp-forest-now-1200.jpg 1200w, /images/lp/lp-forest-now.jpg 2400w"
+              sizes="(max-width: 768px) 100vw, 50vw"
+              alt="おいらの森の木漏れ日と空"
+              width="1200"
+              height="675"
+              loading="lazy"
+              class="w-full object-cover"
+              style="aspect-ratio:4/3;"
+            />
+          </picture>
+        </div>
+        <div>
+          <p class="text-xs tracking-[0.32em] text-zinc-400">FOREST NOW</p>
+          <p class="mt-4 text-2xl font-semibold leading-snug text-zinc-800 md:text-3xl">
+            森の今を、覗きに
+          </p>
+          <h2 class="mt-3 text-base font-medium text-zinc-700 md:text-lg">
+            栃木県那須烏山市の天気と、キャンプ場のライブカメラ
+          </h2>
+          <p class="mt-5 text-sm leading-loose text-zinc-600 md:text-base">
+            天気、雨雲、週間予報、那須烏山アメダス。<br />
+            予約の混雑状況やライブカメラも、ここで。<br />
+            ※ライブカメラは準備中、近日公開。<br />
+            出かける前にも、テントの中からでも。
+          </p>
+          <a
+            href="/now/"
+            class="mt-8 inline-flex items-center gap-2 text-sm tracking-[0.14em] text-zinc-600 transition hover:text-zinc-900"
+          >
+            森のいまを見る
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M5 12h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+              <path d="M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -64,8 +212,11 @@ try {
     <div class="relative z-10 mx-auto max-w-6xl px-6 md:px-10">
       <div class="max-w-2xl">
         <p class="text-xs tracking-[0.32em] text-zinc-400">CAMPFIRE</p>
-        <h2 class="mt-4 text-3xl font-semibold leading-snug text-white md:text-4xl">
+        <p class="mt-4 text-3xl font-semibold leading-snug text-white md:text-4xl">
           キャンプといえば焚火
+        </p>
+        <h2 class="mt-3 text-base font-medium text-zinc-200 md:text-lg">
+          おいらの森から仕立てた最高の薪で、焚き火を満喫できるキャンプ場
         </h2>
         <p class="mt-3 text-sm tracking-[0.16em] text-zinc-300 md:text-base">
           焚き火をするためにキャンプする方も
@@ -84,59 +235,326 @@ try {
     </div>
   </section>
 
-  {/* 5. プランギャラリー */}
+  {/* 5. アーリーチェックイン */}
+  <section class="py-20 md:py-28 bg-[#eef1ec]">
+    <div class="mx-auto max-w-6xl px-6 md:px-10">
+      <div class="grid items-center gap-10 md:grid-cols-2 md:gap-16">
+        <div class="overflow-hidden">
+          <picture>
+            <source type="image/avif" srcset="/images/lp/lp-early-checkin-1200.avif 1200w, /images/lp/lp-early-checkin.avif 2400w" sizes="(max-width: 768px) 100vw, 50vw" />
+            <source type="image/webp" srcset="/images/lp/lp-early-checkin-1200.webp 1200w, /images/lp/lp-early-checkin.webp 2400w" sizes="(max-width: 768px) 100vw, 50vw" />
+            <img
+              src="/images/lp/lp-early-checkin-1200.jpg"
+              srcset="/images/lp/lp-early-checkin-1200.jpg 1200w, /images/lp/lp-early-checkin.jpg 2400w"
+              sizes="(max-width: 768px) 100vw, 50vw"
+              alt="朝のおいらの森 — 木漏れ日の差し込む広葉樹林"
+              width="1200"
+              height="675"
+              loading="lazy"
+              class="w-full object-cover"
+              style="aspect-ratio:4/3;"
+            />
+          </picture>
+        </div>
+        <div>
+          <p class="text-xs tracking-[0.32em] text-zinc-400">EARLY CHECK-IN</p>
+          <p class="mt-4 text-2xl font-semibold leading-snug text-zinc-800 md:text-3xl">
+            キャンプを存分に楽しんでもらいたい。
+          </p>
+          <h2 class="mt-3 text-base font-medium text-zinc-700 md:text-lg">
+            9時イン・翌12時アウト。アーリーチェックイン無料
+          </h2>
+          <p class="mt-5 text-sm leading-loose text-zinc-600 md:text-base">
+            だからアーリーチェックインは無料にしています。<br />
+            朝から来て、翌日12時のチェックアウトまでこの森でゆっくりと時間を過ごしてほしい。<br />
+            それがおいらの想いです。
+          </p>
+          <p class="mt-4 text-xs text-zinc-400">繁忙期は対応できない場合もあります。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* 【新】② 周辺便利 */}
+  <section id="neighborhood" class="py-20 md:py-28 bg-[#f4f5f2]">
+    <div class="mx-auto max-w-6xl px-6 md:px-10">
+      <div class="grid items-center gap-10 md:grid-cols-2 md:gap-16">
+        <div class="order-last md:order-none">
+          <p class="text-xs tracking-[0.32em] text-zinc-400">NEIGHBORHOOD</p>
+          <p class="mt-4 text-2xl font-semibold leading-snug text-zinc-800 md:text-3xl">
+            秘境じゃない、街中じゃない
+          </p>
+          <h2 class="mt-3 text-base font-medium text-zinc-700 md:text-lg">
+            温泉もスーパーも車で10分。栃木県那須烏山市の里山キャンプ場
+          </h2>
+          <p class="mt-5 text-sm leading-loose text-zinc-600 md:text-base">
+            森の中だけど、車で10分も走れば<br />
+            温泉、スーパー、食事処、観光スポット、だいたい揃ってる。<br />
+            忘れ物しても、温泉に浸かりに出ても、すぐ戻ってこれる距離。
+          </p>
+          <dl class="mt-8 grid grid-cols-2 gap-x-8 gap-y-4 sm:grid-cols-3">
+            {[
+              { label: "食事", count: "14件" },
+              { label: "温泉・お風呂", count: "11件" },
+              { label: "買い物", count: "20件" },
+              { label: "観光スポット", count: "13件" },
+              { label: "救急医療", count: "1件" },
+            ].map(({ label, count }) => (
+              <div>
+                <dt class="text-xs text-zinc-400">{label}</dt>
+                <dd class="mt-0.5 text-base font-semibold text-zinc-800">{count}</dd>
+              </div>
+            ))}
+          </dl>
+          <dl class="mt-6 grid grid-cols-3 gap-x-8 gap-y-4">
+            {[
+              { label: "東京駅から", count: "約2時間" },
+              { label: "大宮駅から", count: "約1時間40分" },
+              { label: "宇都宮駅から", count: "約40分" },
+            ].map(({ label, count }) => (
+              <div>
+                <dt class="text-xs text-zinc-400">{label}</dt>
+                <dd class="mt-0.5 text-base font-semibold text-zinc-800">{count}</dd>
+              </div>
+            ))}
+          </dl>
+          <a
+            href="/map/"
+            class="mt-8 inline-flex items-center gap-2 text-sm tracking-[0.14em] text-zinc-600 transition hover:text-zinc-900"
+          >
+            周辺マップを見る
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M5 12h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+              <path d="M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+        <div class="overflow-hidden">
+          <picture>
+            <source type="image/avif" srcset="/images/lp/lp-neighborhood-1200.avif 1200w, /images/lp/lp-neighborhood.avif 2400w" sizes="(max-width: 768px) 100vw, 50vw" />
+            <source type="image/webp" srcset="/images/lp/lp-neighborhood-1200.webp 1200w, /images/lp/lp-neighborhood.webp 2400w" sizes="(max-width: 768px) 100vw, 50vw" />
+            <img
+              src="/images/lp/lp-neighborhood-1200.jpg"
+              srcset="/images/lp/lp-neighborhood-1200.jpg 1200w, /images/lp/lp-neighborhood.jpg 2400w"
+              sizes="(max-width: 768px) 100vw, 50vw"
+              alt="那須烏山市の里山の風景"
+              width="1200"
+              height="801"
+              loading="lazy"
+              class="w-full object-cover"
+              style="aspect-ratio:4/3;"
+            />
+          </picture>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* 6. ライトフォレスト紹介 ① */}
+  <section class="py-20 md:py-28 bg-white">
+    <div class="mx-auto max-w-6xl px-6 md:px-10">
+      <div class="grid items-center gap-10 md:grid-cols-2 md:gap-16">
+        <div class="overflow-hidden">
+          <img
+            src="/images/IMG_0552.JPEG"
+            alt="おいらの森 ライトフォレスト — 里山広葉樹林のキャンプサイト"
+            loading="lazy"
+            class="w-full object-cover"
+            style="aspect-ratio:4/3;"
+          />
+        </div>
+        <div>
+          <p class="text-xs tracking-[0.32em] text-zinc-400">LIGHT FOREST</p>
+          <p class="mt-4 text-2xl font-semibold leading-snug text-zinc-800 md:text-3xl">
+            おいらが家族と暮らす森に、お越しください。
+          </p>
+          <h2 class="mt-3 text-base font-medium text-zinc-700 md:text-lg">
+            家族で住む管理人がそばにいる、女性ソロも歓迎の林間オートサイト
+          </h2>
+          <p class="mt-5 text-sm leading-loose text-zinc-600 md:text-base">
+            おいらが家族と隣接地に住んでいる、管理人常駐のキャンプ場です。<br />
+            女性一人でも安心してお越しいただけます。
+          </p>
+          <a
+            href="/light-guide/"
+            class="mt-8 inline-flex items-center gap-2 text-sm tracking-[0.14em] text-zinc-600 transition hover:text-zinc-900"
+          >
+            利用案内を見る
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M5 12h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+              <path d="M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* 6-2. ライトフォレスト紹介 ② */}
+  <section class="py-20 md:py-28 bg-[#f4f5f2]">
+    <div class="mx-auto max-w-6xl px-6 md:px-10">
+      <div class="grid items-center gap-10 md:grid-cols-2 md:gap-16">
+        <div class="order-last md:order-none">
+          <p class="text-xs tracking-[0.32em] text-zinc-400">HONEST FOREST</p>
+          <p class="mt-4 text-2xl font-semibold leading-snug text-zinc-800 md:text-3xl">
+            整えすぎず、けど、手は入っている。
+          </p>
+          <h2 class="mt-3 text-base font-medium text-zinc-700 md:text-lg">
+            里山の地形を活かした、水洗トイレ完備の通年営業キャンプ場
+          </h2>
+          <p class="mt-5 text-sm leading-loose text-zinc-600 md:text-base">
+            地面は土で、夜は暗く、虫も当たり前に暮らしています。<br />
+            その分、森本来の心地よさがそのままあります。
+          </p>
+          <p class="mt-3 text-sm leading-loose text-zinc-600">
+            シャワーはありませんが、水洗トイレは備えています。<br />
+            虫よけと歩きやすい靴を用意して来てください。
+          </p>
+        </div>
+        <div class="overflow-hidden">
+          <img
+            src="/images/IMG_1698.JPEG"
+            alt="おいらの森 ライトフォレスト — ありのままの里山の自然"
+            loading="lazy"
+            class="w-full object-cover"
+            style="aspect-ratio:4/3;"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* 【新】③ 林間の強み */}
+  <section
+    id="in-the-forest"
+    class="relative overflow-hidden py-24 md:py-32"
+  >
+    <picture>
+      <source type="image/avif" srcset="/images/lp/lp-in-the-forest-1200.avif 1200w, /images/lp/lp-in-the-forest.avif 2400w" sizes="100vw" />
+      <source type="image/webp" srcset="/images/lp/lp-in-the-forest-1200.webp 1200w, /images/lp/lp-in-the-forest.webp 2400w" sizes="100vw" />
+      <img
+        src="/images/lp/lp-in-the-forest-1200.jpg"
+        srcset="/images/lp/lp-in-the-forest-1200.jpg 1200w, /images/lp/lp-in-the-forest.jpg 2400w"
+        sizes="100vw"
+        alt="那須烏山 里山パークおいらの森の林間"
+        width="2365"
+        height="1330"
+        loading="lazy"
+        class="absolute inset-0 h-full w-full object-cover"
+      />
+    </picture>
+    <div class="absolute inset-0 bg-black/60"></div>
+    <div class="relative z-10 mx-auto max-w-6xl px-6 md:px-10">
+      <div class="max-w-2xl">
+        <p class="text-xs tracking-[0.32em] text-zinc-400">IN THE FOREST</p>
+        <p class="mt-4 text-3xl font-semibold leading-snug text-white md:text-4xl">
+          森が、ちょうどよくしてくれる
+        </p>
+        <h2 class="mt-3 text-base font-medium text-zinc-200 md:text-lg">
+          夏は木陰、冬は風よけ。ハンモックを掛けやすい林間サイト
+        </h2>
+        <p class="mt-5 text-sm leading-loose text-zinc-200 md:text-base">
+          高い木が強い風をいなして、地面はおだやか。<br />
+          夏は木陰、冬は北風よけ。森が勝手に整えてくれる。<br />
+          気に入った木にハンモックをかけて昼寝するのも、<br />
+          本を持って奥のほうに歩いていくのも、何もせずぼーっとするのも、ぜんぶ自由。
+        </p>
+        <p class="mt-4 text-sm leading-loose text-zinc-300 md:text-base">
+          下草まで手の入った歩きやすい森を、お好きにどうぞ。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  {/* 【新】④ 生ビール量り売り */}
+  <section id="draft-beer" class="py-20 md:py-28 bg-white">
+    <div class="mx-auto max-w-6xl px-6 md:px-10">
+      <div class="grid items-center gap-10 md:grid-cols-2 md:gap-16">
+        <div class="overflow-hidden">
+          <picture>
+            <source type="image/avif" srcset="/images/lp/lp-draft-beer-1200.avif 1200w, /images/lp/lp-draft-beer.avif 2400w" sizes="(max-width: 768px) 100vw, 50vw" />
+            <source type="image/webp" srcset="/images/lp/lp-draft-beer-1200.webp 1200w, /images/lp/lp-draft-beer.webp 2400w" sizes="(max-width: 768px) 100vw, 50vw" />
+            <img
+              src="/images/lp/lp-draft-beer-1200.jpg"
+              srcset="/images/lp/lp-draft-beer-1200.jpg 1200w, /images/lp/lp-draft-beer.jpg 2400w"
+              sizes="(max-width: 768px) 100vw, 50vw"
+              alt="おいらの森売店の生ビールサーバー"
+              width="675"
+              height="1200"
+              loading="lazy"
+              class="w-full object-cover"
+              style="aspect-ratio:4/3;"
+            />
+          </picture>
+        </div>
+        <div>
+          <p class="text-xs tracking-[0.32em] text-zinc-400">DRAFT BEER</p>
+          <p class="mt-4 text-2xl font-semibold leading-snug text-zinc-800 md:text-3xl">
+            お気に入りのカップで、生ビールを
+          </p>
+          <h2 class="mt-3 text-base font-medium text-zinc-700 md:text-lg">
+            売店のサーバーから量り売り。生ビールが飲めるキャンプ場
+          </h2>
+          <p class="mt-5 text-sm leading-loose text-zinc-600 md:text-base">
+            キリン一番搾り、または晴れ風。1グラム1円の量り売り。<br />
+            売店のサーバーから、持ってきたカップやグラスに注いで楽しめる。
+          </p>
+          <p class="mt-4 text-sm leading-loose text-zinc-600 md:text-base">
+            容器は売っていません。家のマグでも、お気に入りのグラスでも、<br />
+            気分の上がるやつを連れてきてください。
+          </p>
+          <p class="mt-4 text-sm leading-loose text-zinc-600 md:text-base">
+            提供時間は<a href="/shop/" class="underline underline-offset-2 transition hover:text-zinc-900">売店のページ</a>にまとめてあります。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* 7. プランギャラリー */}
   <section id="plans" class="py-20 md:py-28 bg-[#f4f5f2]">
     <div class="mx-auto max-w-6xl px-6 md:px-10">
       <p class="text-xs tracking-[0.32em] text-zinc-400">PLAN</p>
-      <h2 class="mt-3 text-2xl font-semibold text-zinc-800 md:text-3xl">プランを選ぶ</h2>
+      <p class="mt-3 text-2xl font-semibold text-zinc-800 md:text-3xl">プランを選ぶ</p>
+      <h2 class="mt-3 text-base font-medium text-zinc-700 md:text-lg">
+        キャンププラン一覧。1組限定の貸切ドッグランサイトあり
+      </h2>
 
       <div class="mt-10 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
-        {[
-          {
-            name: "スタンダード・\nオートサイト",
-            price: "¥3,300/サイト〜",
-            ci: "IN 9:00〜17:00",
-            co: "OUT 12:00",
-            bg: "bg-[#2d3a30]",
-            id: 4,
-          },
-          {
-            name: "貸切\nドッグランサイト",
-            price: "¥4,400/サイト〜",
-            ci: "IN 9:00〜17:00",
-            co: "OUT 12:00",
-            bg: "bg-[#3a3228]",
-            id: 7,
-          },
-          {
-            name: "日帰り\nデイキャンプ",
-            price: "¥1,100〜",
-            ci: "IN 9:00〜13:00",
-            co: "OUT 18:00",
-            bg: "bg-[#38342a]",
-            id: 14,
-          },
-          {
-            name: "電車\nプラン",
-            price: "¥2,200/人〜",
-            ci: "IN 9:00〜17:00",
-            co: "OUT 12:00",
-            bg: "bg-[#2a3530]",
-            id: 23,
-          },
-        ].map((plan) => (
+        {plans.map((plan) => (
           <a
-            href={`https://www.489pro-x.com/ja/s/oiranomori/plan/${plan.id}/`}
+            href={`https://www.489pro-x.com/ja/s/oiranomori/search/?plans=${plan.id}&show=plan`}
             target="_blank"
             rel="noopener noreferrer"
-            class={`group relative flex flex-col justify-end overflow-hidden ${plan.bg}`}
+            class="group relative flex flex-col justify-end overflow-hidden bg-zinc-900"
             style="aspect-ratio: 3/4;"
           >
-            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent transition group-hover:from-black/80"></div>
+            {plan.badge && (
+              <p class="absolute left-2 top-2 z-20 bg-white/15 px-2 py-0.5 text-[10px] tracking-wide text-white/90 backdrop-blur-sm">
+                {plan.badge}
+              </p>
+            )}
+            <Image
+              src={plan.img}
+              alt={plan.alt}
+              width={600}
+              height={800}
+              loading="lazy"
+              class="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent transition group-hover:from-black/85"></div>
             <div class="relative z-10 p-4">
               <p class="whitespace-pre-line text-sm font-medium leading-snug text-white md:text-base">
                 {plan.name}
               </p>
+              {plan.subtitle && (
+                <p class="mt-0.5 text-[10px] text-zinc-300">{plan.subtitle}</p>
+              )}
+              {plan.body && (
+                <p class="mt-2 line-clamp-4 whitespace-pre-line text-[10px] leading-snug text-zinc-300">
+                  {plan.body}
+                </p>
+              )}
               <p class="mt-1 text-xs tracking-wide text-zinc-300">{plan.price}</p>
               <p class="mt-0.5 text-[10px] text-zinc-400">{plan.ci} / {plan.co}</p>
               <p class="mt-3 inline-flex items-center gap-1 text-[10px] tracking-[0.16em] text-zinc-300 transition group-hover:text-white">

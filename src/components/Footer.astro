@@ -1,4 +1,5 @@
----
+﻿---
+const { lastUpdated } = Astro.props;
 const footerGroups = [
   {
     title: "予約・会員",
@@ -6,46 +7,43 @@ const footerGroups = [
       { label: "予約する", href: "https://www.489pro-x.com/ja/s/oiranomori/planlist/", external: true, active: true },
       { label: "予約ガイド", href: "/reservation-guide/", active: true },
       { label: "ご予約確認", href: "https://www.489pro-x.com/ja/s/oiranomori/booking/login/", external: true, active: true },
-      { label: "チェックアウト", href: "/checkout/", active: true },
+      { label: "会員ログイン", href: "https://www.489pro-x.com/ja/s/oiranomori/member/login/", external: true, active: true },
+      { label: "新規会員登録", href: "https://www.489pro-x.com/ja/s/oiranomori/member/input/", external: true, active: true },
+      { label: "チェックアウトの連絡", href: "/checkout/", active: true },
+      { label: "キャンセルポリシー", href: "/reservation-guide/#cancellation", active: true },
     ],
   },
   {
-    title: "フィールド案内",
+    title: "おいらの森でキャンプする",
     items: [
-      { label: "森のいま", href: "/now/", active: true },
-      { label: "ライトフォレスト", href: "/light-guide/", active: true },
-      { label: "ディープフォレスト", href: "/deep-guide/", active: true },
-      { label: "アクセス", href: "/access/", active: true },
-    ],
-  },
-  {
-    title: "薪・レンタル",
-    items: [
+      { label: "ライトフォレスト 利用案内", href: "/light-guide/", active: true },
+      { label: "ディープフォレスト 利用案内", href: "/deep-guide/", active: true },
+      { label: "場内マップ（ライト）", href: "/map/?view=light", active: true },
       { label: "おいらの薪", href: "/firewood/", active: true },
-      { label: "レンタル・売店", href: "/firewood/#rental", active: true },
-      { label: "年間パスポート", href: "/passport/", active: true },
+      { label: "レンタル", href: "/rental/", active: true },
+      { label: "売店", href: "/shop/", active: true },
+      { label: "年間パスポート・回数券", href: "/passport/", active: true },
+      { label: "よくある質問", href: "/faq/", active: true },
     ],
   },
   {
-    title: "森を体験",
+    title: "おいらの森",
     items: [
-      { label: "オイラーズ", href: "/oiras/", active: true },
-    ],
-  },
-  {
-    title: "物語・記録",
-    items: [
-      { label: "Note", href: "https://note.com/oiranomori", external: true, active: true },
-      { label: "Instagram", href: "https://instagram.com/oiranomori", external: true, active: true },
-      { label: "Facebook", href: "https://facebook.com/oiranomori", external: true, active: true },
-    ],
-  },
-  {
-    title: "サポート",
-    items: [
+      { label: "アクセス", href: "/access/", active: true },
+      { label: "周辺案内", href: "/map/?view=food", active: true },
+      { label: "森のいま", href: "/now/", active: true },
       { label: "お知らせ", href: "/news/", active: true },
       { label: "お問い合わせ", href: "/contact/", active: true },
-      { label: "よくある質問", href: "/faq/", active: true },
+    ],
+  },
+  {
+    title: "おいらと森と",
+    items: [
+      { label: "森の住人", href: "/residents/", active: true },
+      { label: "オイラーズ", href: "/oiras/", active: true },
+      { label: "The 森 Chronicles", href: "https://note.com/oiranomori/m/m820d8cac57a3", external: true, active: true },
+      { label: "メディア・ロケ地・貸し切り", href: "/media/", active: true },
+      { label: "運営会社・関連組織", href: "/about/", active: true },
       { label: "利用規約", href: "/policy/#terms", active: true },
       { label: "プライバシーポリシー", href: "/policy/#privacy", active: true },
     ],
@@ -55,22 +53,23 @@ const footerGroups = [
 
 <footer class="lp-footer">
   <div class="mx-auto max-w-6xl px-4 py-14">
-    <div class="mb-10 flex flex-wrap items-end justify-between gap-6 border-b border-zinc-300 pb-8">
+    <div class="mb-10 flex flex-wrap items-end justify-between gap-6 border-b border-zinc-800 pb-8">
       <div>
-        <img src="/images/logo/logo-w512.png" onerror="this.src='/logo.svg'" alt="おいらの森" class="h-12 w-auto" />
-        <p class="mt-3 max-w-lg text-sm text-zinc-600">栃木県那須烏山の里山で、100年先の森を育てるキャンプ場</p>
+        <img src="/images/logo/logo-w512.png" onerror="this.src='/logo.svg'" alt="おいらの森" class="h-12 w-auto" style="filter: brightness(0) invert(1)" />
+        <p class="mt-3 max-w-lg text-sm text-zinc-400">栃木県那須烏山の里山で、100年先の森を育てるキャンプ場</p>
       </div>
       <div class="flex items-center gap-2">
         <a href="https://note.com/oiranomori" target="_blank" rel="noopener noreferrer" class="footer-sns">note</a>
         <a href="https://instagram.com/oiranomori" target="_blank" rel="noopener noreferrer" class="footer-sns">Instagram</a>
         <a href="https://facebook.com/oiranomori" target="_blank" rel="noopener noreferrer" class="footer-sns">Facebook</a>
+        <a href="https://x.com/oiranomori" target="_blank" rel="noopener noreferrer" class="footer-sns">X</a>
       </div>
     </div>
 
-    <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+    <div class="grid grid-cols-2 gap-6 lg:grid-cols-4">
       {footerGroups.map((group) => (
         <div>
-          <h3 class="mb-3 text-sm font-semibold tracking-[0.16em] text-zinc-700">{group.title}</h3>
+          <h3 class="mb-3 text-sm font-semibold tracking-[0.16em] text-zinc-400">{group.title}</h3>
           <ul class="space-y-2 text-sm">
             {group.items.map((item) => (
               <li>
@@ -88,8 +87,9 @@ const footerGroups = [
       ))}
     </div>
 
-    <p class="mt-10 border-t border-zinc-200 pt-6 text-center text-xs tracking-[0.14em] text-zinc-500">
-      © {new Date().getFullYear()} おいらの森 / Satoyama Park Oiranomori. All rights reserved.
-    </p>
+    <div class="mt-10 border-t border-zinc-800 pt-6 text-center text-xs tracking-[0.14em] text-zinc-400">
+      {lastUpdated && <p class="mb-1">最終更新：{lastUpdated}</p>}
+      <p>© {new Date().getFullYear()} 里山パークおいらの森 / Satoyama Park Oira no Mori. All rights reserved.</p>
+    </div>
   </div>
 </footer>

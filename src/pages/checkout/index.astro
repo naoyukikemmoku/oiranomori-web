@@ -1,5 +1,6 @@
----
+﻿---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/Header.astro";
 
 const lightSites = [
   ...Array.from({ length: 37 }, (_, i) => `オートサイト ${i + 1}番`),
@@ -15,9 +16,11 @@ const lightSites = [
 ---
 
 <BaseLayout
-  title="チェックアウト連絡 | おいらの森"
+  title="チェックアウト連絡 | 里山パークおいらの森"
+  noindex={true}
   description="那須烏山・里山パークおいらの森のチェックアウト連絡フォーム。お帰りの際はこちらからご連絡ください。"
 >
+  <Header />
   <div class="min-h-screen bg-[#f4f5f2] pt-16 pb-24">
     <div class="mx-auto max-w-2xl px-5">
 
@@ -103,7 +106,7 @@ const lightSites = [
             class="block w-full border-b border-zinc-400 bg-transparent py-2.5 text-sm text-zinc-800 placeholder-zinc-300 outline-none transition focus:border-zinc-700"
             placeholder="example@mail.com"
           />
-          <p class="text-xs text-zinc-400">サンキューメールを受け取る場合ご記入ください</p>
+          <p class="text-xs text-zinc-400">返信不要の場合は入力不要です。ご連絡が必要な場合や返信をご希望の際にご記入ください。</p>
         </div>
 
         {/* ご意見・ご感想 */}

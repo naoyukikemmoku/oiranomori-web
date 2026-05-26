@@ -2,12 +2,26 @@
 import PageLayout from "../../layouts/PageLayout.astro";
 ---
 
-<PageLayout title="利用規約・プライバシーポリシー | 里山パークおいらの森" description="那須烏山・里山パークおいらの森の利用規約・プライバシーポリシー・キャンセルポリシーをご確認ください。">
+<PageLayout title="ご利用のルール | 里山パークおいらの森" description="おいらの森の利用規約・プライバシーポリシー・キャンセルポリシーをまとめました。初めてのご利用前にご確認ください。" lastUpdated="2026年4月">
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json">{JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "ご利用のルール | 里山パークおいらの森",
+      "description": "おいらの森の利用規約・プライバシーポリシー・キャンセルポリシーをまとめました。初めてのご利用前にご確認ください。",
+      "url": "https://oiranomori.jp/policy/",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "里山パークおいらの森",
+        "url": "https://oiranomori.jp"
+      }
+    })}</script>
+  </Fragment>
 
   {/* ページ見出し */}
   <div class="mb-10 border-b border-zinc-200 pb-8">
     <p class="text-xs tracking-[0.26em] text-zinc-400 uppercase">Policy</p>
-    <h1 class="mt-3 text-3xl font-semibold text-zinc-800 md:text-4xl">利用規約・<br class="sm:hidden" />プライバシーポリシー</h1>
+    <h1 class="mt-3 text-3xl font-semibold text-zinc-800 md:text-4xl">ご利用のルール</h1>
     <p class="mt-4 max-w-2xl text-base leading-loose text-zinc-600">
       里山パークおいらの森をご利用いただくにあたり、以下の規約をお読みください。
       ご予約・ご入場をもって同意いただいたものとみなします。
@@ -16,9 +30,11 @@ import PageLayout from "../../layouts/PageLayout.astro";
       {[
         { href: "#checkin", label: "チェックイン・アウト" },
         { href: "#cancel", label: "キャンセル" },
+        { href: "#lost-and-found", label: "お忘れ物" },
         { href: "#rules", label: "禁止事項" },
         { href: "#terms", label: "利用規約（条文）" },
         { href: "#privacy", label: "プライバシーポリシー" },
+        { href: "#tokushoho", label: "特商法表記" },
       ].map((item) => (
         <a
           href={item.href}
@@ -59,6 +75,25 @@ import PageLayout from "../../layouts/PageLayout.astro";
         { label: "無断キャンセル", value: "連絡なく当日入場されない場合も同様に100%を申し受けます。" },
         { label: "それ以外", value: "無料です。" },
         { label: "当施設都合による中止", value: "天災・悪天候・施設トラブル等による中止の場合、キャンセル料は発生しません。" },
+      ].map((item) => (
+        <div class="grid grid-cols-[10rem_1fr] gap-4 py-5 sm:grid-cols-[14rem_1fr]">
+          <dt class="text-zinc-500">{item.label}</dt>
+          <dd class="text-zinc-700">{item.value}</dd>
+        </div>
+      ))}
+    </dl>
+  </section>
+
+  {/* お忘れ物 */}
+  <section id="lost-and-found" class="mb-14">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">お忘れ物について</h2>
+    <dl class="divide-y divide-zinc-100 border-y border-zinc-200 text-sm">
+      {[
+        { label: "保管期間", value: "場内で見つかった忘れ物は3ヶ月間保管します。期限を過ぎたものは処分します。" },
+        { label: "ご連絡方法", value: "お問い合わせフォームまたはお電話でご連絡ください。ご宿泊日・サイト名・お忘れ物の内容をお知らせいただければ保管状況をお調べします。" },
+        { label: "返送", value: "返送をご希望の場合は着払いでお送りします。送料はご負担ください。" },
+        { label: "個別のご連絡", value: "プライバシー配慮のため、当施設からお客様に個別にご連絡することはありません。お心当たりのある方はお早めにお問い合わせください。" },
+        { label: "食品・飲料等", value: "衛生上問題があるものは当日中に処分します。あらかじめご了承ください。" },
       ].map((item) => (
         <div class="grid grid-cols-[10rem_1fr] gap-4 py-5 sm:grid-cols-[14rem_1fr]">
           <dt class="text-zinc-500">{item.label}</dt>
@@ -220,6 +255,86 @@ import PageLayout from "../../layouts/PageLayout.astro";
         <p class="text-zinc-600">
           里山パークおいらの森<br />
           栃木県那須烏山市
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  {/* ── 特定商取引法に基づく表記 ── */}
+  <hr class="mb-14 border-zinc-300" />
+
+  <section id="tokushoho" class="mb-14">
+    <h2 class="mb-2 text-xl font-semibold text-zinc-800">特定商取引法に基づく表記</h2>
+    <p class="mb-6 text-xs text-zinc-400">最終更新：2026年4月</p>
+
+    <dl class="mb-10 divide-y divide-zinc-100 border-y border-zinc-200 text-sm">
+      {[
+        { label: "販売事業者", value: "株式会社橋本商事" },
+        { label: "運営施設", value: "里山パークおいらの森" },
+        { label: "代表取締役", value: "橋本佳子" },
+        { label: "通信販売業務責任者", value: "橋本佳子" },
+        { label: "所在地", value: "〒321-0525 栃木県那須烏山市福岡1047" },
+        { label: "電話番号", value: "050-3647-1047（受付時間 9:00〜18:00）" },
+        { label: "メールアドレス", value: "oira@oiranomori.jp" },
+        { label: "営業", value: "通年営業" },
+        { label: "URL", value: "https://oiranomori.jp" },
+      ].map((item) => (
+        <div class="grid grid-cols-[10rem_1fr] gap-4 py-5 sm:grid-cols-[14rem_1fr]">
+          <dt class="text-zinc-500">{item.label}</dt>
+          <dd class="text-zinc-700">{item.value}</dd>
+        </div>
+      ))}
+    </dl>
+
+    <div class="space-y-8 text-sm leading-loose">
+
+      <div class="border-t border-zinc-200 pt-6">
+        <p class="mb-3 font-semibold text-zinc-800">販売価格</p>
+        <p class="text-zinc-600">
+          各宿泊・施設利用プランの予約ページに表示する金額（消費税込）。
+        </p>
+      </div>
+
+      <div class="border-t border-zinc-200 pt-6">
+        <p class="mb-3 font-semibold text-zinc-800">価格以外に必要となる料金</p>
+        <p class="text-zinc-600">
+          レンタル品・薪・追加サービス等は現地メニューに従う。ペット同伴は無料。
+        </p>
+      </div>
+
+      <div class="border-t border-zinc-200 pt-6">
+        <p class="mb-3 font-semibold text-zinc-800">支払方法・支払時期</p>
+        <p class="text-zinc-600">現地決済（チェックイン時または現地での注文発生時）。</p>
+        <p class="mt-3 text-zinc-600">決済代行サービス Square を通じて以下の決済方法に対応:</p>
+        <ul class="mt-2 space-y-1 list-disc pl-5 text-zinc-600">
+          <li>クレジットカード：Visa / Mastercard / JCB / American Express / Diners Club / Discover / UnionPay</li>
+          <li>電子マネー：交通系IC / iD / QUICPay</li>
+          <li>QRコード決済：PayPay / 楽天ペイ / au PAY / d払い / メルペイ / Alipay+ / WeChat Pay</li>
+          <li>現金</li>
+        </ul>
+      </div>
+
+      <div class="border-t border-zinc-200 pt-6">
+        <p class="mb-3 font-semibold text-zinc-800">役務の提供時期</p>
+        <p class="text-zinc-600">
+          予約時に確定したチェックイン日からチェックアウト日まで。
+          チェックイン・チェックアウト時間は<a href="#checkin" class="border-b border-zinc-400 transition hover:border-zinc-700">本ページ上部「チェックイン・チェックアウト」</a>をご参照ください。
+        </p>
+      </div>
+
+      <div class="border-t border-zinc-200 pt-6">
+        <p class="mb-3 font-semibold text-zinc-800">キャンセル・契約解除</p>
+        <p class="text-zinc-600">
+          <a href="#cancel" class="border-b border-zinc-400 transition hover:border-zinc-700">本ページ上部「キャンセルについて」</a>をご参照ください。
+          役務の性質上、サービス提供開始後の返金は不可。
+        </p>
+      </div>
+
+      <div class="border-t border-zinc-200 pt-6">
+        <p class="mb-3 font-semibold text-zinc-800">申込み方法</p>
+        <p class="text-zinc-600">
+          予約サイト <a href="https://www.489pro-x.com/ja/s/oiranomori/" target="_blank" rel="noopener noreferrer" class="border-b border-zinc-400 transition hover:border-zinc-700">ProX</a> からのオンライン予約。
         </p>
       </div>
 

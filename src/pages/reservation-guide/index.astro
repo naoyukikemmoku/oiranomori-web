@@ -1,26 +1,108 @@
----
+﻿---
 import PageLayout from "../../layouts/PageLayout.astro";
+
+const proXPlanlist = "https://www.489pro-x.com/ja/s/oiranomori/planlist/";
+
+const steps = [
+  {
+    no: "2",
+    title: "プランを選択",
+    desc: "プランページから、ご希望のプランと日程を選択します。",
+  },
+  {
+    no: "3",
+    title: "買い物カゴに追加",
+    desc: "複数のプランや日程を買い物カゴに入れて、まとめて予約・決済が可能です。グループでの別々予約や長期滞在も1回の手続きで完了します。",
+  },
+  {
+    no: "4",
+    title: "決済",
+    desc: "決済は現地決済のみ",
+  },
+  {
+    no: "5",
+    title: "前日リマインドメール",
+    desc: "ご来場前日に、チェックイン方法や周辺の買い出し情報をまとめたリマインドメールをお送りします。チェックイン・チェックアウトに必要な予約番号コードが記載されていますので、必ず受信をご確認ください。",
+  },
+];
 ---
 
 <PageLayout
-  title="予約ガイド | おいらの森"
-  description="那須烏山・里山パークおいらの森の予約ガイド。オンライン予約の手順、会員登録のメリット、キャンセルポリシーをわかりやすく解説します。"
+  title="予約ガイド | 里山パークおいらの森"
+  description="はじめての方向け予約ガイド。オンライン予約の手順・会員登録のメリット・キャンセルポリシーをわかりやすく解説しています。"
+  lastUpdated="2026年5月"
 >
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json">{JSON.stringify({
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebPage",
+          "name": "予約ガイド | 里山パークおいらの森",
+          "description": "はじめての方向け予約ガイド。オンライン予約の手順・会員登録のメリット・キャンセルポリシーをわかりやすく解説しています。",
+          "url": "https://oiranomori.jp/reservation-guide/",
+          "isPartOf": {
+            "@type": "WebSite",
+            "name": "里山パークおいらの森",
+            "url": "https://oiranomori.jp"
+          }
+        },
+        {
+          "@type": "HowTo",
+          "name": "里山パークおいらの森の予約手順",
+          "description": "おいらの森公式予約サイトを使ったオンライン予約の手順です。",
+          "step": [
+            {
+              "@type": "HowToStep",
+              "position": 1,
+              "name": "公式予約サイトへアクセス",
+              "text": "「予約する」ボタンを押して、おいらの森公式予約サイトにアクセスしてください。"
+            },
+            {
+              "@type": "HowToStep",
+              "position": 2,
+              "name": "プランを選択",
+              "text": "プランページから、ご希望のプランと日程を選択します。"
+            },
+            {
+              "@type": "HowToStep",
+              "position": 3,
+              "name": "買い物カゴに追加",
+              "text": "複数のプランや日程を買い物カゴに入れて、まとめて予約・決済が可能です。"
+            },
+            {
+              "@type": "HowToStep",
+              "position": 4,
+              "name": "決済",
+              "text": "決済は現地決済のみです。"
+            },
+            {
+              "@type": "HowToStep",
+              "position": 5,
+              "name": "前日リマインドメールを受信",
+              "text": "ご来場前日に、チェックイン方法や周辺の買い出し情報をまとめたリマインドメールをお送りします。予約番号コードが記載されていますので、必ず受信をご確認ください。"
+            }
+          ]
+        }
+      ]
+    })}</script>
+  </Fragment>
 
   <div class="mb-10 border-b border-zinc-200 pb-8">
     <p class="text-xs tracking-[0.26em] text-zinc-400 uppercase">Reservation Guide</p>
     <h1 class="mt-3 text-3xl font-semibold text-zinc-800 md:text-4xl">予約ガイド</h1>
     <p class="mt-4 max-w-2xl text-base leading-loose text-zinc-600">
-      おいらの森は当方の予約システムを通じてネット予約を受け付けています。
-      会員登録でさらに便利にご利用いただけます。
+      おいらの森は公式予約サイトを通じてネット予約を受け付けています。
+      ポイントが貯まる会員登録をしてからのご利用がおすすめです。
     </p>
     <nav class="mt-6 flex flex-wrap gap-3 text-sm">
       {[
         { href: "#steps",  label: "予約の手順" },
-        { href: "#online", label: "ネット予約の特徴" },
-        { href: "#member", label: "会員制度・ポイント" },
-        { href: "#change", label: "変更・キャンセル" },
         { href: "#phone",  label: "電話予約について" },
+        { href: "#change", label: "変更・キャンセル" },
+        { href: "#merit",  label: "公式予約のメリット" },
+        { href: "#member", label: "会員制度・ポイント" },
+        { href: "#online", label: "ネット予約の特徴" },
       ].map((item) => (
         <a
           href={item.href}
@@ -34,39 +116,35 @@ import PageLayout from "../../layouts/PageLayout.astro";
 
   {/* 予約の基本ステップ */}
   <section id="steps" class="mb-14">
-    <h2 class="mb-2 text-xl font-semibold text-zinc-800">予約の基本ステップ</h2>
-    <p class="mb-6 text-sm text-zinc-500">
-      会員登録を済ませてから予約を開始することが重要です。ゲストのまま進めると宿泊実績・ポイントが紐付きません。
-    </p>
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">予約の基本ステップ</h2>
 
     <div class="divide-y divide-zinc-100 border-y border-zinc-200">
-      {[
-        {
-          no: "1",
-          title: "会員登録・ログイン",
-          desc: "当方の予約システムにて会員登録を完了させてからご予約を開始してください。登録を完了させずにゲスト予約で進めると、宿泊実績やポイントが会員情報に紐付きません。",
-        },
-        {
-          no: "2",
-          title: "プランを選択",
-          desc: "ライトフォレスト・ディープフォレストそれぞれのプランページから、ご希望のプランと日程を選択します。",
-        },
-        {
-          no: "3",
-          title: "買い物カゴに追加",
-          desc: "複数のプランや日程を買い物カゴに入れて、まとめて予約・決済が可能です。グループでの別々予約や長期滞在も1回の手続きで完了します。",
-        },
-        {
-          no: "4",
-          title: "決済",
-          desc: "クレジットカード等で決済が完了すると、予約完了メールが届きます。内容に間違いがないかご確認ください。",
-        },
-        {
-          no: "5",
-          title: "前日リマインドメール",
-          desc: "ご来場の前日に、チェックイン方法や周辺の買い出し情報をまとめたリマインドメールをお送りします。",
-        },
-      ].map((step) => (
+
+      {/* STEP 1 — 特殊レンダリング */}
+      <div class="grid grid-cols-[2.5rem_1fr] gap-4 py-6">
+        <p class="text-2xl font-semibold text-zinc-200 leading-none">1</p>
+        <div>
+          <p class="font-semibold text-zinc-800">おいらの森公式予約サイト</p>
+          <p class="mt-2 text-sm leading-loose text-zinc-600">
+            <a
+              href={proXPlanlist}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80"
+            >予約する</a>ボタンを押してください
+          </p>
+          <div class="mt-3 border-l-2 border-zinc-200 pl-4 text-xs leading-loose text-zinc-500">
+            <p class="font-medium text-zinc-600">※会員登録・ログイン</p>
+            <p>
+              公式予約ページにて会員登録を行い、ログイン状態で予約すると特典があります。
+              <a href="#member" class="ml-1 underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">会員について →</a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* STEPs 2–5 */}
+      {steps.map((step) => (
         <div class="grid grid-cols-[2.5rem_1fr] gap-4 py-6">
           <p class="text-2xl font-semibold text-zinc-200 leading-none">{step.no}</p>
           <div>
@@ -75,16 +153,132 @@ import PageLayout from "../../layouts/PageLayout.astro";
           </div>
         </div>
       ))}
+
+    </div>
+
+    <div class="mt-6 border-l-4 border-[color:var(--forest-600)] pl-5">
+      <p class="text-sm font-semibold text-zinc-700">アーリーチェックインは無料です</p>
+      <p class="mt-1 text-sm leading-loose text-zinc-600">
+        サイトの空き状況によりますが、9時からご利用いただけます。繁忙期は対応できない場合があるため、<strong>前日夕方</strong>までにご確認ください。
+      </p>
     </div>
 
     <div class="mt-6">
       <a
-        href="https://www.489pro-x.com/ja/s/oiranomori/planlist/"
+        href={proXPlanlist}
         target="_blank"
         rel="noopener noreferrer"
         class="inline-flex items-center justify-center rounded-full bg-[color:var(--forest-600)] px-8 py-3 text-sm text-white shadow-sm transition hover:bg-[color:var(--forest-700)]"
       >
         予約ページへ ↗
+      </a>
+    </div>
+  </section>
+
+  {/* 電話予約 */}
+  <section id="phone" class="mb-14">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">電話予約・当日予約について</h2>
+
+    <div class="grid gap-6 sm:grid-cols-2">
+      {[
+        {
+          title: "電話予約は「当日のみ」",
+          desc: "お電話によるご予約受付は、ご来場当日のみ承っております。当日以外のご予約については、聞き間違い等のトラブル防止のため、お電話では一切受け付けておりません。",
+        },
+        {
+          title: "当日予約の料金について",
+          desc: "当日予約（お電話または現地受付）はネット予約と料金体系が異なります。ネット予約がお得です。",
+        },
+      ].map((item) => (
+        <div class="border-t border-zinc-200 pt-5">
+          <h3 class="font-semibold text-zinc-800">{item.title}</h3>
+          <p class="mt-3 text-sm leading-loose text-zinc-600">{item.desc}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  {/* 変更・キャンセル */}
+  <section id="change" class="mb-14">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">変更・キャンセルについて</h2>
+    <dl class="divide-y divide-zinc-100 border-y border-zinc-200 text-sm">
+      {[
+        {
+          label: "マイページでの手続き",
+          value: "マイページからご自身でキャンセルや予約内容の変更が可能です。",
+        },
+        {
+          label: "直前の変更・キャンセル",
+          value: "オンライン操作期限を過ぎた直前の変更・キャンセルについては、お電話またはメールにて直接ご連絡ください。人数の変更は現地にて承ります。",
+        },
+      ].map((item) => (
+        <div class="grid grid-cols-[10rem_1fr] gap-4 py-5 sm:grid-cols-[14rem_1fr]">
+          <dt class="text-zinc-500">{item.label}</dt>
+          <dd class="text-zinc-700">{item.value}</dd>
+        </div>
+      ))}
+    </dl>
+  </section>
+
+  {/* 公式予約のメリット */}
+  <section id="merit" class="mb-14">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">公式予約のメリット</h2>
+
+    <div class="mb-8 bg-[color:var(--forest-600)] px-6 py-5">
+      <p class="text-lg font-semibold text-white">おいらの森の公式サイトが最安です！</p>
+      <p class="mt-2 text-sm leading-loose text-zinc-300">楽天等の外部サイトより公式直接予約がおトク。会員登録でさらにポイントが貯まります。</p>
+    </div>
+
+    <div class="grid gap-6 sm:grid-cols-2">
+      {[
+        {
+          title: "宿泊回数で上がる「会員ランク」",
+          desc: "会員登録してマイページを作成すると、宿泊回数に応じて会員ランクが上がります。ランクアップに伴い予約時のポイント付与率もアップ。リピーターほど優遇される仕組みです。",
+        },
+        {
+          title: "賢く貯まる「ポイント制度」",
+          desc: "ご予約時の利用金額に応じてポイントが貯まります。貯まったポイントは「1ポイント＝1円」として次回予約代金に充当可能です。オイラーズ活動への参加でも貯まります。",
+        },
+      ].map((item) => (
+        <div class="rounded-xl border border-zinc-200 bg-zinc-50 p-6">
+          <h3 class="font-semibold text-zinc-800">{item.title}</h3>
+          <p class="mt-3 text-sm leading-loose text-zinc-600">{item.desc}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  {/* 会員制度 */}
+  <section id="member" class="mb-14">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">会員制度について</h2>
+    <p class="mb-6 text-sm text-zinc-600">泊まるほどにおトクになる仕組みです。まずは会員登録をおすすめします。</p>
+
+    <div class="mb-8 border-l-4 border-[color:var(--forest-600)] pl-5">
+      <p class="text-sm font-semibold text-zinc-700">【おすすめ】ご予約前の会員登録でお得に</p>
+      <p class="mt-2 text-sm leading-loose text-zinc-600">
+        会員登録をしてからご予約いただくと、宿泊実績やポイントが確実に貯まり、次回以降のご利用がお得になります。
+      </p>
+      <p class="mt-2 text-xs text-zinc-400">
+        ※「ゲスト予約」のまま手続きを進めると、システム上後からポイントを紐付けることができません。事前ログインをおすすめします。
+      </p>
+    </div>
+
+    <div class="flex flex-wrap gap-3">
+      <a
+        href="https://www.489pro-x.com/ja/s/oiranomori/member/input/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center justify-center rounded-full bg-[color:var(--forest-600)] px-6 py-2.5 text-sm text-white shadow-sm transition hover:bg-[color:var(--forest-700)]"
+      >
+        新規会員登録 ↗
+      </a>
+      <a
+        href="https://www.489pro-x.com/ja/s/oiranomori/member/login/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center justify-center rounded-full border border-zinc-400 px-6 py-2.5 text-sm text-zinc-700 transition hover:border-zinc-600"
+      >
+        ログイン ↗
       </a>
     </div>
   </section>
@@ -102,79 +296,6 @@ import PageLayout from "../../layouts/PageLayout.astro";
         {
           title: "「キャンセル待ち」でチャンスを逃さない",
           desc: "希望の日が満室でも、キャンセル待ちに登録しておけば、空きが出た際にメールでお知らせが届きます。人気の週末・連休を狙いたい方に有効な機能です。",
-        },
-      ].map((item) => (
-        <div class="border-t border-zinc-200 pt-5">
-          <h3 class="font-semibold text-zinc-800">{item.title}</h3>
-          <p class="mt-3 text-sm leading-loose text-zinc-600">{item.desc}</p>
-        </div>
-      ))}
-    </div>
-  </section>
-
-  {/* 会員制度・ポイント */}
-  <section id="member" class="mb-14 -mx-4 bg-[color:var(--forest-100)] px-4 py-10 md:-mx-8 md:px-8">
-    <h2 class="mb-6 text-xl font-semibold text-zinc-800">会員制度とポイント特典</h2>
-    <p class="mb-6 text-sm text-zinc-600">泊まるほどにおトクになる仕組みです。</p>
-
-    <div class="grid gap-8 sm:grid-cols-3">
-      {[
-        {
-          title: "宿泊回数で上がる「会員ランク」",
-          desc: "会員登録してマイページを作成すると、宿泊回数に応じて会員ランクが上がります。ランクアップに伴い予約時のポイント付与率もアップ。リピーターほど優遇される仕組みです。",
-        },
-        {
-          title: "賢く貯まる「ポイント制度」",
-          desc: "ご予約時の利用金額に応じてポイントが貯まります。貯まったポイントは「1ポイント＝1円」として次回予約代金に充当可能です。オイラーズ活動への参加でも貯まります。",
-        },
-        {
-          title: "【重要】登録のタイミング",
-          desc: "会員登録を完了させずにゲスト予約のまま進めると、その予約情報と会員情報が紐付きません。宿泊実績・ポイントを正しく反映させるため、必ず「会員登録・ログイン」を済ませてから予約を開始してください。",
-        },
-      ].map((item) => (
-        <div>
-          <h3 class="font-semibold text-zinc-800">{item.title}</h3>
-          <p class="mt-3 text-sm leading-loose text-zinc-600">{item.desc}</p>
-        </div>
-      ))}
-    </div>
-  </section>
-
-  {/* 変更・キャンセル */}
-  <section id="change" class="mb-14">
-    <h2 class="mb-5 text-xl font-semibold text-zinc-800">変更・キャンセルについて</h2>
-    <dl class="divide-y divide-zinc-100 border-y border-zinc-200 text-sm">
-      {[
-        {
-          label: "マイページでの手続き",
-          value: "期限内であれば、マイページからご自身でキャンセルや予約内容の変更が可能です。",
-        },
-        {
-          label: "直前の変更・キャンセル",
-          value: "オンライン操作期限を過ぎた直前の変更・キャンセルについては、お電話またはメールにて直接ご連絡ください。",
-        },
-      ].map((item) => (
-        <div class="grid grid-cols-[10rem_1fr] gap-4 py-5 sm:grid-cols-[14rem_1fr]">
-          <dt class="text-zinc-500">{item.label}</dt>
-          <dd class="text-zinc-700">{item.value}</dd>
-        </div>
-      ))}
-    </dl>
-  </section>
-
-  {/* 電話予約 */}
-  <section id="phone" class="mb-14">
-    <h2 class="mb-5 text-xl font-semibold text-zinc-800">電話予約・当日予約について</h2>
-
-    <div class="grid gap-6 sm:grid-cols-2">
-      {[
-        {
-          title: "電話予約は「当日のみ」",
-          desc: "お電話によるご予約受付は、ご来場当日のみ承っております。当日以外のご予約については、聞き間違い等のトラブルを防止するため、お電話では一切受け付けておりません。必ず公式サイトよりお手続きをお願いいたします。",
-        },
-        {
-          title: "当日予約の料金について",
-          desc: "当日予約（お電話または現地受付）の場合、ネット予約とは料金体系が異なります。事前のネット予約がおトクになるよう設定されています。",
         },
       ].map((item) => (
         <div class="border-t border-zinc-200 pt-5">
@@ -218,13 +339,13 @@ import PageLayout from "../../layouts/PageLayout.astro";
   {/* CTA */}
   <div class="mt-12 bg-[color:var(--forest-100)] px-8 py-10 text-center">
     <p class="text-sm text-zinc-500">準備が整いましたら</p>
-    <p class="mt-2 text-xl font-semibold text-zinc-800">予約は当方の予約システムから</p>
+    <p class="mt-2 text-xl font-semibold text-zinc-800">ご予約は公式予約サイトから</p>
     <p class="mt-3 text-sm leading-loose text-zinc-600">
       会員登録で複数プラン・複数日程の同時予約が可能です。
     </p>
     <div class="mt-6 flex flex-wrap justify-center gap-3">
       <a
-        href="https://www.489pro-x.com/ja/s/oiranomori/planlist/"
+        href={proXPlanlist}
         target="_blank"
         rel="noopener noreferrer"
         class="inline-flex items-center justify-center rounded-full bg-[color:var(--forest-600)] px-8 py-3 text-sm text-white shadow-sm transition hover:bg-[color:var(--forest-700)]"

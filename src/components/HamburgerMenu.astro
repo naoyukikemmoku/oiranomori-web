@@ -1,4 +1,4 @@
----
+﻿---
 const menuGroups = [
   {
     title: "予約・会員",
@@ -9,50 +9,39 @@ const menuGroups = [
       { label: "会員ログイン", href: "https://www.489pro-x.com/ja/s/oiranomori/member/login/", external: true, active: true },
       { label: "新規会員登録", href: "https://www.489pro-x.com/ja/s/oiranomori/member/input/", external: true, active: true },
       { label: "チェックアウトの連絡", href: "/checkout/", active: true },
+      { label: "キャンセルポリシー", href: "/reservation-guide/#cancellation", active: true },
     ],
   },
   {
-    title: "フィールド案内",
+    title: "おいらの森でキャンプする",
     items: [
-      { label: "森のいま", href: "/now/", active: true },
       { label: "ライトフォレスト 利用案内", href: "/light-guide/", active: true },
       { label: "ディープフォレスト 利用案内", href: "/deep-guide/", active: true },
-      { label: "場内マップ(Light)", href: "/access/#light-detail", active: false },
-      { label: "場内マップ(Deep)", href: "/access/#deep", active: false },
-      { label: "周辺案内", href: "/access/#area", active: false },
-      { label: "アクセス", href: "/access/", active: true },
-    ],
-  },
-  {
-    title: "薪・レンタル・チケット",
-    items: [
+      { label: "場内マップ（ライト）", href: "/map/?view=light", active: true },
       { label: "おいらの薪", href: "/firewood/", active: true },
-      { label: "レンタル・売店", href: "/firewood/#rental", active: false },
+      { label: "レンタル", href: "/rental/", active: true },
+      { label: "売店", href: "/shop/", active: true },
       { label: "年間パスポート・回数券", href: "/passport/", active: true },
+      { label: "よくある質問", href: "/faq/", active: true },
     ],
   },
   {
-    title: "森を体験する",
+    title: "おいらの森",
     items: [
-      { label: "オイラーズ", href: "/oiras/", active: true },
-    ],
-  },
-  {
-    title: "森の物語・記録",
-    items: [
-      { label: "森 of the Story", href: "https://note.com/oiranomori", external: true, active: true },
-      { label: "開拓日誌", href: "https://note.com/oiranomori/m/m7c8e8e8e8e8e", external: true, active: false },
-      { label: "生きもの観察記録", href: "https://note.com/oiranomori/m/m9c9e9e9e9e9e", external: true, active: false },
-      { label: "おすすめキャンプ場", href: "https://note.com/oiranomori/m/m1c1e1e1e1e1e", external: true, active: false },
-    ],
-  },
-  {
-    title: "サポート",
-    items: [
+      { label: "アクセス", href: "/access/", active: true },
+      { label: "周辺案内", href: "/map/?view=food", active: true },
+      { label: "森のいま", href: "/now/", active: true },
       { label: "お知らせ", href: "/news/", active: true },
       { label: "お問い合わせ", href: "/contact/", active: true },
-      { label: "よくある質問", href: "/faq/", active: true },
-      { label: "キャンセルポリシー", href: "/policy/#cancel", active: true },
+    ],
+  },
+  {
+    title: "おいらと森と",
+    items: [
+      { label: "森の住人", href: "/residents/", active: true },
+      { label: "オイラーズ", href: "/oiras/", active: true },
+      { label: "The 森 Chronicles", href: "https://note.com/oiranomori/m/m820d8cac57a3", external: true, active: true },
+      { label: "運営会社・関連組織", href: "/about/", active: true },
       { label: "利用規約", href: "/policy/#terms", active: true },
       { label: "プライバシーポリシー", href: "/policy/#privacy", active: true },
     ],
@@ -60,52 +49,94 @@ const menuGroups = [
 ];
 ---
 
-<div class="drawer drawer-end">
-  <input id="site-menu-drawer" type="checkbox" class="drawer-toggle" />
+{/* 開くボタン */}
+<button id="menu-open-btn" class="menu-toggle" aria-label="メニューを開く" aria-expanded="false">
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+    <path d="M2 4h16M2 10h16M2 16h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+  </svg>
+</button>
 
-  <div class="drawer-content">
-    <label for="site-menu-drawer" class="menu-toggle" aria-label="メニューを開く">
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-        <path d="M2 4h16M2 10h16M2 16h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
-      </svg>
-    </label>
+{/* オーバーレイ */}
+<div
+  id="menu-overlay"
+  class="fixed inset-0 z-[64] bg-black/50 opacity-0 pointer-events-none transition-opacity duration-300"
+  aria-hidden="true"
+></div>
+
+{/* パネル */}
+<aside
+  id="menu-panel"
+  class="menu-panel fixed right-0 top-0 z-[65] translate-x-full transition-transform duration-300"
+  aria-hidden="true"
+>
+  <div class="mb-5 flex items-center justify-between">
+    <p class="text-sm tracking-[0.2em] uppercase text-zinc-500">Menu</p>
+    <button id="menu-close-btn" class="menu-close" aria-label="メニューを閉じる">✕</button>
   </div>
 
-  <div class="drawer-side z-[65]">
-    <label for="site-menu-drawer" aria-label="メニューを閉じる" class="drawer-overlay"></label>
-    <aside class="menu-panel">
-      <div class="mb-5 flex items-center justify-between">
-        <p class="text-sm tracking-[0.2em] uppercase text-zinc-500">Menu</p>
-        <label for="site-menu-drawer" class="menu-close" aria-label="メニューを閉じる">✕</label>
-      </div>
-
-      <div class="menu-grid">
-        {menuGroups.map((group) => (
-          <section>
-            <p class="menu-group-title">{group.title}</p>
-            <div class="menu-items">
-              {group.items.map((item) =>
-                item.active ? (
-                  <a
-                    class="menu-link"
-                    href={item.href}
-                    target={item.external ? "_blank" : undefined}
-                    rel={item.external ? "noopener" : undefined}
-                  >
-                    {item.label}
-                    {item.external && <span class="text-xs opacity-50">↗</span>}
-                  </a>
-                ) : (
-                  <span class="menu-link is-disabled" aria-disabled="true">
-                    {item.label}
-                    <span class="text-xs">(準備中)</span>
-                  </span>
-                )
-              )}
-            </div>
-          </section>
-        ))}
-      </div>
-    </aside>
+  <div class="menu-grid">
+    {menuGroups.map((group) => (
+      <section>
+        <p class="menu-group-title">{group.title}</p>
+        <div class="menu-items">
+          {group.items.map((item) =>
+            item.active ? (
+              <a
+                class="menu-link"
+                href={item.href}
+                target={item.external ? "_blank" : undefined}
+                rel={item.external ? "noopener noreferrer" : undefined}
+              >
+                {item.label}
+                {item.external && <span class="text-xs opacity-50">↗</span>}
+              </a>
+            ) : (
+              <span class="menu-link is-disabled" aria-disabled="true">
+                {item.label}
+                <span class="text-xs">(準備中)</span>
+              </span>
+            )
+          )}
+        </div>
+      </section>
+    ))}
   </div>
-</div>
+</aside>
+
+<script>
+  // site-header has backdrop-filter which makes fixed children relative to the
+  // header instead of the viewport. Move overlay and panel to <body> to restore
+  // correct fixed positioning.
+  const overlay = document.getElementById("menu-overlay");
+  const panel   = document.getElementById("menu-panel");
+  if (overlay && panel) document.body.append(overlay, panel);
+
+  const openBtn  = document.getElementById("menu-open-btn");
+  const closeBtn = document.getElementById("menu-close-btn");
+
+  function openMenu() {
+    panel?.classList.remove("translate-x-full");
+    panel?.setAttribute("aria-hidden", "false");
+    overlay?.classList.remove("opacity-0", "pointer-events-none");
+    overlay?.classList.add("opacity-100");
+    openBtn?.setAttribute("aria-expanded", "true");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeMenu() {
+    panel?.classList.add("translate-x-full");
+    panel?.setAttribute("aria-hidden", "true");
+    overlay?.classList.add("opacity-0", "pointer-events-none");
+    overlay?.classList.remove("opacity-100");
+    openBtn?.setAttribute("aria-expanded", "false");
+    document.body.style.overflow = "";
+  }
+
+  openBtn?.addEventListener("click", openMenu);
+  closeBtn?.addEventListener("click", closeMenu);
+  overlay?.addEventListener("click", closeMenu);
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeMenu();
+  });
+</script>
