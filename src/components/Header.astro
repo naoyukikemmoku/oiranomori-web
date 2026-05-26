@@ -83,11 +83,11 @@ const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.s
   window.addEventListener("scroll", onScroll, { passive: true });
 
   // ── Open-Meteo APIから天気・気温を取得 ──────────────────
-  // 対象: 栃木県那須烏山（緯度: 36.647, 経度: 140.062）
+  // 対象: 場内正確座標（緯度: 36.641001, 経度: 140.067100）
   async function fetchWeather() {
     try {
       const res = await fetch(
-        "https://api.open-meteo.com/v1/forecast?latitude=36.647&longitude=140.062&current=temperature_2m,weather_code&timezone=Asia%2FTokyo"
+        "https://api.open-meteo.com/v1/forecast?latitude=36.641001&longitude=140.067100&current=temperature_2m,weather_code&timezone=Asia%2FTokyo"
       );
       const data = await res.json();
       const temp: number = data.current?.temperature_2m;
