@@ -1,0 +1,237 @@
+---
+import Header from "../../components/Header.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import {
+	bodyToParagraphs,
+	extractYouTubeId,
+	formatPostDate,
+	getAllForestDailyIds,
+	getForestDailyDetail,
+	getOgImage,
+} from "../../lib/forestDaily";
+
+export async function getStaticPaths() {
+	let ids: string[] = [];
+	try {
+		ids = await getAllForestDailyIds();
+	} catch (e) {
+		console.warn("[forest-daily/[id]] getStaticPaths 失敗", e);
+	}
+	return ids.map((id) => ({ params: { id } }));
+}
+
+const { id } = Astro.params;
+
+let article = null;
+try {
+	article = await getForestDailyDetail(id);
+} catch (e) {
+	console.warn("[forest-daily/[id]] 記事取得失敗", e);
+}
+
+const ogImage = article
+	? getOgImage(article)
+	: "https://oiranomori.jp/images/lp/hero.jpg";
+const ytId = article ? extractYouTubeId(article.videoUrl) : null;
+const paragraphs = article ? bodyToParagraphs(article.body) : [];
+
+const hasWeather =
+	article &&
+	(article.tempC !== undefined ||
+		article.maxTempC !== undefined ||
+		article.minTempC !== undefined ||
+		article.humidity !== undefined ||
+		article.condition);
+
+const articleSchema = article
+	? {
+			"@context": "https://schema.org",
+			"@type": "Article",
+			headline: article.title,
+			datePublished: article.postDate,
+			dateModified: article.updatedAt ?? article.postDate,
+			image: ogImage,
+			description: paragraphs[0] ?? article.title,
+			author: {
+				"@type": "Organization",
+				name: "里山パークおいらの森",
+				url: "https://oiranomori.jp",
+			},
+			publisher: {
+				"@type": "Organization",
+				name: "里山パークおいらの森",
+				url: "https://oiranomori.jp",
+			},
+			mainEntityOfPage: {
+				"@type": "WebPage",
+				"@id": `https://oiranomori.jp/forest-daily/${id}/`,
+			},
+		}
+	: null;
+---
+
+<BaseLayout
+  title={article ? `${article.title} | 里山パークおいらの森` : "今日のおいらの森 | 里山パークおいらの森"}
+  description={article ? (paragraphs[0] ?? article.title).slice(0, 120) : "おいらの森の今日の記録。"}
+  ogImage={ogImage}
+>
+  {articleSchema && (
+    <script is:inline type="application/ld+json" slot="head" set:html={JSON.stringify(articleSchema)} />
+  )}
+
+  <Header />
+
+  <main class="min-h-screen bg-[#f4f5f2] pb-32 pt-[var(--header-offset)]">
+    <div class="mx-auto max-w-3xl px-5">
+
+      <div class="pt-10 pb-2">
+        <a
+          href="/forest-daily/"
+          class="inline-flex items-center gap-1.5 text-xs tracking-[0.12em] text-zinc-400 transition hover:text-zinc-700"
+        >
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M19 12H5"/><path d="M11 6l-6 6 6 6"/>
+          </svg>
+          今日のおいらの森
+        </a>
+      </div>
+
+      {article ? (
+        <article>
+          {/* ヘッダー */}
+          <header class="pt-8 pb-8">
+            <time
+              class="block text-xs tracking-[0.2em] text-zinc-400 uppercase"
+              datetime={article.postDate}
+            >
+              {formatPostDate(article.postDate)}
+            </time>
+            <h1 class="mt-3 font-semibold leading-snug text-zinc-800" style="font-size: clamp(1.25rem, 3.5vw, 1.75rem);">
+              {article.title}
+            </h1>
+          </header>
+
+          {/* メインビジュアル: 動画優先 */}
+          {ytId ? (
+            <div class="relative mb-8 w-full overflow-hidden" style="padding-top:56.25%;">
+              <iframe
+                src={`https://www.youtube.com/embed/${ytId}`}
+                title={article.title}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+                loading="lazy"
+                class="absolute inset-0 h-full w-full border-none"
+              />
+            </div>
+          ) : article.imageUrl ? (
+            <div class="mb-8 overflow-hidden">
+              <img
+                src={article.imageUrl}
+                alt={`${formatPostDate(article.postDate)}の朝の森`}
+                width="720"
+                height="480"
+                loading="eager"
+                class="w-full object-cover"
+                style="max-height:480px;"
+              />
+            </div>
+          ) : null}
+
+          {/* 気象情報 */}
+          {hasWeather && (
+            <div class="mb-8 border-l-2 border-zinc-300 pl-4">
+              <p class="mb-2 text-[10px] tracking-[0.2em] text-zinc-400 uppercase">Weather</p>
+              <div class="flex flex-wrap items-baseline gap-x-5 gap-y-1">
+                {article.condition && (
+                  <span class="text-sm text-zinc-700">{article.condition}</span>
+                )}
+                {article.tempC !== undefined && article.tempC !== null && (
+                  <span class="text-sm text-zinc-600">
+                    <span class="text-xs text-zinc-400 mr-1">朝</span>{article.tempC}℃
+                  </span>
+                )}
+                {(article.maxTempC !== undefined && article.maxTempC !== null) ||
+                 (article.minTempC !== undefined && article.minTempC !== null) ? (
+                  <span class="text-sm text-zinc-600">
+                    <span class="text-xs text-zinc-400 mr-1">予想</span>
+                    {article.maxTempC !== undefined && article.maxTempC !== null ? (
+                      <span class="text-red-500">{article.maxTempC}°</span>
+                    ) : <span class="text-zinc-400">—</span>}
+                    <span class="mx-1 text-zinc-300">/</span>
+                    {article.minTempC !== undefined && article.minTempC !== null ? (
+                      <span class="text-blue-500">{article.minTempC}°</span>
+                    ) : <span class="text-zinc-400">—</span>}
+                  </span>
+                ) : null}
+                {article.humidity !== undefined && article.humidity !== null && (
+                  <span class="text-xs text-zinc-400">湿度 {article.humidity}%</span>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* 本文 */}
+          <div class="mb-12 space-y-5">
+            {paragraphs.map((p) => (
+              <p class="text-sm leading-[2.1] text-zinc-700">{p}</p>
+            ))}
+          </div>
+
+          {/* 内部リンク導線 */}
+          <div class="border-t border-zinc-300 pt-10 pb-4">
+            <p class="mb-1 text-xs tracking-[0.2em] text-zinc-400 uppercase">Visit</p>
+            <p class="text-sm leading-relaxed text-zinc-600">
+              実際の森は、もっと静かで、もっと広い。
+            </p>
+            <div class="mt-4 flex flex-wrap gap-3">
+              <a
+                href="https://www.489pro-x.com/ja/s/oiranomori/planlist/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 bg-[color:var(--light-accent)] px-6 py-2.5 text-xs font-semibold tracking-[0.12em] text-white transition hover:opacity-90"
+              >
+                予約する
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M5 12h14"/><path d="M13 6l6 6-6 6"/>
+                </svg>
+              </a>
+              <a
+                href="/map/"
+                class="inline-flex items-center gap-2 border border-zinc-400 px-6 py-2.5 text-xs tracking-[0.12em] text-zinc-600 transition hover:border-zinc-700 hover:text-zinc-800"
+              >
+                場内マップ
+              </a>
+              <a
+                href="/now/"
+                class="inline-flex items-center gap-2 border border-zinc-400 px-6 py-2.5 text-xs tracking-[0.12em] text-zinc-600 transition hover:border-zinc-700 hover:text-zinc-800"
+              >
+                いまの天気
+              </a>
+            </div>
+          </div>
+
+          {/* 前後ナビ */}
+          <div class="mt-12 border-t border-zinc-300 pt-8">
+            <a
+              href="/forest-daily/"
+              class="inline-flex items-center gap-1.5 text-sm tracking-[0.12em] text-zinc-500 transition hover:text-zinc-800"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M19 12H5"/><path d="M11 6l-6 6 6 6"/>
+              </svg>
+              一覧へ戻る
+            </a>
+          </div>
+        </article>
+      ) : (
+        <div class="pt-12">
+          <p class="text-sm text-zinc-500">記事が見つかりませんでした。</p>
+          <a href="/forest-daily/" class="mt-4 inline-block text-xs text-zinc-400 underline underline-offset-4">
+            一覧へ戻る
+          </a>
+        </div>
+      )}
+
+    </div>
+  </main>
+</BaseLayout>
