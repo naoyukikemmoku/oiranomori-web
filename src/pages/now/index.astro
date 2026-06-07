@@ -1,6 +1,8 @@
 ﻿---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Header from "../../components/Header.astro";
+
+const YOUTUBE_CHANNEL_ID = "UCxxxxxxxxxxxxxxxxxxxxxx";
 ---
 
 <BaseLayout
@@ -172,8 +174,24 @@ import Header from "../../components/Header.astro";
       {/* ── カメラ ───────────────────────────────────── */}
       <section id="camera" class="py-8">
         <p class="mb-4 text-xs tracking-[0.24em] text-zinc-400 uppercase">Live Camera</p>
-        <div class="border border-zinc-200 bg-zinc-100 py-20 text-center">
-          <p class="text-sm text-zinc-400">ライブカメラは準備中です</p>
+        <div class="aspect-video overflow-hidden border border-zinc-200">
+          <iframe
+            src={`https://www.youtube.com/embed/live_stream?channel=${YOUTUBE_CHANNEL_ID}`}
+            title="里山パークおいらの森 ライブカメラ"
+            loading="lazy"
+            allowfullscreen
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            class="h-full w-full border-none"
+          ></iframe>
+        </div>
+        <div class="mt-2 flex items-center justify-between">
+          <a
+            href={`https://www.youtube.com/channel/${YOUTUBE_CHANNEL_ID}/live`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-xs tracking-[0.1em] text-zinc-400 transition hover:text-zinc-700"
+          >YouTubeで見る →</a>
+          <p class="text-xs text-zinc-400">配信は機器メンテナンス等で一時停止する場合があります</p>
         </div>
       </section>
 
