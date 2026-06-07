@@ -2,7 +2,7 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Header from "../../components/Header.astro";
 
-const YOUTUBE_CHANNEL_ID = "UCxxxxxxxxxxxxxxxxxxxxxx";
+const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
 ---
 
 <BaseLayout
@@ -176,7 +176,7 @@ const YOUTUBE_CHANNEL_ID = "UCxxxxxxxxxxxxxxxxxxxxxx";
         <p class="mb-4 text-xs tracking-[0.24em] text-zinc-400 uppercase">Live Camera</p>
         <div class="aspect-video overflow-hidden border border-zinc-200">
           <iframe
-            src={`https://www.youtube.com/embed/live_stream?channel=${YOUTUBE_CHANNEL_ID}`}
+            src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}`}
             title="里山パークおいらの森 ライブカメラ"
             loading="lazy"
             allowfullscreen
@@ -186,7 +186,7 @@ const YOUTUBE_CHANNEL_ID = "UCxxxxxxxxxxxxxxxxxxxxxx";
         </div>
         <div class="mt-2 flex items-center justify-between">
           <a
-            href={`https://www.youtube.com/channel/${YOUTUBE_CHANNEL_ID}/live`}
+            href={`https://youtube.com/live/${YOUTUBE_VIDEO_ID}`}
             target="_blank"
             rel="noopener noreferrer"
             class="text-xs tracking-[0.1em] text-zinc-400 transition hover:text-zinc-700"
