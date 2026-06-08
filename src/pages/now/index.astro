@@ -203,6 +203,51 @@ const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
         </div>
       </section>
 
+      {/* ═══ A5：推移グラフ（過去ゾーン） ═══════════════════════ */}
+      {/* 取得失敗時はセクションごと非表示（他セクションは壊さない） */}
+      <section id="trend" class="border-t border-zinc-200 py-8" hidden>
+        <div class="flex items-center justify-between">
+          <p class="text-xs tracking-[0.24em] text-zinc-400 uppercase">Trend — 気温の推移（日平均）</p>
+          {/* 期間切替 1w / 1m / 3m */}
+          <div id="a5-range" class="flex gap-1">
+            {[
+              { range: "1w", label: "1週" },
+              { range: "1m", label: "1ヶ月" },
+              { range: "3m", label: "3ヶ月" },
+            ].map((b) => (
+              <button
+                type="button"
+                data-range={b.range}
+                class="a5-range-btn border border-zinc-300 px-3 py-1 text-xs tracking-[0.1em] text-zinc-500 transition hover:border-zinc-500 hover:text-zinc-800"
+              >{b.label}</button>
+            ))}
+          </div>
+        </div>
+
+        {/* SVG 折れ線グラフ（自前描画）。JSで #a5-svg に series を流し込む */}
+        <div class="mt-4 overflow-hidden">
+          <svg id="a5-svg" viewBox="0 0 720 280" class="w-full" role="img" aria-label="受付棟とアメダスの日平均気温の推移グラフ"></svg>
+        </div>
+
+        {/* 凡例。normal（平年線）は normal 供給後に #a5-legend-normal を表示する接続ポイント */}
+        <div class="mt-3 flex flex-wrap items-center gap-x-6 gap-y-1 text-xs text-zinc-500">
+          <span class="inline-flex items-center gap-2">
+            <span class="inline-block h-0.5 w-5" style="background:#2f6f4f;"></span>受付棟
+          </span>
+          <span class="inline-flex items-center gap-2">
+            <span class="inline-block h-0.5 w-5" style="background:#b08968;"></span>那須烏山アメダス
+          </span>
+          <span id="a5-legend-normal" class="inline-flex items-center gap-2" hidden>
+            <span class="inline-block h-0.5 w-5" style="background:#9ca3af; border-top:1px dashed #9ca3af;"></span>平年
+          </span>
+        </div>
+
+        {/* 平年比サマリ（④）。normal 未供給の間は非表示。供給後にここへ流し込む接続ポイント */}
+        <div id="a5-normal-summary" class="mt-3 text-sm text-zinc-500" hidden>
+          <p id="a5-normal-summary-text"></p>
+        </div>
+      </section>
+
     </div>
   </main>
 
@@ -213,6 +258,7 @@ const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
       { href: "#compare",  label: "5地点" },
       { href: "#warning",  label: "警報" },
       { href: "#local",    label: "現地" },
+      { href: "#trend",    label: "推移" },
     ].map((item) => (
       <a
         href={item.href}
@@ -235,9 +281,10 @@ const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
     //    （current=60s / forecast=warning=300s）
     // ════════════════════════════════════════════════════════════
     const API = {
-      current:  "https://oiranomori.com/app/weather/api/public/current.php",
-      forecast: "https://oiranomori.com/app/weather/api/public/forecast.php",
-      warning:  "https://oiranomori.com/app/weather/api/public/warning.php",
+      current:    "https://oiranomori.com/app/weather/api/public/current.php",
+      forecast:   "https://oiranomori.com/app/weather/api/public/forecast.php",
+      warning:    "https://oiranomori.com/app/weather/api/public/warning.php",
+      timeseries: "https://oiranomori.com/app/weather/api/public/timeseries.php",
     };
 
     // 鮮度閾値（A4 で使用）
@@ -528,6 +575,149 @@ const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
       }
     }
 
+    // ── A5：推移グラフ（自前インラインSVG） ─────────────────────
+    const SVG_NS = "http://www.w3.org/2000/svg";
+    type Point = { date: string; temp_c: number };
+
+    // 期間切替時の再fetch。HTTPキャッシュ（max-age=3600）に委ね追加ポーリングなし。
+    let a5CurrentRange = "1w";
+
+    function svgEl(name: string, attrs: Record<string, string | number>): SVGElement {
+      const el = document.createElementNS(SVG_NS, name);
+      for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, String(v));
+      return el;
+    }
+
+    // series（date昇順の点群）を折れ線 path の d 文字列に変換
+    function buildPath(
+      points: Point[],
+      xOf: (date: string) => number,
+      yOf: (t: number) => number,
+    ): string {
+      return points
+        .filter((p) => p.temp_c != null && !Number.isNaN(p.temp_c))
+        .map((p, i) => `${i === 0 ? "M" : "L"}${xOf(p.date).toFixed(1)},${yOf(p.temp_c).toFixed(1)}`)
+        .join(" ");
+    }
+
+    function drawTrend(data: Json): void {
+      const svg = getEl("a5-svg");
+      if (!svg) return;
+
+      const reception: Point[] = Array.isArray(data?.series?.reception) ? data.series.reception : [];
+      const amedas: Point[]    = Array.isArray(data?.series?.amedas) ? data.series.amedas : [];
+      // normal（平年値）は現状 null。供給されたら3本目の線として描く接続ポイント。
+      const normal: Point[]    = Array.isArray(data?.series?.normal) ? data.series.normal : [];
+
+      svg.replaceChildren();
+
+      // レイアウト
+      const W = 720, H = 280;
+      const padL = 36, padR = 12, padT = 12, padB = 28;
+
+      // X軸：全系列の日付 union を昇順に
+      const allDates = Array.from(
+        new Set([...reception, ...amedas, ...normal].map((p) => p.date)),
+      ).sort();
+      // Y軸：全系列の気温 min-max
+      const temps = [...reception, ...amedas, ...normal]
+        .map((p) => p.temp_c)
+        .filter((t) => t != null && !Number.isNaN(t));
+      if (allDates.length === 0 || temps.length === 0) return;
+
+      const minT = Math.floor(Math.min(...temps) - 1);
+      const maxT = Math.ceil(Math.max(...temps) + 1);
+      const dateIndex = new Map(allDates.map((d, i) => [d, i]));
+      const xOf = (date: string) =>
+        padL + (allDates.length === 1 ? 0 : ((dateIndex.get(date) ?? 0) / (allDates.length - 1)) * (W - padL - padR));
+      const yOf = (t: number) =>
+        H - padB - ((t - minT) / (maxT - minT || 1)) * (H - padT - padB);
+
+      // Y軸グリッド（4本）
+      for (let i = 0; i <= 4; i++) {
+        const t = minT + ((maxT - minT) * i) / 4;
+        const y = yOf(t);
+        svg.appendChild(svgEl("line", { x1: padL, y1: y, x2: W - padR, y2: y, stroke: "#e5e7eb", "stroke-width": 1 }));
+        const label = svgEl("text", { x: padL - 6, y: y + 3, "text-anchor": "end", "font-size": 10, fill: "#9ca3af" });
+        label.textContent = `${t.toFixed(0)}°`;
+        svg.appendChild(label);
+      }
+
+      // X軸ラベル（両端＋中央）
+      const xTicks = allDates.length <= 1 ? [0] : [0, Math.floor((allDates.length - 1) / 2), allDates.length - 1];
+      for (const idx of xTicks) {
+        const d = allDates[idx];
+        const mmdd = `${parseInt(d.slice(5, 7))}/${parseInt(d.slice(8, 10))}`;
+        const label = svgEl("text", { x: xOf(d), y: H - 8, "text-anchor": "middle", "font-size": 10, fill: "#9ca3af" });
+        label.textContent = mmdd;
+        svg.appendChild(label);
+      }
+
+      // 平年線（normal）：供給時のみ描画＋凡例・サマリ枠を表示
+      const legendNormal = getEl("a5-legend-normal");
+      const normalSummary = getEl("a5-normal-summary");
+      if (normal.length > 0) {
+        svg.appendChild(svgEl("path", {
+          d: buildPath(normal, xOf, yOf),
+          fill: "none", stroke: "#9ca3af", "stroke-width": 1.5, "stroke-dasharray": "4 3",
+        }));
+        if (legendNormal) legendNormal.hidden = false;
+        // 平年比サマリの実値表示は今回スコープ外（normal 供給後にここで算出して出す）
+        if (normalSummary) normalSummary.hidden = true;
+      } else {
+        if (legendNormal) legendNormal.hidden = true;
+        if (normalSummary) normalSummary.hidden = true;
+      }
+
+      // アメダス（茶）
+      if (amedas.length > 0) {
+        svg.appendChild(svgEl("path", {
+          d: buildPath(amedas, xOf, yOf), fill: "none", stroke: "#b08968", "stroke-width": 2,
+        }));
+      }
+      // 受付棟（緑）
+      if (reception.length > 0) {
+        svg.appendChild(svgEl("path", {
+          d: buildPath(reception, xOf, yOf), fill: "none", stroke: "#2f6f4f", "stroke-width": 2,
+        }));
+      }
+    }
+
+    async function loadTrend(range: string): Promise<void> {
+      const section = getEl("trend");
+      try {
+        const data = await fetchJson(`${API.timeseries}?range=${range}`);
+        drawTrend(data);
+        if (section) section.hidden = false; // 取得成功時のみ表示
+      } catch (e) {
+        // 取得失敗 → A5セクションごと非表示（他セクションは壊さない）
+        if (section) section.hidden = true;
+        console.warn("[A5 trend]", e);
+      }
+    }
+
+    function syncRangeButtons(active: string): void {
+      for (const btn of document.querySelectorAll<HTMLElement>(".a5-range-btn")) {
+        const isActive = btn.dataset.range === active;
+        btn.classList.toggle("border-zinc-600", isActive);
+        btn.classList.toggle("text-zinc-800", isActive);
+        btn.classList.toggle("font-semibold", isActive);
+      }
+    }
+
+    function initTrend(): void {
+      for (const btn of document.querySelectorAll<HTMLElement>(".a5-range-btn")) {
+        btn.addEventListener("click", () => {
+          const range = btn.dataset.range ?? "1w";
+          a5CurrentRange = range;
+          syncRangeButtons(range);
+          loadTrend(range); // range 別に再fetch・再描画
+        });
+      }
+      syncRangeButtons(a5CurrentRange);
+      // 初回ロードは init() に一任（二重fetch回避）。初期 range は 1w。
+    }
+
     // ── 全更新 ───────────────────────────────────────────────────
     async function init(): Promise<void> {
       const btn = getEl("btn-refresh") as HTMLButtonElement | null;
@@ -547,11 +737,14 @@ const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
       renderA2(current);
       renderA3(warning);
       renderA4(current);
+      // A5 は現在の選択 range で再取得（HTTPキャッシュに委任）
+      loadTrend(a5CurrentRange);
 
       if (btn) { btn.textContent = "更新"; btn.disabled = false; }
     }
 
     getEl("btn-refresh")?.addEventListener("click", init);
+    initTrend();
     init();
   </script>
 
