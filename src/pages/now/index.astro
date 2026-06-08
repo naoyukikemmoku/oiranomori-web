@@ -65,6 +65,13 @@ const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
               <span class="text-red-400" id="a1-today-max">—°</span> /
               <span class="text-blue-400" id="a1-today-min">—°</span>
             </p>
+
+            {/* 暦（控えめ）: 日の出入り・二十四節気・七十二候。JSで流し込む */}
+            <div id="a1-koyomi" class="mt-4 border-t border-zinc-100 pt-3 text-[11px] leading-relaxed text-zinc-400" hidden>
+              <p id="a1-koyomi-sun"></p>
+              <p id="a1-koyomi-term" class="mt-0.5"></p>
+              <p id="a1-koyomi-ko" class="mt-0.5"></p>
+            </div>
           </div>
           <div id="a1-tomorrow" class="border border-zinc-200 bg-white p-5 text-center" hidden>
             <p class="text-xs tracking-[0.16em] text-zinc-400">明日</p>
@@ -238,13 +245,14 @@ const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
             <span class="inline-block h-0.5 w-5" style="background:#b08968;"></span>那須烏山アメダス
           </span>
           <span id="a5-legend-normal" class="inline-flex items-center gap-2" hidden>
-            <span class="inline-block h-0.5 w-5" style="background:#9ca3af; border-top:1px dashed #9ca3af;"></span>平年
+            <span class="inline-block h-0.5 w-5" style="background:#9ca3af; border-top:1px dashed #9ca3af;"></span>平年値（那須烏山・2009-2020）
           </span>
         </div>
 
         {/* 平年比サマリ（④）。normal 未供給の間は非表示。供給後にここへ流し込む接続ポイント */}
         <div id="a5-normal-summary" class="mt-3 text-sm text-zinc-500" hidden>
-          <p id="a5-normal-summary-text"></p>
+          <p class="text-xs tracking-[0.16em] text-zinc-400">平年比（平年値：那須烏山・2009-2020）</p>
+          <p id="a5-normal-summary-text" class="mt-1"></p>
         </div>
       </section>
 
@@ -271,6 +279,7 @@ const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
 
   <script>
     import { jmaIconUrl } from "../../lib/jmaTelops";
+    import { getKoyomi, getSunTimes, getMoonAge, moonPhaseSvg } from "../../lib/koyomi";
 
     // ════════════════════════════════════════════════════════════
     //  データ取得層（A1〜A4 共通の土台）
@@ -317,6 +326,24 @@ const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
       return `${d.getMonth() + 1}/${d.getDate()}(${DOW[d.getDay()]})`;
     }
 
+    // "YYYY-MM-DD"（JST暦日）をローカルDateとして解釈（暦計算用）
+    function parseLocalDate(iso: string): Date {
+      const [y, m, d] = iso.split("-").map(Number);
+      return new Date(y, m - 1, d);
+    }
+
+    // A1 today の暦ブロック（日の出入り・二十四節気・七十二候）を埋める
+    function renderKoyomi(date: Date): void {
+      const box = getEl("a1-koyomi");
+      if (!box) return;
+      const sun = getSunTimes(date);
+      const koyomi = getKoyomi(date);
+      if (sun) setText("a1-koyomi-sun", `日の出 ${sun.rise} ／ 日の入 ${sun.set}`);
+      setText("a1-koyomi-term", `二十四節気：${koyomi.solarTerm}`);
+      setText("a1-koyomi-ko", `七十二候：${koyomi.ko.name}（${koyomi.ko.yomi}）`);
+      box.hidden = false;
+    }
+
     function fmtClock(iso: string): string {
       const d = new Date(iso);
       const p = (n: number) => String(n).padStart(2, "0");
@@ -347,6 +374,9 @@ const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
         setText("a1-today-max", today.temp_max != null ? `${today.temp_max}°` : "—°");
         setText("a1-today-min", today.temp_min != null ? `${today.temp_min}°` : "—°");
         show("a1-today");
+
+        // 暦（控えめ）: 日の出入り・二十四節気・七十二候。全て HP 側計算。
+        renderKoyomi(parseLocalDate(today.date));
       }
 
       // 明日（weekly[0] は pop/temp が常に null。tomorrow ブロックを使う）
@@ -390,7 +420,14 @@ const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
           temp.innerHTML =
             `<span class="text-red-400">${day.temp_max != null ? day.temp_max + "°" : "—"}</span>` +
             ` / <span class="text-blue-400">${day.temp_min != null ? day.temp_min + "°" : "—"}</span>`;
-          card.append(date, icon, pop, temp);
+
+          // 月齢（控えめ）: 月相アイコン＋数値
+          const moon = document.createElement("p");
+          moon.className = "mt-1.5 flex items-center justify-center gap-1 text-[10px] text-zinc-400";
+          const age = getMoonAge(parseLocalDate(day.date));
+          moon.innerHTML = `${moonPhaseSvg(age, 12)}<span>月齢${age.toFixed(0)}</span>`;
+
+          card.append(date, icon, pop, temp, moon);
           wrap.appendChild(card);
         }
       }
