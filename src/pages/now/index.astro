@@ -1,4 +1,4 @@
-﻿---
+---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Header from "../../components/Header.astro";
 
@@ -7,20 +7,15 @@ const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
 
 <BaseLayout
   title="森のいま | 里山パークおいらの森"
-  description="おいらの森の今の天気・気象など現地情報をお知らせ。アメダスの現況や警報、週間天気予報など、キャンプに向けた直前の準備に活用してください。"
-  lastUpdated="2026年5月"
+  description="おいらの森の今の天気・気象など現地情報をお知らせ。直近予報・周辺5地点の比較・警報注意報・現地センサーの現況を、キャンプ直前の準備に活用してください。"
+  lastUpdated="2026年6月"
 >
 
-  <link
-    slot="head"
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
-  />
   <script slot="head" is:inline type="application/ld+json">{JSON.stringify({
     "@context": "https://schema.org",
     "@type": "WebPage",
     "name": "森のいま | 里山パークおいらの森",
-    "description": "おいらの森の今の天気・気象など現地情報をお知らせ。アメダスの現況や警報、週間天気予報など、キャンプに向けた直前の準備に活用してください。",
+    "description": "おいらの森の今の天気・気象など現地情報をお知らせ。直近予報・周辺5地点の比較・警報注意報・現地センサーの現況を、キャンプ直前の準備に活用してください。",
     "url": "https://oiranomori.jp/now/",
     "isPartOf": {
       "@type": "WebSite",
@@ -39,7 +34,7 @@ const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
         <div>
           <p class="text-xs tracking-[0.28em] text-zinc-400 uppercase">Forest Now</p>
           <h1 class="mt-1 text-2xl font-semibold text-zinc-800">森のいま</h1>
-          <p class="mt-0.5 text-xs text-zinc-400">おいら監修｜現地アメダスデータをもとに構築</p>
+          <p class="mt-0.5 text-xs text-zinc-400">おいら監修｜現地センサーと周辺観測をもとに構築</p>
         </div>
         <div class="flex items-center gap-3">
           <p class="text-xs text-zinc-400">ページを開いた時点の情報です</p>
@@ -55,71 +50,73 @@ const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
 
     <div class="mx-auto max-w-6xl px-5">
 
-      {/* ── 注意報・警報 ──────────────────────────────── */}
+      {/* ═══ A1：直近予報＋装備テキスト ═══════════════════════ */}
+      <section id="forecast" class="border-b border-zinc-200 py-8">
+        <p class="mb-4 text-xs tracking-[0.24em] text-zinc-400 uppercase">Forecast — 直近予報</p>
+
+        {/* 今日・明日 */}
+        <div class="grid grid-cols-2 gap-3">
+          <div id="a1-today" class="border border-zinc-200 bg-white p-5 text-center" hidden>
+            <p class="text-xs tracking-[0.16em] text-zinc-400">今日</p>
+            <p id="a1-today-date" class="mt-1 text-xs text-zinc-400">—</p>
+            <div class="my-3 flex h-12 items-center justify-center" id="a1-today-icon"></div>
+            <p class="text-xs"><span class="text-zinc-400">降水</span> <span id="a1-today-pop">—</span>%</p>
+            <p class="mt-1 text-xs">
+              <span class="text-red-400" id="a1-today-max">—°</span> /
+              <span class="text-blue-400" id="a1-today-min">—°</span>
+            </p>
+          </div>
+          <div id="a1-tomorrow" class="border border-zinc-200 bg-white p-5 text-center" hidden>
+            <p class="text-xs tracking-[0.16em] text-zinc-400">明日</p>
+            <p id="a1-tomorrow-date" class="mt-1 text-xs text-zinc-400">—</p>
+            <div class="my-3 flex h-12 items-center justify-center" id="a1-tomorrow-icon"></div>
+            <p class="text-xs"><span class="text-zinc-400">降水</span> <span id="a1-tomorrow-pop">—</span>%</p>
+            <p class="mt-1 text-xs">
+              <span class="text-red-400" id="a1-tomorrow-max">—°</span> /
+              <span class="text-blue-400" id="a1-tomorrow-min">—°</span>
+            </p>
+          </div>
+        </div>
+
+        {/* 週間予報（weekly[1] 以降） */}
+        <p class="mt-6 mb-3 text-xs tracking-[0.16em] text-zinc-400">週間</p>
+        <div id="a1-weekly" class="flex gap-2 overflow-x-auto pb-2">
+          {/* JSで weekly[1..] を描画 */}
+        </div>
+
+        {/* 装備テキスト枠「おいらからのご案内」: advisory API 未実装のため非表示。
+            P4完了後に #a1-advisory へ short/weekly を流し込む接続ポイント。 */}
+        <div id="a1-advisory" class="mt-6 border-l-4 border-zinc-300 py-2 pl-4 text-sm text-zinc-600" hidden>
+          <p class="text-xs tracking-[0.16em] text-zinc-400">おいらからのご案内</p>
+          <p id="a1-advisory-short" class="mt-1"></p>
+          <p id="a1-advisory-weekly" class="mt-1 text-zinc-500"></p>
+        </div>
+      </section>
+
+      {/* ═══ A2：比較5地点カード ═══════════════════════════════ */}
+      <section id="compare" class="border-b border-zinc-200 py-8">
+        <p class="mb-4 text-xs tracking-[0.24em] text-zinc-400 uppercase">Compare — 周辺5地点</p>
+        <div id="a2-cards" class="grid grid-cols-2 gap-3 md:grid-cols-5">
+          {/* JSで current.stations を描画 */}
+          <p class="col-span-full text-sm text-zinc-400">取得中…</p>
+        </div>
+
+        {/* 季節コメント枠: seasonal_comment API 未実装のため非表示。
+            P後続で #a2-seasonal へ流し込む接続ポイント。 */}
+        <div id="a2-seasonal" class="mt-4 text-sm text-zinc-500" hidden>
+          <p id="a2-seasonal-text"></p>
+        </div>
+      </section>
+
+      {/* ═══ A3：警報・注意報 ═══════════════════════════════════ */}
       <section id="warning" class="border-b border-zinc-200 py-8">
         <p class="mb-4 text-xs tracking-[0.24em] text-zinc-400 uppercase">Warning / Advisory — 那須烏山市</p>
-        <div id="warning-list" class="text-sm text-zinc-600">
+        <div id="a3-warnings" class="text-sm text-zinc-600">
           <p class="text-zinc-400">取得中…</p>
         </div>
-        <div id="fire-risk" class="mt-4 hidden">
-          <div id="fire-risk-inner" class="border-l-4 py-2 pl-4 text-sm"></div>
-        </div>
-      </section>
 
-      {/* ── アメダス現況カード ────────────────────────── */}
-      <section id="amedas" class="border-b border-zinc-200 py-8">
-        <p class="mb-4 text-xs tracking-[0.24em] text-zinc-400 uppercase">Current Conditions — Amedas 41247</p>
-        <div class="grid grid-cols-2 gap-3 md:grid-cols-4">
-          <div class="border border-zinc-200 bg-white p-5">
-            <p class="text-xs tracking-[0.16em] text-zinc-400">気温</p>
-            <p id="card-temp" class="mt-3 text-4xl font-semibold text-zinc-800">—</p>
-            <p class="mt-1 text-xs text-zinc-400">℃</p>
-          </div>
-          <div class="border border-zinc-200 bg-white p-5">
-            <p class="text-xs tracking-[0.16em] text-zinc-400">風速 / 風向</p>
-            <p id="card-wind" class="mt-3 text-4xl font-semibold text-zinc-800">—</p>
-            <p id="card-wind-dir" class="mt-1 text-xs text-zinc-400">m/s　—</p>
-          </div>
-          <div class="border border-zinc-200 bg-white p-5">
-            <p class="text-xs tracking-[0.16em] text-zinc-400">降水量（1h）</p>
-            <p id="card-precip" class="mt-3 text-4xl font-semibold text-zinc-800">—</p>
-            <p class="mt-1 text-xs text-zinc-400">mm</p>
-          </div>
-          <div class="border border-zinc-200 bg-white p-5">
-            <p class="text-xs tracking-[0.16em] text-zinc-400">日照（10分）</p>
-            <p id="card-sun" class="mt-3 text-4xl font-semibold text-zinc-800">—</p>
-            <p class="mt-1 text-xs text-zinc-400">分</p>
-          </div>
-        </div>
-        <p id="amedas-time" class="mt-3 text-right text-xs text-zinc-400"></p>
-      </section>
-
-      {/* ── 気象衛星 ────────────────────────────────── */}
-      <section id="satellite" class="border-b border-zinc-200 py-8">
-        <p class="mb-4 text-xs tracking-[0.24em] text-zinc-400 uppercase">Satellite — Himawari</p>
-        <div class="overflow-hidden border border-zinc-200 bg-zinc-100">
-          <img
-            id="sat-img"
-            src=""
-            alt="気象衛星ひまわり可視画像"
-            class="w-full object-cover"
-            style="display:none;"
-          />
-          <iframe
-            id="sat-iframe"
-            src=""
-            class="h-80 w-full border-none"
-            title="気象衛星ひまわり"
-            style="display:none;"
-          ></iframe>
-          <p id="sat-loading" class="py-10 text-center text-xs text-zinc-400">衛星画像を読み込み中…</p>
-        </div>
-        <p id="sat-time" class="mt-2 text-right text-xs text-zinc-400"></p>
-      </section>
-
-      {/* ── 雨雲レーダー ──────────────────────────────── */}
-      <section id="radar" class="border-b border-zinc-200 py-8">
-        <p class="mb-4 text-xs tracking-[0.24em] text-zinc-400 uppercase">Radar — Nowcast</p>
+        {/* 雨雲レーダー（気象庁ナウキャスト）: 現行踏襲で残す */}
+        <p class="mt-6 mb-3 text-xs tracking-[0.16em] text-zinc-400">雨雲レーダー</p>
         <div class="overflow-hidden border border-zinc-200">
           <iframe
             src="https://www.jma.go.jp/bosai/nowc/#lat:36.667/lon:140.13/zoom:9/coltype:HPN"
@@ -131,49 +128,60 @@ const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
         <p class="mt-2 text-xs text-zinc-400">© 気象庁ナウキャスト（那須烏山周辺）</p>
       </section>
 
-      {/* ── 天気分布予報 ────────────────────────────── */}
-      <section id="wdist" class="border-b border-zinc-200 py-8">
-        <p class="mb-4 text-xs tracking-[0.24em] text-zinc-400 uppercase">Weather Distribution</p>
-        <div class="overflow-hidden border border-zinc-200">
-          <iframe
-            src="https://www.jma.go.jp/bosai/wdist/#lat:36.647487/lon:140.061951/zoom:9"
-            class="h-96 w-full border-none"
-            title="天気分布予報"
-            loading="lazy"
-          ></iframe>
-        </div>
-        <p class="mt-2 text-xs text-zinc-400">© 気象庁天気分布予報</p>
-      </section>
+      {/* ═══ A4：現地の今（＋ライブカメラ） ═══════════════════ */}
+      <section id="local" class="py-8">
+        <p class="mb-4 text-xs tracking-[0.24em] text-zinc-400 uppercase">Local Now — 現地の今</p>
 
-      {/* ── 週間予報 ────────────────────────────────── */}
-      <section id="forecast" class="border-b border-zinc-200 py-8">
-        <p class="mb-4 text-xs tracking-[0.24em] text-zinc-400 uppercase">Weekly Forecast — Tochigi / Utsunomiya temp</p>
-        <div id="forecast-swiper" class="swiper overflow-hidden">
-          <div class="swiper-wrapper">
-            {Array.from({ length: 7 }).map((_, i) => (
-              <div class="swiper-slide" style="width:130px;">
-                <div class="border border-zinc-200 bg-white p-4 text-center">
-                  <p class="text-xs text-zinc-400" id={`fc-date-${i}`}>—</p>
-                  <div class="my-3 flex h-10 items-center justify-center" id={`fc-icon-${i}`}>
-                    <span class="text-zinc-300 text-lg">—</span>
-                  </div>
-                  <p class="text-xs" id={`fc-pop-${i}`}>
-                    <span class="text-zinc-400">降水</span> —%
-                  </p>
-                  <p class="mt-1 text-xs" id={`fc-temp-${i}`}>
-                    <span class="text-red-400">—°</span> / <span class="text-blue-400">—°</span>
-                  </p>
-                </div>
-              </div>
-            ))}
+        {/* 上：受付棟センサー */}
+        <div id="a4-uketsuke" class="border border-zinc-200 bg-white p-5">
+          <div class="flex items-baseline justify-between">
+            <p class="text-xs tracking-[0.16em] text-zinc-400">受付棟</p>
+            <p id="a4-uketsuke-time" class="text-xs text-zinc-400"></p>
           </div>
-          <div class="swiper-scrollbar mt-3 h-1 bg-zinc-200"></div>
+          <div id="a4-uketsuke-body" class="mt-3 flex flex-wrap items-end gap-x-8 gap-y-2">
+            <div>
+              <span id="a4-uketsuke-temp" class="text-4xl font-semibold text-zinc-800">—</span>
+              <span class="text-sm text-zinc-400">℃</span>
+            </div>
+            <div>
+              <span id="a4-uketsuke-hum" class="text-2xl font-semibold text-zinc-700">—</span>
+              <span class="text-sm text-zinc-400">%（湿度）</span>
+            </div>
+          </div>
+          <p id="a4-uketsuke-diff" class="mt-3 text-sm text-zinc-500" hidden></p>
+          <p id="a4-uketsuke-down" class="mt-3 text-sm text-amber-600" hidden>
+            センサー一時停止中（復旧作業中）
+          </p>
         </div>
-      </section>
 
-      {/* ── カメラ ───────────────────────────────────── */}
-      <section id="camera" class="py-8">
-        <p class="mb-4 text-xs tracking-[0.24em] text-zinc-400 uppercase">Live Camera</p>
+        {/* 下：那須烏山アメダス */}
+        <div id="a4-amedas" class="mt-3 border border-zinc-200 bg-white p-5">
+          <div class="flex items-baseline justify-between">
+            <p class="text-xs tracking-[0.16em] text-zinc-400">那須烏山アメダス</p>
+            <p id="a4-amedas-time" class="text-xs text-zinc-400"></p>
+          </div>
+          <div class="mt-3 grid grid-cols-2 gap-x-6 gap-y-3 md:grid-cols-4">
+            <div>
+              <p class="text-xs text-zinc-400">気温</p>
+              <p class="mt-1"><span id="a4-amedas-temp" class="text-2xl font-semibold text-zinc-800">—</span><span class="text-xs text-zinc-400"> ℃</span></p>
+            </div>
+            <div>
+              <p class="text-xs text-zinc-400">風向 / 風速</p>
+              <p class="mt-1"><span id="a4-amedas-wind" class="text-2xl font-semibold text-zinc-800">—</span><span class="text-xs text-zinc-400"> m/s</span></p>
+            </div>
+            <div>
+              <p class="text-xs text-zinc-400">降水（1h）</p>
+              <p class="mt-1"><span id="a4-amedas-rain" class="text-2xl font-semibold text-zinc-800">—</span><span class="text-xs text-zinc-400"> mm</span></p>
+            </div>
+            <div>
+              <p class="text-xs text-zinc-400">日照（1h）</p>
+              <p class="mt-1"><span id="a4-amedas-sun" class="text-2xl font-semibold text-zinc-800">—</span><span class="text-xs text-zinc-400"> h</span></p>
+            </div>
+          </div>
+        </div>
+
+        {/* ライブカメラ（YouTube）: 現行から A4 末尾へ移設 */}
+        <p class="mt-6 mb-3 text-xs tracking-[0.16em] text-zinc-400">ライブカメラ</p>
         <div class="aspect-video overflow-hidden border border-zinc-200">
           <iframe
             src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}`}
@@ -201,13 +209,10 @@ const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
   {/* ── BottomNav ────────────────────────────────────── */}
   <nav class="fixed bottom-0 left-0 right-0 z-50 flex overflow-x-auto border-t border-zinc-700 bg-[color:var(--forest-700)]">
     {[
-      { href: "#warning",   label: "注意報" },
-      { href: "#amedas",    label: "現況" },
-      { href: "#satellite", label: "衛星" },
-      { href: "#radar",     label: "レーダー" },
-      { href: "#wdist",     label: "分布予報" },
-      { href: "#forecast",  label: "週間" },
-      { href: "#camera",    label: "カメラ" },
+      { href: "#forecast", label: "予報" },
+      { href: "#compare",  label: "5地点" },
+      { href: "#warning",  label: "警報" },
+      { href: "#local",    label: "現地" },
     ].map((item) => (
       <a
         href={item.href}
@@ -218,252 +223,335 @@ const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
     ))}
   </nav>
 
-  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-
   <script>
-    // ── 定数 ──────────────────────────────────────────────────
-    const PREF_CODE    = "090000";
-    const AMEDAS_CODE  = "41247";
-    const CITY_NAME    = "那須烏山市";
+    import { jmaIconUrl } from "../../lib/jmaTelops";
 
-    const WIND_DIR = [
-      "静穏","N","NNE","NE","ENE","E","ESE","SE","SSE",
-      "S","SSW","SW","WSW","W","WNW","NW","NNW",
-    ];
-
-    const WARNING_NAMES: Record<string, string> = {
-      "10":"大雨警報","11":"洪水警報","12":"大雪警報",
-      "13":"暴風警報","14":"暴風雪警報","15":"波浪警報","16":"高潮警報",
-      "20":"大雨注意報","21":"洪水注意報","22":"大雪注意報",
-      "23":"強風注意報","24":"風雪注意報","25":"波浪注意報","26":"高潮注意報",
-      "32":"乾燥注意報","33":"なだれ注意報","34":"低温注意報",
-      "35":"霜注意報","36":"着氷注意報","37":"着雪注意報",
+    // ════════════════════════════════════════════════════════════
+    //  データ取得層（A1〜A4 共通の土台）
+    //  - current / forecast / warning を Promise.allSettled で並列取得
+    //  - 部分失敗・null フィールドはその箇所だけ非表示。ページ全体は壊さない
+    //  - 鮮度判定・差分計算は HP 側（API に status は無い。age_seconds を使う）
+    //  - フェッチ頻度は HTTP キャッシュに委ね、追加ポーリングはしない
+    //    （current=60s / forecast=warning=300s）
+    // ════════════════════════════════════════════════════════════
+    const API = {
+      current:  "https://oiranomori.com/app/weather/api/public/current.php",
+      forecast: "https://oiranomori.com/app/weather/api/public/forecast.php",
+      warning:  "https://oiranomori.com/app/weather/api/public/warning.php",
     };
 
-    // ── ユーティリティ ────────────────────────────────────────
-    const pad = (n: number) => String(n).padStart(2, "0");
+    // 鮮度閾値（A4 で使用）
+    const STALE_WARN_S = 1200; // 20分超 → 警告色
+    const STALE_DOWN_S = 3600; // 1時間超 → 停止中扱い
 
-    function getSatUrl(offsetMin = 20): string {
-      const ms  = Date.now() + 9 * 3600 * 1000 - offsetMin * 60 * 1000;
-      const d   = new Date(ms);
-      const y   = d.getUTCFullYear();
-      const mo  = pad(d.getUTCMonth() + 1);
-      const dy  = pad(d.getUTCDate());
-      const h   = pad(d.getUTCHours());
-      const mi  = pad(Math.floor(d.getUTCMinutes() / 10) * 10);
-      return `https://www.jma.go.jp/bosai/himawari/data/hirv/fullcolor/jpn/${y}${mo}${dy}/${h}${mi}00_hirv_jpn.jpg`;
+    const DOW = ["日", "月", "火", "水", "木", "金", "土"];
+
+    type Json = Record<string, any>;
+
+    const getEl = (id: string) => document.getElementById(id);
+    const show = (id: string) => { const e = getEl(id); if (e) e.hidden = false; };
+    const setText = (id: string, v: string) => { const e = getEl(id); if (e) e.textContent = v; };
+
+    // JMA 天気アイコン（weather_code → TELOPS 表で昼アイコンファイル名に解決）。
+    // 表に無い未知コードは null を返し、呼び出し側でアイコンを描かない。
+    function jmaIcon(code: string | number, size = 36): HTMLImageElement | null {
+      const url = jmaIconUrl(code);
+      if (!url) return null;
+      const img = document.createElement("img");
+      img.src = url;
+      img.width = size; img.height = size; img.alt = ""; img.className = "mx-auto";
+      // TELOPS にあっても万一 404 のときは保険で非表示（null耐性と整合）
+      img.onerror = () => { img.style.display = "none"; };
+      return img;
     }
 
-    // ── 注意報・警報 ───────────────────────────────────────────
-    async function fetchWarnings(): Promise<void> {
-      const listEl = document.getElementById("warning-list")!;
-      try {
-        const data = await fetch(
-          `https://www.jma.go.jp/bosai/warning/data/warning/${PREF_CODE}.json`
-        ).then((r) => r.json());
+    function fmtDate(iso: string): string {
+      const d = new Date(iso + "T00:00:00+09:00");
+      return `${d.getMonth() + 1}/${d.getDate()}(${DOW[d.getDay()]})`;
+    }
 
-        let warnings: { code: string; status: string }[] = [];
-        for (const at of (data.areaTypes ?? [])) {
-          for (const area of (at.areas ?? [])) {
-            if (area.name === CITY_NAME) {
-              warnings = area.warnings ?? [];
-              break;
-            }
-          }
+    function fmtClock(iso: string): string {
+      const d = new Date(iso);
+      const p = (n: number) => String(n).padStart(2, "0");
+      return `${d.getMonth() + 1}/${d.getDate()} ${p(d.getHours())}:${p(d.getMinutes())}`;
+    }
+
+    async function fetchJson(url: string): Promise<Json> {
+      const r = await fetch(url, { cache: "default" });
+      const d = await r.json();
+      if (!d.ok) throw new Error("ok:false");
+      return d;
+    }
+
+    // ── A1：直近予報 ─────────────────────────────────────────────
+    function renderA1(forecast: Json | null): void {
+      if (!forecast) return;
+
+      // 今日
+      const today = forecast.today;
+      if (today) {
+        setText("a1-today-date", fmtDate(today.date));
+        const iconEl = getEl("a1-today-icon");
+        if (iconEl && today.weather_code) {
+          const icon = jmaIcon(today.weather_code, 44);
+          if (icon) iconEl.replaceChildren(icon);
         }
-
-        const active = warnings.filter((w) => w.status === "発表");
-
-        if (active.length === 0) {
-          listEl.innerHTML =
-            `<span class="text-zinc-400">現在、${CITY_NAME}に発表中の注意報・警報はありません。</span>`;
-        } else {
-          listEl.innerHTML = active
-            .map((w) => {
-              const name      = WARNING_NAMES[w.code] ?? `コード ${w.code}`;
-              const isWarning = parseInt(w.code) < 20;
-              const cls       = isWarning
-                ? "border-red-400 bg-red-50 text-red-700"
-                : "border-amber-400 bg-amber-50 text-amber-700";
-              return `<span class="mr-2 mb-2 inline-block border px-3 py-1 text-xs ${cls}">${name}</span>`;
-            })
-            .join("");
-        }
-
-        // 林野火災リスク判定（11月〜5月）
-        const month     = new Date(Date.now() + 9 * 3600 * 1000).getUTCMonth() + 1;
-        const inSeason  = month >= 11 || month <= 5;
-        const hasDry    = active.some((w) => w.code === "32");
-        const hasWind   = active.some((w) => ["13", "14", "23", "24"].includes(w.code));
-        const fireEl    = document.getElementById("fire-risk")!;
-        const innerEl   = document.getElementById("fire-risk-inner")!;
-
-        if (inSeason && hasDry) {
-          fireEl.classList.remove("hidden");
-          if (hasWind) {
-            innerEl.className = "border-l-4 border-red-500 py-2 pl-4 text-sm";
-            innerEl.innerHTML =
-              `<strong class="text-red-700">林野火災リスク：警報相当</strong>` +
-              `<span class="ml-2 text-red-600">乾燥注意報＋強風系の警報・注意報が発表中。焚き火は十分な注意が必要です。</span>`;
-          } else {
-            innerEl.className = "border-l-4 border-amber-500 py-2 pl-4 text-sm";
-            innerEl.innerHTML =
-              `<strong class="text-amber-700">林野火災リスク：注意報相当</strong>` +
-              `<span class="ml-2 text-amber-600">乾燥注意報が発表中。焚き火の管理に注意してください。</span>`;
-          }
-        }
-      } catch (e) {
-        listEl.innerHTML = `<span class="text-zinc-400">注意報・警報の取得に失敗しました。</span>`;
-        console.warn("[Warning]", e);
+        setText("a1-today-pop", today.pop != null ? String(today.pop) : "—");
+        setText("a1-today-max", today.temp_max != null ? `${today.temp_max}°` : "—°");
+        setText("a1-today-min", today.temp_min != null ? `${today.temp_min}°` : "—°");
+        show("a1-today");
       }
-    }
 
-    // ── アメダス現況 ────────────────────────────────────────────
-    async function fetchAmedas(): Promise<void> {
-      try {
-        const latestTime: string = await fetch(
-          "https://www.jma.go.jp/bosai/amedas/data/latest_time.json"
-        ).then((r) => r.json());
-        const timeStr = latestTime.replace(/[-:T]/g, "").slice(0, 12) + "00";
-        const d = await fetch(
-          `https://www.jma.go.jp/bosai/amedas/data/point/${AMEDAS_CODE}/${timeStr}.json`
-        ).then((r) => r.json());
-
-        const set = (id: string, val: string) => {
-          const el = document.getElementById(id);
-          if (el) el.textContent = val;
-        };
-
-        const temp   = d.temp?.[0];
-        const wind   = d.wind?.[0];
-        const wdir   = d.windDirection?.[0];
-        const precip = d.precipitation1h?.[0];
-        const sun    = d.sun10m?.[0];
-
-        set("card-temp",    temp   !== undefined ? temp.toFixed(1)   : "—");
-        set("card-wind",    wind   !== undefined ? wind.toFixed(1)   : "—");
-        set("card-wind-dir", `m/s　${wdir !== undefined ? (WIND_DIR[wdir] ?? "—") : "—"}`);
-        set("card-precip",  precip !== undefined ? precip.toFixed(1) : "—");
-        set("card-sun",     sun    !== undefined ? String(sun)       : "—");
-
-        const tEl = document.getElementById("amedas-time");
-        if (tEl) tEl.textContent = `観測時刻: ${latestTime.slice(0, 16).replace("T", " ")} JST`;
-      } catch (e) {
-        console.warn("[Amedas]", e);
-      }
-    }
-
-    // ── 気象衛星 ───────────────────────────────────────────────
-    function loadSatellite(offsetMin = 20): void {
-      const imgEl     = document.getElementById("sat-img") as HTMLImageElement;
-      const iframeEl  = document.getElementById("sat-iframe") as HTMLIFrameElement;
-      const loadingEl = document.getElementById("sat-loading")!;
-      const timeEl    = document.getElementById("sat-time")!;
-      const url       = getSatUrl(offsetMin);
-
-      const tmp = new Image();
-      tmp.onload = () => {
-        imgEl.src          = url;
-        imgEl.style.display = "block";
-        loadingEl.style.display = "none";
-        const m = url.match(/(\d{4})(\d{2})(\d{2})\/(\d{2})(\d{2})/);
-        if (m) timeEl.textContent = `ひまわり可視: ${m[1]}/${m[2]}/${m[3]} ${m[4]}:${m[5]} JST`;
-      };
-      tmp.onerror = () => {
-        if (offsetMin < 60) {
-          loadSatellite(offsetMin + 10); // 1世代ずつ遡る
-        } else {
-          // 全滅 → iframe fallback
-          iframeEl.src = "https://www.jma.go.jp/bosai/himawari/#zoom:6/lat:36.6/lon:140.1/coltype:VISC";
-          iframeEl.style.display = "block";
-          loadingEl.style.display = "none";
-          timeEl.textContent = "衛星画像の直接取得に失敗しました（iframeで表示）";
+      // 明日（weekly[0] は pop/temp が常に null。tomorrow ブロックを使う）
+      const tomorrow = forecast.tomorrow;
+      if (tomorrow) {
+        setText("a1-tomorrow-date", fmtDate(tomorrow.date));
+        const iconEl = getEl("a1-tomorrow-icon");
+        if (iconEl && tomorrow.weather_code) {
+          const icon = jmaIcon(tomorrow.weather_code, 44);
+          if (icon) iconEl.replaceChildren(icon);
         }
-      };
-      tmp.src = url;
-    }
-
-    // ── 週間予報 ───────────────────────────────────────────────
-    async function fetchForecast(): Promise<void> {
-      try {
-        const data = await fetch(
-          `https://www.jma.go.jp/bosai/forecast/data/forecast/${PREF_CODE}.json`
-        ).then((r) => r.json());
-
-        const weekly    = data[1];
-        const wSeries   = weekly?.timeSeries?.[0];
-        const popSeries = weekly?.timeSeries?.[1];
-        const tSeries   = weekly?.timeSeries?.[2];
-
-        const dates: string[] = wSeries?.timeDefines ?? [];
-        const codes: string[] = wSeries?.areas?.[0]?.weatherCodes ?? [];
-        const pops: string[]  = popSeries?.areas?.[0]?.pops ?? [];
-        const maxT: string[]  = tSeries?.areas?.[0]?.tempsMax ?? [];
-        const minT: string[]  = tSeries?.areas?.[0]?.tempsMin ?? [];
-
-        const DOW = ["日", "月", "火", "水", "木", "金", "土"];
-
-        dates.slice(0, 7).forEach((dateStr, i) => {
-          const d     = new Date(dateStr);
-          const label = `${d.getUTCMonth() + 1}/${d.getUTCDate()}(${DOW[d.getUTCDay()]})`;
-
-          const dateEl = document.getElementById(`fc-date-${i}`);
-          const iconEl = document.getElementById(`fc-icon-${i}`);
-          const popEl  = document.getElementById(`fc-pop-${i}`);
-          const tempEl = document.getElementById(`fc-temp-${i}`);
-
-          if (dateEl) dateEl.textContent = label;
-
-          if (iconEl && codes[i]) {
-            const img     = document.createElement("img");
-            img.src       = `https://www.jma.go.jp/bosai/forecast/img/${codes[i]}.svg`;
-            img.width     = 36;
-            img.height    = 36;
-            img.alt       = "";
-            img.className = "mx-auto";
-            iconEl.replaceChildren(img);
-          }
-
-          if (popEl) {
-            popEl.innerHTML = `<span class="text-zinc-400">降水</span> ${pops[i] ?? "—"}%`;
-          }
-          if (tempEl) {
-            const mx = maxT[i] ?? "—";
-            const mn = minT[i] ?? "—";
-            tempEl.innerHTML =
-              `<span class="text-red-400">${mx}°</span> / <span class="text-blue-400">${mn}°</span>`;
-          }
-        });
-      } catch (e) {
-        console.warn("[Forecast]", e);
+        setText("a1-tomorrow-pop", tomorrow.pop != null ? String(tomorrow.pop) : "—");
+        setText("a1-tomorrow-max", tomorrow.temp_max != null ? `${tomorrow.temp_max}°` : "—°");
+        setText("a1-tomorrow-min", tomorrow.temp_min != null ? `${tomorrow.temp_min}°` : "—°");
+        show("a1-tomorrow");
       }
+
+      // 週間（weekly[0]=明日は描画しない。weekly[1] 以降を並べる）
+      const weekly: Json[] = Array.isArray(forecast.weekly) ? forecast.weekly : [];
+      const wrap = getEl("a1-weekly");
+      if (wrap && weekly.length > 1) {
+        wrap.replaceChildren();
+        for (const day of weekly.slice(1)) {
+          const card = document.createElement("div");
+          card.className = "shrink-0 border border-zinc-200 bg-white p-3 text-center";
+          card.style.width = "96px";
+          const date = document.createElement("p");
+          date.className = "text-xs text-zinc-400";
+          date.textContent = fmtDate(day.date);
+          const icon = document.createElement("div");
+          icon.className = "my-2 flex h-9 items-center justify-center";
+          if (day.weather_code) {
+            const img = jmaIcon(day.weather_code, 32);
+            if (img) icon.appendChild(img);
+          }
+          const pop = document.createElement("p");
+          pop.className = "text-xs text-zinc-500";
+          pop.textContent = day.pop != null ? `${day.pop}%` : "—";
+          const temp = document.createElement("p");
+          temp.className = "mt-1 text-xs";
+          temp.innerHTML =
+            `<span class="text-red-400">${day.temp_max != null ? day.temp_max + "°" : "—"}</span>` +
+            ` / <span class="text-blue-400">${day.temp_min != null ? day.temp_min + "°" : "—"}</span>`;
+          card.append(date, icon, pop, temp);
+          wrap.appendChild(card);
+        }
+      }
+
+      // 装備テキスト（advisory）は今回非表示。接続ポイント #a1-advisory のみ用意。
     }
 
-    // ── Swiper初期化 ───────────────────────────────────────────
-    function initSwiper(): void {
-      if (typeof (window as any).Swiper === "undefined") {
-        setTimeout(initSwiper, 150);
+    // ── A2：比較5地点カード ──────────────────────────────────────
+    function renderA2(current: Json | null): void {
+      const wrap = getEl("a2-cards");
+      if (!wrap) return;
+      if (!current?.stations) {
+        wrap.innerHTML = `<p class="col-span-full text-sm text-zinc-400">周辺地点の取得に失敗しました。</p>`;
         return;
       }
-      new (window as any).Swiper("#forecast-swiper", {
-        slidesPerView: "auto",
-        spaceBetween: 8,
-        freeMode: true,
-        scrollbar: { el: ".swiper-scrollbar", draggable: true },
-      });
+
+      // 表示順：東京 / 埼玉 / 宇都宮 / 那須烏山 / 受付棟
+      const order = [
+        { key: "amedas_tokyo",     label: "東京" },
+        { key: "amedas_saitama",   label: "埼玉" },
+        { key: "amedas_utsunomiya", label: "宇都宮" },
+        { key: "amedas_karasuyama", label: "那須烏山" },
+        { key: "uketsuke",         label: "受付棟" },
+      ];
+
+      const baseTemp = current.stations?.uketsuke?.temp_c; // 都市比の基準＝受付棟
+      wrap.replaceChildren();
+
+      for (const { key, label } of order) {
+        const st = current.stations[key];
+        const card = document.createElement("div");
+        card.className = "border border-zinc-200 bg-white p-4 text-center";
+
+        const name = document.createElement("p");
+        name.className = "text-xs tracking-[0.12em] text-zinc-400";
+        name.textContent = st?.label ?? label;
+        card.appendChild(name);
+
+        // 天気アイコン（OpenWeather icon。実値があるのは現状 uketsuke のみ）
+        const iconBox = document.createElement("div");
+        iconBox.className = "my-2 flex h-9 items-center justify-center";
+        if (st?.weather?.icon) {
+          const img = document.createElement("img");
+          img.src = `https://openweathermap.org/img/wn/${st.weather.icon}@2x.png`;
+          img.width = 36; img.height = 36;
+          img.alt = st.weather.text ?? "";
+          img.loading = "lazy"; img.decoding = "async";
+          iconBox.appendChild(img);
+        }
+        card.appendChild(iconBox);
+
+        // 気温
+        const temp = document.createElement("p");
+        temp.className = "text-2xl font-semibold text-zinc-800";
+        temp.innerHTML = (st?.temp_c != null)
+          ? `${st.temp_c.toFixed(1)}<span class="text-xs text-zinc-400"> ℃</span>`
+          : `<span class="text-zinc-300">—</span>`;
+        card.appendChild(temp);
+
+        // 都市比差分（受付棟基準。受付棟自身は基準なので出さない）
+        if (key !== "uketsuke" && st?.temp_c != null && baseTemp != null) {
+          const diff = st.temp_c - baseTemp;
+          const sign = diff >= 0 ? "+" : "−";
+          const d = document.createElement("p");
+          d.className = "mt-1 text-xs text-zinc-400";
+          d.textContent = `受付棟比 ${sign}${Math.abs(diff).toFixed(1)}℃`;
+          card.appendChild(d);
+        }
+
+        wrap.appendChild(card);
+      }
+
+      // 季節コメント（seasonal_comment）は今回非表示。接続ポイント #a2-seasonal のみ用意。
     }
 
-    // ── 全更新 ─────────────────────────────────────────────────
+    // ── A3：警報・注意報 ─────────────────────────────────────────
+    function renderA3(warning: Json | null): void {
+      const wrap = getEl("a3-warnings");
+      if (!wrap) return;
+      if (!warning) {
+        wrap.innerHTML = `<p class="text-zinc-400">警報・注意報の取得に失敗しました。</p>`;
+        return;
+      }
+
+      const warnings: Json[] = Array.isArray(warning.warnings) ? warning.warnings : [];
+      if (warnings.length === 0) {
+        wrap.innerHTML = `<p class="text-zinc-400">現在、発表中の警報・注意報はありません。</p>`;
+        return;
+      }
+
+      // level で3段階に出し分け（emergency / warning / advisory）
+      const styleByLevel = (level: string) => {
+        switch (level) {
+          case "emergency":
+            return "border-2 border-purple-600 bg-purple-50 text-purple-800 font-semibold";
+          case "warning":
+            return "border border-red-400 bg-red-50 text-red-700";
+          default: // advisory
+            return "border border-amber-400 bg-amber-50 text-amber-700";
+        }
+      };
+      const rank = (level: string) =>
+        level === "emergency" ? 0 : level === "warning" ? 1 : 2;
+
+      const sorted = [...warnings].sort((a, b) => rank(a.level) - rank(b.level));
+
+      wrap.replaceChildren();
+      for (const w of sorted) {
+        const span = document.createElement("span");
+        const lv = String(w.level ?? "advisory");
+        span.className = `mr-2 mb-2 inline-block px-3 py-1 text-xs ${styleByLevel(lv)}`;
+        span.textContent = w.name ?? w.text ?? `コード ${w.code ?? "—"}`;
+        wrap.appendChild(span);
+      }
+    }
+
+    // ── A4：現地の今 ─────────────────────────────────────────────
+    function renderA4(current: Json | null): void {
+      const uketsuke = current?.stations?.uketsuke;
+      const amedas   = current?.stations?.amedas_karasuyama;
+
+      // --- 受付棟 ---
+      const tempEl = getEl("a4-uketsuke-temp");
+      const humEl  = getEl("a4-uketsuke-hum");
+      const bodyEl = getEl("a4-uketsuke-body");
+      const downEl = getEl("a4-uketsuke-down");
+      const timeEl = getEl("a4-uketsuke-time");
+
+      // 停止中判定：temp_c が null、または鮮度 1時間超
+      const ukDown =
+        !uketsuke || uketsuke.temp_c == null ||
+        (uketsuke.age_seconds != null && uketsuke.age_seconds > STALE_DOWN_S);
+
+      if (ukDown) {
+        if (bodyEl) bodyEl.hidden = true;
+        if (downEl) downEl.hidden = false;
+      } else {
+        if (bodyEl) bodyEl.hidden = false;
+        if (downEl) downEl.hidden = true;
+        if (tempEl) tempEl.textContent = uketsuke.temp_c.toFixed(1);
+        if (humEl)  humEl.textContent  = uketsuke.humidity != null ? String(uketsuke.humidity) : "—";
+
+        // 鮮度（20分超で警告色）と時刻スタンプ（強調）
+        if (timeEl && uketsuke.observed_at) {
+          timeEl.textContent = `${fmtClock(uketsuke.observed_at)} 観測`;
+          timeEl.className =
+            (uketsuke.age_seconds != null && uketsuke.age_seconds > STALE_WARN_S)
+              ? "text-xs font-semibold text-amber-600"
+              : "text-xs font-semibold text-zinc-600";
+        }
+      }
+
+      // --- 那須烏山アメダス ---
+      if (amedas) {
+        setText("a4-amedas-temp", amedas.temp_c != null ? amedas.temp_c.toFixed(1) : "—");
+        const wind = amedas.wind_speed_mps != null ? amedas.wind_speed_mps.toFixed(1) : "—";
+        const wdir = amedas.wind_direction ?? "";
+        setText("a4-amedas-wind", wdir ? `${wind}（${wdir}）` : wind);
+        setText("a4-amedas-rain", amedas.rainfall_1h_mm != null ? String(amedas.rainfall_1h_mm) : "—");
+        setText("a4-amedas-sun",  amedas.daylight_1h_h != null ? String(amedas.daylight_1h_h) : "—");
+        const aTimeEl = getEl("a4-amedas-time");
+        if (aTimeEl && amedas.observed_at) {
+          aTimeEl.textContent = `${fmtClock(amedas.observed_at)} 観測`;
+          aTimeEl.className =
+            (amedas.age_seconds != null && amedas.age_seconds > STALE_WARN_S)
+              ? "text-xs font-semibold text-amber-600"
+              : "text-xs font-semibold text-zinc-600";
+        }
+      }
+
+      // --- アメダス比の気温差分（受付棟 − 那須烏山アメダス） ---
+      // 受付棟が落ちている場合は代替せず、差分も出さない（欠損は正直に）
+      const diffEl = getEl("a4-uketsuke-diff");
+      if (diffEl && !ukDown && uketsuke?.temp_c != null && amedas?.temp_c != null) {
+        const diff = uketsuke.temp_c - amedas.temp_c;
+        const sign = diff >= 0 ? "+" : "−";
+        const note = diff < 0 ? "、林間で日陰多め" : "";
+        diffEl.textContent = `アメダスより ${sign}${Math.abs(diff).toFixed(1)}℃${note}`;
+        diffEl.hidden = false;
+      } else if (diffEl) {
+        diffEl.hidden = true;
+      }
+    }
+
+    // ── 全更新 ───────────────────────────────────────────────────
     async function init(): Promise<void> {
-      const btn = document.getElementById("btn-refresh") as HTMLButtonElement | null;
+      const btn = getEl("btn-refresh") as HTMLButtonElement | null;
       if (btn) { btn.textContent = "更新中…"; btn.disabled = true; }
-      await Promise.allSettled([fetchWarnings(), fetchAmedas(), fetchForecast()]);
-      loadSatellite();
+
+      const [curR, fcR, wnR] = await Promise.allSettled([
+        fetchJson(API.current),
+        fetchJson(API.forecast),
+        fetchJson(API.warning),
+      ]);
+
+      const current  = curR.status === "fulfilled" ? curR.value : null;
+      const forecast = fcR.status === "fulfilled" ? fcR.value : null;
+      const warning  = wnR.status === "fulfilled" ? wnR.value : null;
+
+      renderA1(forecast);
+      renderA2(current);
+      renderA3(warning);
+      renderA4(current);
+
       if (btn) { btn.textContent = "更新"; btn.disabled = false; }
     }
 
-    document.getElementById("btn-refresh")?.addEventListener("click", init);
-    initSwiper();
+    getEl("btn-refresh")?.addEventListener("click", init);
     init();
   </script>
 
