@@ -83,14 +83,24 @@ const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.s
   window.addEventListener("scroll", onScroll, { passive: true });
 
   // ── 天気・気温の取得と表示 ─────────────────────────────
+  // データソース: OirasApp current.php（stations.uketsuke の temp_c / weather）
+  // フェッチ頻度はブラウザHTTPキャッシュ（current.php の max-age=60）に委ねる。
+  // localStorage はフォールバック専用（取得失敗時のみ参照、鮮度閾値6時間）。
   const CACHE_KEY = "header-weather-cache";
   const CACHE_TTL_MS = 6 * 60 * 60 * 1000; // 6時間
+
+  interface WeatherInfo {
+    code: number;
+    icon: string;
+    text: string;
+    main: string;
+  }
 
   interface WeatherCache {
     temp_c: number;
     observed_at: string;
     fetched_at: string;
-    weather_code: number;
+    weather: WeatherInfo | null;
   }
 
   function loadCache(): WeatherCache | null {
@@ -113,50 +123,9 @@ const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.s
     }
   }
 
-  function weatherCodeToSvg(code: number): string {
-    if (code === 0) {
-      return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="4"></circle>
-        <path d="M12 2v2"></path><path d="M12 20v2"></path>
-        <path d="M4.93 4.93l1.41 1.41"></path><path d="M17.66 17.66l1.41 1.41"></path>
-        <path d="M2 12h2"></path><path d="M20 12h2"></path>
-        <path d="M4.93 19.07l1.41-1.41"></path><path d="M17.66 6.34l1.41-1.41"></path>
-      </svg>`;
-    } else if (code <= 3) {
-      return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 2v1"></path><path d="M4.22 4.22l.7.7"></path><path d="M2 12h1"></path>
-        <circle cx="12" cy="8" r="3" fill="none"></circle>
-        <path d="M18.5 13a3.5 3.5 0 0 0-7 0H7a3 3 0 0 0 0 6h12a2.5 2.5 0 0 0 0-5h-.5z"></path>
-      </svg>`;
-    } else if (code === 45 || code === 48) {
-      return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M3 10h18"></path><path d="M3 14h18"></path><path d="M3 18h18"></path>
-        <path d="M5 6h14a2 2 0 0 0-14 0z"></path>
-      </svg>`;
-    } else if ([51,53,55,61,63,65,80,81,82].includes(code)) {
-      return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M20 17.58A5 5 0 0 0 18 8h-1.26A8 8 0 1 0 4 16.25"></path>
-        <line x1="8" y1="19" x2="8" y2="21"></line>
-        <line x1="12" y1="17" x2="12" y2="21"></line>
-        <line x1="16" y1="19" x2="16" y2="21"></line>
-      </svg>`;
-    } else if ([71,73,75,77,85,86].includes(code)) {
-      return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M20 17.58A5 5 0 0 0 18 8h-1.26A8 8 0 1 0 4 16.25"></path>
-        <line x1="8" y1="20" x2="8" y2="24"></line>
-        <line x1="12" y1="18" x2="12" y2="22"></line>
-        <line x1="16" y1="20" x2="16" y2="24"></line>
-      </svg>`;
-    } else if ([95,96,99].includes(code)) {
-      return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M19 16.9A5 5 0 0 0 18 7h-1.26a8 8 0 1 0-11.62 9"></path>
-        <polyline points="13 11 9 17 15 17 11 23"></polyline>
-      </svg>`;
-    } else {
-      return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M18.5 13a3.5 3.5 0 0 0-7 0H7a3 3 0 0 0 0 6h12a2.5 2.5 0 0 0 0-5h-.5z"></path>
-      </svg>`;
-    }
+  // OpenWeather のアイコンコード（例 "04d"）を公式アイコン画像で描画
+  function weatherIconImg(icon: string, alt: string): string {
+    return `<img src="https://openweathermap.org/img/wn/${icon}@2x.png" width="18" height="18" alt="${alt}" loading="lazy" decoding="async" />`;
   }
 
   async function initWeather() {
@@ -168,48 +137,47 @@ const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.s
     // 初期値として `--℃` を非表示にしておく（DOM は維持）
     weatherEl.style.display = "none";
 
-    const [switchbotResult, openMeteoResult] = await Promise.allSettled([
+    // フェッチ対象は current.php のみ。並列対象が増えた場合に備え allSettled を維持。
+    const [currentResult] = await Promise.allSettled([
       fetch("https://oiranomori.com/app/weather/api/public/current.php")
         .then(r => r.json())
         .then(d => {
           if (!d.ok) throw new Error("ok:false");
           return d;
         }),
-      fetch(
-        "https://api.open-meteo.com/v1/forecast?latitude=36.641001&longitude=140.067100&current=temperature_2m,weather_code&timezone=Asia%2FTokyo"
-      ).then(r => r.json()),
     ]);
 
     const cache = loadCache();
 
-    // --- 温度値の決定 ---
+    // --- 温度・天気の決定 ---
     let tempC: number | null = null;
     let observedAt = "";
-    if (switchbotResult.status === "fulfilled") {
-      const uketsuke = switchbotResult.value?.stations?.uketsuke;
-      if (uketsuke?.temp_c !== undefined) {
+    let weather: WeatherInfo | null = null;
+    let fromApi = false;
+
+    if (currentResult.status === "fulfilled") {
+      const uketsuke = currentResult.value?.stations?.uketsuke;
+      if (uketsuke?.temp_c !== undefined && uketsuke?.temp_c !== null) {
         tempC = uketsuke.temp_c;
         observedAt = uketsuke.observed_at ?? "";
+        fromApi = true;
+        const w = uketsuke.weather;
+        if (w && typeof w.icon === "string") {
+          weather = { code: w.code, icon: w.icon, text: w.text ?? "", main: w.main ?? "" };
+        }
       }
     }
+
+    // 取得失敗 → 6時間以内の localStorage フォールバック
     if (tempC === null && cache) {
       tempC = cache.temp_c;
       observedAt = cache.observed_at;
-    }
-
-    // --- アイコン用 weather_code の決定 ---
-    let weatherCode: number | null = null;
-    if (openMeteoResult.status === "fulfilled") {
-      const code = openMeteoResult.value?.current?.weather_code;
-      if (code !== undefined) weatherCode = code;
-    }
-    if (weatherCode === null && cache) {
-      weatherCode = cache.weather_code;
+      weather = cache.weather;
     }
 
     // --- 表示判定 ---
+    // 温度が出せない（API失敗かつキャッシュも6時間超）→ 要素ごと非表示のまま
     if (tempC === null) {
-      // 温度が出せない → 要素ごと非表示のまま
       return;
     }
 
@@ -218,19 +186,19 @@ const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.s
     tempEl.textContent = `${tempC.toFixed(1)}℃`;
 
     // アイコンを表示（出せる場合のみ）
-    if (weatherCode !== null) {
-      iconEl.innerHTML = weatherCodeToSvg(weatherCode);
+    if (weather && weather.icon) {
+      iconEl.innerHTML = weatherIconImg(weather.icon, weather.text || "");
     } else {
       iconEl.innerHTML = "";
     }
 
-    // localStorage に成功値を保存（温度APIが成功したタイミングで更新）
-    if (switchbotResult.status === "fulfilled") {
+    // localStorage に成功値を保存（APIが成功したタイミングで更新）
+    if (fromApi) {
       saveCache({
         temp_c: tempC,
         observed_at: observedAt,
         fetched_at: new Date().toISOString(),
-        weather_code: weatherCode ?? (cache?.weather_code ?? 0),
+        weather,
       });
     }
   }
