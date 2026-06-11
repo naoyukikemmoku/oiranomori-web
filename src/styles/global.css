@@ -98,11 +98,11 @@
   }
 
   .menu-grid {
-    @apply grid gap-6;
+    @apply grid gap-7;
   }
 
   .menu-group-title {
-    @apply mb-2 text-xs tracking-[0.16em] text-zinc-500;
+    @apply mb-2.5 text-[15px] font-semibold tracking-[0.04em] text-zinc-800;
   }
 
   .menu-items {
@@ -110,7 +110,7 @@
   }
 
   .menu-link {
-    @apply flex items-center justify-between rounded-lg px-3 py-2 text-sm text-zinc-700 transition hover:bg-zinc-100;
+    @apply flex items-center justify-between px-2 py-1.5 text-sm text-zinc-600 transition hover:text-zinc-900;
   }
 
   .menu-link.is-disabled {
