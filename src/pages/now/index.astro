@@ -26,21 +26,21 @@ const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
 
   <Header />
 
-  <main class="pb-24 pt-[var(--header-offset)]">
+  <main class="pb-16 pt-[var(--header-offset)]">
 
     {/* ページヘッダー */}
     <div class="border-b border-zinc-200 bg-white px-5 py-6">
       <div class="mx-auto flex max-w-6xl items-center justify-between gap-4">
         <div>
-          <p class="text-xs tracking-[0.28em] text-zinc-400 uppercase">Forest Now</p>
-          <h1 class="mt-1 text-2xl font-semibold text-zinc-800">森のいま</h1>
-          <p class="mt-0.5 text-xs text-zinc-400">おいら監修｜現地センサーと周辺観測をもとに構築</p>
+          <p class="text-[11px] tracking-[0.28em] text-zinc-400 uppercase">Forest Now</p>
+          <h1 class="mt-1 text-3xl font-semibold tracking-tight text-zinc-900">森のいま</h1>
+          <p class="mt-1 text-xs text-zinc-500">おいら監修｜現地センサーと周辺観測をもとに構築</p>
         </div>
         <div class="flex items-center gap-3">
-          <p class="text-xs text-zinc-400">ページを開いた時点の情報です</p>
+          <p class="text-xs text-zinc-500">ページを開いた時点の情報です</p>
           <button
             id="btn-refresh"
-            class="border border-zinc-300 bg-white px-4 py-2 text-xs tracking-[0.14em] text-zinc-600 transition hover:border-zinc-500 hover:text-zinc-800"
+            class="border border-zinc-300 bg-white px-4 py-2 text-xs tracking-[0.14em] text-zinc-700 transition hover:border-zinc-500 hover:text-zinc-900"
           >
             更新
           </button>
@@ -48,114 +48,51 @@ const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
       </div>
     </div>
 
+    {/* ── セクションナビ（ヘッダー直下に sticky） ────────────── */}
+    <nav class="sticky top-[var(--header-offset)] z-40 border-b border-zinc-200 bg-white/95 backdrop-blur">
+      <div class="mx-auto flex max-w-6xl overflow-x-auto px-5">
+        {[
+          { href: "#local",    label: "現地" },
+          { href: "#warning",  label: "警報" },
+          { href: "#forecast", label: "予報" },
+          { href: "#compare",  label: "5地点" },
+          { href: "#trend",    label: "推移" },
+          { href: "#aux",      label: "補助" },
+        ].map((item) => (
+          <a
+            href={item.href}
+            class="whitespace-nowrap px-4 py-3 text-sm tracking-[0.1em] text-zinc-600 transition hover:text-zinc-900"
+          >
+            {item.label}
+          </a>
+        ))}
+      </div>
+    </nav>
+
     <div class="mx-auto max-w-6xl px-5">
 
-      {/* ═══ A1：直近予報＋装備テキスト ═══════════════════════ */}
-      <section id="forecast" class="border-b border-zinc-200 py-8">
-        <p class="mb-4 text-xs tracking-[0.24em] text-zinc-400 uppercase">Forecast — 直近予報</p>
-
-        {/* 今日・明日 */}
-        <div class="grid grid-cols-2 gap-3">
-          <div id="a1-today" class="border border-zinc-200 bg-white p-5 text-center" hidden>
-            <p class="text-xs tracking-[0.16em] text-zinc-400">今日</p>
-            <p id="a1-today-date" class="mt-1 text-xs text-zinc-400">—</p>
-            <div class="my-3 flex h-12 items-center justify-center" id="a1-today-icon"></div>
-            <p class="text-xs"><span class="text-zinc-400">降水</span> <span id="a1-today-pop">—</span>%</p>
-            <p class="mt-1 text-xs">
-              <span class="text-red-400" id="a1-today-max">—°</span> /
-              <span class="text-blue-400" id="a1-today-min">—°</span>
-            </p>
-
-            {/* 暦（控えめ）: 日の出入り・二十四節気・七十二候。JSで流し込む */}
-            <div id="a1-koyomi" class="mt-4 border-t border-zinc-100 pt-3 text-[11px] leading-relaxed text-zinc-400" hidden>
-              <p id="a1-koyomi-sun"></p>
-              <p id="a1-koyomi-term" class="mt-0.5"></p>
-              <p id="a1-koyomi-ko" class="mt-0.5"></p>
-            </div>
-          </div>
-          <div id="a1-tomorrow" class="border border-zinc-200 bg-white p-5 text-center" hidden>
-            <p class="text-xs tracking-[0.16em] text-zinc-400">明日</p>
-            <p id="a1-tomorrow-date" class="mt-1 text-xs text-zinc-400">—</p>
-            <div class="my-3 flex h-12 items-center justify-center" id="a1-tomorrow-icon"></div>
-            <p class="text-xs"><span class="text-zinc-400">降水</span> <span id="a1-tomorrow-pop">—</span>%</p>
-            <p class="mt-1 text-xs">
-              <span class="text-red-400" id="a1-tomorrow-max">—°</span> /
-              <span class="text-blue-400" id="a1-tomorrow-min">—°</span>
-            </p>
-          </div>
-        </div>
-
-        {/* 週間予報（weekly[1] 以降） */}
-        <p class="mt-6 mb-3 text-xs tracking-[0.16em] text-zinc-400">週間</p>
-        <div id="a1-weekly" class="flex gap-2 overflow-x-auto pb-2">
-          {/* JSで weekly[1..] を描画 */}
-        </div>
-
-        {/* 装備テキスト枠「おいらからのご案内」: advisory API 未実装のため非表示。
-            P4完了後に #a1-advisory へ short/weekly を流し込む接続ポイント。 */}
-        <div id="a1-advisory" class="mt-6 border-l-4 border-zinc-300 py-2 pl-4 text-sm text-zinc-600" hidden>
-          <p class="text-xs tracking-[0.16em] text-zinc-400">おいらからのご案内</p>
-          <p id="a1-advisory-short" class="mt-1"></p>
-          <p id="a1-advisory-weekly" class="mt-1 text-zinc-500"></p>
-        </div>
-      </section>
-
-      {/* ═══ A2：比較5地点カード ═══════════════════════════════ */}
-      <section id="compare" class="border-b border-zinc-200 py-8">
-        <p class="mb-4 text-xs tracking-[0.24em] text-zinc-400 uppercase">Compare — 周辺5地点</p>
-        <div id="a2-cards" class="grid grid-cols-2 gap-3 md:grid-cols-5">
-          {/* JSで current.stations を描画 */}
-          <p class="col-span-full text-sm text-zinc-400">取得中…</p>
-        </div>
-
-        {/* 季節コメント枠: seasonal_comment API 未実装のため非表示。
-            P後続で #a2-seasonal へ流し込む接続ポイント。 */}
-        <div id="a2-seasonal" class="mt-4 text-sm text-zinc-500" hidden>
-          <p id="a2-seasonal-text"></p>
-        </div>
-      </section>
-
-      {/* ═══ A3：警報・注意報 ═══════════════════════════════════ */}
-      <section id="warning" class="border-b border-zinc-200 py-8">
-        <p class="mb-4 text-xs tracking-[0.24em] text-zinc-400 uppercase">Warning / Advisory — 那須烏山市</p>
-        <div id="a3-warnings" class="text-sm text-zinc-600">
-          <p class="text-zinc-400">取得中…</p>
-        </div>
-
-        {/* 雨雲レーダー（気象庁ナウキャスト）: 現行踏襲で残す */}
-        <p class="mt-6 mb-3 text-xs tracking-[0.16em] text-zinc-400">雨雲レーダー</p>
-        <div class="overflow-hidden border border-zinc-200">
-          <iframe
-            src="https://www.jma.go.jp/bosai/nowc/#lat:36.667/lon:140.13/zoom:9/coltype:HPN"
-            class="h-96 w-full border-none"
-            title="雨雲レーダー"
-            loading="lazy"
-          ></iframe>
-        </div>
-        <p class="mt-2 text-xs text-zinc-400">© 気象庁ナウキャスト（那須烏山周辺）</p>
-      </section>
-
-      {/* ═══ A4：現地の今（＋ライブカメラ） ═══════════════════ */}
-      <section id="local" class="py-8">
-        <p class="mb-4 text-xs tracking-[0.24em] text-zinc-400 uppercase">Local Now — 現地の今</p>
+      {/* ═══ A4：現地の今（センサーのみ。ライブカメラは最下部 #livecam へ分離） ═══ */}
+      <section id="local" class="scroll-mt-[calc(var(--header-offset)+3.5rem)] py-8">
+        <p class="text-[11px] tracking-[0.24em] text-zinc-400 uppercase">Local Now</p>
+        <h2 class="mt-1 mb-4 text-lg font-semibold text-zinc-800">現地の今</h2>
 
         {/* 上：受付棟センサー */}
         <div id="a4-uketsuke" class="border border-zinc-200 bg-white p-5">
           <div class="flex items-baseline justify-between">
-            <p class="text-xs tracking-[0.16em] text-zinc-400">受付棟</p>
-            <p id="a4-uketsuke-time" class="text-xs text-zinc-400"></p>
+            <p class="text-sm tracking-[0.12em] text-zinc-600">おいらの森(受付)</p>
+            <p id="a4-uketsuke-time" class="text-xs text-zinc-500"></p>
           </div>
           <div id="a4-uketsuke-body" class="mt-3 flex flex-wrap items-end gap-x-8 gap-y-2">
             <div>
               <span id="a4-uketsuke-temp" class="text-4xl font-semibold text-zinc-800">—</span>
-              <span class="text-sm text-zinc-400">℃</span>
+              <span class="text-sm text-zinc-500">℃</span>
             </div>
             <div>
               <span id="a4-uketsuke-hum" class="text-2xl font-semibold text-zinc-700">—</span>
-              <span class="text-sm text-zinc-400">%（湿度）</span>
+              <span class="text-sm text-zinc-500">%（湿度）</span>
             </div>
           </div>
-          <p id="a4-uketsuke-diff" class="mt-3 text-sm text-zinc-500" hidden></p>
+          <p id="a4-uketsuke-diff" class="mt-3 text-sm text-zinc-600" hidden></p>
           <p id="a4-uketsuke-down" class="mt-3 text-sm text-amber-600" hidden>
             センサー一時停止中（復旧作業中）
           </p>
@@ -164,57 +101,123 @@ const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
         {/* 下：那須烏山アメダス */}
         <div id="a4-amedas" class="mt-3 border border-zinc-200 bg-white p-5">
           <div class="flex items-baseline justify-between">
-            <p class="text-xs tracking-[0.16em] text-zinc-400">那須烏山アメダス</p>
-            <p id="a4-amedas-time" class="text-xs text-zinc-400"></p>
+            <p class="text-sm tracking-[0.12em] text-zinc-600">那須烏山アメダス</p>
+            <p id="a4-amedas-time" class="text-xs text-zinc-500"></p>
           </div>
           <div class="mt-3 grid grid-cols-2 gap-x-6 gap-y-3 md:grid-cols-4">
             <div>
-              <p class="text-xs text-zinc-400">気温</p>
-              <p class="mt-1"><span id="a4-amedas-temp" class="text-2xl font-semibold text-zinc-800">—</span><span class="text-xs text-zinc-400"> ℃</span></p>
+              <p class="text-sm text-zinc-500">気温</p>
+              <p class="mt-1"><span id="a4-amedas-temp" class="text-2xl font-semibold text-zinc-800">—</span><span class="text-sm text-zinc-500"> ℃</span></p>
             </div>
             <div>
-              <p class="text-xs text-zinc-400">風向 / 風速</p>
-              <p class="mt-1"><span id="a4-amedas-wind" class="text-2xl font-semibold text-zinc-800">—</span><span class="text-xs text-zinc-400"> m/s</span></p>
+              <p class="text-sm text-zinc-500">風向 / 風速</p>
+              <p class="mt-1"><span id="a4-amedas-wind" class="text-2xl font-semibold text-zinc-800">—</span><span class="text-sm text-zinc-500"> m/s</span></p>
             </div>
             <div>
-              <p class="text-xs text-zinc-400">降水（1h）</p>
-              <p class="mt-1"><span id="a4-amedas-rain" class="text-2xl font-semibold text-zinc-800">—</span><span class="text-xs text-zinc-400"> mm</span></p>
+              <p class="text-sm text-zinc-500">降水（1h）</p>
+              <p class="mt-1"><span id="a4-amedas-rain" class="text-2xl font-semibold text-zinc-800">—</span><span class="text-sm text-zinc-500"> mm</span></p>
             </div>
             <div>
-              <p class="text-xs text-zinc-400">日照（1h）</p>
-              <p class="mt-1"><span id="a4-amedas-sun" class="text-2xl font-semibold text-zinc-800">—</span><span class="text-xs text-zinc-400"> h</span></p>
+              <p class="text-sm text-zinc-500">日照（1h）</p>
+              <p class="mt-1"><span id="a4-amedas-sun" class="text-2xl font-semibold text-zinc-800">—</span><span class="text-sm text-zinc-500"> h</span></p>
             </div>
           </div>
         </div>
+      </section>
 
-        {/* ライブカメラ（YouTube）: 現行から A4 末尾へ移設 */}
-        <p class="mt-6 mb-3 text-xs tracking-[0.16em] text-zinc-400">ライブカメラ</p>
-        <div class="aspect-video overflow-hidden border border-zinc-200">
-          <iframe
-            src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}`}
-            title="里山パークおいらの森 ライブカメラ"
-            loading="lazy"
-            allowfullscreen
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            class="h-full w-full border-none"
-          ></iframe>
+      {/* ═══ A3：警報・注意報 ═══════════════════════════════════ */}
+      <section id="warning" class="scroll-mt-[calc(var(--header-offset)+3.5rem)] border-t border-zinc-200 py-8">
+        <p class="text-[11px] tracking-[0.24em] text-zinc-400 uppercase">Warning / Advisory</p>
+        <h2 class="mt-1 mb-4 text-lg font-semibold text-zinc-800">警報・注意報（那須烏山市）</h2>
+        <div id="a3-warnings" class="text-sm text-zinc-700">
+          <p class="text-zinc-500">取得中…</p>
         </div>
-        <div class="mt-2 flex items-center justify-between">
-          <a
-            href={`https://youtube.com/live/${YOUTUBE_VIDEO_ID}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-xs tracking-[0.1em] text-zinc-400 transition hover:text-zinc-700"
-          >YouTubeで見る →</a>
-          <p class="text-xs text-zinc-400">配信は機器メンテナンス等で一時停止する場合があります</p>
+
+        {/* 雨雲レーダー：気象庁ナウキャストは frame 表示を拒否するため外部リンク化 */}
+        <p class="mt-6 mb-2 text-sm text-zinc-600">雨雲レーダー</p>
+        <a
+          href="https://www.jma.go.jp/bosai/nowc/#lat:36.667/lon:140.13/zoom:9/coltype:HPN"
+          target="_blank"
+          rel="noopener"
+          class="inline-flex items-center text-sm tracking-[0.08em] text-zinc-700 underline underline-offset-4 transition hover:text-zinc-900"
+        >雨雲の動きを見る（気象庁）→</a>
+      </section>
+
+      {/* ═══ A1：直近予報＋装備テキスト ═══════════════════════ */}
+      <section id="forecast" class="scroll-mt-[calc(var(--header-offset)+3.5rem)] border-t border-zinc-200 py-8">
+        <p class="text-[11px] tracking-[0.24em] text-zinc-400 uppercase">Forecast</p>
+        <h2 class="mt-1 mb-4 text-lg font-semibold text-zinc-800">直近予報</h2>
+
+        {/* 今日・明日 */}
+        <div class="grid grid-cols-2 gap-3">
+          <div id="a1-today" class="border border-zinc-200 bg-white p-5 text-center" hidden>
+            <p class="text-sm tracking-[0.12em] text-zinc-600">今日</p>
+            <p id="a1-today-date" class="mt-1 text-sm text-zinc-500">—</p>
+            <div class="my-3 flex h-16 items-center justify-center" id="a1-today-icon"></div>
+            <p class="text-sm"><span class="text-zinc-500">降水</span> <span class="font-medium text-zinc-800"><span id="a1-today-pop">—</span>%</span></p>
+            <p class="mt-1 text-sm">
+              <span class="font-medium text-red-500" id="a1-today-max">—°</span> /
+              <span class="font-medium text-blue-500" id="a1-today-min">—°</span>
+            </p>
+
+            {/* 暦（控えめ）: 日の出入り・二十四節気・七十二候。JSで流し込む */}
+            <div id="a1-koyomi" class="mt-4 border-t border-zinc-100 pt-3 text-[11px] leading-relaxed text-zinc-500" hidden>
+              <p id="a1-koyomi-sun"></p>
+              <p id="a1-koyomi-term" class="mt-0.5"></p>
+              <p id="a1-koyomi-ko" class="mt-0.5"></p>
+            </div>
+          </div>
+          <div id="a1-tomorrow" class="border border-zinc-200 bg-white p-5 text-center" hidden>
+            <p class="text-sm tracking-[0.12em] text-zinc-600">明日</p>
+            <p id="a1-tomorrow-date" class="mt-1 text-sm text-zinc-500">—</p>
+            <div class="my-3 flex h-16 items-center justify-center" id="a1-tomorrow-icon"></div>
+            <p class="text-sm"><span class="text-zinc-500">降水</span> <span class="font-medium text-zinc-800"><span id="a1-tomorrow-pop">—</span>%</span></p>
+            <p class="mt-1 text-sm">
+              <span class="font-medium text-red-500" id="a1-tomorrow-max">—°</span> /
+              <span class="font-medium text-blue-500" id="a1-tomorrow-min">—°</span>
+            </p>
+          </div>
+        </div>
+
+        {/* 週間予報（weekly[1] 以降） */}
+        <p class="mt-6 mb-3 text-sm text-zinc-600">週間</p>
+        <div id="a1-weekly" class="flex gap-2 overflow-x-auto pb-2">
+          {/* JSで weekly[1..] を描画 */}
+        </div>
+
+        {/* 装備テキスト枠「おいらからのご案内」: advisory API 未実装のため非表示。
+            P4完了後に #a1-advisory へ short/weekly を流し込む接続ポイント。 */}
+        <div id="a1-advisory" class="mt-6 border-l-4 border-zinc-300 py-2 pl-4 text-sm text-zinc-700" hidden>
+          <p class="text-sm tracking-[0.12em] text-zinc-600">おいらからのご案内</p>
+          <p id="a1-advisory-short" class="mt-1"></p>
+          <p id="a1-advisory-weekly" class="mt-1 text-zinc-600"></p>
+        </div>
+      </section>
+
+      {/* ═══ A2：比較5地点カード ═══════════════════════════════ */}
+      <section id="compare" class="scroll-mt-[calc(var(--header-offset)+3.5rem)] border-t border-zinc-200 py-8">
+        <p class="text-[11px] tracking-[0.24em] text-zinc-400 uppercase">Compare</p>
+        <h2 class="mt-1 mb-4 text-lg font-semibold text-zinc-800">周辺5地点</h2>
+        <div id="a2-cards" class="grid grid-cols-2 gap-3 md:grid-cols-5">
+          {/* JSで current.stations を描画 */}
+          <p class="col-span-full text-sm text-zinc-500">取得中…</p>
+        </div>
+
+        {/* 季節コメント枠: seasonal_comment API 未実装のため非表示。
+            P後続で #a2-seasonal へ流し込む接続ポイント。 */}
+        <div id="a2-seasonal" class="mt-4 text-sm text-zinc-600" hidden>
+          <p id="a2-seasonal-text"></p>
         </div>
       </section>
 
       {/* ═══ A5：推移グラフ（過去ゾーン） ═══════════════════════ */}
       {/* 取得失敗時はセクションごと非表示（他セクションは壊さない） */}
-      <section id="trend" class="border-t border-zinc-200 py-8" hidden>
-        <div class="flex items-center justify-between">
-          <p class="text-xs tracking-[0.24em] text-zinc-400 uppercase">Trend — 気温の推移（日平均）</p>
+      <section id="trend" class="scroll-mt-[calc(var(--header-offset)+3.5rem)] border-t border-zinc-200 py-8" hidden>
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <p class="text-[11px] tracking-[0.24em] text-zinc-400 uppercase">Trend</p>
+            <h2 class="mt-1 text-lg font-semibold text-zinc-800">気温の推移（日平均）</h2>
+          </div>
           {/* 期間切替 1w / 1m / 3m */}
           <div id="a5-range" class="flex gap-1">
             {[
@@ -225,7 +228,7 @@ const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
               <button
                 type="button"
                 data-range={b.range}
-                class="a5-range-btn border border-zinc-300 px-3 py-1 text-xs tracking-[0.1em] text-zinc-500 transition hover:border-zinc-500 hover:text-zinc-800"
+                class="a5-range-btn border border-zinc-300 px-3 py-1 text-xs tracking-[0.1em] text-zinc-600 transition hover:border-zinc-500 hover:text-zinc-900"
               >{b.label}</button>
             ))}
           </div>
@@ -237,7 +240,7 @@ const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
         </div>
 
         {/* 凡例。normal（平年線）は normal 供給後に #a5-legend-normal を表示する接続ポイント */}
-        <div class="mt-3 flex flex-wrap items-center gap-x-6 gap-y-1 text-xs text-zinc-500">
+        <div class="mt-3 flex flex-wrap items-center gap-x-6 gap-y-1 text-xs text-zinc-600">
           <span class="inline-flex items-center gap-2">
             <span class="inline-block h-0.5 w-5" style="background:#2f6f4f;"></span>受付棟
           </span>
@@ -250,14 +253,14 @@ const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
         </div>
 
         {/* 平年比サマリ（④）。normal 未供給の間は非表示。供給後にここへ流し込む接続ポイント */}
-        <div id="a5-normal-summary" class="mt-3 text-sm text-zinc-500" hidden>
-          <p class="text-xs tracking-[0.16em] text-zinc-400">平年比（平年値：那須烏山・2009-2020）</p>
+        <div id="a5-normal-summary" class="mt-3 text-sm text-zinc-600" hidden>
+          <p class="text-sm text-zinc-600">平年比（平年値：那須烏山・2009-2020）</p>
           <p id="a5-normal-summary-text" class="mt-1"></p>
         </div>
       </section>
 
       {/* ═══ A6：補助タブ（衛星・天気図・台風） ══════════════════ */}
-      <section id="aux" class="border-t border-zinc-200 py-8">
+      <section id="aux" class="scroll-mt-[calc(var(--header-offset)+3.5rem)] border-t border-zinc-200 py-8">
 
         {/* 折りたたみトグル */}
         <button
@@ -266,8 +269,11 @@ const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
           aria-expanded="false"
           aria-controls="aux-body"
         >
-          <p class="text-xs tracking-[0.24em] text-zinc-400 uppercase">Satellite / Weather Map / Typhoon</p>
-          <span id="aux-toggle-icon" class="text-xs text-zinc-400 tracking-widest">＋ 展開</span>
+          <span>
+            <span class="block text-[11px] tracking-[0.24em] text-zinc-400 uppercase">Satellite / Weather Map / Typhoon</span>
+            <span class="mt-1 block text-lg font-semibold text-zinc-800">衛星・天気図・台風</span>
+          </span>
+          <span id="aux-toggle-icon" class="text-sm text-zinc-600 tracking-widest">＋ 展開</span>
         </button>
 
         {/* 展開コンテンツ */}
@@ -313,8 +319,8 @@ const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
                 style="display:none"
               />
               <div class="flex items-center justify-between">
-                <p id="sat2-label" class="text-xs text-zinc-400"></p>
-                <p id="sat2-stale" class="hidden text-xs text-zinc-400">更新が止まっています</p>
+                <p id="sat2-label" class="text-sm text-zinc-600"></p>
+                <p id="sat2-stale" class="hidden text-xs text-zinc-500">更新が止まっています</p>
               </div>
             </div>
           </div>
@@ -324,7 +330,7 @@ const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
             {/* モード切替 */}
             <div class="mb-4 flex gap-4">
               <button id="wxmap-mode-a" class="wxmap-mode text-sm tracking-[0.14em] text-zinc-700" data-mode="a">直近3日（3時間ごと）</button>
-              <button id="wxmap-mode-b" class="wxmap-mode text-sm tracking-[0.14em] text-zinc-400" data-mode="b">過去の天気図（日次）</button>
+              <button id="wxmap-mode-b" class="wxmap-mode text-sm tracking-[0.14em] text-zinc-500" data-mode="b">過去の天気図（日次）</button>
             </div>
 
             {/* モードA */}
@@ -335,7 +341,7 @@ const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
               </div>
               <div class="mt-3 flex flex-col gap-2">
                 <input id="wxmap-a-slider" type="range" min="0" value="0" class="aux-slider w-full" style="display:none" />
-                <p id="wxmap-a-label" class="text-xs text-zinc-400"></p>
+                <p id="wxmap-a-label" class="text-sm text-zinc-600"></p>
               </div>
             </div>
 
@@ -346,9 +352,9 @@ const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
                 <p id="wxmap-b-missing" class="absolute inset-0 hidden items-center justify-center text-xs text-zinc-400">この日の天気図はまだありません</p>
               </div>
               <div class="mt-3 flex items-center justify-between">
-                <button id="wxmap-b-prev" class="text-xs text-zinc-400 hover:text-zinc-700 tracking-[0.14em]">◀ 前日</button>
-                <p id="wxmap-b-label" class="text-xs text-zinc-600"></p>
-                <button id="wxmap-b-next" class="text-xs text-zinc-400 hover:text-zinc-700 tracking-[0.14em]">翌日 ▶</button>
+                <button id="wxmap-b-prev" class="text-sm text-zinc-600 hover:text-zinc-900 tracking-[0.14em]">◀ 前日</button>
+                <p id="wxmap-b-label" class="text-sm text-zinc-700"></p>
+                <button id="wxmap-b-next" class="text-sm text-zinc-600 hover:text-zinc-900 tracking-[0.14em]">翌日 ▶</button>
               </div>
             </div>
           </div>
@@ -356,40 +362,48 @@ const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
           {/* ── 台風パネル ── */}
           <div id="panel-typhoon" class="aux-panel hidden pt-6">
             <div id="typhoon-body">
-              <p id="typhoon-status" class="text-xs text-zinc-400">読み込み中…</p>
+              <p id="typhoon-status" class="text-sm text-zinc-600">読み込み中…</p>
               {/* TODO: 第2弾で specifications.json を使った予報円描画を実装 */}
             </div>
           </div>
 
           {/* 出典（3タブ共通） */}
-          <p class="mt-8 text-xs text-zinc-400">
-            出典：<a href="https://www.jma.go.jp/" target="_blank" rel="noopener" class="underline hover:text-zinc-600">気象庁ホームページ</a>
+          <p class="mt-8 text-xs text-zinc-500">
+            出典：<a href="https://www.jma.go.jp/" target="_blank" rel="noopener" class="underline hover:text-zinc-700">気象庁ホームページ</a>
           </p>
 
         </div>
       </section>
 
+      {/* ═══ ライブカメラ（A4 から分離・最下部に独立） ══════════════
+          LCP悪化回避のため YouTube iframe をファーストビューから外す。
+          ナビ項目化はしない。ID #livecam（新規）。 */}
+      <section id="livecam" class="border-t border-zinc-200 py-8">
+        <p class="text-[11px] tracking-[0.24em] text-zinc-400 uppercase">Live Camera</p>
+        <h2 class="mt-1 mb-4 text-lg font-semibold text-zinc-800">ライブカメラ</h2>
+        <div class="aspect-video overflow-hidden border border-zinc-200">
+          <iframe
+            src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}`}
+            title="里山パークおいらの森 ライブカメラ"
+            loading="lazy"
+            allowfullscreen
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            class="h-full w-full border-none"
+          ></iframe>
+        </div>
+        <div class="mt-2 flex items-center justify-between gap-4">
+          <a
+            href={`https://youtube.com/live/${YOUTUBE_VIDEO_ID}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-sm tracking-[0.08em] text-zinc-600 underline underline-offset-4 transition hover:text-zinc-900"
+          >YouTubeで見る →</a>
+          <p class="text-xs text-zinc-500">配信は機器メンテナンス等で一時停止する場合があります</p>
+        </div>
+      </section>
+
     </div>
   </main>
-
-  {/* ── BottomNav ────────────────────────────────────── */}
-  <nav class="fixed bottom-0 left-0 right-0 z-50 flex overflow-x-auto border-t border-zinc-700 bg-[color:var(--forest-700)]">
-    {[
-      { href: "#forecast", label: "予報" },
-      { href: "#compare",  label: "5地点" },
-      { href: "#warning",  label: "警報" },
-      { href: "#local",    label: "現地" },
-      { href: "#trend",    label: "推移" },
-      { href: "#aux",      label: "補助" },
-    ].map((item) => (
-      <a
-        href={item.href}
-        class="flex-1 whitespace-nowrap px-3 py-3 text-center text-xs tracking-[0.14em] text-zinc-300 transition hover:bg-white/10 hover:text-white"
-      >
-        {item.label}
-      </a>
-    ))}
-  </nav>
 
   <script>
     import { jmaIconUrl } from "../../lib/jmaTelops";
@@ -481,7 +495,7 @@ const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
         setText("a1-today-date", fmtDate(today.date));
         const iconEl = getEl("a1-today-icon");
         if (iconEl && today.weather_code) {
-          const icon = jmaIcon(today.weather_code, 44);
+          const icon = jmaIcon(today.weather_code, 60);
           if (icon) iconEl.replaceChildren(icon);
         }
         setText("a1-today-pop", today.pop != null ? String(today.pop) : "—");
@@ -499,7 +513,7 @@ const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
         setText("a1-tomorrow-date", fmtDate(tomorrow.date));
         const iconEl = getEl("a1-tomorrow-icon");
         if (iconEl && tomorrow.weather_code) {
-          const icon = jmaIcon(tomorrow.weather_code, 44);
+          const icon = jmaIcon(tomorrow.weather_code, 60);
           if (icon) iconEl.replaceChildren(icon);
         }
         setText("a1-tomorrow-pop", tomorrow.pop != null ? String(tomorrow.pop) : "—");
@@ -518,12 +532,12 @@ const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
           card.className = "shrink-0 border border-zinc-200 bg-white p-3 text-center";
           card.style.width = "96px";
           const date = document.createElement("p");
-          date.className = "text-xs text-zinc-400";
+          date.className = "text-xs text-zinc-500";
           date.textContent = fmtDate(day.date);
           const icon = document.createElement("div");
-          icon.className = "my-2 flex h-9 items-center justify-center";
+          icon.className = "my-2 flex h-11 items-center justify-center";
           if (day.weather_code) {
-            const img = jmaIcon(day.weather_code, 32);
+            const img = jmaIcon(day.weather_code, 44);
             if (img) icon.appendChild(img);
           }
           const pop = document.createElement("p");
@@ -532,8 +546,8 @@ const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
           const temp = document.createElement("p");
           temp.className = "mt-1 text-xs";
           temp.innerHTML =
-            `<span class="text-red-400">${day.temp_max != null ? day.temp_max + "°" : "—"}</span>` +
-            ` / <span class="text-blue-400">${day.temp_min != null ? day.temp_min + "°" : "—"}</span>`;
+            `<span class="text-red-500">${day.temp_max != null ? day.temp_max + "°" : "—"}</span>` +
+            ` / <span class="text-blue-500">${day.temp_min != null ? day.temp_min + "°" : "—"}</span>`;
 
           // 月齢（控えめ）: 月相アイコン＋数値
           const moon = document.createElement("p");
@@ -622,13 +636,13 @@ const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
       const wrap = getEl("a3-warnings");
       if (!wrap) return;
       if (!warning) {
-        wrap.innerHTML = `<p class="text-zinc-400">警報・注意報の取得に失敗しました。</p>`;
+        wrap.innerHTML = `<p class="text-zinc-500">警報・注意報の取得に失敗しました。</p>`;
         return;
       }
 
       const warnings: Json[] = Array.isArray(warning.warnings) ? warning.warnings : [];
       if (warnings.length === 0) {
-        wrap.innerHTML = `<p class="text-zinc-400">現在、発表中の警報・注意報はありません。</p>`;
+        wrap.innerHTML = `<p class="text-zinc-500">現在、発表中の警報・注意報はありません。</p>`;
         return;
       }
 
