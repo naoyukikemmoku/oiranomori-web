@@ -2,7 +2,9 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Header from "../../components/Header.astro";
 
-const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
+// ライブ中の videoID は実行時に livecam.php から取得して埋め込む（ビルド時 fetch 禁止）。
+// videoID をここに直書きしないこと（配信を作り直すと埋め込みが切れるため）。
+const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パークおいらの森
 ---
 
 <BaseLayout
@@ -35,6 +37,10 @@ const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
           <p class="text-[11px] tracking-[0.28em] text-zinc-400 uppercase">Forest Now</p>
           <h1 class="mt-1 text-3xl font-semibold tracking-tight text-zinc-900">森のいま</h1>
           <p class="mt-1 text-xs text-zinc-500">おいら監修｜現地センサーと周辺観測をもとに構築</p>
+          <a
+            href="/forest-daily/"
+            class="mt-2 inline-flex items-center gap-1 text-xs tracking-[0.08em] text-zinc-600 underline underline-offset-4 transition hover:text-zinc-900"
+          >今日のおいらの森（日々の記録）→</a>
         </div>
         <div class="flex items-center gap-3">
           <p class="text-xs text-zinc-500">ページを開いた時点の情報です</p>
@@ -377,27 +383,42 @@ const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
 
       {/* ═══ ライブカメラ（A4 から分離・最下部に独立） ══════════════
           LCP悪化回避のため YouTube iframe をファーストビューから外す。
-          ナビ項目化はしない。ID #livecam（新規）。 */}
+          ライブ中の videoID は実行時に livecam.php から取得して動的に埋め込む
+          （ビルド時 fetch 禁止／videoID 直書き禁止）。ナビ項目化はしない。 */}
       <section id="livecam" class="border-t border-zinc-200 py-8">
         <p class="text-[11px] tracking-[0.24em] text-zinc-400 uppercase">Live Camera</p>
         <h2 class="mt-1 mb-4 text-lg font-semibold text-zinc-800">ライブカメラ</h2>
-        <div class="aspect-video overflow-hidden border border-zinc-200">
-          <iframe
-            src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}`}
-            title="里山パークおいらの森 ライブカメラ"
-            loading="lazy"
-            allowfullscreen
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            class="h-full w-full border-none"
-          ></iframe>
+
+        {/* 映像枠（aspect-video 維持）。初期はプレースホルダ。
+            ライブ中のみ JS が #livecam-frame に iframe を流し込む。 */}
+        <div class="relative aspect-video overflow-hidden border border-zinc-200 bg-zinc-900">
+          <div id="livecam-frame" class="h-full w-full"></div>
+          <div
+            id="livecam-placeholder"
+            class="absolute inset-0 flex flex-col items-center justify-center gap-3 px-5 text-center"
+          >
+            <p id="livecam-status" class="text-sm text-zinc-300">配信状況を確認しています…</p>
+            <a
+              id="livecam-channel-link"
+              href={`https://www.youtube.com/channel/${YT_CHANNEL_ID}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="hidden text-sm tracking-[0.08em] text-zinc-200 underline underline-offset-4 transition hover:text-white"
+            >チャンネルを開く →</a>
+          </div>
         </div>
+
         <div class="mt-2 flex items-center justify-between gap-4">
+          {/* ライブ中のみ表示。href は JS が watch?v=<videoID> に差し替える */}
           <a
-            href={`https://youtube.com/live/${YOUTUBE_VIDEO_ID}`}
+            id="livecam-watch-link"
+            href={`https://www.youtube.com/channel/${YT_CHANNEL_ID}/live`}
             target="_blank"
             rel="noopener noreferrer"
-            class="text-sm tracking-[0.08em] text-zinc-600 underline underline-offset-4 transition hover:text-zinc-900"
+            class="hidden text-sm tracking-[0.08em] text-zinc-600 underline underline-offset-4 transition hover:text-zinc-900"
           >YouTubeで見る →</a>
+          {/* 鮮度注記（stale:true かつ live 表示中のみ JS が表示） */}
+          <p id="livecam-stale" class="hidden text-xs text-amber-600">配信状態の確認が最新ではありません</p>
           <p class="text-xs text-zinc-500">配信は機器メンテナンス等で一時停止する場合があります</p>
         </div>
       </section>
@@ -422,7 +443,12 @@ const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
       forecast:   "https://oiranomori.com/app/weather/api/public/forecast.php",
       warning:    "https://oiranomori.com/app/weather/api/public/warning.php",
       timeseries: "https://oiranomori.com/app/weather/api/public/timeseries.php",
+      livecam:    "https://oiranomori.com/app/weather/api/public/livecam.php",
     };
+
+    // ライブカメラ（A4 から分離した #livecam で使用）
+    // チャンネルリンクは Astro 側で静的描画済み（JS は videoID のみ動的差替）。
+    const LIVECAM_STALE_MAX_S = 3600; // stale:true かつ checked_at がこの秒数超 → live でもプレースホルダ落とし
 
     // 鮮度閾値（A4 で使用）
     const STALE_WARN_S = 1200; // 20分超 → 警告色
@@ -483,6 +509,15 @@ const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
       const d = await r.json();
       if (!d.ok) throw new Error("ok:false");
       return d;
+    }
+
+    // livecam.php 専用フェッチ。レスポンスに ok フィールドを前提しない
+    // （{ is_live, video_id, checked_at, stale }）。HTTP/パース失敗は throw し、
+    // 呼び出し側（allSettled→renderLivecam(null)）でプレースホルダに倒す。
+    async function fetchLivecam(url: string): Promise<Json> {
+      const r = await fetch(url, { cache: "default" });
+      if (!r.ok) throw new Error(`http:${r.status}`);
+      return await r.json();
     }
 
     // ── A1：直近予報 ─────────────────────────────────────────────
@@ -740,6 +775,67 @@ const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
       }
     }
 
+    // ── ライブカメラ（#livecam）：実行時に livecam.php を見て埋め込み切替 ──
+    // is_live:true && video_id → iframe 埋め込み（stale:true は注記つき表示、
+    //   ただし checked_at が LIVECAM_STALE_MAX_S 超ならプレースホルダ落とし）
+    // それ以外（false / video_id欠落 / 取得失敗 / 長期stale）→ プレースホルダ。
+    //   壊れた iframe は絶対に出さない。
+    function renderLivecam(data: Json | null): void {
+      const frame   = getEl("livecam-frame");
+      const ph      = getEl("livecam-placeholder");
+      const statusEl = getEl("livecam-status");
+      const chLink  = getEl("livecam-channel-link");
+      const watch   = getEl("livecam-watch-link");
+      const staleEl = getEl("livecam-stale");
+      if (!frame || !ph) return;
+
+      // プレースホルダへ倒す共通処理（iframe は出さない）
+      const toPlaceholder = (msg: string): void => {
+        frame.replaceChildren();
+        ph.classList.remove("hidden");
+        if (statusEl) statusEl.textContent = msg;
+        if (chLink) chLink.classList.remove("hidden");
+        if (watch) watch.classList.add("hidden");
+        if (staleEl) staleEl.classList.add("hidden");
+      };
+
+      // 取得失敗・欠落・非ライブ → プレースホルダ
+      if (!data || data.is_live !== true || !data.video_id) {
+        toPlaceholder("現在ライブ配信していません");
+        return;
+      }
+
+      // 長期 stale 判定：stale:true かつ checked_at が古すぎる → live を信用せず落とす
+      if (data.stale === true && data.checked_at) {
+        const checked = new Date(data.checked_at).getTime();
+        if (!Number.isNaN(checked) &&
+            (Date.now() - checked) / 1000 > LIVECAM_STALE_MAX_S) {
+          toPlaceholder("現在ライブ配信していません");
+          return;
+        }
+      }
+
+      // --- ライブ表示 ---
+      const vid = String(data.video_id);
+      const iframe = document.createElement("iframe");
+      iframe.src = `https://www.youtube.com/embed/${vid}`;
+      iframe.title = "里山パークおいらの森 ライブカメラ";
+      iframe.loading = "lazy";
+      iframe.allowFullscreen = true;
+      iframe.allow =
+        "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+      iframe.className = "h-full w-full border-none";
+      frame.replaceChildren(iframe);
+      ph.classList.add("hidden");
+
+      if (watch) {
+        (watch as HTMLAnchorElement).href = `https://www.youtube.com/watch?v=${vid}`;
+        watch.classList.remove("hidden");
+      }
+      // stale だが新しめ → 表示は出すが鮮度注記を添える（衛星タブと同作法）
+      if (staleEl) staleEl.classList.toggle("hidden", data.stale !== true);
+    }
+
     // ── A5：推移グラフ（自前インラインSVG） ─────────────────────
     const SVG_NS = "http://www.w3.org/2000/svg";
     type Point = { date: string; temp_c: number };
@@ -888,20 +984,23 @@ const YOUTUBE_VIDEO_ID = "8jz3lAgUYl8";
       const btn = getEl("btn-refresh") as HTMLButtonElement | null;
       if (btn) { btn.textContent = "更新中…"; btn.disabled = true; }
 
-      const [curR, fcR, wnR] = await Promise.allSettled([
+      const [curR, fcR, wnR, lcR] = await Promise.allSettled([
         fetchJson(API.current),
         fetchJson(API.forecast),
         fetchJson(API.warning),
+        fetchLivecam(API.livecam),
       ]);
 
       const current  = curR.status === "fulfilled" ? curR.value : null;
       const forecast = fcR.status === "fulfilled" ? fcR.value : null;
       const warning  = wnR.status === "fulfilled" ? wnR.value : null;
+      const livecam  = lcR.status === "fulfilled" ? lcR.value : null;
 
       renderA1(forecast);
       renderA2(current);
       renderA3(warning);
       renderA4(current);
+      renderLivecam(livecam); // 取得失敗時は null → プレースホルダ
       // A5 は現在の選択 range で再取得（HTTPキャッシュに委任）
       loadTrend(a5CurrentRange);
 

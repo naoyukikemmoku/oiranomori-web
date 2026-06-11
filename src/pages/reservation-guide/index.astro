@@ -97,6 +97,7 @@ const steps = [
     </p>
     <nav class="mt-6 flex flex-wrap gap-3 text-sm">
       {[
+        { href: "#account", label: "ログイン・予約確認" },
         { href: "#steps",  label: "予約の手順" },
         { href: "#phone",  label: "電話予約について" },
         { href: "#change", label: "変更・キャンセル" },
@@ -113,6 +114,37 @@ const steps = [
       ))}
     </nav>
   </div>
+
+  {/* 会員の方・予約を確認したい方（会員/予約確認のハブ） */}
+  <section id="account" class="mb-14">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">会員の方・予約を確認したい方</h2>
+    <div class="flex flex-wrap gap-3">
+      <a
+        href="https://www.489pro-x.com/ja/s/oiranomori/member/input/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center justify-center rounded-full bg-[color:var(--forest-600)] px-6 py-2.5 text-sm text-white shadow-sm transition hover:bg-[color:var(--forest-700)]"
+      >
+        新規会員登録 ↗
+      </a>
+      <a
+        href="https://www.489pro-x.com/ja/s/oiranomori/member/login/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center justify-center rounded-full border border-zinc-400 px-6 py-2.5 text-sm text-zinc-700 transition hover:border-zinc-600"
+      >
+        ログイン ↗
+      </a>
+      <a
+        href="https://www.489pro-x.com/ja/s/oiranomori/booking/login/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center justify-center rounded-full border border-zinc-400 px-6 py-2.5 text-sm text-zinc-700 transition hover:border-zinc-600"
+      >
+        予約確認（マイページ） ↗
+      </a>
+    </div>
+  </section>
 
   {/* 予約の基本ステップ */}
   <section id="steps" class="mb-14">
@@ -202,21 +234,21 @@ const steps = [
   <section id="change" class="mb-14">
     <h2 class="mb-5 text-xl font-semibold text-zinc-800">変更・キャンセルについて</h2>
     <dl class="divide-y divide-zinc-100 border-y border-zinc-200 text-sm">
-      {[
-        {
-          label: "マイページでの手続き",
-          value: "マイページからご自身でキャンセルや予約内容の変更が可能です。",
-        },
-        {
-          label: "直前の変更・キャンセル",
-          value: "オンライン操作期限を過ぎた直前の変更・キャンセルについては、お電話またはメールにて直接ご連絡ください。人数の変更は現地にて承ります。",
-        },
-      ].map((item) => (
-        <div class="grid grid-cols-[10rem_1fr] gap-4 py-5 sm:grid-cols-[14rem_1fr]">
-          <dt class="text-zinc-500">{item.label}</dt>
-          <dd class="text-zinc-700">{item.value}</dd>
-        </div>
-      ))}
+      <div class="grid grid-cols-[10rem_1fr] gap-4 py-5 sm:grid-cols-[14rem_1fr]">
+        <dt class="text-zinc-500">マイページでの手続き</dt>
+        <dd class="text-zinc-700">
+          <a
+            href="https://www.489pro-x.com/ja/s/oiranomori/booking/login/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="underline underline-offset-2 transition hover:text-zinc-900"
+          >マイページ</a>からご自身でキャンセルや予約内容の変更が可能です。
+        </dd>
+      </div>
+      <div class="grid grid-cols-[10rem_1fr] gap-4 py-5 sm:grid-cols-[14rem_1fr]">
+        <dt class="text-zinc-500">直前の変更・キャンセル</dt>
+        <dd class="text-zinc-700">オンライン操作期限を過ぎた直前の変更・キャンセルについては、お電話またはメールにて直接ご連絡ください。人数の変更は現地にて承ります。</dd>
+      </div>
     </dl>
   </section>
 
