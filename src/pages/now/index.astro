@@ -219,17 +219,19 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
       {/* ═══ A5：推移グラフ（過去ゾーン） ═══════════════════════ */}
       {/* 取得失敗時はセクションごと非表示（他セクションは壊さない） */}
       <section id="trend" class="scroll-mt-[calc(var(--header-offset)+3.5rem)] border-t border-zinc-200 py-6" hidden>
-        <div class="flex items-start justify-between gap-4">
+        <div class="flex flex-wrap items-start justify-between gap-y-3 gap-x-4">
           <div>
             <p class="text-[11px] tracking-[0.24em] text-zinc-400 uppercase">Trend</p>
             <h2 class="mt-1 text-lg font-semibold text-zinc-800">気温の推移（日平均）</h2>
           </div>
-          {/* 期間切替 1w / 1m / 3m */}
-          <div id="a5-range" class="flex gap-1">
+          {/* 期間切替 */}
+          <div id="a5-range" class="flex flex-wrap gap-1">
             {[
               { range: "1w", label: "1週" },
               { range: "1m", label: "1ヶ月" },
               { range: "3m", label: "3ヶ月" },
+              { range: "6m", label: "半年" },
+              { range: "1y", label: "1年" },
             ].map((b) => (
               <button
                 type="button"
@@ -243,6 +245,7 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
         {/* SVG 折れ線グラフ（自前描画）。JSで #a5-svg に series を流し込む */}
         <div class="mt-4 overflow-hidden">
           <svg id="a5-svg" viewBox="0 0 720 280" class="w-full" role="img" aria-label="受付棟とアメダスの日平均気温の推移グラフ"></svg>
+          <p id="a5-nodata" class="hidden py-8 text-center text-sm text-zinc-500">この期間の観測データはまだありません</p>
         </div>
 
         {/* 凡例。normal（平年線）は normal 供給後に #a5-legend-normal を表示する接続ポイント */}
@@ -846,20 +849,34 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
       return el;
     }
 
-    // series（date昇順の点群）を折れ線 path の d 文字列に変換
+    // series（date昇順の点群）を折れ線 path の d 文字列に変換。
+    // 直前採用点と3日超の空白があれば M（線切り）、それ以外は L（線継続）。
+    const GAP_DAYS = 3;
     function buildPath(
       points: Point[],
       xOf: (date: string) => number,
       yOf: (t: number) => number,
     ): string {
-      return points
-        .filter((p) => p.temp_c != null && !Number.isNaN(p.temp_c))
-        .map((p, i) => `${i === 0 ? "M" : "L"}${xOf(p.date).toFixed(1)},${yOf(p.temp_c).toFixed(1)}`)
-        .join(" ");
+      const valid = points.filter((p) => p.temp_c != null && !Number.isNaN(p.temp_c));
+      const cmds: string[] = [];
+      let prevDate: string | null = null;
+      for (const p of valid) {
+        let cmd = "L";
+        if (prevDate === null) {
+          cmd = "M";
+        } else {
+          const diff = (new Date(p.date).getTime() - new Date(prevDate).getTime()) / 86400000;
+          if (diff > GAP_DAYS) cmd = "M";
+        }
+        cmds.push(`${cmd}${xOf(p.date).toFixed(1)},${yOf(p.temp_c).toFixed(1)}`);
+        prevDate = p.date;
+      }
+      return cmds.join(" ");
     }
 
     function drawTrend(data: Json): void {
       const svg = getEl("a5-svg");
+      const nodataEl = getEl("a5-nodata");
       if (!svg) return;
 
       const reception: Point[] = Array.isArray(data?.series?.reception) ? data.series.reception : [];
@@ -881,13 +898,25 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
       const temps = [...reception, ...amedas, ...normal]
         .map((p) => p.temp_c)
         .filter((t) => t != null && !Number.isNaN(t));
+
+      // 空series 表示（B-5）
+      if (nodataEl) {
+        const isEmpty = reception.length === 0 && amedas.length === 0;
+        nodataEl.classList.toggle("hidden", !isEmpty);
+        svg.style.display = isEmpty ? "none" : "";
+      }
       if (allDates.length === 0 || temps.length === 0) return;
 
       const minT = Math.floor(Math.min(...temps) - 1);
       const maxT = Math.ceil(Math.max(...temps) + 1);
-      const dateIndex = new Map(allDates.map((d, i) => [d, i]));
+
+      // X軸：実時刻ベース（時間比例。欠測区間は空白のまま）
+      const tOf = (date: string) => new Date(date + "T00:00:00+09:00").getTime();
+      const tMin = tOf(allDates[0]);
+      const tMax = tOf(allDates[allDates.length - 1]);
       const xOf = (date: string) =>
-        padL + (allDates.length === 1 ? 0 : ((dateIndex.get(date) ?? 0) / (allDates.length - 1)) * (W - padL - padR));
+        padL + (tMax === tMin ? 0 : ((tOf(date) - tMin) / (tMax - tMin)) * (W - padL - padR));
+
       const yOf = (t: number) =>
         H - padB - ((t - minT) / (maxT - minT || 1)) * (H - padT - padB);
 
@@ -901,13 +930,43 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
         svg.appendChild(label);
       }
 
-      // X軸ラベル（両端＋中央）
-      const xTicks = allDates.length <= 1 ? [0] : [0, Math.floor((allDates.length - 1) / 2), allDates.length - 1];
-      for (const idx of xTicks) {
-        const d = allDates[idx];
-        const mmdd = `${parseInt(d.slice(5, 7))}/${parseInt(d.slice(8, 10))}`;
+      // X軸ラベル（時間比例で約6点等間隔。3m以下は M/D、6m/1y は M月）
+      // rangeに応じてラベル形式を切り替える。
+      const rangeDays = tMax === tMin ? 1 : (tMax - tMin) / 86400000;
+      const useLongLabel = rangeDays > 92;
+
+      function xAxisLabel(date: string): string {
+        const d = new Date(date + "T00:00:00+09:00");
+        if (useLongLabel) {
+          const mo = d.getMonth() + 1;
+          // 1月（年始め）は年も出す
+          if (mo === 1) return `${d.getFullYear().toString().slice(2)}/${mo}月`;
+          return `${mo}月`;
+        }
+        return `${d.getMonth() + 1}/${d.getDate()}`;
+      }
+
+      const tickCount = 6;
+      const tickDates: string[] = [];
+      if (allDates.length === 1) {
+        tickDates.push(allDates[0]);
+      } else {
+        for (let i = 0; i < tickCount; i++) {
+          const targetT = tMin + (i / (tickCount - 1)) * (tMax - tMin);
+          // targetT に最も近い実在日付を選ぶ
+          let best = allDates[0];
+          let bestDiff = Math.abs(tOf(best) - targetT);
+          for (const d of allDates) {
+            const diff = Math.abs(tOf(d) - targetT);
+            if (diff < bestDiff) { best = d; bestDiff = diff; }
+          }
+          if (!tickDates.includes(best)) tickDates.push(best);
+        }
+      }
+
+      for (const d of tickDates) {
         const label = svgEl("text", { x: xOf(d), y: H - 8, "text-anchor": "middle", "font-size": 10, fill: "#9ca3af" });
-        label.textContent = mmdd;
+        label.textContent = xAxisLabel(d);
         svg.appendChild(label);
       }
 
