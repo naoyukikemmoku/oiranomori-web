@@ -629,16 +629,13 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
         name.textContent = st?.label ?? label;
         card.appendChild(name);
 
-        // 天気アイコン（OpenWeather icon。実値があるのは現状 uketsuke のみ）
+        // 天気アイコン（JMA 統一。station 直下の weather_code を jmaIcon で解決）。
+        // 未知コードは jmaIcon が null を返す → 何も描かない（崩れ防止）。
         const iconBox = document.createElement("div");
-        iconBox.className = "my-2 flex h-9 items-center justify-center";
-        if (st?.weather?.icon) {
-          const img = document.createElement("img");
-          img.src = `https://openweathermap.org/img/wn/${st.weather.icon}@2x.png`;
-          img.width = 36; img.height = 36;
-          img.alt = st.weather.text ?? "";
-          img.loading = "lazy"; img.decoding = "async";
-          iconBox.appendChild(img);
+        iconBox.className = "my-2 flex h-11 items-center justify-center";
+        if (st?.weather_code) {
+          const icon = jmaIcon(st.weather_code, 44);
+          if (icon) iconBox.appendChild(icon);
         }
         card.appendChild(iconBox);
 
