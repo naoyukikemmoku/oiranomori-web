@@ -191,12 +191,14 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
           {/* JSで weekly[1..] を描画 */}
         </div>
 
-        {/* 装備テキスト枠「おいらからのご案内」: advisory API 未実装のため非表示。
-            P4完了後に #a1-advisory へ short/weekly を流し込む接続ポイント。 */}
-        <div id="a1-advisory" class="mt-4 border-l-4 border-zinc-300 py-2 pl-4 text-sm text-zinc-700" hidden>
-          <p class="text-sm tracking-[0.12em] text-zinc-600">おいらからのご案内</p>
-          <p id="a1-advisory-short" class="mt-1"></p>
-          <p id="a1-advisory-weekly" class="mt-1 text-zinc-600"></p>
+        {/* advisory 解説テキスト。advisory.php の current.body をクライアント取得して流し込む。
+            current=null 時は非表示のまま（静かに非挿入）。 */}
+        <div id="a1-advisory" class="mt-4 border-l-4 border-zinc-300 py-2 pl-4" hidden>
+          <p class="text-xs tracking-[0.12em] text-zinc-400 uppercase">Advisory</p>
+          <p class="mt-0.5 text-sm font-medium text-zinc-700">おいらの天気解説</p>
+          <p id="a1-advisory-short" class="mt-2 text-sm leading-relaxed text-zinc-700"></p>
+          <p id="a1-advisory-weekly" class="mt-1 text-sm text-zinc-600"></p>
+          <p class="mt-3 text-right text-[11px] text-zinc-400">気象庁の予報をもとにおいらが解説しています。</p>
         </div>
       </section>
 
@@ -447,6 +449,7 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
       warning:    "https://oiranomori.com/app/weather/api/public/warning.php",
       timeseries: "https://oiranomori.com/app/weather/api/public/timeseries.php",
       livecam:    "https://oiranomori.com/app/weather/api/public/livecam.php",
+      advisory:   "https://oiranomori.com/app/weather/api/public/advisory.php",
     };
 
     // ライブカメラ（A4 から分離した #livecam で使用）
@@ -524,7 +527,7 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
     }
 
     // ── A1：直近予報 ─────────────────────────────────────────────
-    function renderA1(forecast: Json | null): void {
+    function renderA1(forecast: Json | null, advisory: Json | null): void {
       if (!forecast) return;
 
       // 今日
@@ -598,7 +601,16 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
         }
       }
 
-      // 装備テキスト（advisory）は今回非表示。接続ポイント #a1-advisory のみ用意。
+      // advisory 解説テキスト（current.body のみ表示。null 時は静かに非挿入）
+      const advisoryEl = getEl("a1-advisory");
+      const shortEl    = getEl("a1-advisory-short");
+      const body = advisory?.current?.body;
+      if (advisoryEl && shortEl && typeof body === "string" && body.trim().length > 0) {
+        shortEl.textContent = body.trim();
+        advisoryEl.hidden = false;
+      } else if (advisoryEl) {
+        advisoryEl.hidden = true;
+      }
     }
 
     // ── A2：比較5地点カード ──────────────────────────────────────
@@ -1040,19 +1052,21 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
       const btn = getEl("btn-refresh") as HTMLButtonElement | null;
       if (btn) { btn.textContent = "更新中…"; btn.disabled = true; }
 
-      const [curR, fcR, wnR, lcR] = await Promise.allSettled([
+      const [curR, fcR, wnR, lcR, advR] = await Promise.allSettled([
         fetchJson(API.current),
         fetchJson(API.forecast),
         fetchJson(API.warning),
         fetchLivecam(API.livecam),
+        fetchJson(API.advisory),
       ]);
 
       const current  = curR.status === "fulfilled" ? curR.value : null;
       const forecast = fcR.status === "fulfilled" ? fcR.value : null;
       const warning  = wnR.status === "fulfilled" ? wnR.value : null;
       const livecam  = lcR.status === "fulfilled" ? lcR.value : null;
+      const advisory = advR.status === "fulfilled" ? advR.value : null;
 
-      renderA1(forecast);
+      renderA1(forecast, advisory);
       renderA2(current);
       renderA3(warning);
       renderA4(current);
