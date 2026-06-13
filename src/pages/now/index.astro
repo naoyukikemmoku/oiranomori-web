@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Header from "../../components/Header.astro";
+import FloatingNav from "../../components/FloatingNav.astro";
 
 // ライブ中の videoID は実行時に livecam.php から取得して埋め込む（ビルド時 fetch 禁止）。
 // videoID をここに直書きしないこと（配信を作り直すと埋め込みが切れるため）。
@@ -27,6 +28,7 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
   })}</script>
 
   <Header />
+  <FloatingNav />
 
   <main class="pb-12 pt-[var(--header-offset)]">
 
