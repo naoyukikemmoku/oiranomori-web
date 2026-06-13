@@ -246,17 +246,23 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
 
         {/* SVG 折れ線グラフ（自前描画）。JSで #a5-svg に series を流し込む */}
         <div class="mt-4 overflow-hidden">
-          <svg id="a5-svg" viewBox="0 0 720 280" class="w-full" role="img" aria-label="受付棟とアメダスの日平均気温の推移グラフ"></svg>
+          <svg id="a5-svg" viewBox="0 0 720 280" class="w-full" role="img" aria-label="おいらの森の日平均気温と、那須烏山アメダスの日最高・日平均・日最低気温の推移グラフ"></svg>
           <p id="a5-nodata" class="hidden py-8 text-center text-sm text-zinc-500">この期間の観測データはまだありません</p>
         </div>
 
         {/* 凡例。normal（平年線）は normal 供給後に #a5-legend-normal を表示する接続ポイント */}
         <div class="mt-3 flex flex-wrap items-center gap-x-6 gap-y-1 text-xs text-zinc-600">
           <span class="inline-flex items-center gap-2">
-            <span class="inline-block h-0.5 w-5" style="background:#2f6f4f;"></span>受付棟
+            <span class="inline-block h-0.5 w-5" style="background:#2f6f4f;"></span>おいらの森
           </span>
           <span class="inline-flex items-center gap-2">
-            <span class="inline-block h-0.5 w-5" style="background:#b08968;"></span>那須烏山アメダス
+            <span class="inline-block h-0.5 w-5" style="background:#dc2626;"></span>那須烏山アメダス 最高
+          </span>
+          <span class="inline-flex items-center gap-2">
+            <span class="inline-block h-0.5 w-5" style="background:#b08968;"></span>那須烏山アメダス 平均
+          </span>
+          <span class="inline-flex items-center gap-2">
+            <span class="inline-block h-0.5 w-5" style="background:#2563eb;"></span>那須烏山アメダス 最低
           </span>
           <span id="a5-legend-normal" class="inline-flex items-center gap-2" hidden>
             <span class="inline-block h-0.5 w-5" style="background:#9ca3af; border-top:1px dashed #9ca3af;"></span>平年値（那須烏山・2009-2020）
@@ -892,9 +898,23 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
       if (!svg) return;
 
       const reception: Point[] = Array.isArray(data?.series?.reception) ? data.series.reception : [];
-      const amedas: Point[]    = Array.isArray(data?.series?.amedas) ? data.series.amedas : [];
+      // amedas は {date, temp_avg, temp_max, temp_min}（後方互換で temp_c のみも許容）。
+      const amedas: Json[]     = Array.isArray(data?.series?.amedas) ? data.series.amedas : [];
       // normal（平年値）は現状 null。供給されたら3本目の線として描く接続ポイント。
       const normal: Point[]    = Array.isArray(data?.series?.normal) ? data.series.normal : [];
+
+      // 烏山アメダスを3系列（平均・最高・最低）に分解。
+      // temp_avg 欠落かつ temp_c のみのレスポンスは後方互換で平均線に流す。
+      const amAvg: Point[] = amedas
+        .map((p) => ({ date: p.date, temp_c: p.temp_avg ?? p.temp_c }))
+        .filter((p) => p.temp_c != null && !Number.isNaN(p.temp_c));
+      const amMax: Point[] = amedas
+        .map((p) => ({ date: p.date, temp_c: p.temp_max }))
+        .filter((p) => p.temp_c != null && !Number.isNaN(p.temp_c));
+      const amMin: Point[] = amedas
+        .map((p) => ({ date: p.date, temp_c: p.temp_min }))
+        .filter((p) => p.temp_c != null && !Number.isNaN(p.temp_c));
+      const amHasData = amAvg.length > 0 || amMax.length > 0 || amMin.length > 0;
 
       svg.replaceChildren();
 
@@ -902,18 +922,18 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
       const W = 720, H = 280;
       const padL = 36, padR = 12, padT = 12, padB = 28;
 
-      // X軸：全系列の日付 union を昇順に
+      // X軸：全系列の日付 union を昇順に（amedas の date は3系列共通）
       const allDates = Array.from(
         new Set([...reception, ...amedas, ...normal].map((p) => p.date)),
       ).sort();
-      // Y軸：全系列の気温 min-max
-      const temps = [...reception, ...amedas, ...normal]
+      // Y軸：全系列の気温 min-max（烏山 平均/最高/最低を含む）
+      const temps = [...reception, ...amAvg, ...amMax, ...amMin, ...normal]
         .map((p) => p.temp_c)
         .filter((t) => t != null && !Number.isNaN(t));
 
-      // 空series 表示（B-5）
+      // 空series 表示（B-5）：受付棟も烏山(3系列とも)も無いとき
       if (nodataEl) {
-        const isEmpty = reception.length === 0 && amedas.length === 0;
+        const isEmpty = reception.length === 0 && !amHasData;
         nodataEl.classList.toggle("hidden", !isEmpty);
         svg.style.display = isEmpty ? "none" : "";
       }
@@ -998,13 +1018,25 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
         if (normalSummary) normalSummary.hidden = true;
       }
 
-      // アメダス（茶）
-      if (amedas.length > 0) {
+      // 烏山アメダス 最高（赤・細）
+      if (amMax.length > 0) {
         svg.appendChild(svgEl("path", {
-          d: buildPath(amedas, xOf, yOf), fill: "none", stroke: "#b08968", "stroke-width": 2,
+          d: buildPath(amMax, xOf, yOf), fill: "none", stroke: "#dc2626", "stroke-width": 1.5,
         }));
       }
-      // 受付棟（緑）
+      // 烏山アメダス 最低（青・細）
+      if (amMin.length > 0) {
+        svg.appendChild(svgEl("path", {
+          d: buildPath(amMin, xOf, yOf), fill: "none", stroke: "#2563eb", "stroke-width": 1.5,
+        }));
+      }
+      // 烏山アメダス 平均（茶・太）
+      if (amAvg.length > 0) {
+        svg.appendChild(svgEl("path", {
+          d: buildPath(amAvg, xOf, yOf), fill: "none", stroke: "#b08968", "stroke-width": 2,
+        }));
+      }
+      // 受付棟（緑）※現地センサーを最前面に
       if (reception.length > 0) {
         svg.appendChild(svgEl("path", {
           d: buildPath(reception, xOf, yOf), fill: "none", stroke: "#2f6f4f", "stroke-width": 2,
