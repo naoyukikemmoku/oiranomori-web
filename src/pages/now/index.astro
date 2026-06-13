@@ -185,12 +185,6 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
           </div>
         </div>
 
-        {/* 週間予報（weekly[1] 以降） */}
-        <p class="mt-4 mb-3 text-sm text-zinc-600">週間</p>
-        <div id="a1-weekly" class="flex gap-2 overflow-x-auto pb-2">
-          {/* JSで weekly[1..] を描画 */}
-        </div>
-
         {/* advisory 解説テキスト。advisory.php の current.body をクライアント取得して流し込む。
             current=null 時は非表示のまま（静かに非挿入）。 */}
         <div id="a1-advisory" class="mt-4 border-l-4 border-zinc-300 py-2 pl-4" hidden>
@@ -199,6 +193,12 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
           <p id="a1-advisory-short" class="mt-2 text-sm leading-relaxed text-zinc-700"></p>
           <p id="a1-advisory-weekly" class="mt-1 text-sm text-zinc-600"></p>
           <p class="mt-3 text-right text-[11px] text-zinc-400">気象庁の予報をもとにおいらが解説しています。</p>
+        </div>
+
+        {/* 週間予報（weekly[1] 以降） */}
+        <p class="mt-4 mb-3 text-sm text-zinc-600">週間</p>
+        <div id="a1-weekly" class="flex gap-2 overflow-x-auto pb-2">
+          {/* JSで weekly[1..] を描画 */}
         </div>
       </section>
 
