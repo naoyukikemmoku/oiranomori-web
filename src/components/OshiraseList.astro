@@ -44,7 +44,7 @@ const categoryLabel = (cat?: string | string[]) => {
                   {categoryLabel(it.category)}
                 </span>
               )}
-              <span class="shrink-0">{it.title}</span>
+              <span class="min-w-0 truncate">{it.title}</span>
               {it.subtitle && (
                 <span class="min-w-0 truncate text-zinc-500">
                   {it.subtitle}
