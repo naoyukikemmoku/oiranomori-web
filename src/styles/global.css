@@ -122,11 +122,19 @@
     @apply inline-flex min-h-[84px] w-[30px] select-none items-center justify-center rounded-l-xl border border-zinc-200 bg-white/95 px-1 py-2 shadow-lg;
   }
 
+  .floating-tab--active {
+    @apply border-zinc-800 bg-zinc-800;
+  }
+
   .floating-tab__text {
     writing-mode: vertical-rl;
     text-orientation: mixed;
     letter-spacing: 0.12em;
     @apply text-[11px] font-semibold leading-none text-zinc-800;
+  }
+
+  .floating-tab--active .floating-tab__text {
+    @apply text-white;
   }
 
   .reserve-cta {
