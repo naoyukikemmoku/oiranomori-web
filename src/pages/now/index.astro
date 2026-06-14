@@ -63,7 +63,6 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
           { href: "#local",    label: "現地" },
           { href: "#warning",  label: "警報" },
           { href: "#forecast", label: "予報" },
-          { href: "#compare",  label: "5地点" },
           { href: "#trend",    label: "推移" },
           { href: "#aux",      label: "補助" },
         ].map((item) => (
@@ -86,8 +85,11 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
 
         {/* 上：受付棟センサー */}
         <div id="a4-uketsuke" class="border border-zinc-200 bg-white p-4">
-          <div class="flex items-baseline justify-between">
-            <p class="text-sm tracking-[0.12em] text-zinc-600">おいらの森(受付)</p>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <p class="text-sm tracking-[0.12em] text-zinc-600">おいらの森(受付)</p>
+              <div id="a4-uketsuke-icon" class="flex h-9 w-9 items-center justify-center"></div>
+            </div>
             <p id="a4-uketsuke-time" class="text-xs text-zinc-500"></p>
           </div>
           <div id="a4-uketsuke-body" class="mt-3 flex flex-wrap items-end gap-x-8 gap-y-2">
@@ -108,8 +110,11 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
 
         {/* 下：那須烏山アメダス */}
         <div id="a4-amedas" class="mt-3 border border-zinc-200 bg-white p-4">
-          <div class="flex items-baseline justify-between">
-            <p class="text-sm tracking-[0.12em] text-zinc-600">那須烏山アメダス</p>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <p class="text-sm tracking-[0.12em] text-zinc-600">那須烏山アメダス</p>
+              <div id="a4-amedas-icon" class="flex h-9 w-9 items-center justify-center"></div>
+            </div>
             <p id="a4-amedas-time" class="text-xs text-zinc-500"></p>
           </div>
           <div class="mt-3 grid grid-cols-2 gap-x-6 gap-y-3 md:grid-cols-4">
@@ -130,6 +135,11 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
               <p class="mt-1"><span id="a4-amedas-sun" class="text-2xl font-semibold text-zinc-800">—</span><span class="text-sm text-zinc-500"> h</span></p>
             </div>
           </div>
+        </div>
+
+        {/* 周辺3都市（東京・埼玉・宇都宮）。JSで current.stations から描画 */}
+        <div id="a4-cities" class="mt-3 grid grid-cols-3 gap-3">
+          {/* JS で描画 */}
         </div>
       </section>
 
@@ -184,6 +194,13 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
               <span class="font-medium text-red-500" id="a1-tomorrow-max">—°</span> /
               <span class="font-medium text-blue-500" id="a1-tomorrow-min">—°</span>
             </p>
+
+            {/* 暦（控えめ）: 今日カードと同じ3項目 */}
+            <div id="a1-tomorrow-koyomi" class="mt-4 border-t border-zinc-100 pt-3 text-[11px] leading-relaxed text-zinc-500" hidden>
+              <p id="a1-tomorrow-koyomi-sun"></p>
+              <p id="a1-tomorrow-koyomi-term" class="mt-0.5"></p>
+              <p id="a1-tomorrow-koyomi-ko" class="mt-0.5"></p>
+            </div>
           </div>
         </div>
 
@@ -201,22 +218,6 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
         <p class="mt-4 mb-3 text-sm text-zinc-600">週間</p>
         <div id="a1-weekly" class="flex gap-2 overflow-x-auto pb-2">
           {/* JSで weekly[1..] を描画 */}
-        </div>
-      </section>
-
-      {/* ═══ A2：比較5地点カード ═══════════════════════════════ */}
-      <section id="compare" class="scroll-mt-[calc(var(--header-offset)+3.5rem)] border-t border-zinc-200 py-6">
-        <p class="text-[11px] tracking-[0.24em] text-zinc-400 uppercase">Compare</p>
-        <h2 class="mt-1 mb-3 text-lg font-semibold text-zinc-800">周辺5地点</h2>
-        <div id="a2-cards" class="grid grid-cols-2 gap-3 md:grid-cols-5">
-          {/* JSで current.stations を描画 */}
-          <p class="col-span-full text-sm text-zinc-500">取得中…</p>
-        </div>
-
-        {/* 季節コメント枠: seasonal_comment API 未実装のため非表示。
-            P後続で #a2-seasonal へ流し込む接続ポイント。 */}
-        <div id="a2-seasonal" class="mt-4 text-sm text-zinc-600" hidden>
-          <p id="a2-seasonal-text"></p>
         </div>
       </section>
 
@@ -500,15 +501,16 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
       return new Date(y, m - 1, d);
     }
 
-    // A1 today の暦ブロック（日の出入り・二十四節気・七十二候）を埋める
-    function renderKoyomi(date: Date): void {
-      const box = getEl("a1-koyomi");
+    // 暦ブロック（日の出入り・二十四節気・七十二候）を埋める。
+    // prefix = "a1-koyomi"（今日）または "a1-tomorrow-koyomi"（明日）
+    function renderKoyomi(date: Date, prefix: string = "a1-koyomi"): void {
+      const box = getEl(prefix);
       if (!box) return;
       const sun = getSunTimes(date);
       const koyomi = getKoyomi(date);
-      if (sun) setText("a1-koyomi-sun", `日の出 ${sun.rise} ／ 日の入 ${sun.set}`);
-      setText("a1-koyomi-term", `二十四節気：${koyomi.solarTerm}`);
-      setText("a1-koyomi-ko", `七十二候：${koyomi.ko.name}（${koyomi.ko.yomi}）`);
+      if (sun) setText(`${prefix}-sun`, `日の出 ${sun.rise} ／ 日の入 ${sun.set}`);
+      setText(`${prefix}-term`, `二十四節気：${koyomi.solarTerm}`);
+      setText(`${prefix}-ko`, `七十二候：${koyomi.ko.name}（${koyomi.ko.yomi}）`);
       box.hidden = false;
     }
 
@@ -569,6 +571,9 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
         setText("a1-tomorrow-max", tomorrow.temp_max != null ? `${tomorrow.temp_max}°` : "—°");
         setText("a1-tomorrow-min", tomorrow.temp_min != null ? `${tomorrow.temp_min}°` : "—°");
         show("a1-tomorrow");
+
+        // 明日の暦（日の出入り・二十四節気・七十二候）
+        renderKoyomi(parseLocalDate(tomorrow.date), "a1-tomorrow-koyomi");
       }
 
       // 週間（weekly[0]=明日は描画しない。weekly[1] 以降を並べる）
@@ -621,71 +626,6 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
       }
     }
 
-    // ── A2：比較5地点カード ──────────────────────────────────────
-    function renderA2(current: Json | null): void {
-      const wrap = getEl("a2-cards");
-      if (!wrap) return;
-      if (!current?.stations) {
-        wrap.innerHTML = `<p class="col-span-full text-sm text-zinc-400">周辺地点の取得に失敗しました。</p>`;
-        return;
-      }
-
-      // 表示順：東京 / 埼玉 / 宇都宮 / 那須烏山 / 受付棟
-      const order = [
-        { key: "amedas_tokyo",     label: "東京" },
-        { key: "amedas_saitama",   label: "埼玉" },
-        { key: "amedas_utsunomiya", label: "宇都宮" },
-        { key: "amedas_karasuyama", label: "那須烏山" },
-        { key: "uketsuke",         label: "受付棟" },
-      ];
-
-      const baseTemp = current.stations?.uketsuke?.temp_c; // 都市比の基準＝受付棟
-      wrap.replaceChildren();
-
-      for (const { key, label } of order) {
-        const st = current.stations[key];
-        const card = document.createElement("div");
-        card.className = "border border-zinc-200 bg-white p-4 text-center";
-
-        const name = document.createElement("p");
-        name.className = "text-xs tracking-[0.12em] text-zinc-400";
-        name.textContent = st?.label ?? label;
-        card.appendChild(name);
-
-        // 天気アイコン（JMA 統一。station 直下の weather_code を jmaIcon で解決）。
-        // 未知コードは jmaIcon が null を返す → 何も描かない（崩れ防止）。
-        const iconBox = document.createElement("div");
-        iconBox.className = "my-2 flex h-11 items-center justify-center";
-        if (st?.weather_code) {
-          const icon = jmaIcon(st.weather_code, 44);
-          if (icon) iconBox.appendChild(icon);
-        }
-        card.appendChild(iconBox);
-
-        // 気温
-        const temp = document.createElement("p");
-        temp.className = "text-2xl font-semibold text-zinc-800";
-        temp.innerHTML = (st?.temp_c != null)
-          ? `${st.temp_c.toFixed(1)}<span class="text-xs text-zinc-400"> ℃</span>`
-          : `<span class="text-zinc-300">—</span>`;
-        card.appendChild(temp);
-
-        // 都市比差分（受付棟基準。受付棟自身は基準なので出さない）
-        if (key !== "uketsuke" && st?.temp_c != null && baseTemp != null) {
-          const diff = st.temp_c - baseTemp;
-          const sign = diff >= 0 ? "+" : "−";
-          const d = document.createElement("p");
-          d.className = "mt-1 text-xs text-zinc-400";
-          d.textContent = `受付棟比 ${sign}${Math.abs(diff).toFixed(1)}℃`;
-          card.appendChild(d);
-        }
-
-        wrap.appendChild(card);
-      }
-
-      // 季節コメント（seasonal_comment）は今回非表示。接続ポイント #a2-seasonal のみ用意。
-    }
-
     // ── A3：警報・注意報 ─────────────────────────────────────────
     function renderA3(warning: Json | null): void {
       const wrap = getEl("a3-warnings");
@@ -727,7 +667,7 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
       }
     }
 
-    // ── A4：現地の今 ─────────────────────────────────────────────
+    // ── A4：現地の今（受付棟・アメダス・周辺3都市）───────────────
     function renderA4(current: Json | null): void {
       const uketsuke = current?.stations?.uketsuke;
       const amedas   = current?.stations?.amedas_karasuyama;
@@ -763,6 +703,18 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
         }
       }
 
+      // 受付棟 天気アイコン
+      const ukIconEl = getEl("a4-uketsuke-icon");
+      if (ukIconEl) {
+        if (uketsuke?.weather_code) {
+          const icon = jmaIcon(uketsuke.weather_code, 36);
+          if (icon) ukIconEl.replaceChildren(icon);
+          else ukIconEl.replaceChildren();
+        } else {
+          ukIconEl.replaceChildren();
+        }
+      }
+
       // --- 那須烏山アメダス ---
       if (amedas) {
         setText("a4-amedas-temp", amedas.temp_c != null ? amedas.temp_c.toFixed(1) : "—");
@@ -781,6 +733,18 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
         }
       }
 
+      // アメダス 天気アイコン
+      const amIconEl = getEl("a4-amedas-icon");
+      if (amIconEl) {
+        if (amedas?.weather_code) {
+          const icon = jmaIcon(amedas.weather_code, 36);
+          if (icon) amIconEl.replaceChildren(icon);
+          else amIconEl.replaceChildren();
+        } else {
+          amIconEl.replaceChildren();
+        }
+      }
+
       // --- アメダス比の気温差分（受付棟 − 那須烏山アメダス） ---
       // 受付棟が落ちている場合は代替せず、差分も出さない（欠損は正直に）
       const diffEl = getEl("a4-uketsuke-diff");
@@ -792,6 +756,55 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
         diffEl.hidden = false;
       } else if (diffEl) {
         diffEl.hidden = true;
+      }
+
+      // --- 周辺3都市（東京・埼玉・宇都宮）---
+      const citiesWrap = getEl("a4-cities");
+      if (citiesWrap) {
+        const cityOrder = [
+          { key: "amedas_tokyo",      label: "東京" },
+          { key: "amedas_saitama",    label: "埼玉" },
+          { key: "amedas_utsunomiya", label: "宇都宮" },
+        ];
+        const baseTemp = uketsuke?.temp_c ?? null;
+        citiesWrap.replaceChildren();
+
+        for (const { key, label } of cityOrder) {
+          const st = current?.stations?.[key];
+          const card = document.createElement("div");
+          card.className = "border border-zinc-200 bg-white p-4 text-center";
+
+          const name = document.createElement("p");
+          name.className = "text-xs tracking-[0.12em] text-zinc-400";
+          name.textContent = st?.label ?? label;
+          card.appendChild(name);
+
+          const iconBox = document.createElement("div");
+          iconBox.className = "my-2 flex h-11 items-center justify-center";
+          if (st?.weather_code) {
+            const icon = jmaIcon(st.weather_code, 44);
+            if (icon) iconBox.appendChild(icon);
+          }
+          card.appendChild(iconBox);
+
+          const temp = document.createElement("p");
+          temp.className = "text-2xl font-semibold text-zinc-800";
+          temp.innerHTML = (st?.temp_c != null)
+            ? `${st.temp_c.toFixed(1)}<span class="text-xs text-zinc-400"> ℃</span>`
+            : `<span class="text-zinc-300">—</span>`;
+          card.appendChild(temp);
+
+          if (st?.temp_c != null && baseTemp != null) {
+            const diff = st.temp_c - baseTemp;
+            const sign = diff >= 0 ? "+" : "−";
+            const d = document.createElement("p");
+            d.className = "mt-1 text-xs text-zinc-400";
+            d.textContent = `受付棟比 ${sign}${Math.abs(diff).toFixed(1)}℃`;
+            card.appendChild(d);
+          }
+
+          citiesWrap.appendChild(card);
+        }
       }
     }
 
@@ -1101,7 +1114,6 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
       const advisory = advR.status === "fulfilled" ? advR.value : null;
 
       renderA1(forecast, advisory);
-      renderA2(current);
       renderA3(warning);
       renderA4(current);
       renderLivecam(livecam); // 取得失敗時は null → プレースホルダ
