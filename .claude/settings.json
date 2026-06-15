@@ -1,7 +1,32 @@
 {
   "permissions": {
     "allow": [
-      "Bash(node -e ' *)"
+      "Bash(node -e ' *)",
+      "Bash(Remove-Item -Recurse -Force /c/Users/nyk/Documents/oiranomori-web/site/.astro -ErrorAction SilentlyContinue)",
+      "Bash(git add *)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run dev:*)",
+      "Bash(npm run lint:*)",
+      "Bash(npx astro:*)",
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(grep:*)",
+      "Bash(rg:*)",
+      "Bash(find:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)"
+    ],
+    "defaultMode": "acceptEdits",
+    "additionalDirectories": [
+      "c:\\Users\\nyk\\Documents\\oiranomori-web\\site\\.git",
+      "C:\\Users\\nyk\\Documents\\oiranomori-web\\site\\.git"
     ]
   }
 }
