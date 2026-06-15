@@ -166,10 +166,10 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
         <p class="text-[11px] tracking-[0.24em] text-zinc-400 uppercase">Forecast</p>
         <h2 class="mt-1 mb-3 text-lg font-semibold text-zinc-800">直近予報</h2>
 
-        {/* 今日・明日 */}
-        <div class="grid grid-cols-2 gap-3">
+        {/* 今日(/今夜)・明日・明後日。枠数は frames.length で2/3切替（JS）。 */}
+        <div id="a1-frames-grid" class="grid grid-cols-2 gap-3">
           <div id="a1-today" class="border border-zinc-200 bg-white p-4 text-center" hidden>
-            <p class="text-sm tracking-[0.12em] text-zinc-600">今日</p>
+            <p id="a1-today-label" class="text-sm tracking-[0.12em] text-zinc-600">今日</p>
             <p id="a1-today-date" class="mt-1 text-sm text-zinc-500">—</p>
             <div class="my-3 flex h-16 items-center justify-center" id="a1-today-icon"></div>
             <p class="text-sm"><span class="text-zinc-500">降水</span> <span class="font-medium text-zinc-800"><span id="a1-today-pop">—</span>%</span></p>
@@ -200,6 +200,24 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
               <p id="a1-tomorrow-koyomi-sun"></p>
               <p id="a1-tomorrow-koyomi-term" class="mt-0.5"></p>
               <p id="a1-tomorrow-koyomi-ko" class="mt-0.5"></p>
+            </div>
+          </div>
+          {/* 明後日カード（夕17時発表など frames 3枠時のみ表示）。#a1-tomorrow と同一構造。 */}
+          <div id="a1-dayafter" class="border border-zinc-200 bg-white p-4 text-center" hidden>
+            <p class="text-sm tracking-[0.12em] text-zinc-600">明後日</p>
+            <p id="a1-dayafter-date" class="mt-1 text-sm text-zinc-500">—</p>
+            <div class="my-3 flex h-16 items-center justify-center" id="a1-dayafter-icon"></div>
+            <p class="text-sm"><span class="text-zinc-500">降水</span> <span class="font-medium text-zinc-800"><span id="a1-dayafter-pop">—</span>%</span></p>
+            <p class="mt-1 text-sm">
+              <span class="font-medium text-red-500" id="a1-dayafter-max">—°</span> /
+              <span class="font-medium text-blue-500" id="a1-dayafter-min">—°</span>
+            </p>
+
+            {/* 暦（控えめ）: 今日カードと同じ3項目 */}
+            <div id="a1-dayafter-koyomi" class="mt-4 border-t border-zinc-100 pt-3 text-[11px] leading-relaxed text-zinc-500" hidden>
+              <p id="a1-dayafter-koyomi-sun"></p>
+              <p id="a1-dayafter-koyomi-term" class="mt-0.5"></p>
+              <p id="a1-dayafter-koyomi-ko" class="mt-0.5"></p>
             </div>
           </div>
         </div>
@@ -548,48 +566,76 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
     function renderA1(forecast: Json | null, advisory: Json | null): void {
       if (!forecast) return;
 
-      // 今日
-      const today = forecast.today;
-      if (today) {
-        setText("a1-today-date", fmtDate(today.date));
-        const iconEl = getEl("a1-today-icon");
-        if (iconEl && today.weather_code) {
-          const icon = jmaIcon(today.weather_code, 60);
+      // 直近予報枠は frames（気象庁2/3枠）駆動。frames 無時は today/tomorrow に縮退。
+      const frames: Json[] | null = Array.isArray(forecast.frames) ? forecast.frames : null;
+
+      // 1枠ぶんを所定のカード（today/tomorrow/dayafter）へ描画する共通処理。
+      // 既存の描画ロジック（fmtDate / jmaIcon(…,60) / null→「—」「—°」/ renderKoyomi）を踏襲。
+      const drawFrame = (
+        f: Json,
+        slot: "today" | "tomorrow" | "dayafter",
+        koyomiPrefix: string,
+      ): void => {
+        setText(`a1-${slot}-date`, fmtDate(f.date));
+        const iconEl = getEl(`a1-${slot}-icon`);
+        if (iconEl && f.weather_code) {
+          const icon = jmaIcon(f.weather_code, 60);
           if (icon) iconEl.replaceChildren(icon);
         }
-        setText("a1-today-pop", today.pop != null ? String(today.pop) : "—");
-        setText("a1-today-max", today.temp_max != null ? `${today.temp_max}°` : "—°");
-        setText("a1-today-min", today.temp_min != null ? `${today.temp_min}°` : "—°");
-        show("a1-today");
+        setText(`a1-${slot}-pop`, f.pop != null ? String(f.pop) : "—");
+        setText(`a1-${slot}-max`, f.temp_max != null ? `${f.temp_max}°` : "—°");
+        setText(`a1-${slot}-min`, f.temp_min != null ? `${f.temp_min}°` : "—°");
+        show(`a1-${slot}`);
+        renderKoyomi(parseLocalDate(f.date), koyomiPrefix);
+      };
 
-        // 暦（控えめ）: 日の出入り・二十四節気・七十二候。全て HP 側計算。
-        renderKoyomi(parseLocalDate(today.date));
-      }
+      const grid = getEl("a1-frames-grid");
+      const dayafterEl = getEl("a1-dayafter");
 
-      // 明日（weekly[0] は pop/temp が常に null。tomorrow ブロックを使う）
-      const tomorrow = forecast.tomorrow;
-      if (tomorrow) {
-        setText("a1-tomorrow-date", fmtDate(tomorrow.date));
-        const iconEl = getEl("a1-tomorrow-icon");
-        if (iconEl && tomorrow.weather_code) {
-          const icon = jmaIcon(tomorrow.weather_code, 60);
-          if (icon) iconEl.replaceChildren(icon);
+      if (frames) {
+        // 先頭枠（今日/今夜）
+        if (frames[0]) {
+          drawFrame(frames[0], "today", "a1-koyomi");
+          setText("a1-today-label", frames[0].kind === "tonight" ? "今夜" : "今日");
         }
-        setText("a1-tomorrow-pop", tomorrow.pop != null ? String(tomorrow.pop) : "—");
-        setText("a1-tomorrow-max", tomorrow.temp_max != null ? `${tomorrow.temp_max}°` : "—°");
-        setText("a1-tomorrow-min", tomorrow.temp_min != null ? `${tomorrow.temp_min}°` : "—°");
-        show("a1-tomorrow");
-
-        // 明日の暦（日の出入り・二十四節気・七十二候）
-        renderKoyomi(parseLocalDate(tomorrow.date), "a1-tomorrow-koyomi");
+        // 明日
+        if (frames[1]) drawFrame(frames[1], "tomorrow", "a1-tomorrow-koyomi");
+        // 明後日（3枠時のみ）
+        const isThree = frames.length === 3 && !!frames[2];
+        if (isThree) {
+          drawFrame(frames[2], "dayafter", "a1-dayafter-koyomi");
+        } else if (dayafterEl) {
+          dayafterEl.hidden = true;
+        }
+        // グリッド列数を 2/3 で切替
+        if (grid) {
+          grid.classList.toggle("grid-cols-3", isThree);
+          grid.classList.toggle("grid-cols-2", !isThree);
+        }
+      } else {
+        // フォールバック（frames 無）: 従来どおり today/tomorrow を描画。明後日は隠す・2列。
+        const today = forecast.today;
+        if (today) {
+          drawFrame(today, "today", "a1-koyomi");
+          setText("a1-today-label", "今日");
+        }
+        const tomorrow = forecast.tomorrow;
+        if (tomorrow) drawFrame(tomorrow, "tomorrow", "a1-tomorrow-koyomi");
+        if (dayafterEl) dayafterEl.hidden = true;
+        if (grid) {
+          grid.classList.toggle("grid-cols-3", false);
+          grid.classList.toggle("grid-cols-2", true);
+        }
       }
 
-      // 週間（weekly[0]=明日は描画しない。weekly[1] 以降を並べる）
+      // 週間（weekly[0]=明日は描画しない）。直近枠との重複解消で slice 起点を frames.length に連動：
+      // 3枠（明後日まで直近表示）→ slice(2)（明々後日〜）／2枠・frames無 → slice(1)（明後日〜）。
       const weekly: Json[] = Array.isArray(forecast.weekly) ? forecast.weekly : [];
+      const weeklyStart = frames && frames.length === 3 ? 2 : 1;
       const wrap = getEl("a1-weekly");
-      if (wrap && weekly.length > 1) {
+      if (wrap && weekly.length > weeklyStart) {
         wrap.replaceChildren();
-        for (const day of weekly.slice(1)) {
+        for (const day of weekly.slice(weeklyStart)) {
           const card = document.createElement("div");
           card.className = "shrink-0 border border-zinc-200 bg-white p-3 text-center";
           card.style.width = "96px";
