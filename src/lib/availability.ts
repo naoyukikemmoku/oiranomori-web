@@ -19,9 +19,17 @@ export type AvailabilityDay = {
 	label: string;
 };
 
+// サイズ別の残数内訳（label なし）。auto={XL,LL,L,M,S} / kukaku={SS,kukakuC,k11}。
+// deep/dogrun には存在しないため optional。後方互換のためキーは固定せず Record で受ける。
+export type AvailabilitySize = {
+	capacity: number;
+	days: { date: string; remain: number }[];
+};
+
 export type AvailabilityArea = {
 	capacity: number;
 	days: AvailabilityDay[];
+	sizes?: Record<string, AvailabilitySize>;
 };
 
 export type AvailabilityResponse = {

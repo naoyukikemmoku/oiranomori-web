@@ -69,6 +69,18 @@ import { RESERVE_FALLBACK_URL } from "../lib/availability";
         <li class="flex items-center gap-2"><span class="inline-block h-3 w-3 rounded-full" style="background:#b56b5a"></span>満サイト</li>
       </ul>
 
+      <ul class="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-xs text-zinc-500" aria-hidden="true">
+        <li class="flex items-center gap-1.5"><span class="text-base text-zinc-700">◎</span>空いている</li>
+        <li class="flex items-center gap-1.5"><span class="text-base text-zinc-700">○</span>ゆとりあり</li>
+        <li class="flex items-center gap-1.5"><span class="text-base text-zinc-700">◇</span>やや混雑</li>
+        <li class="flex items-center gap-1.5"><span class="text-base text-zinc-700">△</span>混雑</li>
+        <li class="flex items-center gap-1.5"><span class="text-base text-zinc-700">×</span>満</li>
+      </ul>
+
+      <p class="mt-3 text-xs leading-loose text-zinc-500">
+        サマリ行は記号、サイズ別の行は残数の目安です。
+      </p>
+
       <p class="mt-5 text-xs leading-loose text-zinc-500">
         空き状況はリアルタイムの目安です。確定の予約は
         <a
@@ -109,6 +121,38 @@ import { RESERVE_FALLBACK_URL } from "../lib/availability";
       予約なし: { bg: "#dfe4d8", fg: "#3a4233" },
       空き: { bg: "#c9d4c2", fg: "#28331f" },
     };
+
+    // ラベル → 記号。エリアサマリ行のセルに表示（背景色は STYLE を維持）。
+    const SYMBOL: Record<string, string> = {
+      予約なし: "◎",
+      ガラガラ: "◎",
+      ゆったり: "○",
+      混雑気味: "◇",
+      混雑: "△",
+      満サイト: "×",
+      空き: "○",
+      満: "×",
+    };
+
+    // サイズ別サブ行の構成。auto=XL/LL/L/M/S、kukaku=SS/kukakuC/k11。dogrun はサブ行なし。
+    const SIZE_ROWS: Record<string, { key: string; label: string }[]> = {
+      auto: [
+        { key: "XL", label: "XLサイズ" },
+        { key: "LL", label: "LLサイズ" },
+        { key: "L", label: "Lサイズ" },
+        { key: "M", label: "Mサイズ" },
+        { key: "S", label: "Sサイズ" },
+      ],
+      kukaku: [
+        { key: "SS", label: "SSサイズ" },
+        { key: "kukakuC", label: "区画C" },
+        { key: "k11", label: "11番" },
+      ],
+    };
+
+    // サイズ別セルの色は既存 STYLE を流用。remain=0→満サイト色、remain>0→予約なし色（中立の空き）。
+    const sizeStyle = (remain: number) =>
+      remain === 0 ? STYLE["満サイト"] : STYLE["予約なし"];
 
     const show = (state: "loading" | "error" | "ready") => {
       root.querySelectorAll<HTMLElement>("[data-congestion-state]").forEach((el) => {
@@ -153,6 +197,7 @@ import { RESERVE_FALLBACK_URL } from "../lib/availability";
         const area = data.areas[row.key];
         const byDate = new Map((area?.days ?? []).map((d) => [d.date, d]));
         const rowTh = `<th scope="row" class="sticky left-0 z-10 whitespace-nowrap bg-[#eef0eb] px-3 py-2 text-sm font-medium text-zinc-700">${row.label}</th>`;
+        // エリアサマリ行：セルは記号表示（背景色は STYLE 維持）。
         const cells = dates
           .map((iso) => {
             const cell = byDate.get(iso);
@@ -160,11 +205,37 @@ import { RESERVE_FALLBACK_URL } from "../lib/availability";
               return '<td class="px-1 py-1"><span class="block h-9 rounded-md bg-[#e3e7df]"></span></td>';
             }
             const s = STYLE[cell.label] ?? { bg: "#dfe4d8", fg: "#3a4233" };
+            const sym = SYMBOL[cell.label] ?? "-";
             const title = `${row.label} ${fmtDate(iso)}：${cell.label}（残り${cell.remain}）`;
-            return `<td class="px-1 py-1"><span class="flex h-9 flex-col items-center justify-center rounded-md text-[11px] leading-tight" style="background:${s.bg};color:${s.fg}" title="${title}"><span aria-hidden="true" class="font-medium">${cell.remain}</span><span class="sr-only">${cell.label} 残り${cell.remain}</span></span></td>`;
+            return `<td class="px-1 py-1"><span class="flex h-9 flex-col items-center justify-center rounded-md text-base leading-tight" style="background:${s.bg};color:${s.fg}" title="${title}"><span aria-hidden="true" class="font-medium">${sym}</span><span class="sr-only">${cell.label} 残り${cell.remain}</span></span></td>`;
           })
           .join("");
-        return `<tr>${rowTh}${cells}</tr>`;
+        const summaryRow = `<tr>${rowTh}${cells}</tr>`;
+
+        // サイズ別サブ行（auto/kukaku のみ・常時展開）。残数を数字で表示。
+        const sizeRows = (SIZE_ROWS[row.key] ?? [])
+          .map((sz) => {
+            const sizeData = area?.sizes?.[sz.key];
+            const sByDate = new Map(
+              (sizeData?.days ?? []).map((d) => [d.date, d]),
+            );
+            const subTh = `<th scope="row" class="sticky left-0 z-10 whitespace-nowrap bg-[#eef0eb] py-1.5 pl-7 pr-3 text-xs font-normal text-zinc-500">${sz.label}</th>`;
+            const subCells = dates
+              .map((iso) => {
+                const d = sByDate.get(iso);
+                if (!d) {
+                  return '<td class="px-1 py-0.5"><span class="block h-6 rounded bg-[#e3e7df]"></span></td>';
+                }
+                const ss = sizeStyle(d.remain);
+                const title = `${sz.label} ${fmtDate(iso)}：残り${d.remain}`;
+                return `<td class="px-1 py-0.5"><span class="flex h-6 items-center justify-center rounded text-[11px] leading-none" style="background:${ss.bg};color:${ss.fg}" title="${title}"><span aria-hidden="true">${d.remain}</span><span class="sr-only">${sz.label} 残り${d.remain}</span></span></td>`;
+              })
+              .join("");
+            return `<tr>${subTh}${subCells}</tr>`;
+          })
+          .join("");
+
+        return summaryRow + sizeRows;
       }).join("");
 
       show("ready");
