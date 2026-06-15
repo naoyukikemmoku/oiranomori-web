@@ -1,6 +1,8 @@
 ---
-// ディープフォレスト向け 静けさの推移カレンダー（deep/index.astro 最終CTA直前に埋め込み）。
-// deep の days を月カレンダー的に。混雑度ではなく「静けさの推移」を色の濃淡で見せる。
+// ディープフォレスト向け 静けさタイムライン（deep/index.astro 最終CTA直前に埋め込み）。
+// 月ごとに横帯1本。帯＝その月の日数分のセグメントを連続配置（日連続。カレンダーではない）。
+// 帯の下に「人の気配がある日」を要約テキストで列挙。終日静かな月は一文で出す。
+// 混雑度ではなく「静けさの推移」を色の濃淡で見せる。
 // 動的データのためクライアント（可視時）取得。サーバー側では骨組みのみ描画。
 import { RESERVE_FALLBACK_URL } from "../lib/availability";
 ---
@@ -18,7 +20,7 @@ import { RESERVE_FALLBACK_URL } from "../lib/availability";
       静けさの、移ろい。
     </h2>
     <p class="mt-5 text-sm leading-loose text-zinc-400">
-      色が濃いほど、深い森に人の気配はない。<br />
+      帯が明るむ日に、人の気配がある。<br />
       誰にも会いたくない日を、ここから選んでほしい。
     </p>
 
@@ -41,13 +43,13 @@ import { RESERVE_FALLBACK_URL } from "../lib/availability";
     </div>
 
     <div class="mt-10 hidden" data-silence-state="ready">
-      <div class="space-y-12" data-silence-months style="font-family:'Noto Serif JP',serif"></div>
+      <div class="space-y-8" data-silence-months style="font-family:'Noto Serif JP',serif"></div>
 
-      <ul class="mt-10 flex flex-wrap gap-x-6 gap-y-2 text-xs text-zinc-500" aria-hidden="true">
-        <li class="flex items-center gap-2"><span class="inline-block h-3 w-3 rounded-full" style="background:#1c2a20"></span>誰もいない</li>
-        <li class="flex items-center gap-2"><span class="inline-block h-3 w-3 rounded-full" style="background:#3a4a38"></span>ほぼ人に会わない</li>
-        <li class="flex items-center gap-2"><span class="inline-block h-3 w-3 rounded-full" style="background:#6b7a5a"></span>人の存在を感じる</li>
-        <li class="flex items-center gap-2"><span class="inline-block h-3 w-3 rounded-full" style="background:#9aa884"></span>満</li>
+      <ul class="mt-12 flex flex-wrap gap-x-6 gap-y-2 text-xs text-zinc-500" aria-hidden="true">
+        <li class="flex items-center gap-2"><span class="inline-block h-3 w-3 rounded-sm" style="background:#33433a"></span>誰もいない</li>
+        <li class="flex items-center gap-2"><span class="inline-block h-3 w-3 rounded-sm" style="background:#4f6149"></span>ほぼ人に会わない</li>
+        <li class="flex items-center gap-2"><span class="inline-block h-3 w-3 rounded-sm" style="background:#7a8a64"></span>人の存在を感じる</li>
+        <li class="flex items-center gap-2"><span class="inline-block h-3 w-3 rounded-sm" style="background:#b3c08e"></span>満</li>
       </ul>
     </div>
   </div>
@@ -63,19 +65,59 @@ import { RESERVE_FALLBACK_URL } from "../lib/availability";
     "[aria-labelledby='silence-calendar-heading']",
   );
   if (section) {
-    // 静けさの濃淡。濃い（誰もいない）ほど暗緑。
-    const STYLE: Record<string, { bg: string; fg: string }> = {
-      誰もいない: { bg: "#1c2a20", fg: "#aebda3" },
-      ほぼ人に会わない: { bg: "#3a4a38", fg: "#cdd8c4" },
-      人の存在を感じる: { bg: "#6b7a5a", fg: "#1a2016" },
-      満: { bg: "#9aa884", fg: "#1a2016" },
+    // 静けさの濃淡。背景 --forest-700 (#1f2820) から識別できるよう「誰もいない」を一段明るく。
+    // 濃い（暗い）ほど人がいない＝静か。満を最も明るく目立たせる。
+    const STYLE: Record<string, { bg: string }> = {
+      誰もいない: { bg: "#33433a" },
+      ほぼ人に会わない: { bg: "#4f6149" },
+      人の存在を感じる: { bg: "#7a8a64" },
+      満: { bg: "#b3c08e" },
     };
-    const WD = ["日", "月", "火", "水", "木", "金", "土"];
+    // フォールバック色（未知 label）。
+    const FALLBACK_BG = "#2d3a30";
+
+    // ── 状態の中間データ構造（拡張用）──────────────────────────
+    // 日付ごとに「混雑label」と、将来重ねる別軸フラグ（山作業日など）を分離して持つ。
+    // 山作業日は混雑色を上書きせず別マーカーで重ねる想定。今回は混雑label のみ描画。
+    type DayState = {
+      iso: string;
+      label: string;
+      // workday?: boolean;  // 将来: 山作業日フラグ（データソース未確定のため未取得）
+    };
+
+    // 状態 → セグメント装飾のマッピング（混雑色のみ。将来マーカーをここに追加）。
+    const styleFor = (st: DayState): { bg: string } => {
+      return STYLE[st.label] ?? { bg: FALLBACK_BG };
+    };
 
     const show = (state: "loading" | "error" | "ready") => {
       section.querySelectorAll<HTMLElement>("[data-silence-state]").forEach((el) => {
         el.classList.toggle("hidden", el.dataset.silenceState !== state);
       });
+    };
+
+    // 「人の気配がある日」= 誰もいない 以外。連続日をまとめて要約文を作る。
+    const summarize = (states: DayState[]): string => {
+      const flagged = states.filter((s) => s.label !== "誰もいない");
+      if (flagged.length === 0) return "ひと月まるごと、誰もいない。";
+
+      // 同一 label が連続する日をランにまとめる。
+      type Run = { label: string; start: number; end: number };
+      const runs: Run[] = [];
+      for (const s of flagged) {
+        const day = Number(s.iso.slice(8, 10));
+        const last = runs[runs.length - 1];
+        if (last && last.label === s.label && day === last.end + 1) {
+          last.end = day;
+        } else {
+          runs.push({ label: s.label, start: day, end: day });
+        }
+      }
+      const parts = runs.map((r) => {
+        const span = r.start === r.end ? `${r.start}日` : `${r.start}–${r.end}日`;
+        return `${span} ${r.label}`;
+      });
+      return parts.join(" ／ ");
     };
 
     const render = (data: AvailabilityResponse) => {
@@ -87,46 +129,37 @@ import { RESERVE_FALLBACK_URL } from "../lib/availability";
       }
 
       // 月ごとにグルーピング（YYYY-MM）。
-      const groups = new Map<string, typeof days>();
+      const groups = new Map<string, DayState[]>();
       for (const d of days) {
         const ym = d.date.slice(0, 7);
         if (!groups.has(ym)) groups.set(ym, []);
-        groups.get(ym)?.push(d);
+        groups.get(ym)?.push({ iso: d.date, label: d.label });
       }
 
       const blocks: string[] = [];
       for (const [ym, list] of groups) {
-        const [y, m] = ym.split("-").map(Number);
-        const byDate = new Map(list.map((d) => [d.date, d]));
-        // 月初の曜日オフセット
-        const first = new Date(`${ym}-01T00:00:00+09:00`);
-        const offset = first.getDay();
-        const daysInMonth = new Date(y, m, 0).getDate();
+        const m = Number(ym.slice(5, 7));
+        // 日付昇順を保証。
+        list.sort((a, b) => (a.iso < b.iso ? -1 : 1));
 
-        const head = WD.map(
-          (w) => `<div class="text-center text-[11px] text-zinc-600">${w}</div>`,
-        ).join("");
+        // 横帯：各日を1セグメントとして連続配置。flex で日数に応じ等幅。
+        const segs = list
+          .map((st) => {
+            const day = Number(st.iso.slice(8, 10));
+            const { bg } = styleFor(st);
+            const title = `${m}月${day}日：${st.label}`;
+            return `<div class="h-7 flex-1 first:rounded-l-md last:rounded-r-md" style="background:${bg}" title="${title}"><span class="sr-only">${title}</span></div>`;
+          })
+          .join("");
 
-        const cells: string[] = [];
-        for (let i = 0; i < offset; i++) cells.push('<div></div>');
-        for (let day = 1; day <= daysInMonth; day++) {
-          const iso = `${ym}-${String(day).padStart(2, "0")}`;
-          const cell = byDate.get(iso);
-          if (!cell) {
-            cells.push(
-              `<div class="flex aspect-square items-center justify-center text-sm text-zinc-700">${day}</div>`,
-            );
-            continue;
-          }
-          const s = STYLE[cell.label] ?? { bg: "#2d3a30", fg: "#aebda3" };
-          const title = `${m}月${day}日：${cell.label}`;
-          cells.push(
-            `<div class="flex aspect-square flex-col items-center justify-center rounded-md" style="background:${s.bg};color:${s.fg}" title="${title}"><span aria-hidden="true" class="text-sm leading-none">${day}</span><span class="sr-only">${cell.label}</span></div>`,
-          );
-        }
+        const summary = summarize(list);
 
         blocks.push(
-          `<div><p class="mb-4 text-lg text-zinc-300">${y}年${m}月</p><div class="grid grid-cols-7 gap-1.5 md:gap-2">${head}${cells.join("")}</div></div>`,
+          `<div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">` +
+            `<p class="w-16 shrink-0 text-base text-zinc-300">${m}月</p>` +
+            `<div class="flex-1"><div class="flex gap-px">${segs}</div>` +
+            `<p class="mt-2 text-xs leading-relaxed text-zinc-500">${summary}</p></div>` +
+          `</div>`,
         );
       }
 
