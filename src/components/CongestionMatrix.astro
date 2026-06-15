@@ -1,0 +1,213 @@
+---
+// ライトフォレスト向け 空き状況マトリクス（トップ index.astro、プランギャラリー直前に埋め込み）。
+// 行＝オート(auto)/区画(kukaku)/ドッグラン(dogrun)、列＝日付。
+// 動的データのためクライアント（可視時）取得。サーバー側では骨組みのみ描画。
+import { RESERVE_FALLBACK_URL } from "../lib/availability";
+---
+
+<section
+  id="congestion-light"
+  class="py-20 md:py-28 bg-[#eef0eb]"
+  aria-labelledby="congestion-light-heading"
+>
+  <div class="mx-auto max-w-6xl px-6 md:px-10">
+    <p class="text-xs tracking-[0.32em] text-zinc-400">AVAILABILITY</p>
+    <p
+      id="congestion-light-heading"
+      class="mt-3 text-2xl font-semibold text-zinc-800 md:text-3xl"
+    >
+      混み具合を見る
+    </p>
+    <h2 class="mt-3 text-base font-medium text-zinc-700 md:text-lg">
+      これからの空き状況。ゆったり過ごせる日を選んで。
+    </h2>
+
+    <!-- ローディング／フォールバック／本体は client script が出し分ける -->
+    <div
+      class="mt-8 text-sm leading-loose text-zinc-500"
+      data-congestion-state="loading"
+    >
+      空き状況を読み込んでいます…
+    </div>
+
+    <div
+      class="mt-8 hidden text-sm leading-loose text-zinc-600"
+      data-congestion-state="error"
+    >
+      <p>空き状況は予約サイトでご確認ください。</p>
+      <p class="mt-4">
+        <a
+          href={RESERVE_FALLBACK_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="underline underline-offset-2 transition hover:text-zinc-900"
+        >
+          予約・空き状況を見る ↗
+        </a>
+      </p>
+    </div>
+
+    <div class="mt-8 hidden" data-congestion-state="ready">
+      <!-- 横スクロール領域（モバイル対応） -->
+      <div class="-mx-6 overflow-x-auto px-6 md:mx-0 md:px-0">
+        <table
+          class="w-full min-w-[640px] border-separate border-spacing-y-1 text-left"
+          data-congestion-table
+        >
+          <caption class="sr-only">
+            ライトフォレスト各エリアの日別空き状況。残数と混み具合の目安。
+          </caption>
+          <thead data-congestion-head></thead>
+          <tbody data-congestion-body></tbody>
+        </table>
+      </div>
+
+      <ul class="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-xs text-zinc-500" aria-hidden="true">
+        <li class="flex items-center gap-2"><span class="inline-block h-3 w-3 rounded-full" style="background:#c9d4c2"></span>ガラガラ・ゆったり</li>
+        <li class="flex items-center gap-2"><span class="inline-block h-3 w-3 rounded-full" style="background:#e6d9ad"></span>混雑気味</li>
+        <li class="flex items-center gap-2"><span class="inline-block h-3 w-3 rounded-full" style="background:#d8a86b"></span>混雑</li>
+        <li class="flex items-center gap-2"><span class="inline-block h-3 w-3 rounded-full" style="background:#b56b5a"></span>満サイト</li>
+      </ul>
+
+      <p class="mt-5 text-xs leading-loose text-zinc-500">
+        空き状況はリアルタイムの目安です。確定の予約は
+        <a
+          href={RESERVE_FALLBACK_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="underline underline-offset-2 transition hover:text-zinc-900"
+        >予約ページ ↗</a>
+        から。
+      </p>
+    </div>
+  </div>
+</section>
+
+<script>
+  import {
+    buildCongestionUrl,
+    type AvailabilityResponse,
+    type AreaKey,
+  } from "../lib/availability";
+
+  const root = document.getElementById("congestion-light");
+  if (root) {
+    const ROWS: { key: AreaKey; label: string }[] = [
+      { key: "auto", label: "オートサイト" },
+      { key: "kukaku", label: "区画サイト" },
+      { key: "dogrun", label: "ドッグラン" },
+    ];
+
+    // ラベル → 背景色・文字色。light の混雑度を暖色グラデで。
+    const STYLE: Record<string, { bg: string; fg: string }> = {
+      満サイト: { bg: "#b56b5a", fg: "#fff" },
+      満: { bg: "#b56b5a", fg: "#fff" },
+      混雑: { bg: "#d8a86b", fg: "#3a2a14" },
+      混雑気味: { bg: "#e6d9ad", fg: "#3a2a14" },
+      ゆったり: { bg: "#cdd8c4", fg: "#28331f" },
+      ガラガラ: { bg: "#c9d4c2", fg: "#28331f" },
+      予約なし: { bg: "#dfe4d8", fg: "#3a4233" },
+      空き: { bg: "#c9d4c2", fg: "#28331f" },
+    };
+
+    const show = (state: "loading" | "error" | "ready") => {
+      root.querySelectorAll<HTMLElement>("[data-congestion-state]").forEach((el) => {
+        el.classList.toggle("hidden", el.dataset.congestionState !== state);
+      });
+    };
+
+    const fmtDate = (iso: string) => {
+      const [, m, d] = iso.split("-");
+      return `${Number(m)}/${Number(d)}`;
+    };
+    const fmtWeekday = (iso: string) => {
+      const wd = ["日", "月", "火", "水", "木", "金", "土"];
+      const dt = new Date(`${iso}T00:00:00+09:00`);
+      return wd[dt.getDay()];
+    };
+
+    const render = (data: AvailabilityResponse) => {
+      // 日付列は auto を基準に取る（全エリア同一 range 前提）。表示は先頭から最大60日。
+      const baseDays = (data.areas.auto?.days ?? []).slice(0, 60);
+      const dates = baseDays.map((d) => d.date);
+
+      const head = root.querySelector("[data-congestion-head]");
+      const body = root.querySelector("[data-congestion-body]");
+      if (!head || !body) return;
+
+      // ヘッダ行
+      const thFirst =
+        '<th scope="col" class="sticky left-0 z-10 bg-[#eef0eb] px-3 py-2 text-xs font-medium text-zinc-500">エリア</th>';
+      const ths = dates
+        .map((iso) => {
+          const sat = fmtWeekday(iso) === "土";
+          const sun = fmtWeekday(iso) === "日";
+          const tone = sun ? "text-red-700" : sat ? "text-blue-700" : "text-zinc-500";
+          return `<th scope="col" class="px-2 py-2 text-center text-[11px] font-medium ${tone}"><span class="block">${fmtDate(iso)}</span><span class="block text-[10px]">${fmtWeekday(iso)}</span></th>`;
+        })
+        .join("");
+      head.innerHTML = `<tr>${thFirst}${ths}</tr>`;
+
+      // 本体行
+      body.innerHTML = ROWS.map((row) => {
+        const area = data.areas[row.key];
+        const byDate = new Map((area?.days ?? []).map((d) => [d.date, d]));
+        const rowTh = `<th scope="row" class="sticky left-0 z-10 whitespace-nowrap bg-[#eef0eb] px-3 py-2 text-sm font-medium text-zinc-700">${row.label}</th>`;
+        const cells = dates
+          .map((iso) => {
+            const cell = byDate.get(iso);
+            if (!cell) {
+              return '<td class="px-1 py-1"><span class="block h-9 rounded-md bg-[#e3e7df]"></span></td>';
+            }
+            const s = STYLE[cell.label] ?? { bg: "#dfe4d8", fg: "#3a4233" };
+            const title = `${row.label} ${fmtDate(iso)}：${cell.label}（残り${cell.remain}）`;
+            return `<td class="px-1 py-1"><span class="flex h-9 flex-col items-center justify-center rounded-md text-[11px] leading-tight" style="background:${s.bg};color:${s.fg}" title="${title}"><span aria-hidden="true" class="font-medium">${cell.remain}</span><span class="sr-only">${cell.label} 残り${cell.remain}</span></span></td>`;
+          })
+          .join("");
+        return `<tr>${rowTh}${cells}</tr>`;
+      }).join("");
+
+      show("ready");
+    };
+
+    const load = async () => {
+      try {
+        const res = await fetch(buildCongestionUrl(), {
+          headers: { Accept: "application/json" },
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = (await res.json()) as AvailabilityResponse;
+        if (!data.ok || !data.areas) throw new Error("invalid payload");
+        render(data);
+      } catch (e) {
+        console.warn("[congestion] fetch failed, showing fallback.", e);
+        show("error");
+      }
+    };
+
+    // 可視時に1回だけ取得。
+    let done = false;
+    const trigger = () => {
+      if (done) return;
+      done = true;
+      load();
+    };
+    if ("IntersectionObserver" in window) {
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const en of entries) {
+            if (en.isIntersecting) {
+              trigger();
+              io.disconnect();
+              break;
+            }
+          }
+        },
+        { rootMargin: "200px" },
+      );
+      io.observe(root);
+    } else {
+      trigger();
+    }
+  }
+</script>

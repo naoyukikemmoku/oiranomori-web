@@ -4,6 +4,7 @@ import planDaycamp from "../assets/images/plan_daycamp.JPEG";
 import planDogrun from "../assets/images/plan_dogrun.JPEG";
 import planStandard from "../assets/images/plan_standard.JPEG";
 import planTrain from "../assets/images/plan_train.JPEG";
+import CongestionMatrix from "../components/CongestionMatrix.astro";
 import OshiraseList from "../components/OshiraseList.astro";
 import SeasonSlider from "../components/SeasonSlider.astro";
 import LpLayout from "../layouts/LpLayout.astro";
@@ -521,6 +522,9 @@ const plans: Array<{
       </div>
     </div>
   </section>
+
+  {/* 空き状況マトリクス（プランギャラリー直前） */}
+  <CongestionMatrix />
 
   {/* 7. プランギャラリー */}
   <section id="plans" class="py-20 md:py-28 bg-[#f4f5f2]">
