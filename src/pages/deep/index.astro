@@ -1,5 +1,6 @@
 ﻿---
 import LpLayout from "../../layouts/LpLayout.astro";
+import SilenceCalendar from "../../components/SilenceCalendar.astro";
 import { Image } from "astro:assets";
 import deepHeroImg       from "../../assets/images/deep_hero.jpg";
 import deepSilentImg     from "../../assets/images/deep_silentforest.JPEG";
@@ -40,8 +41,8 @@ const experiences = [
 ---
 
 <LpLayout
-  title="ディープフォレスト（野営・直火サイト） | 里山パークおいらの森"
-  description="18歳以上限定・全面直火可のディープフォレスト。樹齢80年の針葉樹林で野営やブッシュクラフトに没頭できる、コアキャンパー向けのフィールドです。"
+  title="ディープフォレスト（野営・焚き火サイト） | 里山パークおいらの森"
+  description="18歳以上限定・静寂と焚き火のディープフォレスト。樹齢80年の針葉樹林で野営やブッシュクラフトに没頭できる、コアキャンパー向けのフィールドです。"
   ogImage="https://oiranomori.jp/images/lp/scene-01.jpg"
   lastUpdated="2026年5月"
 >
@@ -50,7 +51,7 @@ const experiences = [
       "@context": "https://schema.org",
       "@type": "TouristAttraction",
       "name": "ディープフォレスト（里山パークおいらの森）",
-      "description": "18歳以上限定・全面直火可のフィールド。樹齢80年の針葉樹林で野営やブッシュクラフトに没頭できる、コアキャンパー向けのフィールドです。",
+      "description": "18歳以上限定・静寂と焚き火のフィールド。樹齢80年の針葉樹林で野営やブッシュクラフトに没頭できる、コアキャンパー向けのフィールドです。",
       "url": "https://oiranomori.jp/deep/",
       "containedInPlace": {
         "@type": "Campground",
@@ -275,6 +276,9 @@ const experiences = [
       </div>
     </div>
   </section>
+
+  {/* 静けさの推移カレンダー（最終CTA直前） */}
+  <SilenceCalendar />
 
   {/* CTA */}
   <section class="bg-[color:var(--forest-700)] py-20 md:py-28">

@@ -42,15 +42,15 @@ const categories = [
       { "@type": "Question", "name": "AC電源は使えますか？", "acceptedAnswer": { "@type": "Answer", "text": "ライトフォレストの一部サイトで有料オプションとしてご利用いただけます（消費電力600Wまで）。ディープフォレストにはありません。" } },
       { "@type": "Question", "name": "発電機は使えますか？", "acceptedAnswer": { "@type": "Answer", "text": "両フィールドとも使用禁止です。" } },
       { "@type": "Question", "name": "花火はできますか？", "acceptedAnswer": { "@type": "Answer", "text": "打ち上げ花火は両フィールドとも禁止です。手持ち花火の可否は要確認。" } },
-      { "@type": "Question", "name": "BBQはできますか？", "acceptedAnswer": { "@type": "Answer", "text": "できます。ライトフォレストは全サイトで焚き火台使用可、ソロ区画3〜11番と区画Cは直火も可能です。ディープフォレストは全面直火可能。食材はお持ち込みください。" } },
+      { "@type": "Question", "name": "BBQはできますか？", "acceptedAnswer": { "@type": "Answer", "text": "できます。ライトフォレストは全サイトで焚き火台使用可。直火は直火エリアで可能です。食材はお持ち込みください。" } },
       { "@type": "Question", "name": "ゴミは捨てられますか？", "acceptedAnswer": { "@type": "Answer", "text": "灰以外はすべてお持ち帰りください。灰は指定のペール缶（ライトフォレスト薪小屋の黒ペール缶）に蓋をして入れてください。" } },
       { "@type": "Question", "name": "ペットは連れて来られますか？", "acceptedAnswer": { "@type": "Answer", "text": "ライトフォレストのドッグランサイトはノーリードOK、その他のサイトはリード必須です。ふんの処理・管理は飼い主の責任でお願いします。ディープフォレストのペット可否は要確認。" } },
       { "@type": "Question", "name": "ライトフォレストはどんなフィールドですか？", "acceptedAnswer": { "@type": "Answer", "text": "コナラ・クヌギの明るい落葉広葉樹林に囲まれたキャンプサイト。管理人家族が敷地内に常駐しており、初心者・女性・ファミリーも安心です。敷地18,000坪・収容約120人。栃木県那須烏山市にあります。" } },
       { "@type": "Question", "name": "ライトフォレストにはどんなサイトがありますか？", "acceptedAnswer": { "@type": "Answer", "text": "オートサイト（車乗り入れ可）、区画サイト（近隣駐車場）、ソロ区画、ドッグランサイト、区画外（お好きな場所でキャンプ）があります。" } },
-      { "@type": "Question", "name": "ライトフォレストで直火はできますか？", "acceptedAnswer": { "@type": "Answer", "text": "オートサイトは焚き火台使用。区画サイトC・ソロ区画3〜11番は直火可能です。" } },
+      { "@type": "Question", "name": "ライトフォレストで直火はできますか？", "acceptedAnswer": { "@type": "Answer", "text": "直火エリアで可能です。区画サイトC・ソロ区画3〜11番が直火エリア、オートサイトは焚き火台使用となります。" } },
       { "@type": "Question", "name": "ディープフォレストはどんなフィールドですか？", "acceptedAnswer": { "@type": "Answer", "text": "樹齢80年のスギ・ヒノキの針葉樹林、敷地14,000坪。野営・ブッシュクラフト・静寂を求める上級者向けフィールドです。ライトフォレストから車で約7分。" } },
       { "@type": "Question", "name": "ディープフォレストは誰でも利用できますか？", "acceptedAnswer": { "@type": "Answer", "text": "18歳以上限定です。入場時に年齢確認書類（免許証・パスポート等）のご提示が必要です。未成年の方はいかなる理由でも入場できません。" } },
-      { "@type": "Question", "name": "ディープフォレストで直火はできますか？", "acceptedAnswer": { "@type": "Answer", "text": "全面直火可能です。ただし火消し壺の持参が必須（受付で500円レンタルあり）、立木の枯れ枝・積んである丸太の使用は厳禁です。" } },
+      { "@type": "Question", "name": "ディープフォレストで直火はできますか？", "acceptedAnswer": { "@type": "Answer", "text": "直火エリアで可能です。ただし火消し壺の持参が必須（受付で500円レンタルあり）、立木の枯れ枝・積んである丸太の使用は厳禁です。" } },
       { "@type": "Question", "name": "ディープフォレストの設備は？", "acceptedAnswer": { "@type": "Answer", "text": "仮設トイレのみ。水道・電源・売店はありません。自己完結型のフィールドです。飲料水・必要物資はライトフォレストで調達してください。" } },
       { "@type": "Question", "name": "ディープフォレストの場所はどこですか？", "acceptedAnswer": { "@type": "Answer", "text": "場所は非公開です。ライトフォレスト管理棟で受付・案内を受けた後、現地へ移動していただきます。" } },
       { "@type": "Question", "name": "売店の営業時間は？", "acceptedAnswer": { "@type": "Answer", "text": "9:00〜17:30（季節延長営業あり）。" } },
@@ -279,7 +279,7 @@ const categories = [
       <div class="py-6">
         <p class="font-semibold text-zinc-800">Q. BBQはできますか？</p>
         <p class="mt-3 text-sm leading-loose text-zinc-600">
-          できます。ライトフォレストは全サイトで焚き火台使用可、ソロ区画3〜11番と区画Cは直火も可能です。ディープフォレストは全面直火可能。食材はお持ち込みください。
+          できます。ライトフォレストは全サイトで焚き火台使用可。直火は直火エリアで可能です。食材はお持ち込みください。
         </p>
       </div>
 
@@ -325,7 +325,7 @@ const categories = [
       <div class="py-6">
         <p class="font-semibold text-zinc-800">Q. 直火はできますか？</p>
         <p class="mt-3 text-sm leading-loose text-zinc-600">
-          オートサイトは焚き火台使用。区画サイトC・ソロ区画3〜11番は直火可能です。
+          直火エリアで可能です。区画サイトC・ソロ区画3〜11番が直火エリア、オートサイトは焚き火台使用となります。
         </p>
       </div>
 
@@ -357,7 +357,7 @@ const categories = [
       <div class="py-6">
         <p class="font-semibold text-zinc-800">Q. 直火はできますか？</p>
         <p class="mt-3 text-sm leading-loose text-zinc-600">
-          <strong class="text-zinc-800">全面直火可能</strong>です。ただし火消し壺の持参が必須（受付で500円レンタルあり）、立木の枯れ枝・積んである丸太の使用は厳禁です。
+          直火エリアで可能です。ただし火消し壺の持参が必須（受付で500円レンタルあり）、立木の枯れ枝・積んである丸太の使用は厳禁です。
         </p>
       </div>
 
