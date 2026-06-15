@@ -210,7 +210,6 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
           <p class="text-xs tracking-[0.12em] text-zinc-400 uppercase">Advisory</p>
           <p class="mt-0.5 text-sm font-medium text-zinc-700">おいらの天気解説</p>
           <p id="a1-advisory-short" class="mt-2 text-sm leading-relaxed text-zinc-700"></p>
-          <p id="a1-advisory-weekly" class="mt-1 text-sm text-zinc-600"></p>
           <p class="mt-3 text-right text-[11px] text-zinc-400">気象庁の予報をもとにおいらが解説しています。</p>
         </div>
 
@@ -218,6 +217,15 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
         <p class="mt-4 mb-3 text-sm text-zinc-600">週間</p>
         <div id="a1-weekly" class="flex gap-2 overflow-x-auto pb-2">
           {/* JSで weekly[1..] を描画 */}
+        </div>
+
+        {/* weekly 解説テキスト。advisory.weekly.body をクライアント取得して流し込む。
+            null/空 時は非表示のまま（静かに非挿入）。週間予報の地続き。 */}
+        <div id="a1-weekly-advisory" class="mt-4 border-l-4 border-zinc-300 py-2 pl-4" hidden>
+          <p class="text-xs tracking-[0.12em] text-zinc-400 uppercase">Weekly Advisory</p>
+          <p class="mt-0.5 text-sm font-medium text-zinc-700">おいらの週間天気解説</p>
+          <p id="a1-weekly-advisory-body" class="mt-2 text-sm leading-relaxed text-zinc-700"></p>
+          <p id="a1-weekly-advisory-note" class="mt-3 text-right text-[11px] text-zinc-400"></p>
         </div>
       </section>
 
@@ -623,6 +631,26 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
         advisoryEl.hidden = false;
       } else if (advisoryEl) {
         advisoryEl.hidden = true;
+      }
+
+      // weekly 解説テキスト（advisory.weekly.body。null/空 時は静かに非表示）。
+      // 注記は target_date(YYYY-MM-DD) を「M月D日」に整形（ゼロ埋めなし・時刻省略）。
+      const wkEl   = getEl("a1-weekly-advisory");
+      const wkBody = getEl("a1-weekly-advisory-body");
+      const wkNote = getEl("a1-weekly-advisory-note");
+      const wbody  = advisory?.weekly?.body;
+      if (wkEl && wkBody && typeof wbody === "string" && wbody.trim().length > 0) {
+        wkBody.textContent = wbody.trim();
+        const td = advisory?.weekly?.target_date;
+        if (wkNote) {
+          const m = typeof td === "string" ? td.match(/^(\d{4})-(\d{2})-(\d{2})$/) : null;
+          wkNote.textContent = m
+            ? `気象庁${Number(m[2])}月${Number(m[3])}日発表の予報に基づく`
+            : "気象庁の予報に基づく";
+        }
+        wkEl.hidden = false;
+      } else if (wkEl) {
+        wkEl.hidden = true;
       }
     }
 
