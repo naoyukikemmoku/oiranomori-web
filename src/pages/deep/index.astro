@@ -47,7 +47,7 @@ const experiences = [
   lastUpdated="2026年5月"
 >
   <Fragment slot="head">
-    <script is:inline type="application/ld+json">{JSON.stringify({
+    <script is:inline type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "TouristAttraction",
       "name": "ディープフォレスト（里山パークおいらの森）",
@@ -58,7 +58,7 @@ const experiences = [
         "name": "里山パークおいらの森",
         "url": "https://oiranomori.jp"
       }
-    })}</script>
+    })} />
   </Fragment>
 
   {/* Hero */}

@@ -14,7 +14,7 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
   lastUpdated="2026年6月"
 >
 
-  <script slot="head" is:inline type="application/ld+json">{JSON.stringify({
+  <script slot="head" is:inline type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@type": "WebPage",
     "name": "森のいま | 里山パークおいらの森",
@@ -25,7 +25,7 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
       "name": "里山パークおいらの森",
       "url": "https://oiranomori.jp"
     }
-  })}</script>
+  })} />
 
   <Header />
   <FloatingNav />

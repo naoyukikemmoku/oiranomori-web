@@ -47,7 +47,7 @@ const companies = [
   lastUpdated="2026年5月"
 >
   <Fragment slot="head">
-    <script is:inline type="application/ld+json">{JSON.stringify({
+    <script is:inline type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "Organization",
       "name": "里山パークおいらの森",
@@ -65,7 +65,7 @@ const companies = [
       "telephone": "050-3647-1047",
       "email": "oira@oiranomori.jp",
       "sameAs": ["https://hashimoto1047.co.jp"]
-    })}</script>
+    })} />
   </Fragment>
 
   {/* ページヘッダー */}

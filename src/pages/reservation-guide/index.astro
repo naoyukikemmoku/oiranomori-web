@@ -33,7 +33,7 @@ const steps = [
   lastUpdated="2026年5月"
 >
   <Fragment slot="head">
-    <script is:inline type="application/ld+json">{JSON.stringify({
+    <script is:inline type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@graph": [
         {
@@ -85,7 +85,7 @@ const steps = [
           ]
         }
       ]
-    })}</script>
+    })} />
   </Fragment>
 
   <div class="mb-10 border-b border-zinc-200 pb-8">

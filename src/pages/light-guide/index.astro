@@ -91,7 +91,7 @@ const plans = [
   lastUpdated="2026年5月"
 >
   <Fragment slot="head">
-    <script is:inline type="application/ld+json">{JSON.stringify({
+    <script is:inline type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "WebPage",
       "name": "ライトフォレスト 利用案内 | 里山パークおいらの森",
@@ -102,7 +102,7 @@ const plans = [
         "name": "里山パークおいらの森",
         "url": "https://oiranomori.jp"
       }
-    })}</script>
+    })} />
   </Fragment>
 
   {/* ページ見出し */}

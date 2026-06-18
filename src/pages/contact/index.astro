@@ -4,7 +4,7 @@ import Header from "../../components/Header.astro";
 ---
 <BaseLayout title="お問い合わせ | 里山パークおいらの森" description="予約・施設・アクセスなど、ご不明な点はお気軽に。TEL 050-3647-1047、またはお問い合わせフォームからどうぞ。">
   <Fragment slot="head">
-    <script is:inline type="application/ld+json">{JSON.stringify({
+    <script is:inline type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@graph": [
         {
@@ -35,7 +35,7 @@ import Header from "../../components/Header.astro";
           }
         }
       ]
-    })}</script>
+    })} />
   </Fragment>
   <Header />
   <div class="min-h-screen bg-[#f4f5f2] pt-16 pb-24">

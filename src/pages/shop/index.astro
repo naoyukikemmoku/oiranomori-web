@@ -71,7 +71,7 @@ const bulkSales = [
   lastUpdated="2026年5月"
 >
   <Fragment slot="head">
-    <script is:inline type="application/ld+json">{JSON.stringify({
+    <script is:inline type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "ItemList",
       "name": "おいらの森 売店 取り扱い商品",
@@ -82,7 +82,7 @@ const bulkSales = [
         { "@type": "ListItem", "position": 4, "item": { "@type": "Product", "name": "おが備長炭（3kg）", "description": "火力が強く火持ちの良い備長炭。", "seller": { "@type": "Organization", "name": "里山パークおいらの森" } } },
         { "@type": "ListItem", "position": 5, "item": { "@type": "Product", "name": "CB缶ガス", "description": "IWATANI / SOTO対応のカセットボンベ。", "seller": { "@type": "Organization", "name": "里山パークおいらの森" } } }
       ]
-    })}</script>
+    })} />
   </Fragment>
 
   {/* ページヘッダー */}

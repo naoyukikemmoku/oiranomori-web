@@ -8,7 +8,7 @@ import LpLayout from "../../layouts/LpLayout.astro";
   lastUpdated="2026年5月"
 >
   <Fragment slot="head">
-    <script is:inline type="application/ld+json">{JSON.stringify({
+    <script is:inline type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "Place",
       "name": "里山パークおいらの森",
@@ -28,7 +28,7 @@ import LpLayout from "../../layouts/LpLayout.astro";
       },
       "telephone": "050-3647-1047",
       "hasMap": "https://maps.google.com/maps?q=里山パークおいらの森+栃木県那須烏山市福岡1047"
-    })}</script>
+    })} />
   </Fragment>
 
   {/* ページタイトル */}

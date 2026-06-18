@@ -8,7 +8,7 @@ import LpLayout from "../../layouts/LpLayout.astro";
   lastUpdated="2026年5月"
 >
   <Fragment slot="head">
-    <script is:inline type="application/ld+json">{JSON.stringify({
+    <script is:inline type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "VolunteerOpportunity",
       "name": "オイラーズ（OIRAS）— 里山キャンプ場の仲間",
@@ -27,7 +27,7 @@ import LpLayout from "../../layouts/LpLayout.astro";
           "addressCountry": "JP"
         }
       }
-    })}</script>
+    })} />
   </Fragment>
 
   {/* Hero */}

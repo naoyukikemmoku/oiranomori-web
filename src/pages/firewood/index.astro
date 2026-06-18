@@ -22,7 +22,7 @@ const stars = (n: number) => "★".repeat(n) + "☆".repeat(5 - n);
   lastUpdated="2026年5月"
 >
   <Fragment slot="head">
-    <script is:inline type="application/ld+json">{JSON.stringify({
+    <script is:inline type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "ItemList",
       "name": "おいらの薪 — 樹種別ラインナップ",
@@ -34,7 +34,7 @@ const stars = (n: number) => "★".repeat(n) + "☆".repeat(5 - n);
         { "@type": "ListItem", "position": 5, "item": { "@type": "Product", "name": "ヒノキ薪", "description": "燃えやすいがスギより長持ち。割った瞬間に広がる爽やかな香りは、準備の時間を豊かにします。", "offers": { "@type": "Offer", "price": "770", "priceCurrency": "JPY", "availability": "https://schema.org/InStock", "seller": { "@type": "Organization", "name": "里山パークおいらの森" } } } },
         { "@type": "ListItem", "position": 6, "item": { "@type": "Product", "name": "薪セルフ量り売り（広葉樹ミックス）", "description": "好きな薪を、必要な分だけ。少量からでもご購入いただけます。", "offers": { "@type": "Offer", "price": "100", "priceCurrency": "JPY", "availability": "https://schema.org/InStock", "seller": { "@type": "Organization", "name": "里山パークおいらの森" } } } }
       ]
-    })}</script>
+    })} />
   </Fragment>
 
   <!-- Hero -->

@@ -119,7 +119,7 @@ const returnRules: { title: string; body?: string; items?: string[] }[] = [
   lastUpdated="2026年5月"
 >
   <Fragment slot="head">
-    <script is:inline type="application/ld+json">{JSON.stringify({
+    <script is:inline type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "ItemList",
       "name": "おいらの森 レンタル用品",
@@ -131,7 +131,7 @@ const returnRules: { title: string; body?: string; items?: string[] }[] = [
         { "@type": "ListItem", "position": 5, "item": { "@type": "Product", "name": "Coleman ファイアーディスク（焚き火台）", "offers": { "@type": "Offer", "price": "800", "priceCurrency": "JPY", "seller": { "@type": "Organization", "name": "里山パークおいらの森" } } } },
         { "@type": "ListItem", "position": 6, "item": { "@type": "Product", "name": "薪ストーブ（冬期限定）", "offers": { "@type": "Offer", "price": "1800", "priceCurrency": "JPY", "seller": { "@type": "Organization", "name": "里山パークおいらの森" } } } }
       ]
-    })}</script>
+    })} />
   </Fragment>
 
   {/* ページヘッダー */}
