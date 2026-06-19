@@ -29,6 +29,7 @@ const categories = [
       { "@type": "Question", "name": "予約の内容を変更したい。", "acceptedAnswer": { "@type": "Answer", "text": "軽微な変更（人数・車台数）は当日清算で対応します。サイト追加は新規予約としてお手続きください。日程変更やサイト数の減少は、一度キャンセルしてから再予約、またはお電話でご相談ください。" } },
       { "@type": "Question", "name": "キャンセルしたい。", "acceptedAnswer": { "@type": "Answer", "text": "予約確認メールに記載のリンクからキャンセル手続きができます。当日キャンセルのみキャンセル料100%を申し受けます（それ以前は無料）。無断キャンセルは100%請求となります。" } },
       { "@type": "Question", "name": "予約日を間違えた。", "acceptedAnswer": { "@type": "Answer", "text": "気づいた時点でキャンセルし、正しい日程で再予約してください。当日扱いになる前であればキャンセル料はかかりません。間に合わない場合はすぐにお電話ください。" } },
+      { "@type": "Question", "name": "支払い方法は？ キャッシュレス決済は使えますか？", "acceptedAnswer": { "@type": "Answer", "text": "お支払いは現地のみです（事前のオンライン決済はありません）。クレジットカード、電子マネー（交通系IC・iD・QUICPay）、QRコード決済（PayPay・楽天ペイ・au PAY・d払い・メルペイ 等）、現金に対応しています。" } },
       { "@type": "Question", "name": "チェックイン・チェックアウトの時間は？", "acceptedAnswer": { "@type": "Answer", "text": "チェックイン 12:00〜17:00 / チェックアウト 12:00 です。17時以降のチェックイン・合流・夜間の出入りはできません。" } },
       { "@type": "Question", "name": "アーリーチェックインはできますか？", "acceptedAnswer": { "@type": "Answer", "text": "エリアに余裕がある場合に限り、9:00から無料でアーリーチェックインが可能です。前日までにお問い合わせフォームまたはお電話よりご連絡ください。" } },
       { "@type": "Question", "name": "早朝にチェックアウトしたい。", "acceptedAnswer": { "@type": "Answer", "text": "6:00前のチェックアウトはできません（ディープフォレストは7:00前不可）。事前にご相談ください。" } },
@@ -142,6 +143,16 @@ const categories = [
         <p class="font-semibold text-zinc-800">Q. 予約日を間違えた。</p>
         <p class="mt-3 text-sm leading-loose text-zinc-600">
           気づいた時点でキャンセルし、正しい日程で再予約してください。当日扱いになる前であればキャンセル料はかかりません。間に合わない場合はすぐにお電話ください。
+        </p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. 支払い方法は？ キャッシュレス決済は使えますか？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          お支払いは現地のみです（事前のオンライン決済はありません）。クレジットカード、電子マネー（交通系IC・iD・QUICPay）、QRコード決済（PayPay・楽天ペイ・au PAY・d払い・メルペイ 等）、現金に対応しています。
+        </p>
+        <p class="mt-2 text-sm">
+          <a href="/policy/" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">対応ブランドの詳細（特定商取引法表記）→</a>
         </p>
       </div>
 
