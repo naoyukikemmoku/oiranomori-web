@@ -7,10 +7,12 @@ const {
   description = "栃木県那須烏山の里山にある『里山パークおいらの森』。100年先の森を育てながら、森で遊び、森に泊まる体験型キャンプ場です。",
   noindex = false,
   ogImage = "https://oiranomori.jp/images/lp/hero.jpg",
+  ogType = "website",
   lastUpdated,
 } = Astro.props;
 
 const BASE_URL = "https://oiranomori.jp";
+const canonicalUrl = BASE_URL + Astro.url.pathname;
 const breadcrumbName = title.includes(" | ") ? title.split(" | ")[0].trim() : title;
 
 const segmentLabels: Record<string, string> = {
@@ -72,10 +74,11 @@ const breadcrumbJson = pathSegments.length > 0 ? JSON.stringify({
     />
     <title>{title}</title>
     <!-- OGP -->
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description ?? ""} />
     <meta property="og:image" content={ogImage} />
+    <meta property="og:url" content={canonicalUrl} />
     <meta property="og:site_name" content="Satoyama Park Oira no Mori" />
     <meta property="og:locale" content="ja_JP" />
     <!-- Twitter Card -->
@@ -83,7 +86,7 @@ const breadcrumbJson = pathSegments.length > 0 ? JSON.stringify({
     <meta name="twitter:site" content="@oiranomori" />
     <meta name="twitter:image" content={ogImage} />
     <!-- canonical -->
-    <link rel="canonical" href={Astro.url.href} />
+    <link rel="canonical" href={canonicalUrl} />
     {noindex && <meta name="robots" content="noindex,nofollow" />}
     <!-- BreadcrumbList -->
     {breadcrumbJson && <script is:inline type="application/ld+json" set:html={breadcrumbJson} />}
