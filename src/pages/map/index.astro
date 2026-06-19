@@ -1,46 +1,71 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
 import Header from "../../components/Header.astro";
 import spotsRaw from "../../data/spots.json";
+import BaseLayout from "../../layouts/BaseLayout.astro";
 
 const API_KEY = import.meta.env.PUBLIC_GMAPS_API_KEY ?? "";
-const MAP_ID  = import.meta.env.PUBLIC_GMAPS_MAP_ID  ?? "";
+const MAP_ID = import.meta.env.PUBLIC_GMAPS_MAP_ID ?? "";
 
 const SURROUND_CATS = [
-  { key: "food",        label: "食事" },
-  { key: "bath",        label: "お風呂" },
-  { key: "shopping",    label: "買い物" },
-  { key: "sightseeing", label: "観光" },
-  { key: "emergency",   label: "緊急・医療" },
+	{ key: "food", label: "食事" },
+	{ key: "bath", label: "お風呂" },
+	{ key: "shopping", label: "買い物" },
+	{ key: "sightseeing", label: "観光" },
+	{ key: "emergency", label: "緊急・医療" },
 ] as const;
 
-type Spot        = { id: string; name: string; lat: number; lng: number; comment: string; status?: string };
-type CampSite    = { id: string; name: string; lat: number; lng: number; desc: string; size?: string };
-type FacilityPin = { id: string; name: string; lat: number; lng: number; desc: string };
+type Spot = {
+	id: string;
+	name: string;
+	lat: number;
+	lng: number;
+	comment: string;
+	status?: string;
+};
+type CampSite = {
+	id: string;
+	name: string;
+	lat: number;
+	lng: number;
+	desc: string;
+	size?: string;
+};
+type FacilityPin = {
+	id: string;
+	name: string;
+	lat: number;
+	lng: number;
+	desc: string;
+};
 
-const homeSpot = (spotsRaw as any).home as { id: string; name: string; lat: number; lng: number; comment: string } | undefined;
+const homeSpot = (spotsRaw as any).home as
+	| { id: string; name: string; lat: number; lng: number; comment: string }
+	| undefined;
 
 // Surround spots
 const surroundSpots: Record<string, Spot[]> = {};
 for (const cat of SURROUND_CATS) {
-  const raw = ((spotsRaw as any)[cat.key] as Spot[]) ?? [];
-  surroundSpots[cat.key] = raw.filter((s) => s.name !== "" && s.lat !== 0 && s.lng !== 0);
+	const raw = ((spotsRaw as any)[cat.key] as Spot[]) ?? [];
+	surroundSpots[cat.key] = raw.filter(
+		(s) => s.name !== "" && s.lat !== 0 && s.lng !== 0,
+	);
 }
 
 // Camp sites
-const autoSites  = ((spotsRaw as any).auto  as CampSite[])  ?? [];
-const blockSites = ((spotsRaw as any).block as CampSite[])  ?? [];
-const soloSites  = ((spotsRaw as any).solo  as CampSite[])  ?? [];
+const autoSites = ((spotsRaw as any).auto as CampSite[]) ?? [];
+const blockSites = ((spotsRaw as any).block as CampSite[]) ?? [];
+const soloSites = ((spotsRaw as any).solo as CampSite[]) ?? [];
 const lightFacilities = ((spotsRaw as any).light as FacilityPin[]) ?? [];
-const powerFacilities = ((spotsRaw as any).facility_power as FacilityPin[]) ?? [];
+const powerFacilities =
+	((spotsRaw as any).facility_power as FacilityPin[]) ?? [];
 
-const surroundJson    = JSON.stringify(surroundSpots);
-const homeJson        = JSON.stringify(homeSpot ?? null);
-const autoJson        = JSON.stringify(autoSites);
-const blockJson       = JSON.stringify(blockSites);
-const soloJson        = JSON.stringify(soloSites);
-const lightFacJson    = JSON.stringify(lightFacilities);
-const powerFacJson    = JSON.stringify(powerFacilities);
+const surroundJson = JSON.stringify(surroundSpots);
+const homeJson = JSON.stringify(homeSpot ?? null);
+const autoJson = JSON.stringify(autoSites);
+const blockJson = JSON.stringify(blockSites);
+const soloJson = JSON.stringify(soloSites);
+const lightFacJson = JSON.stringify(lightFacilities);
+const powerFacJson = JSON.stringify(powerFacilities);
 ---
 
 <BaseLayout
@@ -76,7 +101,7 @@ const powerFacJson    = JSON.stringify(powerFacilities);
   </Fragment>
 
   <Header />
-  <h1 class="sr-only">場内・周辺マップ | 里山パークおいらの森</h1>
+  <h1 class="sr-only">場内・周辺マップ</h1>
 
   <main id="map-main">
 
