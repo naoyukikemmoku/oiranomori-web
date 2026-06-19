@@ -74,6 +74,7 @@ const articleSchema = article
   title={article ? `${article.title} | 里山パークおいらの森` : "今日のおいらの森 | 里山パークおいらの森"}
   description={article ? (paragraphs[0] ?? article.title).slice(0, 120) : "おいらの森の今日の記録。"}
   ogImage={ogImage}
+  ogType="article"
 >
   {articleSchema && (
     <script is:inline type="application/ld+json" slot="head" set:html={JSON.stringify(articleSchema)} />
