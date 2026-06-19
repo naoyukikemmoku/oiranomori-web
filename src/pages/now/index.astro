@@ -467,7 +467,7 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
   </main>
 
   <script>
-    import { iconUrl } from "../../lib/weatherIcon";
+    import { iconSvg } from "../../lib/weatherIcon";
     import { getKoyomi, getSunTimes, getMoonAge, moonPhaseSvg } from "../../lib/koyomi";
 
     // ════════════════════════════════════════════════════════════
@@ -503,22 +503,25 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
     const show = (id: string) => { const e = getEl(id); if (e) e.hidden = false; };
     const setText = (id: string, v: string) => { const e = getEl(id); if (e) e.textContent = v; };
 
-    // 自前天気アイコン（icon_key → 自前 SVG）。自前 SVG は currentColor 単色設計のため
-    // CSS mask で描き、コンテナの color（既存の text-zinc 系）で着色する。
-    // icon_key=null（未知コード）は null を返し、呼び出し側でアイコンを描かない（従来の null 耐性を踏襲）。
+    // 自前天気アイコン（icon_key → 同梱 SVG をインライン展開）。自前 SVG は currentColor
+    // 単色設計のため、親の color（既存の text-zinc 系）を継承してネイティブに着色される。
+    // 同一バンドル＝CORS 無関係・ブラウザ差なし。dev 目視がそのまま本番挙動になる。
+    // icon_key=null（未知/未取り込み）は null を返し、アイコンを描かない（従来の null 耐性を踏襲）。
     function iconFromKey(iconKey: string | null | undefined, size = 36): HTMLElement | null {
-      const url = iconUrl(iconKey);
-      if (!url) return null;
+      const svg = iconSvg(iconKey);
+      if (!svg) return null;
       const span = document.createElement("span");
-      span.className = "mx-auto";
-      span.style.display = "inline-block";
+      span.className = "inline-flex items-center justify-center";
       span.style.width = `${size}px`;
       span.style.height = `${size}px`;
-      span.style.backgroundColor = "currentColor"; // 親の color で着色
-      span.style.webkitMaskImage = span.style.maskImage = `url(${url})`;
-      (span.style as any).webkitMaskRepeat = span.style.maskRepeat = "no-repeat";
-      (span.style as any).webkitMaskPosition = span.style.maskPosition = "center";
-      (span.style as any).webkitMaskSize = span.style.maskSize = "contain";
+      span.style.color = "currentColor"; // 親のテキスト色を継承して着色
+      span.innerHTML = svg;
+      const el = span.querySelector("svg");
+      if (el) {
+        el.setAttribute("width", String(size));
+        el.setAttribute("height", String(size));
+        (el as SVGElement).style.display = "block";
+      }
       span.setAttribute("aria-hidden", "true");
       return span;
     }
