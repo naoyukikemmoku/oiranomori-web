@@ -85,7 +85,7 @@ export const siteNav: SiteNavGroup[] = [
 		items: [
 			{ label: "アクセス", href: "/access/" },
 			{ label: "周辺案内", href: "/map/?view=food" },
-			{ label: "森のいま", href: "/now/" },
+			{ label: "天気・気温", href: "/now/" },
 			{ label: "今日のおいらの森", href: "/forest-daily/" },
 			{ label: "お知らせ", href: "/news/" },
 			{ label: "お問い合わせ", href: "/contact/" },

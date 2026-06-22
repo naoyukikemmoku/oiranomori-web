@@ -1,7 +1,7 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import Header from "../../components/Header.astro";
 import FloatingNav from "../../components/FloatingNav.astro";
+import Header from "../../components/Header.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
 
 // ライブ中の videoID は実行時に livecam.php から取得して埋め込む（ビルド時 fetch 禁止）。
 // videoID をここに直書きしないこと（配信を作り直すと埋め込みが切れるため）。
@@ -9,7 +9,7 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
 ---
 
 <BaseLayout
-  title="森のいま | 里山パークおいらの森"
+  title="現地の天気・気温・予報 | 里山パークおいらの森"
   description="おいらの森の今の天気・気象など現地情報をお知らせ。直近予報・周辺5地点の比較・警報注意報・現地センサーの現況を、キャンプ直前の準備に活用してください。"
   lastUpdated="2026年6月"
 >
@@ -17,7 +17,7 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
   <script slot="head" is:inline type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@type": "WebPage",
-    "name": "森のいま | 里山パークおいらの森",
+    "name": "現地の天気・気温・予報 | 里山パークおいらの森",
     "description": "おいらの森の今の天気・気象など現地情報をお知らせ。直近予報・周辺5地点の比較・警報注意報・現地センサーの現況を、キャンプ直前の準備に活用してください。",
     "url": "https://oiranomori.jp/now/",
     "isPartOf": {
@@ -37,7 +37,7 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
       <div class="mx-auto flex max-w-6xl items-center justify-between gap-4">
         <div>
           <p class="text-[11px] tracking-[0.28em] text-zinc-400 uppercase">Forest Now</p>
-          <h1 class="mt-1 text-3xl font-semibold tracking-tight text-zinc-900">森のいま</h1>
+          <h1 class="mt-1 text-3xl font-semibold tracking-tight text-zinc-900">森の今の天気・気温・予報</h1>
           <p class="mt-1 text-xs text-zinc-500">おいら監修｜現地センサーと周辺観測をもとに構築</p>
           <a
             href="/forest-daily/"
