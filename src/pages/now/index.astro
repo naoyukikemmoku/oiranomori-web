@@ -57,7 +57,7 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
     </div>
 
     {/* ── セクションナビ（ヘッダー直下に sticky） ────────────── */}
-    <nav class="sticky top-[var(--header-offset)] z-40 border-b border-zinc-200 bg-white/95 backdrop-blur">
+    <nav class="sticky top-0 z-40 border-b border-zinc-200 bg-white/95 backdrop-blur">
       <div class="mx-auto flex max-w-6xl overflow-x-auto px-5">
         {[
           { href: "#local",    label: "現地" },
@@ -79,7 +79,7 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
     <div class="mx-auto max-w-6xl px-5">
 
       {/* ═══ A4：現地の今（センサーのみ。ライブカメラは最下部 #livecam へ分離） ═══ */}
-      <section id="local" class="scroll-mt-[calc(var(--header-offset)+3.5rem)] py-6">
+      <section id="local" class="scroll-mt-[3.5rem] py-6">
         <p class="text-[11px] tracking-[0.24em] text-zinc-400 uppercase">Local Now</p>
         <h2 class="mt-1 mb-3 text-lg font-semibold text-zinc-800">現地の今</h2>
 
@@ -144,7 +144,7 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
       </section>
 
       {/* ═══ A3：警報・注意報 ═══════════════════════════════════ */}
-      <section id="warning" class="scroll-mt-[calc(var(--header-offset)+3.5rem)] border-t border-zinc-200 py-6">
+      <section id="warning" class="scroll-mt-[3.5rem] border-t border-zinc-200 py-6">
         <p class="text-[11px] tracking-[0.24em] text-zinc-400 uppercase">Warning / Advisory</p>
         <h2 class="mt-1 mb-3 text-lg font-semibold text-zinc-800">警報・注意報（那須烏山市）</h2>
         <div id="a3-warnings" class="text-sm text-zinc-700">
@@ -162,7 +162,7 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
       </section>
 
       {/* ═══ A1：直近予報＋装備テキスト ═══════════════════════ */}
-      <section id="forecast" class="scroll-mt-[calc(var(--header-offset)+3.5rem)] border-t border-zinc-200 py-6">
+      <section id="forecast" class="scroll-mt-[3.5rem] border-t border-zinc-200 py-6">
         <p class="text-[11px] tracking-[0.24em] text-zinc-400 uppercase">Forecast</p>
         <h2 class="mt-1 mb-3 text-lg font-semibold text-zinc-800">直近予報</h2>
 
@@ -249,7 +249,7 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
 
       {/* ═══ A5：推移グラフ（過去ゾーン） ═══════════════════════ */}
       {/* 取得失敗時はセクションごと非表示（他セクションは壊さない） */}
-      <section id="trend" class="scroll-mt-[calc(var(--header-offset)+3.5rem)] border-t border-zinc-200 py-6" hidden>
+      <section id="trend" class="scroll-mt-[3.5rem] border-t border-zinc-200 py-6" hidden>
         <div class="flex flex-wrap items-start justify-between gap-y-3 gap-x-4">
           <div>
             <p class="text-[11px] tracking-[0.24em] text-zinc-400 uppercase">Trend</p>
@@ -306,7 +306,7 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
       </section>
 
       {/* ═══ A6：補助タブ（衛星・天気図・台風） ══════════════════ */}
-      <section id="aux" class="scroll-mt-[calc(var(--header-offset)+3.5rem)] border-t border-zinc-200 py-6">
+      <section id="aux" class="scroll-mt-[3.5rem] border-t border-zinc-200 py-6">
 
         {/* 折りたたみトグル */}
         <button
