@@ -34,26 +34,26 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
 
     {/* ページヘッダー */}
     <div class="border-b border-zinc-200 bg-white px-5 py-5">
-      <div class="mx-auto flex max-w-6xl items-center justify-between gap-4">
-        <div>
-          <p class="text-[11px] tracking-[0.28em] text-zinc-400 uppercase">Forest Now</p>
-          <h1 class="mt-1 text-3xl font-semibold tracking-tight text-zinc-900">森の今の天気・気温・予報</h1>
-          <p class="mt-1 text-xs text-zinc-500">おいら監修｜現地センサーと周辺観測をもとに構築</p>
-          <a
-            href="/forest-daily/"
-            class="mt-2 inline-flex items-center gap-1 text-xs tracking-[0.08em] text-zinc-600 underline underline-offset-4 transition hover:text-zinc-900"
-          >今日のおいらの森（日々の記録）→</a>
-        </div>
-        <div class="flex items-center gap-3">
-          <p class="text-xs text-zinc-500">ページを開いた時点の情報です</p>
-          <button
-            id="btn-refresh"
-            class="border border-zinc-300 bg-white px-4 py-2 text-xs tracking-[0.14em] text-zinc-700 transition hover:border-zinc-500 hover:text-zinc-900"
-          >
-            更新
-          </button>
-        </div>
+      <div class="mx-auto max-w-6xl">
+        <p class="text-[11px] tracking-[0.28em] text-zinc-400 uppercase">Forest Now</p>
+        <h1 class="mt-1 text-3xl font-semibold tracking-tight text-zinc-900">森の今の天気・気温・予報</h1>
+        <p class="mt-1 text-xs text-zinc-500">おいら監修｜現地センサーと周辺観測をもとに構築</p>
+        <a
+          href="/forest-daily/"
+          class="mt-2 inline-flex items-center gap-1 text-xs tracking-[0.08em] text-zinc-600 underline underline-offset-4 transition hover:text-zinc-900"
+        >今日のおいらの森（日々の記録）→</a>
       </div>
+    </div>
+
+    {/* 更新ボタン（画面右下固定）。h1 ブロックと独立させ、モバイルでの改行増を防ぐ */}
+    <div class="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-1">
+      <button
+        id="btn-refresh"
+        class="border border-zinc-300 bg-white px-4 py-2 text-xs tracking-[0.14em] text-zinc-700 shadow-md transition hover:border-zinc-500 hover:text-zinc-900"
+      >
+        最新に更新
+      </button>
+      <p class="text-[10px] text-zinc-500 drop-shadow-sm">ページを開いた時点の情報です</p>
     </div>
 
     {/* ── セクションナビ（ヘッダー直下に sticky） ────────────── */}
