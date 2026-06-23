@@ -328,8 +328,8 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
           {/* タブ切替 */}
           <div class="mt-6 flex gap-6 border-b border-zinc-200">
             {[
-              { id: "tab-sat",     label: "衛星" },
-              { id: "tab-wxmap",  label: "天気図" },
+              { id: "tab-wxmap",   label: "天気図" },
+              { id: "tab-sat",     label: "衛星画像" },
               { id: "tab-typhoon", label: "台風" },
             ].map(({ id, label }) => (
               <button
@@ -342,7 +342,7 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
           </div>
 
           {/* ── 衛星パネル ── */}
-          <div id="panel-sat" class="aux-panel pt-6">
+          <div id="panel-sat" class="aux-panel hidden pt-6">
             <div id="sat2-wrap" class="relative overflow-hidden bg-zinc-900" style="aspect-ratio:1024/768">
               <img
                 id="sat2-img"
@@ -372,7 +372,7 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
           </div>
 
           {/* ── 天気図パネル ── */}
-          <div id="panel-wxmap" class="aux-panel hidden pt-6">
+          <div id="panel-wxmap" class="aux-panel pt-6">
             {/* モード切替 */}
             <div class="mb-4 flex gap-4">
               <button id="wxmap-mode-a" class="wxmap-mode text-sm tracking-[0.14em] text-zinc-700" data-mode="a">直近3日（3時間ごと）</button>
@@ -1326,8 +1326,8 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
     tabs.forEach((t) => {
       t.addEventListener("click", () => switchTab(t.dataset.panel!));
     });
-    // 初期アクティブ
-    switchTab("panel-sat");
+    // 初期アクティブ（補助セクションを開いたとき最初に出るのは天気図）
+    switchTab("panel-wxmap");
 
     // ════════════════════════════════════════════════════════
     // 衛星タブ
