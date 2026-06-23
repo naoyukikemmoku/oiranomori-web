@@ -1,76 +1,57 @@
-import type { MicroCMSDate } from "microcms-js-sdk";
-import { microcms } from "./microcms";
+// forest-daily（今日のおいらの森）データ層。
+// 旧: microCMS＋日付別SSG。現: OirasApp 公開read API を client-fetch する鮮度 widget。
+// microCMS 依存は除去済み（microcms.ts 本体は oshirase が継続使用するため残置）。
 
 export type ForestDaily = {
+	id: string;
 	title: string;
 	body: string;
 	postDate: string;
 	postType: string[];
 	imageUrl?: string;
-	videoUrl?: string;
 	tempC?: number;
 	maxTempC?: number;
 	minTempC?: number;
 	humidity?: number;
 	condition?: string;
-} & MicroCMSDate;
+	url?: string;
+};
 
-const ENDPOINT = "forest-daily";
-const FIELDS =
-	"id,title,body,postDate,postType,imageUrl,videoUrl,tempC,maxTempC,minTempC,humidity,condition,publishedAt,updatedAt";
+// OirasApp 公開 read API（GET限定・無認証・読み取り専用。CORS は oiranomori.jp 許可済み）。
+const API_BASE = "https://oiranomori.com/app/sns/api/forest_daily.php";
 
-export async function getForestDailyList(limit = 20, offset = 0) {
-	if (!microcms) throw new Error("microCMS is not configured");
-	return microcms.getList<ForestDaily>({
-		endpoint: ENDPOINT,
-		queries: { limit, offset, orders: "-postDate", fields: FIELDS },
-	});
+// 一覧取得。ok:false / 取得失敗時は呼び出し側で縮退できるよう throw する。
+export async function fetchForestDailyList(
+	limit = 10,
+	offset = 0,
+): Promise<{ contents: ForestDaily[]; totalCount: number }> {
+	const url = `${API_BASE}?limit=${limit}&offset=${offset}`;
+	const r = await fetch(url, { cache: "default" });
+	if (!r.ok) throw new Error(`http:${r.status}`);
+	const d = await r.json();
+	if (!d.ok) throw new Error("ok:false");
+	return {
+		contents: Array.isArray(d.contents) ? d.contents : [],
+		totalCount: typeof d.totalCount === "number" ? d.totalCount : 0,
+	};
 }
 
-export async function getAllForestDailyIds(): Promise<string[]> {
-	if (!microcms) throw new Error("microCMS is not configured");
-
-	const ids: string[] = [];
-	const limit = 100;
-	let offset = 0;
-
-	while (true) {
-		const res = await microcms.getList<ForestDaily>({
-			endpoint: ENDPOINT,
-			queries: { limit, offset, fields: "id" },
-		});
-		ids.push(...res.contents.map((c) => c.id));
-		if (ids.length >= res.totalCount) break;
-		offset += limit;
-	}
-
-	return ids;
+// 個別取得。200/ok なら item、404/ok:false なら null。HTTP/パース失敗は throw。
+export async function fetchForestDailyDetail(
+	id: string,
+): Promise<ForestDaily | null> {
+	const url = `${API_BASE}?id=${encodeURIComponent(id)}`;
+	const r = await fetch(url, { cache: "default" });
+	if (r.status === 404) return null;
+	if (!r.ok) throw new Error(`http:${r.status}`);
+	const d = await r.json();
+	if (!d.ok) return null;
+	return (d.content as ForestDaily) ?? null;
 }
 
-export async function getForestDailyDetail(id: string) {
-	if (!microcms) throw new Error("microCMS is not configured");
-	return microcms.get<ForestDaily>({ endpoint: ENDPOINT, contentId: id });
-}
-
-export function getOgImage(
-	item: Pick<ForestDaily, "imageUrl" | "videoUrl">,
-): string {
-	if (item.imageUrl) return item.imageUrl;
-	if (item.videoUrl) {
-		const m = item.videoUrl.match(
-			/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/,
-		);
-		if (m) return `https://img.youtube.com/vi/${m[1]}/maxresdefault.jpg`;
-	}
-	return "https://oiranomori.jp/images/lp/hero.jpg";
-}
-
-export function extractYouTubeId(url?: string): string | null {
-	if (!url) return null;
-	const m = url.match(
-		/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/,
-	);
-	return m ? m[1] : null;
+// imageUrl 欠落時は hero にフォールバック（videoUrl は API 非提供のため分岐なし）。
+export function getOgImage(item: Pick<ForestDaily, "imageUrl">): string {
+	return item.imageUrl ?? "https://oiranomori.jp/images/lp/hero.jpg";
 }
 
 export function formatPostDate(str: string): string {

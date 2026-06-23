@@ -1,56 +1,41 @@
 ---
 import Header from "../../components/Header.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import type { ForestDaily } from "../../lib/forestDaily";
-import {
-	formatPostDate,
-	getForestDailyList,
-	getOgImage,
-} from "../../lib/forestDaily";
 
-const LIMIT = 20;
-let items: ForestDaily[] = [];
-let totalCount = 0;
+const TITLE = "今日のおいらの森 | 里山パークおいらの森";
+const DESCRIPTION =
+	"毎朝、森のいまをお届けします。ライブカメラの朝スチルと気象データから生まれた、おいらの森の日々の記録。";
 
-try {
-	const res = await getForestDailyList(LIMIT, 0);
-	items = res.contents;
-	totalCount = res.totalCount;
-} catch (e) {
-	console.warn("[forest-daily] microCMS 取得失敗", e);
-}
-
-const hasMore = totalCount > LIMIT;
-
-const TYPE_LABEL: Record<string, string> = {
-	daily: "日常",
-	seasonal: "季節",
-	special: "特別",
+// ページ単位 JSON-LD（WebPage）。client-fetch アイテムは HTML に無いため
+// Blog/BlogPosting は使わない（不整合回避）。直火は含めない。
+const webPageSchema = {
+	"@context": "https://schema.org",
+	"@type": "WebPage",
+	name: "今日のおいらの森",
+	description: DESCRIPTION,
+	url: "https://oiranomori.jp/forest-daily/",
+	isPartOf: {
+		"@type": "WebSite",
+		name: "里山パークおいらの森",
+		url: "https://oiranomori.jp",
+	},
 };
-
-function typeLabel(types: string[]): string {
-	if (types.includes("special")) return TYPE_LABEL.special;
-	if (types.includes("seasonal")) return TYPE_LABEL.seasonal;
-	return TYPE_LABEL.daily;
-}
-
-function bodySnippet(body: string, len = 80): string {
-	const text = body.replace(/\r?\n/g, " ").trim();
-	return text.length > len ? `${text.slice(0, len)}…` : text;
-}
 ---
 
 <BaseLayout
-  title="今日のおいらの森 | 里山パークおいらの森"
-  description="毎朝、森のいまをお届けします。ライブカメラの朝スチルと気象データから生まれた、おいらの森の日々の記録。"
+  title={TITLE}
+  description={DESCRIPTION}
   ogImage="https://oiranomori.jp/images/lp/hero.jpg"
 >
+  <script is:inline type="application/ld+json" slot="head" set:html={JSON.stringify(webPageSchema)} />
+
   <Header />
 
   <main class="min-h-screen bg-[#f4f5f2] pb-32 pt-[var(--header-offset)]">
     <div class="mx-auto max-w-3xl px-5">
 
-      <div class="pt-10 pb-10">
+      {/* 静的シェル（SEO対象）。一覧ヘッダは常設。個別ビュー時は JS で隠す。 */}
+      <div id="fd-intro" class="pt-10 pb-10">
         <p class="text-xs tracking-[0.28em] text-zinc-400 uppercase">Forest Daily</p>
         <h1 class="mt-3 font-semibold text-zinc-800" style="font-size: clamp(1.4rem, 4vw, 2rem);">
           今日のおいらの森
@@ -60,77 +45,12 @@ function bodySnippet(body: string, len = 80): string {
         </p>
       </div>
 
-      {items.length === 0 ? (
-        <p class="text-sm text-zinc-500">まだ記事がありません。</p>
-      ) : (
-        <ul class="divide-y divide-zinc-300 border-t border-zinc-300">
-          {items.map((item) => {
-            const ogImg = getOgImage(item);
-            const label = typeLabel(item.postType ?? []);
-            const isSpecial =
-              (item.postType ?? []).includes("special") ||
-              (item.postType ?? []).includes("seasonal");
-            return (
-              <li>
-                <a
-                  href={`/forest-daily/${item.id}/`}
-                  class="group flex gap-4 py-6 -mx-2 px-2 transition hover:bg-zinc-100/60"
-                >
-                  <div
-                    class="relative shrink-0 overflow-hidden bg-zinc-200"
-                    style="width:88px;height:66px;"
-                  >
-                    <img
-                      src={ogImg}
-                      alt=""
-                      width="88"
-                      height="66"
-                      loading="lazy"
-                      class="h-full w-full object-cover transition duration-300 group-hover:scale-105"
-                    />
-                    {isSpecial && (
-                      <span class="absolute bottom-1 left-1 bg-[color:var(--forest-700)] px-1.5 py-0.5 text-[10px] tracking-[0.1em] text-zinc-200">
-                        {label}
-                      </span>
-                    )}
-                  </div>
+      {/* マウント点。client-fetch で一覧／個別を描画。初期は読み込み中。 */}
+      <div id="fd-app" data-state="loading">
+        <p class="py-8 text-sm text-zinc-400">読み込み中…</p>
+      </div>
 
-                  <div class="min-w-0 flex-1">
-                    <div class="mb-1.5 flex flex-wrap items-center gap-2">
-                      <time
-                        class="text-xs tracking-[0.12em] text-zinc-400"
-                        datetime={item.postDate}
-                      >
-                        {formatPostDate(item.postDate)}
-                      </time>
-                      {item.condition && (
-                        <span class="text-xs text-zinc-500">{item.condition}</span>
-                      )}
-                      {item.tempC !== undefined && item.tempC !== null && (
-                        <span class="text-xs text-zinc-400">{item.tempC}℃</span>
-                      )}
-                    </div>
-                    <p class="text-sm font-medium leading-snug text-zinc-800 group-hover:text-[color:var(--forest-600)]">
-                      {item.title}
-                    </p>
-                    <p class="mt-1 text-xs leading-relaxed text-zinc-500 line-clamp-2">
-                      {bodySnippet(item.body)}
-                    </p>
-                  </div>
-                </a>
-              </li>
-            );
-          })}
-        </ul>
-      )}
-
-      {hasMore && (
-        <div class="mt-12 border-t border-zinc-300 pt-8 text-center">
-          <p class="text-xs text-zinc-400">全{totalCount}件中 {LIMIT}件を表示しています</p>
-          <p class="mt-2 text-xs text-zinc-400">バックナンバーは順次追加予定です。</p>
-        </div>
-      )}
-
+      {/* 末尾 Reserve 導線（静的・常設） */}
       <div class="mt-16 border-t border-zinc-200 pt-10 pb-4">
         <p class="mb-1 text-xs tracking-[0.2em] text-zinc-400 uppercase">Reserve</p>
         <p class="text-sm leading-relaxed text-zinc-600">
@@ -159,4 +79,428 @@ function bodySnippet(body: string, len = 80): string {
 
     </div>
   </main>
+
+  <script>
+    import {
+      bodyToParagraphs,
+      fetchForestDailyDetail,
+      fetchForestDailyList,
+      formatPostDate,
+      getOgImage,
+      type ForestDaily,
+    } from "../../lib/forestDaily";
+
+    // ════════════════════════════════════════════════════════════
+    //  forest-daily client-fetch widget
+    //  - ?id= 有無で一覧／個別を分岐
+    //  - マークアップ・Tailwind は旧 SSG（index.astro / [id].astro）踏襲
+    //  - API 由来テキストは textContent でセット（XSS 回避・innerHTML 不使用）
+    //  - fetch 失敗・ok:false はプレースホルダに倒し、ページ骨格は静的なので保持
+    // ════════════════════════════════════════════════════════════
+
+    const LIST_LIMIT = 20;
+
+    const TYPE_LABEL: Record<string, string> = {
+      daily: "日常",
+      seasonal: "季節",
+      special: "特別",
+    };
+
+    function typeLabel(types: string[]): string {
+      if (types.includes("special")) return TYPE_LABEL.special;
+      if (types.includes("seasonal")) return TYPE_LABEL.seasonal;
+      return TYPE_LABEL.daily;
+    }
+
+    function isSpecialType(types: string[]): boolean {
+      return types.includes("special") || types.includes("seasonal");
+    }
+
+    function bodySnippet(body: string, len = 80): string {
+      const text = body.replace(/\r?\n/g, " ").trim();
+      return text.length > len ? `${text.slice(0, len)}…` : text;
+    }
+
+    const app = document.getElementById("fd-app");
+    const intro = document.getElementById("fd-intro");
+
+    // 小さな DOM ヘルパー（textContent 既定でセット）
+    function el(
+      tag: string,
+      cls?: string,
+      text?: string,
+    ): HTMLElement {
+      const e = document.createElement(tag);
+      if (cls) e.className = cls;
+      if (text !== undefined) e.textContent = text;
+      return e;
+    }
+
+    function svgArrowRight(size = 12): string {
+      return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>`;
+    }
+    function svgArrowLeft(size = 12): string {
+      return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M11 6l-6 6 6 6"/></svg>`;
+    }
+
+    function showPlaceholder(message: string): void {
+      if (!app) return;
+      app.dataset.state = "error";
+      app.replaceChildren();
+      const p = el("p", "py-8 text-sm text-zinc-500", message);
+      app.appendChild(p);
+    }
+
+    // ── 一覧の1行 ───────────────────────────────────────────────
+    function listRow(item: ForestDaily): HTMLElement {
+      const li = document.createElement("li");
+      const a = el(
+        "a",
+        "group flex gap-4 py-6 -mx-2 px-2 transition hover:bg-zinc-100/60",
+      ) as HTMLAnchorElement;
+      a.href = `/forest-daily/?id=${encodeURIComponent(item.id)}`;
+
+      // サムネ
+      const thumbWrap = el("div", "relative shrink-0 overflow-hidden bg-zinc-200");
+      thumbWrap.style.width = "88px";
+      thumbWrap.style.height = "66px";
+      const img = document.createElement("img");
+      img.src = getOgImage(item);
+      img.alt = "";
+      img.width = 88;
+      img.height = 66;
+      img.loading = "lazy";
+      img.className =
+        "h-full w-full object-cover transition duration-300 group-hover:scale-105";
+      thumbWrap.appendChild(img);
+      const types = item.postType ?? [];
+      if (isSpecialType(types)) {
+        const badge = el(
+          "span",
+          "absolute bottom-1 left-1 bg-[color:var(--forest-700)] px-1.5 py-0.5 text-[10px] tracking-[0.1em] text-zinc-200",
+          typeLabel(types),
+        );
+        thumbWrap.appendChild(badge);
+      }
+      a.appendChild(thumbWrap);
+
+      // テキスト列
+      const col = el("div", "min-w-0 flex-1");
+      const meta = el("div", "mb-1.5 flex flex-wrap items-center gap-2");
+      const time = el(
+        "time",
+        "text-xs tracking-[0.12em] text-zinc-400",
+        formatPostDate(item.postDate),
+      );
+      time.setAttribute("datetime", item.postDate);
+      meta.appendChild(time);
+      if (item.condition) {
+        meta.appendChild(el("span", "text-xs text-zinc-500", item.condition));
+      }
+      if (item.tempC !== undefined && item.tempC !== null) {
+        meta.appendChild(el("span", "text-xs text-zinc-400", `${item.tempC}℃`));
+      }
+      col.appendChild(meta);
+      col.appendChild(
+        el(
+          "p",
+          "text-sm font-medium leading-snug text-zinc-800 group-hover:text-[color:var(--forest-600)]",
+          item.title,
+        ),
+      );
+      col.appendChild(
+        el(
+          "p",
+          "mt-1 text-xs leading-relaxed text-zinc-500 line-clamp-2",
+          bodySnippet(item.body),
+        ),
+      );
+      a.appendChild(col);
+
+      li.appendChild(a);
+      return li;
+    }
+
+    // ── 一覧ビュー ───────────────────────────────────────────────
+    async function renderList(): Promise<void> {
+      if (!app) return;
+      let data: { contents: ForestDaily[]; totalCount: number };
+      try {
+        data = await fetchForestDailyList(LIST_LIMIT, 0);
+      } catch (e) {
+        console.warn("[forest-daily] 一覧取得失敗", e);
+        showPlaceholder("いまは読み込めません。時間をおいてお試しください。");
+        return;
+      }
+
+      app.dataset.state = "ready";
+      app.replaceChildren();
+
+      if (data.contents.length === 0) {
+        app.appendChild(el("p", "text-sm text-zinc-500", "まだ記事がありません。"));
+        return;
+      }
+
+      const ul = el("ul", "divide-y divide-zinc-300 border-t border-zinc-300");
+      for (const item of data.contents) ul.appendChild(listRow(item));
+      app.appendChild(ul);
+
+      let loaded = data.contents.length;
+      let totalCount = data.totalCount;
+
+      // もっと見る
+      if (totalCount > loaded) {
+        const moreWrap = el("div", "mt-12 border-t border-zinc-300 pt-8 text-center");
+        const btn = el(
+          "button",
+          "inline-flex items-center gap-2 border border-zinc-400 px-6 py-2.5 text-xs tracking-[0.12em] text-zinc-600 transition hover:border-zinc-700 hover:text-zinc-800",
+          "もっと見る",
+        ) as HTMLButtonElement;
+        btn.type = "button";
+        const count = el(
+          "p",
+          "mt-3 text-xs text-zinc-400",
+          `全${totalCount}件中 ${loaded}件を表示しています`,
+        );
+        moreWrap.appendChild(btn);
+        moreWrap.appendChild(count);
+        app.appendChild(moreWrap);
+
+        btn.addEventListener("click", async () => {
+          btn.disabled = true;
+          btn.textContent = "読み込み中…";
+          try {
+            const next = await fetchForestDailyList(LIST_LIMIT, loaded);
+            for (const item of next.contents) ul.appendChild(listRow(item));
+            loaded += next.contents.length;
+            totalCount = next.totalCount;
+            count.textContent = `全${totalCount}件中 ${loaded}件を表示しています`;
+            if (loaded >= totalCount) {
+              moreWrap.remove();
+            } else {
+              btn.disabled = false;
+              btn.textContent = "もっと見る";
+            }
+          } catch (e) {
+            console.warn("[forest-daily] 追加取得失敗", e);
+            btn.disabled = false;
+            btn.textContent = "もっと見る";
+            count.textContent = "読み込みに失敗しました。もう一度お試しください。";
+          }
+        });
+      }
+    }
+
+    // ── 個別ビュー ───────────────────────────────────────────────
+    async function renderDetail(id: string): Promise<void> {
+      if (!app) return;
+
+      // 個別時は常設の一覧イントロを隠す（記事側にヘッダを持つ）
+      if (intro) intro.hidden = true;
+
+      let article: ForestDaily | null;
+      try {
+        article = await fetchForestDailyDetail(id);
+      } catch (e) {
+        console.warn("[forest-daily] 記事取得失敗", e);
+        renderNotFound("いまは読み込めません。時間をおいてお試しください。");
+        return;
+      }
+
+      if (!article) {
+        renderNotFound("記事が見つかりませんでした。");
+        return;
+      }
+
+      app.dataset.state = "ready";
+      app.replaceChildren();
+
+      // UX用にタイトル更新（SEO非対象）
+      document.title = `${article.title} | 里山パークおいらの森`;
+
+      // 一覧へ戻る（上部）
+      const backTop = el("div", "pt-2 pb-2");
+      const backTopLink = el(
+        "a",
+        "inline-flex items-center gap-1.5 text-xs tracking-[0.12em] text-zinc-400 transition hover:text-zinc-700",
+      ) as HTMLAnchorElement;
+      backTopLink.href = "/forest-daily/";
+      backTopLink.innerHTML = svgArrowLeft();
+      backTopLink.appendChild(document.createTextNode("今日のおいらの森"));
+      backTop.appendChild(backTopLink);
+      app.appendChild(backTop);
+
+      const articleEl = document.createElement("article");
+
+      // ヘッダー
+      const header = document.createElement("header");
+      header.className = "pt-8 pb-8";
+      const time = el(
+        "time",
+        "block text-xs tracking-[0.2em] text-zinc-400 uppercase",
+        formatPostDate(article.postDate),
+      );
+      time.setAttribute("datetime", article.postDate);
+      header.appendChild(time);
+      const h1 = el(
+        "h1",
+        "mt-3 font-semibold leading-snug text-zinc-800",
+        article.title,
+      );
+      h1.style.fontSize = "clamp(1.25rem, 3.5vw, 1.75rem)";
+      header.appendChild(h1);
+      articleEl.appendChild(header);
+
+      // メインビジュアル（imageUrl のみ。videoUrl 非提供＝動画ブロックなし）
+      if (article.imageUrl) {
+        const figure = el("div", "mb-8 overflow-hidden");
+        const img = document.createElement("img");
+        img.src = article.imageUrl;
+        img.alt = `${formatPostDate(article.postDate)}の朝の森`;
+        img.width = 720;
+        img.height = 480;
+        img.loading = "eager";
+        img.className = "w-full object-cover";
+        img.style.maxHeight = "480px";
+        figure.appendChild(img);
+        articleEl.appendChild(figure);
+      }
+
+      // 気象情報
+      const hasWeather =
+        (article.tempC !== undefined && article.tempC !== null) ||
+        (article.maxTempC !== undefined && article.maxTempC !== null) ||
+        (article.minTempC !== undefined && article.minTempC !== null) ||
+        (article.humidity !== undefined && article.humidity !== null) ||
+        !!article.condition;
+
+      if (hasWeather) {
+        const box = el("div", "mb-8 border-l-2 border-zinc-300 pl-4");
+        box.appendChild(
+          el("p", "mb-2 text-[10px] tracking-[0.2em] text-zinc-400 uppercase", "Weather"),
+        );
+        const row = el("div", "flex flex-wrap items-baseline gap-x-5 gap-y-1");
+
+        if (article.condition) {
+          row.appendChild(el("span", "text-sm text-zinc-700", article.condition));
+        }
+        if (article.tempC !== undefined && article.tempC !== null) {
+          const s = el("span", "text-sm text-zinc-600");
+          s.appendChild(el("span", "text-xs text-zinc-400 mr-1", "朝"));
+          s.appendChild(document.createTextNode(`${article.tempC}℃`));
+          row.appendChild(s);
+        }
+        const hasMax = article.maxTempC !== undefined && article.maxTempC !== null;
+        const hasMin = article.minTempC !== undefined && article.minTempC !== null;
+        if (hasMax || hasMin) {
+          const s = el("span", "text-sm text-zinc-600");
+          s.appendChild(el("span", "text-xs text-zinc-400 mr-1", "予想"));
+          s.appendChild(
+            hasMax
+              ? el("span", "text-red-500", `${article.maxTempC}°`)
+              : el("span", "text-zinc-400", "—"),
+          );
+          s.appendChild(el("span", "mx-1 text-zinc-300", "/"));
+          s.appendChild(
+            hasMin
+              ? el("span", "text-blue-500", `${article.minTempC}°`)
+              : el("span", "text-zinc-400", "—"),
+          );
+          row.appendChild(s);
+        }
+        if (article.humidity !== undefined && article.humidity !== null) {
+          row.appendChild(
+            el("span", "text-xs text-zinc-400", `湿度 ${article.humidity}%`),
+          );
+        }
+        box.appendChild(row);
+        articleEl.appendChild(box);
+      }
+
+      // 本文
+      const bodyWrap = el("div", "mb-12 space-y-5");
+      for (const p of bodyToParagraphs(article.body)) {
+        bodyWrap.appendChild(el("p", "text-sm leading-[2.1] text-zinc-700", p));
+      }
+      articleEl.appendChild(bodyWrap);
+
+      // Visit 導線
+      const visit = el("div", "border-t border-zinc-300 pt-10 pb-4");
+      visit.appendChild(
+        el("p", "mb-1 text-xs tracking-[0.2em] text-zinc-400 uppercase", "Visit"),
+      );
+      visit.appendChild(
+        el(
+          "p",
+          "text-sm leading-relaxed text-zinc-600",
+          "実際の森は、もっと静かで、もっと広い。",
+        ),
+      );
+      const visitLinks = el("div", "mt-4 flex flex-wrap gap-3");
+      const reserve = el(
+        "a",
+        "inline-flex items-center gap-2 bg-[color:var(--light-accent)] px-6 py-2.5 text-xs font-semibold tracking-[0.12em] text-white transition hover:opacity-90",
+      ) as HTMLAnchorElement;
+      reserve.href = "https://www.489pro-x.com/ja/s/oiranomori/planlist/";
+      reserve.target = "_blank";
+      reserve.rel = "noopener noreferrer";
+      reserve.appendChild(document.createTextNode("予約する"));
+      reserve.insertAdjacentHTML("beforeend", svgArrowRight());
+      visitLinks.appendChild(reserve);
+      const mapLink = el(
+        "a",
+        "inline-flex items-center gap-2 border border-zinc-400 px-6 py-2.5 text-xs tracking-[0.12em] text-zinc-600 transition hover:border-zinc-700 hover:text-zinc-800",
+        "場内マップ",
+      ) as HTMLAnchorElement;
+      mapLink.href = "/map/";
+      visitLinks.appendChild(mapLink);
+      const nowLink = el(
+        "a",
+        "inline-flex items-center gap-2 border border-zinc-400 px-6 py-2.5 text-xs tracking-[0.12em] text-zinc-600 transition hover:border-zinc-700 hover:text-zinc-800",
+        "いまの天気",
+      ) as HTMLAnchorElement;
+      nowLink.href = "/now/";
+      visitLinks.appendChild(nowLink);
+      visit.appendChild(visitLinks);
+      articleEl.appendChild(visit);
+
+      // 一覧へ戻る（下部）
+      const backBottom = el("div", "mt-12 border-t border-zinc-300 pt-8");
+      const backBottomLink = el(
+        "a",
+        "inline-flex items-center gap-1.5 text-sm tracking-[0.12em] text-zinc-500 transition hover:text-zinc-800",
+      ) as HTMLAnchorElement;
+      backBottomLink.href = "/forest-daily/";
+      backBottomLink.innerHTML = svgArrowLeft(14);
+      backBottomLink.appendChild(document.createTextNode("一覧へ戻る"));
+      backBottom.appendChild(backBottomLink);
+      articleEl.appendChild(backBottom);
+
+      app.appendChild(articleEl);
+    }
+
+    function renderNotFound(message: string): void {
+      if (!app) return;
+      app.dataset.state = "error";
+      app.replaceChildren();
+      const wrap = el("div", "pt-4");
+      wrap.appendChild(el("p", "text-sm text-zinc-500", message));
+      const back = el(
+        "a",
+        "mt-4 inline-block text-xs text-zinc-400 underline underline-offset-4",
+        "一覧へ戻る",
+      ) as HTMLAnchorElement;
+      back.href = "/forest-daily/";
+      wrap.appendChild(back);
+      app.appendChild(wrap);
+    }
+
+    // ── エントリ ───────────────────────────────────────────────
+    const id = new URLSearchParams(location.search).get("id");
+    if (id) {
+      renderDetail(id);
+    } else {
+      renderList();
+    }
+  </script>
 </BaseLayout>
