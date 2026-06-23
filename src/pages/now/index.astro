@@ -467,7 +467,7 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
   </main>
 
   <script>
-    import { iconSvg } from "../../lib/weatherIcon";
+    import { iconSvg, iconColor } from "../../lib/weatherIcon";
     import { getKoyomi, getSunTimes, getMoonAge, moonPhaseSvg } from "../../lib/koyomi";
 
     // ════════════════════════════════════════════════════════════
@@ -514,7 +514,7 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
       span.className = "inline-flex items-center justify-center";
       span.style.width = `${size}px`;
       span.style.height = `${size}px`;
-      span.style.color = "currentColor"; // 親のテキスト色を継承して着色
+      span.style.color = iconColor(iconKey); // 天気カテゴリ別に着色（SVG は currentColor 単色）
       span.innerHTML = svg;
       const el = span.querySelector("svg");
       if (el) {
