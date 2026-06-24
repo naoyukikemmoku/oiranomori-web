@@ -144,7 +144,30 @@ const plans: Array<{
     <a href="#season" class="lp-scroll">Scroll</a>
   </section>
 
-  {/* 2. お知らせ */}
+  {/* 2. 今日のおいらの森（client-fetch widget。取得失敗・0件時は JS でセクションごと非表示） */}
+  <section id="forest-daily-widget" class="py-12 md:py-16 bg-[#f4f5f2]" hidden>
+    <div class="mx-auto max-w-6xl px-4">
+      <p class="text-xs tracking-[0.32em] text-zinc-400">FOREST DAILY</p>
+      <h2 class="mt-3 text-2xl font-semibold leading-snug text-zinc-800 md:text-3xl">
+        今日のおいらの森
+      </h2>
+      <ul id="fd-widget-list" class="mt-6 divide-y divide-zinc-300 border-t border-zinc-300"></ul>
+      <div class="mt-8">
+        <a
+          href="/forest-daily/"
+          class="inline-flex items-center gap-2 text-sm tracking-[0.14em] text-zinc-600 transition hover:text-zinc-900"
+        >
+          すべて見る
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M5 12h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  {/* 3. お知らせ */}
   <section id="news" class="py-12 md:py-16 bg-[#f4f5f2]">
     <div class="mx-auto max-w-6xl px-4">
       <OshiraseList items={contents} />
@@ -601,5 +624,61 @@ const plans: Array<{
       </div>
     </div>
   </section>
+
+  <script>
+    // ════════════════════════════════════════════════════════════
+    //  今日のおいらの森 トップ widget（直近7件・サムネ無しの行リスト）
+    //  - forestDaily.ts の fetchForestDailyList(7,0) / formatPostDate を再利用
+    //  - API 由来テキストは textContent でセット（XSS 回避・innerHTML 不使用）
+    //  - 取得失敗・0件はセクションごと非表示のまま（空枠を残さない）
+    // ════════════════════════════════════════════════════════════
+    import {
+      fetchForestDailyList,
+      formatPostDate,
+      type ForestDaily,
+    } from "../lib/forestDaily";
+
+    const section = document.getElementById("forest-daily-widget");
+    const list = document.getElementById("fd-widget-list");
+
+    function widgetRow(item: ForestDaily): HTMLElement {
+      const li = document.createElement("li");
+      const a = document.createElement("a");
+      a.href = `/forest-daily/?id=${encodeURIComponent(item.id)}`;
+      a.className =
+        "group flex flex-wrap items-baseline gap-x-4 gap-y-1 py-4 transition hover:text-zinc-900";
+
+      const time = document.createElement("time");
+      time.className = "shrink-0 text-xs tracking-[0.12em] text-zinc-400";
+      time.dateTime = item.postDate;
+      time.textContent = formatPostDate(item.postDate);
+      a.appendChild(time);
+
+      const title = document.createElement("span");
+      title.className =
+        "min-w-0 text-sm font-medium leading-snug text-zinc-700 group-hover:text-zinc-900";
+      title.textContent = item.title;
+      a.appendChild(title);
+
+      li.appendChild(a);
+      return li;
+    }
+
+    async function init(): Promise<void> {
+      if (!section || !list) return;
+      let data: { contents: ForestDaily[]; totalCount: number };
+      try {
+        data = await fetchForestDailyList(7, 0);
+      } catch (e) {
+        console.warn("[forest-daily widget] 取得失敗", e);
+        return; // セクションは hidden のまま
+      }
+      if (data.contents.length === 0) return; // 0件はセクションごと非表示
+      for (const item of data.contents) list.appendChild(widgetRow(item));
+      section.hidden = false;
+    }
+
+    init();
+  </script>
 
 </LpLayout>
