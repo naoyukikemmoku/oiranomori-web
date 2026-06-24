@@ -81,6 +81,10 @@
 /event/*                                  /news/                                                  301
 /event/                                   /news/                                                  301
 
+# /forest-daily/<id>/ → 旧日付別SSGルート撤去。個別URLは一覧へ集約（soft-404畳み）
+# 末尾スラッシュ付き個別のみを対象（splat が <id> を要求＝一覧本体 /forest-daily/ は不一致＝自己ループ回避）
+/forest-daily/*/                          /forest-daily/                                          301
+
 
 # ---------- 7. /category/ 系 ----------
 /category/wildlife-diary/                 https://note.com/oiranomori                             301
