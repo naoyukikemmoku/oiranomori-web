@@ -312,18 +312,18 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
         <button
           id="aux-toggle"
           class="flex w-full items-center justify-between text-left"
-          aria-expanded="false"
+          aria-expanded="true"
           aria-controls="aux-body"
         >
           <span>
             <span class="block text-[11px] tracking-[0.24em] text-zinc-400 uppercase">Weather Map / Satellite / Typhoon</span>
             <span class="mt-1 block text-lg font-semibold text-zinc-800">天気図・衛星画像・台風</span>
           </span>
-          <span id="aux-toggle-icon" class="text-sm text-zinc-600 tracking-widest">＋ 展開</span>
+          <span id="aux-toggle-icon" class="text-sm text-zinc-600 tracking-widest">－ 閉じる</span>
         </button>
 
         {/* 展開コンテンツ */}
-        <div id="aux-body" class="hidden">
+        <div id="aux-body">
 
           {/* タブ切替 */}
           <div class="mt-6 flex gap-6 border-b border-zinc-200">
@@ -1286,8 +1286,7 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
     }
 
     // ── 折りたたみ ─────────────────────────────────────────
-    let auxInitialized = false;
-
+    // 初期化はタブ初回表示時に遅延実行（switchTab 内）。トグルは表示切替のみ。
     const toggleBtn  = document.getElementById("aux-toggle")!;
     const auxBody    = document.getElementById("aux-body")!;
     const toggleIcon = document.getElementById("aux-toggle-icon")!;
@@ -1301,16 +1300,27 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
       } else {
         auxBody.classList.remove("hidden");
         toggleIcon.textContent = "－ 閉じる";
-        if (!auxInitialized) {
-          auxInitialized = true;
-          initAux();
-        }
       }
     });
 
     // ── タブ切替 ────────────────────────────────────────────
     const tabs   = document.querySelectorAll<HTMLButtonElement>(".aux-tab");
     const panels = document.querySelectorAll<HTMLElement>(".aux-panel");
+
+    // パネルごとの初期化済みフラグ。初回表示時のみ対応 init を呼び、再fetchを防ぐ。
+    const panelInitialized: Record<string, boolean> = {
+      "panel-wxmap":   false,
+      "panel-sat":     false,
+      "panel-typhoon": false,
+    };
+
+    function initPanel(targetPanel: string): void {
+      if (panelInitialized[targetPanel]) return;
+      panelInitialized[targetPanel] = true;
+      if (targetPanel === "panel-wxmap")   initWxmapTab();
+      else if (targetPanel === "panel-sat") initSatTab();
+      else if (targetPanel === "panel-typhoon") initTyphoonTab();
+    }
 
     function switchTab(targetPanel: string): void {
       tabs.forEach((t) => {
@@ -1321,6 +1331,8 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
         t.classList.toggle("text-zinc-400", !active);
       });
       panels.forEach((p) => p.classList.toggle("hidden", p.id !== targetPanel));
+      // 対象パネルが未初期化なら初回だけ遅延初期化
+      initPanel(targetPanel);
     }
 
     tabs.forEach((t) => {
@@ -1528,14 +1540,6 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
       }
     }
 
-    // ── 展開時に全タブ初期化 ────────────────────────────────
-    function initAux(): void {
-      Promise.allSettled([
-        initSatTab(),
-        initWxmapTab(),
-        initTyphoonTab(),
-      ]);
-    }
   </script>
 
   <style>
