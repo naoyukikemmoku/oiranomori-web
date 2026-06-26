@@ -21,11 +21,18 @@ export type ForestDaily = {
 const API_BASE = "https://oiranomori.com/app/sns/api/forest_daily.php";
 
 // 一覧取得。ok:false / 取得失敗時は呼び出し側で縮退できるよう throw する。
+// 任意で year(YYYY)/month(1..12) を渡すと API の ?year=&month= フィルタを付ける
+// （month は MM ゼロ埋めで送る。不正値は API 側が安全側＝全件にフォールバック）。
 export async function fetchForestDailyList(
 	limit = 10,
 	offset = 0,
+	opts?: { year?: number; month?: number },
 ): Promise<{ contents: ForestDaily[]; totalCount: number }> {
-	const url = `${API_BASE}?limit=${limit}&offset=${offset}`;
+	let url = `${API_BASE}?limit=${limit}&offset=${offset}`;
+	if (opts?.year && opts?.month) {
+		const mm = String(opts.month).padStart(2, "0");
+		url += `&year=${opts.year}&month=${mm}`;
+	}
 	const r = await fetch(url, { cache: "default" });
 	if (!r.ok) throw new Error(`http:${r.status}`);
 	const d = await r.json();
@@ -34,6 +41,23 @@ export async function fetchForestDailyList(
 		contents: Array.isArray(d.contents) ? d.contents : [],
 		totalCount: typeof d.totalCount === "number" ? d.totalCount : 0,
 	};
+}
+
+// daily の日付文字列のみ（YYYY-MM-DD・降順）を軽量取得。
+// 個別ビューの前後/前週翌週ナビ・カレンダーの基準配列に使う。失敗時は throw。
+export async function fetchForestDailyDates(): Promise<string[]> {
+	const url = `${API_BASE}?fields=dates`;
+	const r = await fetch(url, { cache: "default" });
+	if (!r.ok) throw new Error(`http:${r.status}`);
+	const d = await r.json();
+	if (!d.ok) throw new Error("ok:false");
+	return Array.isArray(d.dates) ? d.dates : [];
+}
+
+// daily 判定：id が YYYY-MM-DD 完全一致なら daily。
+// seasonal/special は YYYY-MM-DD-<type>-<id> 形（ハイフン3つ以上）で false。
+export function isDailyId(id: string): boolean {
+	return /^\d{4}-\d{2}-\d{2}$/.test(id);
 }
 
 // 個別取得。200/ok なら item、404/ok:false なら null。HTTP/パース失敗は throw。

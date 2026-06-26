@@ -45,6 +45,9 @@ const webPageSchema = {
         </p>
       </div>
 
+      {/* 一覧フィルタ（年/月/週）のマウント点。個別ビュー時は JS で隠す。 */}
+      <div id="fd-filter" hidden></div>
+
       {/* マウント点。client-fetch で一覧／個別を描画。初期は読み込み中。 */}
       <div id="fd-app" data-state="loading">
         <p class="py-8 text-sm text-zinc-400">読み込み中…</p>
@@ -83,22 +86,25 @@ const webPageSchema = {
   <script>
     import {
       bodyToParagraphs,
+      fetchForestDailyDates,
       fetchForestDailyDetail,
       fetchForestDailyList,
       formatPostDate,
-      getOgImage,
+      isDailyId,
       type ForestDaily,
     } from "../../lib/forestDaily";
 
     // ════════════════════════════════════════════════════════════
     //  forest-daily client-fetch widget
     //  - ?id= 有無で一覧／個別を分岐
-    //  - マークアップ・Tailwind は旧 SSG（index.astro / [id].astro）踏襲
+    //  - 一覧: 年/月フィルタ（API再取得）＋週フィルタ（client絞り込み）
+    //  - 個別 daily: 前後/前週翌週/今日ナビ＋投稿日カレンダー（dates 配列基準）
+    //  - 個別 seasonal/special: 日付ナビ・カレンダーなし
     //  - API 由来テキストは textContent でセット（XSS 回避・innerHTML 不使用）
     //  - fetch 失敗・ok:false はプレースホルダに倒し、ページ骨格は静的なので保持
     // ════════════════════════════════════════════════════════════
 
-    const LIST_LIMIT = 20;
+    const LIST_LIMIT = 50;
 
     const TYPE_LABEL: Record<string, string> = {
       daily: "日常",
@@ -123,13 +129,10 @@ const webPageSchema = {
 
     const app = document.getElementById("fd-app");
     const intro = document.getElementById("fd-intro");
+    const filterMount = document.getElementById("fd-filter");
 
-    // 小さな DOM ヘルパー（textContent 既定でセット）
-    function el(
-      tag: string,
-      cls?: string,
-      text?: string,
-    ): HTMLElement {
+    // ── 小さな DOM ヘルパー（textContent 既定でセット） ──────────────
+    function el(tag: string, cls?: string, text?: string): HTMLElement {
       const e = document.createElement(tag);
       if (cls) e.className = cls;
       if (text !== undefined) e.textContent = text;
@@ -143,15 +146,39 @@ const webPageSchema = {
       return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M11 6l-6 6 6 6"/></svg>`;
     }
 
+    // 日付ユーティリティ（YYYY-MM-DD 文字列基準。タイムゾーン非依存）
+    function ymOf(date: string): { y: number; m: number } {
+      const [y, m] = date.split("-").map(Number);
+      return { y, m };
+    }
+    function ymLabel(y: number, m: number): string {
+      return `${y}年${m}月`;
+    }
+
     function showPlaceholder(message: string): void {
       if (!app) return;
       app.dataset.state = "error";
       app.replaceChildren();
-      const p = el("p", "py-8 text-sm text-zinc-500", message);
-      app.appendChild(p);
+      app.appendChild(el("p", "py-8 text-sm text-zinc-500", message));
     }
 
-    // ── 一覧の1行 ───────────────────────────────────────────────
+    // ════════════════════════════════════════════════════════════
+    //  一覧ビュー
+    // ════════════════════════════════════════════════════════════
+
+    // 一覧の状態（フィルタ・週割りで参照）
+    type ListState = {
+      year: number | null; // null = 全期間
+      month: number | null;
+      week: number; // 0 = 全週、1..N = 月内の週（週フィルタは月選択時のみ有効）
+      monthItems: ForestDaily[]; // 現在の年月で取得済みの全件（週割り元）
+    };
+    const listState: ListState = { year: null, month: null, week: 0, monthItems: [] };
+
+    // dates 由来の利用可能な年月オプション（降順）。初期化時に1度だけ算出。
+    let ymOptions: { y: number; m: number }[] = [];
+
+    // 一覧の1行（日付列なし＝タイトル主体）
     function listRow(item: ForestDaily): HTMLElement {
       const li = document.createElement("li");
       const a = el(
@@ -165,7 +192,7 @@ const webPageSchema = {
       thumbWrap.style.width = "88px";
       thumbWrap.style.height = "66px";
       const img = document.createElement("img");
-      img.src = getOgImage(item);
+      img.src = item.imageUrl ?? "https://oiranomori.jp/images/lp/hero.jpg";
       img.alt = "";
       img.width = 88;
       img.height = 66;
@@ -175,32 +202,26 @@ const webPageSchema = {
       thumbWrap.appendChild(img);
       const types = item.postType ?? [];
       if (isSpecialType(types)) {
-        const badge = el(
-          "span",
-          "absolute bottom-1 left-1 bg-[color:var(--forest-700)] px-1.5 py-0.5 text-[10px] tracking-[0.1em] text-zinc-200",
-          typeLabel(types),
+        thumbWrap.appendChild(
+          el(
+            "span",
+            "absolute bottom-1 left-1 bg-[color:var(--forest-700)] px-1.5 py-0.5 text-[10px] tracking-[0.1em] text-zinc-200",
+            typeLabel(types),
+          ),
         );
-        thumbWrap.appendChild(badge);
       }
       a.appendChild(thumbWrap);
 
-      // テキスト列
+      // テキスト列（投稿日は削除。condition / tempC のみ薄く添える）
       const col = el("div", "min-w-0 flex-1");
       const meta = el("div", "mb-1.5 flex flex-wrap items-center gap-2");
-      const time = el(
-        "time",
-        "text-xs tracking-[0.12em] text-zinc-400",
-        formatPostDate(item.postDate),
-      );
-      time.setAttribute("datetime", item.postDate);
-      meta.appendChild(time);
       if (item.condition) {
         meta.appendChild(el("span", "text-xs text-zinc-500", item.condition));
       }
       if (item.tempC !== undefined && item.tempC !== null) {
         meta.appendChild(el("span", "text-xs text-zinc-400", `${item.tempC}℃`));
       }
-      col.appendChild(meta);
+      if (meta.childElementCount > 0) col.appendChild(meta);
       col.appendChild(
         el(
           "p",
@@ -221,82 +242,429 @@ const webPageSchema = {
       return li;
     }
 
-    // ── 一覧ビュー ───────────────────────────────────────────────
+    // 月内の「週」インデックス（1始まり）。ISO 風に「その月の1日を含む週=第1週」で
+    // 7日ごとに区切る簡易定義（週区切りの定義は HP 側に一元化）。
+    function weekIndexInMonth(date: string): number {
+      const day = Number(date.split("-")[2]);
+      return Math.floor((day - 1) / 7) + 1;
+    }
+    function weeksInMonthFor(items: ForestDaily[]): number[] {
+      const set = new Set<number>();
+      for (const it of items) set.add(weekIndexInMonth(it.postDate));
+      return Array.from(set).sort((a, b) => a - b);
+    }
+
+    // 現在の listState を反映した表示対象 items を返す（週は client 絞り込み）
+    function visibleItems(): ForestDaily[] {
+      let items = listState.monthItems;
+      if (listState.month && listState.week > 0) {
+        items = items.filter(
+          (it) => weekIndexInMonth(it.postDate) === listState.week,
+        );
+      }
+      return items;
+    }
+
+    // 一覧本体（リスト DOM）だけを再描画する
+    function paintList(): void {
+      if (!app) return;
+      app.dataset.state = "ready";
+      app.replaceChildren();
+      const items = visibleItems();
+      if (items.length === 0) {
+        app.appendChild(
+          el("p", "py-8 text-sm text-zinc-500", "この期間の記録はまだありません。"),
+        );
+        return;
+      }
+      const ul = el("ul", "divide-y divide-zinc-300 border-t border-zinc-300");
+      for (const item of items) ul.appendChild(listRow(item));
+      app.appendChild(ul);
+      app.appendChild(
+        el("p", "mt-8 text-xs text-zinc-400", `${items.length}件を表示しています`),
+      );
+    }
+
+    // 年月の取得（API再取得）→ monthItems 更新 → 週UI更新 → リスト再描画
+    async function loadAndPaint(): Promise<void> {
+      if (!app) return;
+      app.dataset.state = "loading";
+      app.replaceChildren();
+      app.appendChild(el("p", "py-8 text-sm text-zinc-400", "読み込み中…"));
+      try {
+        const opts =
+          listState.year && listState.month
+            ? { year: listState.year, month: listState.month }
+            : undefined;
+        const data = await fetchForestDailyList(LIST_LIMIT, 0, opts);
+        listState.monthItems = data.contents;
+      } catch (e) {
+        console.warn("[forest-daily] 一覧取得失敗", e);
+        showPlaceholder("いまは読み込めません。時間をおいてお試しください。");
+        return;
+      }
+      renderWeekControl();
+      paintList();
+    }
+
+    // ── フィルタUI（年・月のセレクト＋週のセグメント） ───────────────
+    function buildSelect(
+      labelText: string,
+      options: { value: string; label: string }[],
+      current: string,
+      onChange: (v: string) => void,
+    ): HTMLElement {
+      const wrap = el("label", "inline-flex items-center gap-1.5 text-xs text-zinc-500");
+      wrap.appendChild(el("span", "tracking-[0.1em]", labelText));
+      const sel = document.createElement("select");
+      sel.className =
+        "border-b border-zinc-400 bg-transparent py-1 pr-5 text-xs text-zinc-700 focus:border-zinc-700 focus:outline-none";
+      for (const o of options) {
+        const opt = document.createElement("option");
+        opt.value = o.value;
+        opt.textContent = o.label;
+        if (o.value === current) opt.selected = true;
+        sel.appendChild(opt);
+      }
+      sel.addEventListener("change", () => onChange(sel.value));
+      wrap.appendChild(sel);
+      return wrap;
+    }
+
+    function renderFilterControl(): void {
+      if (!filterMount) return;
+      filterMount.hidden = false;
+      filterMount.replaceChildren();
+
+      const bar = el(
+        "div",
+        "mb-2 flex flex-wrap items-center gap-x-6 gap-y-3 border-y border-zinc-300 py-4",
+      );
+
+      // 年セレクト
+      const years = Array.from(new Set(ymOptions.map((o) => o.y))).sort(
+        (a, b) => b - a,
+      );
+      const yearOpts = [
+        { value: "", label: "すべて" },
+        ...years.map((y) => ({ value: String(y), label: `${y}年` })),
+      ];
+      bar.appendChild(
+        buildSelect(
+          "年",
+          yearOpts,
+          listState.year ? String(listState.year) : "",
+          (v) => {
+            listState.year = v ? Number(v) : null;
+            // 年だけ選んで月未選択は「全期間」と同義に倒す（API は year+month 同時のみ）
+            if (!listState.year) {
+              listState.month = null;
+            }
+            listState.week = 0;
+            renderFilterControl();
+            loadAndPaint();
+          },
+        ),
+      );
+
+      // 月セレクト（年が選ばれているときのみ。dates にある月だけ出す）
+      if (listState.year) {
+        const months = ymOptions
+          .filter((o) => o.y === listState.year)
+          .map((o) => o.m)
+          .sort((a, b) => b - a);
+        const monthOpts = [
+          { value: "", label: "すべて" },
+          ...months.map((m) => ({ value: String(m), label: `${m}月` })),
+        ];
+        bar.appendChild(
+          buildSelect(
+            "月",
+            monthOpts,
+            listState.month ? String(listState.month) : "",
+            (v) => {
+              listState.month = v ? Number(v) : null;
+              listState.week = 0;
+              renderFilterControl();
+              loadAndPaint();
+            },
+          ),
+        );
+      }
+
+      filterMount.appendChild(bar);
+      renderWeekControl();
+    }
+
+    // 週セグメント（月選択時のみ。monthItems から実在する週だけ）
+    let weekBar: HTMLElement | null = null;
+    function renderWeekControl(): void {
+      if (!filterMount) return;
+      if (weekBar) {
+        weekBar.remove();
+        weekBar = null;
+      }
+      if (!listState.month) return;
+      const weeks = weeksInMonthFor(listState.monthItems);
+      if (weeks.length <= 1) return; // 週が1つ以下なら出さない
+
+      const bar = el("div", "mb-2 flex flex-wrap items-center gap-2 pb-1");
+      bar.appendChild(el("span", "mr-1 text-xs tracking-[0.1em] text-zinc-500", "週"));
+
+      const mkBtn = (label: string, week: number): HTMLElement => {
+        const active = listState.week === week;
+        const b = el(
+          "button",
+          active
+            ? "border-b-2 border-zinc-700 px-1 pb-0.5 text-xs text-zinc-800"
+            : "px-1 pb-0.5 text-xs text-zinc-400 transition hover:text-zinc-700",
+          label,
+        ) as HTMLButtonElement;
+        b.type = "button";
+        b.addEventListener("click", () => {
+          listState.week = week;
+          renderWeekControl();
+          paintList();
+        });
+        return b;
+      };
+
+      bar.appendChild(mkBtn("すべて", 0));
+      for (const w of weeks) bar.appendChild(mkBtn(`第${w}週`, w));
+
+      // フィルタバー直下に挿入
+      filterMount.appendChild(bar);
+      weekBar = bar;
+    }
+
     async function renderList(): Promise<void> {
       if (!app) return;
-      let data: { contents: ForestDaily[]; totalCount: number };
+
+      // 年月オプションは dates（daily）＋初期 list の postDate から算出
+      let dates: string[] = [];
       try {
-        data = await fetchForestDailyList(LIST_LIMIT, 0);
+        dates = await fetchForestDailyDates();
+      } catch (e) {
+        console.warn("[forest-daily] dates 取得失敗（フィルタは縮退）", e);
+      }
+
+      try {
+        const data = await fetchForestDailyList(LIST_LIMIT, 0);
+        listState.monthItems = data.contents;
+        // dates と list 双方の postDate を年月オプションに統合
+        const ymSet = new Map<string, { y: number; m: number }>();
+        for (const ds of dates) {
+          const { y, m } = ymOf(ds);
+          ymSet.set(`${y}-${m}`, { y, m });
+        }
+        for (const it of data.contents) {
+          const { y, m } = ymOf(it.postDate);
+          ymSet.set(`${y}-${m}`, { y, m });
+        }
+        ymOptions = Array.from(ymSet.values()).sort(
+          (a, b) => b.y - a.y || b.m - a.m,
+        );
       } catch (e) {
         console.warn("[forest-daily] 一覧取得失敗", e);
         showPlaceholder("いまは読み込めません。時間をおいてお試しください。");
         return;
       }
 
-      app.dataset.state = "ready";
-      app.replaceChildren();
-
-      if (data.contents.length === 0) {
-        app.appendChild(el("p", "text-sm text-zinc-500", "まだ記事がありません。"));
-        return;
-      }
-
-      const ul = el("ul", "divide-y divide-zinc-300 border-t border-zinc-300");
-      for (const item of data.contents) ul.appendChild(listRow(item));
-      app.appendChild(ul);
-
-      let loaded = data.contents.length;
-      let totalCount = data.totalCount;
-
-      // もっと見る
-      if (totalCount > loaded) {
-        const moreWrap = el("div", "mt-12 border-t border-zinc-300 pt-8 text-center");
-        const btn = el(
-          "button",
-          "inline-flex items-center gap-2 border border-zinc-400 px-6 py-2.5 text-xs tracking-[0.12em] text-zinc-600 transition hover:border-zinc-700 hover:text-zinc-800",
-          "もっと見る",
-        ) as HTMLButtonElement;
-        btn.type = "button";
-        const count = el(
-          "p",
-          "mt-3 text-xs text-zinc-400",
-          `全${totalCount}件中 ${loaded}件を表示しています`,
-        );
-        moreWrap.appendChild(btn);
-        moreWrap.appendChild(count);
-        app.appendChild(moreWrap);
-
-        btn.addEventListener("click", async () => {
-          btn.disabled = true;
-          btn.textContent = "読み込み中…";
-          try {
-            const next = await fetchForestDailyList(LIST_LIMIT, loaded);
-            for (const item of next.contents) ul.appendChild(listRow(item));
-            loaded += next.contents.length;
-            totalCount = next.totalCount;
-            count.textContent = `全${totalCount}件中 ${loaded}件を表示しています`;
-            if (loaded >= totalCount) {
-              moreWrap.remove();
-            } else {
-              btn.disabled = false;
-              btn.textContent = "もっと見る";
-            }
-          } catch (e) {
-            console.warn("[forest-daily] 追加取得失敗", e);
-            btn.disabled = false;
-            btn.textContent = "もっと見る";
-            count.textContent = "読み込みに失敗しました。もう一度お試しください。";
-          }
-        });
-      }
+      if (ymOptions.length > 0) renderFilterControl();
+      paintList();
     }
 
-    // ── 個別ビュー ───────────────────────────────────────────────
+    // ════════════════════════════════════════════════════════════
+    //  個別ビュー
+    // ════════════════════════════════════════════════════════════
+
+    // 「過去のおいらの森」へ戻る導線（上部・統一表記）
+    function backLink(size = 12, sizeText = "text-xs"): HTMLAnchorElement {
+      const a = el(
+        "a",
+        `inline-flex items-center gap-1.5 ${sizeText} tracking-[0.12em] text-zinc-400 transition hover:text-zinc-700`,
+      ) as HTMLAnchorElement;
+      a.href = "/forest-daily/";
+      a.innerHTML = svgArrowLeft(size);
+      a.appendChild(document.createTextNode("過去のおいらの森"));
+      return a;
+    }
+
+    // 出口導線（予約＋いまの森の天気）。場内マップは出さない。
+    function exitLinks(): HTMLElement {
+      const wrap = el("div", "mt-4 flex flex-wrap gap-3");
+      const reserve = el(
+        "a",
+        "inline-flex items-center gap-2 bg-[color:var(--light-accent)] px-6 py-2.5 text-xs font-semibold tracking-[0.12em] text-white transition hover:opacity-90",
+      ) as HTMLAnchorElement;
+      reserve.href = "https://www.489pro-x.com/ja/s/oiranomori/planlist/";
+      reserve.target = "_blank";
+      reserve.rel = "noopener noreferrer";
+      reserve.appendChild(document.createTextNode("予約する"));
+      reserve.insertAdjacentHTML("beforeend", svgArrowRight());
+      wrap.appendChild(reserve);
+
+      const now = el(
+        "a",
+        "inline-flex items-center gap-2 border border-zinc-400 px-6 py-2.5 text-xs tracking-[0.12em] text-zinc-600 transition hover:border-zinc-700 hover:text-zinc-800",
+      ) as HTMLAnchorElement;
+      now.href = "/now/";
+      now.appendChild(document.createTextNode("いまの森の天気"));
+      now.insertAdjacentHTML("beforeend", svgArrowRight());
+      wrap.appendChild(now);
+      return wrap;
+    }
+
+    // 日付ナビ（前週・前日・今日・翌日・翌週）。dates は降順配列。
+    // 配列内の位置（idx）基準で隣接/7件隣へ。端はボタン無効化。
+    function dateNav(dates: string[], currentId: string): HTMLElement {
+      const bar = el("div", "flex flex-wrap items-center gap-x-1 gap-y-2 text-xs");
+      const idx = dates.indexOf(currentId);
+
+      // dates は降順 → idx が小さいほど新しい。
+      // 翌日（より新しい）= idx-1、前日（より古い）= idx+1。
+      const mkNav = (
+        label: string,
+        targetIdx: number | null,
+      ): HTMLElement => {
+        const valid =
+          targetIdx !== null && targetIdx >= 0 && targetIdx < dates.length;
+        if (valid) {
+          const a = el(
+            "a",
+            "px-2 py-1 text-zinc-600 transition hover:text-zinc-900",
+            label,
+          ) as HTMLAnchorElement;
+          a.href = `/forest-daily/?id=${encodeURIComponent(dates[targetIdx as number])}`;
+          return a;
+        }
+        return el("span", "px-2 py-1 text-zinc-300", label);
+      };
+
+      const today = el(
+        "a",
+        "px-2 py-1 text-zinc-600 transition hover:text-zinc-900",
+        "今日",
+      ) as HTMLAnchorElement;
+      today.href = `/forest-daily/?id=${encodeURIComponent(dates[0] ?? currentId)}`;
+
+      bar.appendChild(mkNav("« 前週", idx >= 0 ? idx + 7 : null));
+      bar.appendChild(mkNav("‹ 前日", idx >= 0 ? idx + 1 : null));
+      bar.appendChild(today);
+      bar.appendChild(mkNav("翌日 ›", idx >= 0 ? idx - 1 : null));
+      bar.appendChild(mkNav("翌週 »", idx >= 0 ? idx - 7 : null));
+      return bar;
+    }
+
+    // 投稿日カレンダー（プルダウン・月送り）。投稿がある日だけリンク＆ハイライト。
+    function calendar(dates: string[], currentId: string): HTMLElement {
+      const dateSet = new Set(dates);
+      const root = el("div", "relative");
+
+      const toggle = el(
+        "button",
+        "inline-flex items-center gap-1.5 border border-zinc-400 px-3 py-1.5 text-xs tracking-[0.1em] text-zinc-600 transition hover:border-zinc-700 hover:text-zinc-800",
+      ) as HTMLButtonElement;
+      toggle.type = "button";
+      toggle.appendChild(document.createTextNode("📅 日付選択"));
+      const caret = el("span", "text-zinc-400", "▾");
+      toggle.appendChild(caret);
+      root.appendChild(toggle);
+
+      const panel = el(
+        "div",
+        "absolute z-20 mt-2 w-72 bg-[#f4f5f2] p-3 shadow-lg ring-1 ring-zinc-300",
+      );
+      panel.hidden = true;
+      root.appendChild(panel);
+
+      // 表示中の年月（初期＝現在記事の月。なければ最新投稿の月）
+      const base = isDailyId(currentId) ? currentId : dates[0] ?? currentId;
+      let view = ymOf(base);
+
+      const paintPanel = (): void => {
+        panel.replaceChildren();
+        // ヘッダ（月送り）
+        const head = el("div", "mb-2 flex items-center justify-between");
+        const prev = el(
+          "button",
+          "px-2 py-1 text-sm text-zinc-500 transition hover:text-zinc-800",
+          "‹",
+        ) as HTMLButtonElement;
+        prev.type = "button";
+        const next = el(
+          "button",
+          "px-2 py-1 text-sm text-zinc-500 transition hover:text-zinc-800",
+          "›",
+        ) as HTMLButtonElement;
+        next.type = "button";
+        head.appendChild(prev);
+        head.appendChild(el("span", "text-xs text-zinc-700", ymLabel(view.y, view.m)));
+        head.appendChild(next);
+        panel.appendChild(head);
+
+        prev.addEventListener("click", () => {
+          view = view.m === 1 ? { y: view.y - 1, m: 12 } : { y: view.y, m: view.m - 1 };
+          paintPanel();
+        });
+        next.addEventListener("click", () => {
+          view = view.m === 12 ? { y: view.y + 1, m: 1 } : { y: view.y, m: view.m + 1 };
+          paintPanel();
+        });
+
+        // 曜日ヘッダ
+        const grid = el("div", "grid grid-cols-7 gap-1 text-center");
+        for (const w of ["日", "月", "火", "水", "木", "金", "土"]) {
+          grid.appendChild(el("span", "py-1 text-[10px] text-zinc-400", w));
+        }
+        // 月初の曜日オフセット（UTC で算出＝TZ非依存）
+        const first = new Date(Date.UTC(view.y, view.m - 1, 1));
+        const startDow = first.getUTCDay();
+        const daysInMonth = new Date(Date.UTC(view.y, view.m, 0)).getUTCDate();
+        for (let i = 0; i < startDow; i++) grid.appendChild(el("span"));
+        for (let d = 1; d <= daysInMonth; d++) {
+          const ds = `${view.y}-${String(view.m).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+          const has = dateSet.has(ds);
+          const isCurrent = ds === currentId;
+          if (has) {
+            const a = el(
+              "a",
+              isCurrent
+                ? "block rounded-sm bg-[color:var(--forest-700)] py-1 text-xs text-zinc-100"
+                : "block rounded-sm py-1 text-xs text-zinc-700 underline decoration-zinc-400 underline-offset-2 transition hover:bg-zinc-200",
+              String(d),
+            ) as HTMLAnchorElement;
+            a.href = `/forest-daily/?id=${encodeURIComponent(ds)}`;
+            grid.appendChild(a);
+          } else {
+            grid.appendChild(el("span", "block py-1 text-xs text-zinc-300", String(d)));
+          }
+        }
+        panel.appendChild(grid);
+      };
+
+      toggle.addEventListener("click", () => {
+        panel.hidden = !panel.hidden;
+        caret.textContent = panel.hidden ? "▾" : "▴";
+        if (!panel.hidden) paintPanel();
+      });
+      // パネル外クリックで閉じる
+      document.addEventListener("click", (ev) => {
+        if (!root.contains(ev.target as Node)) {
+          panel.hidden = true;
+          caret.textContent = "▾";
+        }
+      });
+
+      return root;
+    }
+
     async function renderDetail(id: string): Promise<void> {
       if (!app) return;
 
-      // 個別時は常設の一覧イントロを隠す（記事側にヘッダを持つ）
+      // 個別時は常設の一覧イントロ・フィルタを隠す
       if (intro) intro.hidden = true;
+      if (filterMount) filterMount.hidden = true;
 
       let article: ForestDaily | null;
       try {
@@ -306,33 +674,40 @@ const webPageSchema = {
         renderNotFound("いまは読み込めません。時間をおいてお試しください。");
         return;
       }
-
       if (!article) {
         renderNotFound("記事が見つかりませんでした。");
         return;
       }
 
+      // daily のみ日付ナビ・カレンダーを出す。dates 取得は daily の場合だけ。
+      const daily = isDailyId(id);
+      let dates: string[] = [];
+      if (daily) {
+        try {
+          dates = await fetchForestDailyDates();
+        } catch (e) {
+          console.warn("[forest-daily] dates 取得失敗（ナビ縮退）", e);
+        }
+      }
+
       app.dataset.state = "ready";
       app.replaceChildren();
-
-      // UX用にタイトル更新（SEO非対象）
       document.title = `${article.title} | 里山パークおいらの森`;
 
-      // 一覧へ戻る（上部）
-      const backTop = el("div", "pt-2 pb-2");
-      const backTopLink = el(
-        "a",
-        "inline-flex items-center gap-1.5 text-xs tracking-[0.12em] text-zinc-400 transition hover:text-zinc-700",
-      ) as HTMLAnchorElement;
-      backTopLink.href = "/forest-daily/";
-      backTopLink.innerHTML = svgArrowLeft();
-      backTopLink.appendChild(document.createTextNode("今日のおいらの森"));
-      backTop.appendChild(backTopLink);
-      app.appendChild(backTop);
+      // ── 記事上部：戻る導線（1つに集約）＋ daily なら日付ナビ＋カレンダー ──
+      const top = el("div", "pt-2");
+      top.appendChild(backLink());
+      if (daily && dates.length > 0) {
+        const navWrap = el("div", "mt-5 flex flex-wrap items-center justify-between gap-3");
+        navWrap.appendChild(dateNav(dates, id));
+        navWrap.appendChild(calendar(dates, id));
+        top.appendChild(navWrap);
+      }
+      app.appendChild(top);
 
       const articleEl = document.createElement("article");
 
-      // ヘッダー
+      // ヘッダー（日付入りタイトル）
       const header = document.createElement("header");
       header.className = "pt-8 pb-8";
       const time = el(
@@ -351,7 +726,7 @@ const webPageSchema = {
       header.appendChild(h1);
       articleEl.appendChild(header);
 
-      // メインビジュアル（imageUrl のみ。videoUrl 非提供＝動画ブロックなし）
+      // メインビジュアル（imageUrl のみ）
       if (article.imageUrl) {
         const figure = el("div", "mb-8 overflow-hidden");
         const img = document.createElement("img");
@@ -380,7 +755,6 @@ const webPageSchema = {
           el("p", "mb-2 text-[10px] tracking-[0.2em] text-zinc-400 uppercase", "Weather"),
         );
         const row = el("div", "flex flex-wrap items-baseline gap-x-5 gap-y-1");
-
         if (article.condition) {
           row.appendChild(el("span", "text-sm text-zinc-700", article.condition));
         }
@@ -424,59 +798,28 @@ const webPageSchema = {
       }
       articleEl.appendChild(bodyWrap);
 
-      // Visit 導線
-      const visit = el("div", "border-t border-zinc-300 pt-10 pb-4");
-      visit.appendChild(
+      // ── 記事下部：daily なら日付ナビ再掲（カレンダーは上部のみ）＋出口導線 ──
+      const bottom = el("div", "border-t border-zinc-300 pt-10 pb-4");
+      if (daily && dates.length > 0) {
+        const navWrap = el("div", "mb-8");
+        navWrap.appendChild(dateNav(dates, id));
+        bottom.appendChild(navWrap);
+      }
+      bottom.appendChild(
         el("p", "mb-1 text-xs tracking-[0.2em] text-zinc-400 uppercase", "Visit"),
       );
-      visit.appendChild(
+      bottom.appendChild(
         el(
           "p",
           "text-sm leading-relaxed text-zinc-600",
           "実際の森は、もっと静かで、もっと広い。",
         ),
       );
-      const visitLinks = el("div", "mt-4 flex flex-wrap gap-3");
-      const reserve = el(
-        "a",
-        "inline-flex items-center gap-2 bg-[color:var(--light-accent)] px-6 py-2.5 text-xs font-semibold tracking-[0.12em] text-white transition hover:opacity-90",
-      ) as HTMLAnchorElement;
-      reserve.href = "https://www.489pro-x.com/ja/s/oiranomori/planlist/";
-      reserve.target = "_blank";
-      reserve.rel = "noopener noreferrer";
-      reserve.appendChild(document.createTextNode("予約する"));
-      reserve.insertAdjacentHTML("beforeend", svgArrowRight());
-      visitLinks.appendChild(reserve);
-      const mapLink = el(
-        "a",
-        "inline-flex items-center gap-2 border border-zinc-400 px-6 py-2.5 text-xs tracking-[0.12em] text-zinc-600 transition hover:border-zinc-700 hover:text-zinc-800",
-        "場内マップ",
-      ) as HTMLAnchorElement;
-      mapLink.href = "/map/";
-      visitLinks.appendChild(mapLink);
-      const nowLink = el(
-        "a",
-        "inline-flex items-center gap-2 border border-zinc-400 px-6 py-2.5 text-xs tracking-[0.12em] text-zinc-600 transition hover:border-zinc-700 hover:text-zinc-800",
-        "いまの天気",
-      ) as HTMLAnchorElement;
-      nowLink.href = "/now/";
-      visitLinks.appendChild(nowLink);
-      visit.appendChild(visitLinks);
-      articleEl.appendChild(visit);
-
-      // 一覧へ戻る（下部）
-      const backBottom = el("div", "mt-12 border-t border-zinc-300 pt-8");
-      const backBottomLink = el(
-        "a",
-        "inline-flex items-center gap-1.5 text-sm tracking-[0.12em] text-zinc-500 transition hover:text-zinc-800",
-      ) as HTMLAnchorElement;
-      backBottomLink.href = "/forest-daily/";
-      backBottomLink.innerHTML = svgArrowLeft(14);
-      backBottomLink.appendChild(document.createTextNode("一覧へ戻る"));
-      backBottom.appendChild(backBottomLink);
-      articleEl.appendChild(backBottom);
+      bottom.appendChild(exitLinks());
+      articleEl.appendChild(bottom);
 
       app.appendChild(articleEl);
+      window.scrollTo({ top: 0 });
     }
 
     function renderNotFound(message: string): void {
@@ -488,7 +831,7 @@ const webPageSchema = {
       const back = el(
         "a",
         "mt-4 inline-block text-xs text-zinc-400 underline underline-offset-4",
-        "一覧へ戻る",
+        "過去のおいらの森へ戻る",
       ) as HTMLAnchorElement;
       back.href = "/forest-daily/";
       wrap.appendChild(back);
