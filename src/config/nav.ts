@@ -72,7 +72,7 @@ export const siteNav: SiteNavGroup[] = [
 		items: [
 			{ label: "ライトフォレスト 利用案内", href: "/light-guide/" },
 			{ label: "ディープフォレスト 利用案内", href: "/deep-guide/" },
-			{ label: "場内マップ（ライト）", href: "/map/?view=light" },
+			{ label: "場内マップ（ライト）", href: "/lightforest-map/" },
 			{ label: "おいらの薪", href: "/firewood/" },
 			{ label: "レンタル", href: "/rental/" },
 			{ label: "売店", href: "/shop/" },
@@ -84,7 +84,7 @@ export const siteNav: SiteNavGroup[] = [
 		title: "おいらの森",
 		items: [
 			{ label: "アクセス", href: "/access/" },
-			{ label: "周辺案内", href: "/map/?view=food" },
+			{ label: "周辺案内", href: "/map/" },
 			{ label: "天気・気温", href: "/now/" },
 			{ label: "今日のおいらの森", href: "/forest-daily/" },
 			{ label: "お知らせ", href: "/news/" },

@@ -47,7 +47,7 @@
 
 
 # ---------- 5. /information/ 系 ----------
-/information/surroundings-maps/           /map/?view=area                                         301
+/information/surroundings-maps/           /map/                                                   301
 /information/recommend-campingground/     https://note.com/oiranomori                             301
 /information/wildlife-watching-diary/     https://note.com/oiranomori                             301
 /information/pioneer-diary/               https://note.com/oiranomori                             301
@@ -60,9 +60,9 @@
 
 
 # ---------- 6. CPT（カスタム投稿タイプ） ----------
-# /properties/ → 場内施設は新マップに統合
-/properties/*                             /map/?view=light                                        301
-/properties/                              /map/?view=light                                        301
+# /properties/ → 場内施設は新マップ（ライトフォレスト場内マップ）に統合
+/properties/*                             /lightforest-map/                                       301
+/properties/                             /lightforest-map/                                        301
 
 # /properties_type/ → 旧WPカスタムタクソノミー（具体→ワイルドカードの順）
 /properties_type/deepforest/              /deep/                                                  301
