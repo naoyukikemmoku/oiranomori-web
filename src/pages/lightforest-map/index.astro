@@ -7,11 +7,25 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 // size / desc は現APIに無いが、存在する時だけ popup に出す実装（App側が後で足せば自動表示）。
 const GEOJSON_URL = "https://oiranomori.com/app/camp/api/sites_geojson.php";
 
-// 背景XYZタイル（SfMオルソをタイル化したもの）。Naoが別途供給するまではプレースホルダ。
-// 未供給時はレイアウト確認用に地理院標準タイルを暫定フォールバックにする（本番背景ではない）。
+// ベースタイル（最下層）。未供給のため地理院標準タイルを使用。
 const TILE_URL = ""; // 例: "https://example.com/ortho/{z}/{x}/{y}.png"
 const FALLBACK_TILE_URL =
 	"https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png";
+
+// ライトフィールド場内マップ背景（ジオリファ済みイラスト地図のXYZタイル）。
+// QGIS「XYZタイルを生成」由来。site/public/lightmap/{z}/{x}/{y}.png に静的配置。
+// XYZ（左上原点・tms:false）/ z15〜21 が実タイル / Webメルカトル(EPSG:3857)再投影済み。
+const LIGHTFIELD = {
+	url: "/lightmap/{z}/{x}/{y}.png",
+	minZoom: 15,
+	maxNativeZoom: 21, // 実タイル上限
+	maxZoom: 22, // 21超はオーバーズームで伸ばす
+	// bounds（WGS84・[[南,西],[北,東]]）。範囲外タイルの404抑制 + 初期fitBounds用。
+	bounds: [
+		[36.639041, 140.065615],
+		[36.641562, 140.069752],
+	],
+};
 
 // マーカー色分け（現 /map/ のサイト色分けと parity）
 //   normal → COLOR_AUTO  (#488B37)
@@ -196,7 +210,7 @@ const DEFAULT_ZOOM = 17;
   crossorigin=""
 ></script>
 
-<script is:inline define:vars={{ GEOJSON_URL, TILE_URL, FALLBACK_TILE_URL, SITE_COLORS, DEFAULT_CENTER, DEFAULT_ZOOM }}>
+<script is:inline define:vars={{ GEOJSON_URL, TILE_URL, FALLBACK_TILE_URL, LIGHTFIELD, SITE_COLORS, DEFAULT_CENTER, DEFAULT_ZOOM }}>
   document.addEventListener("DOMContentLoaded", function () {
     var skeletonEl = document.getElementById("lfmap-skeleton");
     var errorEl    = document.getElementById("lfmap-error");
@@ -214,7 +228,13 @@ const DEFAULT_ZOOM = 17;
       zoomControl: true,
     });
 
-    // 背景XYZタイル。TILE_URL 未供給時は地理院標準タイルを暫定フォールバック。
+    // ── 重ね順: ベースタイル(tilePane z=200) → ライトフィールド背景(専用pane z=250) → サイト点(markerPane z=600)
+    // 背景は tilePane と overlayPane(400) の間に専用 pane を作って載せ、重ね順を安定させる。
+    map.createPane("lightfieldPane");
+    map.getPane("lightfieldPane").style.zIndex = 250;
+    map.getPane("lightfieldPane").style.pointerEvents = "none"; // 点クリックを妨げない
+
+    // 最下層: ベースタイル。TILE_URL 未供給時は地理院標準タイルを暫定フォールバック。
     var tileUrl = TILE_URL || FALLBACK_TILE_URL;
     var usingFallback = !TILE_URL;
     L.tileLayer(tileUrl, {
@@ -224,6 +244,24 @@ const DEFAULT_ZOOM = 17;
         ? '<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noopener">地理院タイル</a>'
         : "里山パークおいらの森",
     }).addTo(map);
+
+    // 中間層: ライトフィールド場内マップ背景（静的XYZタイル）
+    var lightfieldBounds = L.latLngBounds(LIGHTFIELD.bounds);
+    var lightfieldLayer = L.tileLayer(LIGHTFIELD.url, {
+      pane: "lightfieldPane",
+      minZoom: LIGHTFIELD.minZoom,
+      maxNativeZoom: LIGHTFIELD.maxNativeZoom,
+      maxZoom: LIGHTFIELD.maxZoom,
+      bounds: lightfieldBounds, // 範囲外タイルの404抑制
+      tms: false, // XYZ（左上原点）
+      attribution: "里山パークおいらの森",
+    }).addTo(map);
+
+    // 初期表示を場内（背景の範囲）にスナップ。点取得後に点範囲へ微調整する。
+    map.fitBounds(lightfieldBounds, { padding: [20, 20] });
+
+    // 背景マップ ON/OFF トグル（Leaflet標準のoverlay control）
+    L.control.layers(null, { "背景マップ": lightfieldLayer }, { collapsed: false, position: "topright" }).addTo(map);
 
     // site_type → 色
     function colorFor(siteType) {
