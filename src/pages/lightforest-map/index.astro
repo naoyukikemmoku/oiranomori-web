@@ -1,0 +1,322 @@
+---
+import Header from "../../components/Header.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+// 場内マップ（ライトフォレスト）データ源 = App 公開API。HP側に点データは持たない。
+// プロパティは現状 site_id / site_name / area / site_type / module。
+// size / desc は現APIに無いが、存在する時だけ popup に出す実装（App側が後で足せば自動表示）。
+const GEOJSON_URL = "https://oiranomori.com/app/camp/api/sites_geojson.php";
+
+// 背景XYZタイル（SfMオルソをタイル化したもの）。Naoが別途供給するまではプレースホルダ。
+// 未供給時はレイアウト確認用に地理院標準タイルを暫定フォールバックにする（本番背景ではない）。
+const TILE_URL = ""; // 例: "https://example.com/ortho/{z}/{x}/{y}.png"
+const FALLBACK_TILE_URL =
+	"https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png";
+
+// マーカー色分け（現 /map/ のサイト色分けと parity）
+//   normal → COLOR_AUTO  (#488B37)
+//   alpha  → COLOR_BLOCK (#C8A063)
+//   solo   → COLOR_SOLO  (#6B8FA3)
+const SITE_COLORS = {
+	normal: "#488B37",
+	alpha: "#C8A063",
+	solo: "#6B8FA3",
+	default: "#4a5d4e",
+};
+
+const DEFAULT_CENTER = { lat: 36.6405, lng: 140.068 };
+const DEFAULT_ZOOM = 17;
+---
+
+<BaseLayout
+  title="場内マップ（ライトフォレスト）| 里山パークおいらの森"
+  description="ライトフォレストの場内マップ。オートサイト・区画サイト・ソロ区画の位置関係を地図上でご確認いただけます。"
+  lastUpdated="2026年6月"
+>
+  <Fragment slot="head">
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": ["TouristAttraction", "Place"],
+      "name": "里山パークおいらの森 ライトフォレスト 場内マップ",
+      "description": "栃木県那須烏山市の里山キャンプ場ライトフォレストの場内マップ。各サイトの位置関係を表示。",
+      "url": "https://oiranomori.jp/lightforest-map/",
+      "hasMap": "https://oiranomori.jp/lightforest-map/",
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 36.6405,
+        "longitude": 140.0680
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "postalCode": "321-0525",
+        "addressRegion": "栃木県",
+        "addressLocality": "那須烏山市",
+        "streetAddress": "福岡1047"
+      },
+      "containedInPlace": {
+        "@type": "AdministrativeArea",
+        "name": "那須烏山市"
+      }
+    })} />
+  </Fragment>
+
+  <Header />
+  <h1 class="sr-only">場内マップ（ライトフォレスト）</h1>
+
+  <main id="lfmap-main">
+    <div id="lfmap-wrapper">
+      <div id="lfmap-skeleton" aria-hidden="true">
+        <svg class="spin-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+        </svg>
+        <span>読み込み中</span>
+      </div>
+      <div id="lfmap-error">
+        <p>マップの読み込みに失敗しました</p>
+      </div>
+      <div id="lfmap"></div>
+    </div>
+  </main>
+
+</BaseLayout>
+
+<style is:global>
+/* ═══ Reset / global ═══ */
+#lfmap-main *,
+#lfmap-main *::before,
+#lfmap-main *::after { box-sizing: border-box; }
+
+/* ═══ Main ═══ */
+#lfmap-main {
+  height: 100vh;
+  height: 100dvh;
+  padding-top: var(--header-offset);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #f4f5f2;
+}
+
+/* ═══ Map wrapper ═══ */
+#lfmap-wrapper {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  background: #d1d5db;
+  min-height: 0;
+}
+#lfmap { position: absolute; inset: 0; }
+
+#lfmap-skeleton {
+  position: absolute; inset: 0; z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #e0e0dc;
+  color: #9ca3af;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+}
+.spin-icon { animation: spin 1.2s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+#lfmap-error {
+  position: absolute; inset: 0; z-index: 1;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: #1a2421;
+  color: #c0c0c0;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+}
+
+/* ═══ Leaflet popup override（白カード／枠線／影を排し、アーシー系に寄せる）═══ */
+.leaflet-popup.lf-popup .leaflet-popup-content-wrapper {
+  background: #f4f5f2;
+  color: #1a2421;
+  border-radius: 0;
+  box-shadow: 0 2px 10px rgba(26, 36, 33, 0.25);
+  border: none;
+}
+.leaflet-popup.lf-popup .leaflet-popup-content {
+  margin: 12px 14px;
+  font-family: "Noto Serif JP", serif;
+  line-height: 1.5;
+}
+.leaflet-popup.lf-popup .leaflet-popup-tip {
+  background: #f4f5f2;
+  box-shadow: none;
+}
+.leaflet-popup.lf-popup a.leaflet-popup-close-button {
+  color: #6b6b63;
+  padding: 6px 8px 0 0;
+}
+.leaflet-popup.lf-popup a.leaflet-popup-close-button:hover {
+  color: #1a2421;
+}
+.lf-pop-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a2421;
+}
+.lf-pop-area {
+  display: inline-block;
+  margin-left: 6px;
+  font-size: 11px;
+  color: #8a8a80;
+}
+.lf-pop-meta {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: #555;
+  line-height: 1.6;
+}
+
+/* マーカー（DivIcon） */
+.lf-marker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>
+
+<script
+  is:inline
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+  crossorigin=""
+></script>
+
+<script is:inline define:vars={{ GEOJSON_URL, TILE_URL, FALLBACK_TILE_URL, SITE_COLORS, DEFAULT_CENTER, DEFAULT_ZOOM }}>
+  document.addEventListener("DOMContentLoaded", function () {
+    var skeletonEl = document.getElementById("lfmap-skeleton");
+    var errorEl    = document.getElementById("lfmap-error");
+
+    function showError() {
+      if (skeletonEl) skeletonEl.remove();
+      if (errorEl) errorEl.style.display = "flex";
+    }
+
+    if (typeof L === "undefined") { showError(); return; }
+
+    var map = L.map("lfmap", {
+      center: [DEFAULT_CENTER.lat, DEFAULT_CENTER.lng],
+      zoom:   DEFAULT_ZOOM,
+      zoomControl: true,
+    });
+
+    // 背景XYZタイル。TILE_URL 未供給時は地理院標準タイルを暫定フォールバック。
+    var tileUrl = TILE_URL || FALLBACK_TILE_URL;
+    var usingFallback = !TILE_URL;
+    L.tileLayer(tileUrl, {
+      maxZoom: 22,
+      maxNativeZoom: usingFallback ? 18 : 22,
+      attribution: usingFallback
+        ? '<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noopener">地理院タイル</a>'
+        : "里山パークおいらの森",
+    }).addTo(map);
+
+    // site_type → 色
+    function colorFor(siteType) {
+      return SITE_COLORS[siteType] || SITE_COLORS.default;
+    }
+
+    // 丸マーカー（現 /map/ のサイトピンに準じた円形・白縁）
+    function circleIcon(label, color) {
+      var fs = (label && label.length > 2) ? 9 : 12;
+      var html =
+        '<svg width="28" height="28" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">'
+        + '<circle cx="14" cy="14" r="13" fill="' + color + '" stroke="rgba(255,255,255,0.85)" stroke-width="1.5"/>'
+        + '<text x="14" y="14" text-anchor="middle" dominant-baseline="central"'
+        + ' fill="white" font-family="\'Helvetica Neue\',Arial,sans-serif"'
+        + ' font-weight="700" font-size="' + fs + '">' + (label || "") + '</text>'
+        + '</svg>';
+      return L.divIcon({
+        className: "lf-marker",
+        html: html,
+        iconSize: [28, 28],
+        iconAnchor: [14, 14],
+        popupAnchor: [0, -14],
+      });
+    }
+
+    // site_id "1" → "①"（現 /map/ の circledLabel と parity）
+    var CIRCLED_NUMS = ["①","②","③","④","⑤","⑥","⑦","⑧","⑨","⑩",
+      "⑪","⑫","⑬","⑭","⑮","⑯","⑰","⑱","⑲","⑳",
+      "㉑","㉒","㉓","㉔","㉕","㉖","㉗","㉘","㉙","㉚",
+      "㉛","㉜","㉝","㉞","㉟","㊱","㊲","㊳","㊴","㊵"];
+    var CIRCLED_ALPHA = {"A":"Ⓐ","B":"Ⓑ","C":"Ⓒ","D":"Ⓓ","E":"Ⓔ"};
+    function circledLabel(id) {
+      var n = parseInt(id, 10);
+      if (!isNaN(n) && n >= 1 && n <= 40) return CIRCLED_NUMS[n - 1];
+      if (CIRCLED_ALPHA[id]) return CIRCLED_ALPHA[id];
+      return id != null ? String(id) : "";
+    }
+
+    function escapeHtml(s) {
+      return String(s)
+        .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+    }
+
+    // popup 内容：現状APIにある properties を表示。size / desc は存在する時だけ出す。
+    function popupHtml(p) {
+      p = p || {};
+      var name = p.site_name || p.site_id || "サイト";
+      var areaHtml = p.area
+        ? '<span class="lf-pop-area">' + escapeHtml(p.area) + "</span>"
+        : "";
+      var meta = [];
+      if (p.size) meta.push("サイズ: " + escapeHtml(p.size));
+      if (p.desc) meta.push(escapeHtml(p.desc));
+      var metaHtml = meta.length
+        ? '<p class="lf-pop-meta">' + meta.join("<br/>") + "</p>"
+        : "";
+      return '<span class="lf-pop-name">' + escapeHtml(name) + "</span>"
+        + areaHtml + metaHtml;
+    }
+
+    // CORS: API は origin https://oiranomori.jp 限定許可。localhost 開発では弾かれ得る。
+    // キャッシュ: API側 Cache-Control: public, max-age=300。多重fetchしない（1回のみ）。
+    fetch(GEOJSON_URL)
+      .then(function (r) {
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return r.json();
+      })
+      .then(function (geojson) {
+        var layer = L.geoJSON(geojson, {
+          // L.geoJSON は GeoJSON の [lng, lat] を自動で [lat, lng] に変換する
+          pointToLayer: function (feature, latlng) {
+            var p = (feature && feature.properties) || {};
+            var color = colorFor(p.site_type);
+            return L.marker(latlng, {
+              icon: circleIcon(circledLabel(p.site_id), color),
+              title: p.site_name || "",
+            });
+          },
+          onEachFeature: function (feature, lyr) {
+            var p = (feature && feature.properties) || {};
+            lyr.bindPopup(popupHtml(p), { className: "lf-popup", closeButton: true });
+          },
+        }).addTo(map);
+
+        if (skeletonEl) skeletonEl.remove();
+
+        // 全点が収まるよう fitBounds（点が無ければ既定中心のまま）
+        try {
+          var b = layer.getBounds();
+          if (b.isValid()) map.fitBounds(b, { padding: [40, 40], maxZoom: 18 });
+        } catch (e) { /* noop */ }
+      })
+      .catch(function () { showError(); });
+  });
+</script>
