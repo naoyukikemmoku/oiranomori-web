@@ -1,5 +1,14 @@
 ﻿---
 import LpLayout from "../../layouts/LpLayout.astro";
+import { Picture } from "astro:assets";
+import firewoodNet from "../../assets/images/firewood_net.jpg";
+import firewoodFelling from "../../assets/images/firewood_felling.jpg";
+import firewoodBucking1 from "../../assets/images/firewood_bucking1.jpg";
+import firewoodBucking2 from "../../assets/images/firewood_bucking2.jpg";
+import firewoodDrying from "../../assets/images/firewood_drying.jpg";
+import firewoodForest100 from "../../assets/images/firewood_forest100.jpg";
+import firewoodMoisture from "../../assets/images/firewood_moisture.jpg";
+import firewoodSplitting from "../../assets/images/firewood_splitting.jpg";
 
 const speciesCards = [
   { name: "スギ",               bag: "黄袋", size: "40cm",    weight: "3kg",  price: "¥770",   durability: 1, power: 5, ignition: 5, ember: 1, desc: "燃えやすさNo.1。焚きつけに最適。一気に火力を上げたい時に。" },
@@ -96,6 +105,7 @@ const stars = (n: number) => "★".repeat(n) + "☆".repeat(5 - n);
             price: "¥100 / kg",
             note: "100円未満切り捨て",
             desc: "好きな薪を、必要な分だけ。少量からでもご購入いただけます。迷ったらこれが一番のおすすめです。薪棚から自分で選ぶ愉しみを。",
+            img: null,
           },
           {
             no: "02",
@@ -104,6 +114,7 @@ const stars = (n: number) => "★".repeat(n) + "☆".repeat(5 - n);
             price: "予約時オプション",
             note: "当日現地での変更も可",
             desc: "その日の薪の状態を見て、おいらが最高の組み合わせをセレクトします。予約時に必要量を選択いただき、当日現地での変更も可能です。",
+            img: null,
           },
           {
             no: "03",
@@ -112,6 +123,7 @@ const stars = (n: number) => "★".repeat(n) + "☆".repeat(5 - n);
             price: "¥770 〜",
             note: "樹種・サイズにより異なる",
             desc: "各樹種ごとにパッキング済み。手軽に持ち運びたい方、特定の樹種を指定したい方へ。",
+            img: firewoodNet,
           },
         ].map((item) => (
           <div class="grid gap-4 py-8 md:grid-cols-[2.5rem_1fr_auto] md:items-start">
@@ -120,6 +132,16 @@ const stars = (n: number) => "★".repeat(n) + "☆".repeat(5 - n);
               <p class="text-xs tracking-[0.22em] text-zinc-400">{item.subtitle}</p>
               <h3 class="mt-1 text-xl font-semibold text-zinc-800">{item.title}</h3>
               <p class="mt-3 max-w-lg text-sm leading-loose text-zinc-600">{item.desc}</p>
+              {item.img && (
+                <Picture
+                  src={item.img}
+                  formats={["avif", "webp"]}
+                  alt="樹種別ネット売り"
+                  loading="lazy"
+                  sizes="(max-width: 768px) 100vw, 28rem"
+                  class="mt-5 w-full max-w-md object-cover"
+                />
+              )}
             </div>
             <div class="md:text-right">
               <p class="text-2xl font-semibold text-zinc-800">{item.price}</p>
@@ -256,19 +278,32 @@ const stars = (n: number) => "★".repeat(n) + "☆".repeat(5 - n);
           {
             title: "林業のプロが、一束ずつ管理",
             desc: "おいらは那須烏山で林業を営むプロフェッショナル。木を選び、切り、割り、乾燥させる全工程を自ら手がけています。チェーンソーによる伐木等特別教育・刈払機取扱作業者に対する安全衛生教育を修了し、測量士資格を持つ。地形・境界の把握から始まる設計された林業です。",
+            img: null,
           },
           {
             title: "含水率15%以下",
             desc: "芯まで乾燥させ、含水率を15%程度まで下げてから提供しています。乾燥不十分な薪は煙が多く、爆ぜやすく、テントを傷めます。",
+            img: firewoodMoisture,
           },
           {
             title: "地元・那須烏山産の広葉樹",
             desc: "おいらの森の開拓・整備過程で出た木材を活用。コナラ・クヌギを中心とした地元の広葉樹で、ホームセンター品とは一線を画す火持ちと安定性があります。",
+            img: null,
           },
         ].map((item) => (
           <div class="py-8">
             <h3 class="text-lg font-semibold text-white">{item.title}</h3>
             <p class="mt-3 max-w-2xl text-sm leading-loose text-zinc-400">{item.desc}</p>
+            {item.img && (
+              <Picture
+                src={item.img}
+                formats={["avif", "webp"]}
+                alt="水分計が示す含水率12.4%"
+                loading="lazy"
+                sizes="(max-width: 768px) 100vw, 20rem"
+                class="mt-5 w-full max-w-xs object-cover"
+              />
+            )}
           </div>
         ))}
       </div>
@@ -284,15 +319,29 @@ const stars = (n: number) => "★".repeat(n) + "☆".repeat(5 - n);
 
       <div class="mt-14 grid gap-8 sm:grid-cols-2 md:grid-cols-4">
         {[
-          { no: "01", title: "伐採",        desc: "森の光と風の通り道を考え、1本ずつ木を選定。チェーンソーで丁寧に伐採します。" },
-          { no: "02", title: "玉切り・運搬", desc: "軽トラやトラクターで運び出し、玉切り台でまとめて薪の長さにカット。" },
-          { no: "03", title: "薪割り",       desc: "断面を出すことで乾燥を促進。おかみも協力して割っています。" },
-          { no: "04", title: "乾燥",         desc: "薪棚で風に当て、じっくりと熟成。水分計で全数チェックし、含水率15%以下で出荷。" },
+          { no: "01", title: "伐採",        desc: "森の光と風の通り道を考え、1本ずつ木を選定。チェーンソーで丁寧に伐採します。", imgs: [{ src: firewoodFelling, alt: "伐採作業" }] },
+          { no: "02", title: "玉切り・運搬", desc: "軽トラやトラクターで運び出し、玉切り台でまとめて薪の長さにカット。", imgs: [{ src: firewoodBucking1, alt: "玉切り後の薪" }, { src: firewoodBucking2, alt: "玉切り後の薪" }] },
+          { no: "03", title: "薪割り",       desc: "断面を出すことで乾燥を促進。おかみも協力して割っています。", imgs: [{ src: firewoodSplitting, alt: "薪割りの様子" }] },
+          { no: "04", title: "乾燥",         desc: "薪棚で風に当て、じっくりと熟成。水分計で全数チェックし、含水率15%以下で出荷。", imgs: [{ src: firewoodDrying, alt: "乾燥のために積み上げた薪" }] },
         ].map((step) => (
           <div>
             <p class="text-4xl font-semibold leading-none text-zinc-600">{step.no}</p>
             <h3 class="mt-3 font-semibold text-white">{step.title}</h3>
             <p class="mt-2 text-sm leading-loose text-zinc-400">{step.desc}</p>
+            {step.imgs.length > 0 && (
+              <div class="mt-4 space-y-2">
+                {step.imgs.map((im) => (
+                  <Picture
+                    src={im.src}
+                    formats={["avif", "webp"]}
+                    alt={im.alt}
+                    loading="lazy"
+                    sizes="(max-width: 768px) 100vw, 22rem"
+                    class="w-full object-cover"
+                  />
+                ))}
+              </div>
+            )}
           </div>
         ))}
       </div>
@@ -304,6 +353,14 @@ const stars = (n: number) => "★".repeat(n) + "☆".repeat(5 - n);
           木を切り、光を入れ、また芽吹かせる「薪炭林（しんたんりん）」のサイクル。<br />
           薪を買うという行為が、この森の100年後の姿を支える資金になります。
         </p>
+        <Picture
+          src={firewoodForest100}
+          formats={["avif", "webp"]}
+          alt="切り株を見つめるおいらと恩師"
+          loading="lazy"
+          sizes="(max-width: 768px) 100vw, 24rem"
+          class="mt-8 w-full max-w-sm object-cover"
+        />
       </div>
     </div>
   </section>

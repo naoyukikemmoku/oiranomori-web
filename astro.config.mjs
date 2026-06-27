@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig, passthroughImageService } from "astro/config";
+import { defineConfig, sharpImageService } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 import robotsTxt from "astro-robots-txt";
 import tailwindcss from "@tailwindcss/vite";
@@ -15,7 +15,7 @@ export default defineConfig({
     robotsTxt(),
   ],
   image: {
-    service: passthroughImageService(),
+    service: sharpImageService(),
   },
   vite: {
     plugins: [tailwindcss()],
