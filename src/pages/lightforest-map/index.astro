@@ -201,6 +201,44 @@ const DEFAULT_ZOOM = 17;
   align-items: center;
   justify-content: center;
 }
+
+/* ═══ 現在地（GPS）コントロール ═══ */
+.lf-loc-control a {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  background: #fff;
+  cursor: pointer;
+}
+.lf-loc-control a:hover { background: #f5f5f5; }
+.spin-icon, .lf-loc-control svg { /* keyframes spin は既存定義を共有 */ }
+.lf-loc-err {
+  display: none;
+  position: absolute;
+  right: 0;
+  bottom: 40px;
+  white-space: nowrap;
+  background: rgba(26, 36, 33, 0.86);
+  color: #fff;
+  font-size: 11px;
+  line-height: 1.4;
+  padding: 4px 8px;
+  border-radius: 3px;
+}
+
+/* 現在地の青ドット（divIcon） */
+.lf-loc-dot { background: transparent; border: none; }
+.lf-loc-dot-inner {
+  display: block;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #4285f4;
+  border: 2.5px solid #fff;
+  box-shadow: 0 0 0 4px rgba(66, 133, 244, 0.25);
+}
 </style>
 
 <script
@@ -262,6 +300,117 @@ const DEFAULT_ZOOM = 17;
 
     // 背景マップ ON/OFF トグル（Leaflet標準のoverlay control）
     L.control.layers(null, { "背景マップ": lightfieldLayer }, { collapsed: false, position: "topright" }).addTo(map);
+
+    // ── 現在地（GPS）表示 ──────────────────────────────
+    // 携帯のGPSで自位置を青ドット＋精度円で表示。watchで移動に追従。
+    (function () {
+      var locDot = null;       // 現在地マーカー（divIcon）
+      var locCircle = null;    // 精度円
+      var watching = false;
+      var firstFix = true;
+
+      var SVG_NORMAL = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"'
+        + ' stroke="#2d3a30" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
+        + '<circle cx="12" cy="12" r="4"/>'
+        + '<line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/>'
+        + '<line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg>';
+      var SVG_LOADING = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"'
+        + ' stroke="#4285f4" stroke-width="2.5" stroke-linecap="round"'
+        + ' style="animation:spin 0.9s linear infinite;transform-origin:center;">'
+        + '<path d="M12 3a9 9 0 1 0 9 9"/></svg>';
+      var SVG_ACTIVE = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"'
+        + ' stroke="#4285f4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
+        + '<circle cx="12" cy="12" r="4" fill="#4285f4"/>'
+        + '<line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/>'
+        + '<line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg>';
+
+      // Leaflet カスタムコントロール（右下）
+      var LocControl = L.Control.extend({
+        options: { position: "bottomright" },
+        onAdd: function () {
+          var c = L.DomUtil.create("div", "leaflet-bar lf-loc-control");
+          var btn = L.DomUtil.create("a", "", c);
+          btn.href = "#";
+          btn.title = "現在地を表示";
+          btn.setAttribute("role", "button");
+          btn.setAttribute("aria-label", "現在地を表示");
+          btn.innerHTML = SVG_NORMAL;
+          this._btn = btn;
+          this._err = L.DomUtil.create("div", "lf-loc-err", c);
+
+          L.DomEvent.on(btn, "click", L.DomEvent.stop)
+            .on(btn, "click", this._toggle, this);
+          // コントロール上のドラッグ/スクロールが地図に伝播しないように
+          L.DomEvent.disableClickPropagation(c);
+          return c;
+        },
+        _showErr: function (msg) {
+          this._err.textContent = msg;
+          this._err.style.display = "block";
+          var self = this;
+          setTimeout(function () { self._err.style.display = "none"; }, 4000);
+        },
+        _toggle: function () {
+          if (!navigator.geolocation) { this._showErr("非対応ブラウザ"); return; }
+          if (watching) {
+            // 2度押しで追従停止＋表示クリア
+            map.stopLocate();
+            watching = false;
+            if (locDot) { map.removeLayer(locDot); locDot = null; }
+            if (locCircle) { map.removeLayer(locCircle); locCircle = null; }
+            this._btn.innerHTML = SVG_NORMAL;
+            return;
+          }
+          this._btn.innerHTML = SVG_LOADING;
+          firstFix = true;
+          watching = true;
+          // watch:true で移動に追従。enableHighAccuracy で携帯GPSを使う。
+          map.locate({ watch: true, enableHighAccuracy: true, maximumAge: 5000, timeout: 15000 });
+        },
+        _onFound: function (e) {
+          this._btn.innerHTML = SVG_ACTIVE;
+          var dot = L.divIcon({
+            className: "lf-loc-dot",
+            html: '<span class="lf-loc-dot-inner"></span>',
+            iconSize: [18, 18],
+            iconAnchor: [9, 9],
+          });
+          if (!locDot) {
+            locDot = L.marker(e.latlng, { icon: dot, zIndexOffset: 1000, interactive: false }).addTo(map);
+          } else {
+            locDot.setLatLng(e.latlng);
+          }
+          var acc = e.accuracy || 0;
+          if (!locCircle) {
+            locCircle = L.circle(e.latlng, {
+              radius: acc, color: "#4285f4", weight: 1,
+              fillColor: "#4285f4", fillOpacity: 0.12, interactive: false,
+            }).addTo(map);
+          } else {
+            locCircle.setLatLng(e.latlng).setRadius(acc);
+          }
+          // 初回のみ自位置へ寄せる（以降は移動に追従しつつ勝手に画面を動かさない）
+          if (firstFix) {
+            firstFix = false;
+            if (map.getZoom() < 18) map.setView(e.latlng, 19);
+            else map.panTo(e.latlng);
+          }
+        },
+        _onError: function (e) {
+          watching = false;
+          map.stopLocate();
+          this._btn.innerHTML = SVG_NORMAL;
+          var msg = (e && e.code === 1) ? "位置情報が許可されていません"
+                  : (e && e.code === 2) ? "位置を取得できません" : "タイムアウトしました";
+          this._showErr(msg);
+        },
+      });
+
+      var locCtrl = new LocControl();
+      map.addControl(locCtrl);
+      map.on("locationfound", function (e) { locCtrl._onFound(e); });
+      map.on("locationerror", function (e) { locCtrl._onError(e); });
+    })();
 
     // site_type → 色
     function colorFor(siteType) {
