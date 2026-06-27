@@ -1,0 +1,156 @@
+---
+import PageLayout from "../../../layouts/PageLayout.astro";
+
+const TITLE = "ファミリーキャンプ｜里山パークおいらの森（栃木）";
+const DESC =
+	"子どもが走れる広さと、トイレ至近の安心。管理人常駐で初めての家族キャンプにも。栃木・那須烏山のファミリー向けサイト。";
+const URL = "https://oiranomori.jp/sites/family/";
+
+const sizeGuide = [
+	{ size: "M", area: "40〜59㎡", guide: "3〜4人：中型テント1張り＋タープ。" },
+	{
+		size: "L",
+		area: "60〜79㎡",
+		guide: "4〜6人：大型テント1〜2張り＋タープ。",
+	},
+	{
+		size: "LL",
+		area: "80〜109㎡",
+		guide: "6人前後：大型テント＋タープ、子どもの遊ぶ余白あり。",
+	},
+];
+
+const experiences = [
+	{
+		h: "子どもが、走れる",
+		body: "区画に余白がある。テントの外で遊べる広さ。目の届くところで、自由にさせておけます。",
+	},
+	{
+		h: "トイレが、近い",
+		body: "水洗・洋式が近くにある区画を選べます。夜中も、子どもがいても、慌てない。",
+	},
+	{
+		h: "道具がなくても",
+		body: "一式そろわなくても始められます。足りないものは借りればいい。",
+		linkHref: "/rental/",
+		linkText: "レンタルを見る",
+	},
+	{
+		h: "初めての家族キャンプでも",
+		body: "管理人が常駐しています。困ったら聞ける距離に人がいる安心。",
+	},
+];
+---
+
+<PageLayout title={TITLE} description={DESC}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": TITLE,
+      "description": DESC,
+      "url": URL,
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "里山パークおいらの森",
+        "url": "https://oiranomori.jp"
+      }
+    })} />
+  </Fragment>
+
+  {/* ページ見出し */}
+  <div class="mb-10 border-b border-zinc-200 pb-8">
+    <p class="text-xs tracking-[0.26em] text-zinc-400 uppercase">Family</p>
+    <h1 class="mt-3 text-3xl font-semibold text-zinc-800 md:text-4xl">家族で、気持ちよく</h1>
+    <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-500">
+      子どもが駆け回れる広さと、すぐ近くのトイレ。管理人が常駐しているから、
+      初めての家族キャンプでも安心して過ごせます。
+    </p>
+  </div>
+
+  {/* あなたの人数なら、このサイズ */}
+  <section class="mb-14">
+    <h2 class="mb-2 text-xl font-semibold text-zinc-800">あなたなら、このサイズ</h2>
+    <p class="mb-5 text-sm text-zinc-500">家族（3〜6人）に合うのは M・L・LL。</p>
+    <div class="overflow-x-auto border-y border-zinc-200">
+      <table class="w-full min-w-[480px] text-sm">
+        <thead>
+          <tr class="border-b border-zinc-200 bg-zinc-50">
+            <th class="px-4 py-3 text-left font-medium text-zinc-600">サイズ</th>
+            <th class="px-4 py-3 text-left font-medium text-zinc-600">有効面積</th>
+            <th class="px-4 py-3 text-left font-medium text-zinc-600">目安</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-zinc-100">
+          {sizeGuide.map((s) => (
+            <tr class="transition hover:bg-zinc-50">
+              <td class="px-4 py-3 font-medium text-zinc-700">{s.size}</td>
+              <td class="px-4 py-3 text-zinc-600">{s.area}</td>
+              <td class="px-4 py-3 text-zinc-600">{s.guide}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  {/* 動的枠プレースホルダ（②③：サイズ別空き＋個別区画一覧） */}
+  <section id="size-availability" class="mb-14">
+    {/* TODO: client-fetch でサイズ別空き＋個別区画一覧。App handoff 後に実装 */}
+  </section>
+
+  {/* 体験 */}
+  <section class="mb-14">
+    <div class="grid gap-8 sm:grid-cols-2">
+      {experiences.map((e) => (
+        <div class="border-t border-zinc-200 pt-5">
+          <h2 class="text-lg font-semibold text-zinc-800">{e.h}</h2>
+          <p class="mt-3 text-sm leading-loose text-zinc-600">
+            {e.body}
+            {e.linkHref && (
+              <a href={e.linkHref} class="ml-1 underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80">
+                {e.linkText} →
+              </a>
+            )}
+          </p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  {/* 予約導線 */}
+  <section class="mb-14">
+    <h2 class="mb-2 text-xl font-semibold text-zinc-800">予約する</h2>
+    <p class="mb-5 text-sm leading-loose text-zinc-500">
+      料金・空き状況は予約システムでご確認ください。
+    </p>
+    <a
+      href="https://www.489pro-x.com/ja/s/oiranomori/planlist/#plans"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="inline-flex items-center justify-center rounded-full bg-[color:var(--forest-600)] px-7 py-3 text-sm text-white shadow-sm transition hover:bg-[color:var(--forest-700)]"
+    >
+      空き状況・予約はこちら ↗
+    </a>
+    {/* TODO: ファミリー該当プランの個別 id に差し替え（#plans は仮置き）。proX プラン id 確定後に更新 */}
+  </section>
+
+  {/* 関連内部リンク */}
+  <section class="mb-14">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">あわせて見る</h2>
+    <ul class="space-y-3 text-sm">
+      <li>
+        <a href="/light-guide/" class="text-zinc-600 underline underline-offset-2 transition hover:text-zinc-800">ライトフォレスト 利用案内</a>
+        <span class="ml-2 text-zinc-400">— 設備・サイズ別目安・利用ルール</span>
+      </li>
+      <li>
+        <a href="/rental/" class="text-zinc-600 underline underline-offset-2 transition hover:text-zinc-800">レンタル</a>
+        <span class="ml-2 text-zinc-400">— 手ぶらでも始められる</span>
+      </li>
+      <li>
+        <a href="/access/" class="text-zinc-600 underline underline-offset-2 transition hover:text-zinc-800">アクセス</a>
+        <span class="ml-2 text-zinc-400">— 行き方・駐車場</span>
+      </li>
+    </ul>
+  </section>
+</PageLayout>
