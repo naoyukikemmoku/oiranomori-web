@@ -22,27 +22,12 @@ type Spot = {
 	comment: string;
 	status?: string;
 };
-type CampSite = {
-	id: string;
-	name: string;
-	lat: number;
-	lng: number;
-	desc: string;
-	size?: string;
-};
-type FacilityPin = {
-	id: string;
-	name: string;
-	lat: number;
-	lng: number;
-	desc: string;
-};
 
 const homeSpot = (spotsRaw as any).home as
 	| { id: string; name: string; lat: number; lng: number; comment: string }
 	| undefined;
 
-// Surround spots
+// Surround spots（campキー auto/block/solo/light/facility_power は未使用。spots.json には残置）
 const surroundSpots: Record<string, Spot[]> = {};
 for (const cat of SURROUND_CATS) {
 	const raw = ((spotsRaw as any)[cat.key] as Spot[]) ?? [];
@@ -51,34 +36,21 @@ for (const cat of SURROUND_CATS) {
 	);
 }
 
-// Camp sites
-const autoSites = ((spotsRaw as any).auto as CampSite[]) ?? [];
-const blockSites = ((spotsRaw as any).block as CampSite[]) ?? [];
-const soloSites = ((spotsRaw as any).solo as CampSite[]) ?? [];
-const lightFacilities = ((spotsRaw as any).light as FacilityPin[]) ?? [];
-const powerFacilities =
-	((spotsRaw as any).facility_power as FacilityPin[]) ?? [];
-
 const surroundJson = JSON.stringify(surroundSpots);
 const homeJson = JSON.stringify(homeSpot ?? null);
-const autoJson = JSON.stringify(autoSites);
-const blockJson = JSON.stringify(blockSites);
-const soloJson = JSON.stringify(soloSites);
-const lightFacJson = JSON.stringify(lightFacilities);
-const powerFacJson = JSON.stringify(powerFacilities);
 ---
 
 <BaseLayout
-  title="場内・周辺マップ | 里山パークおいらの森"
-  description="場内施設マップと周辺スポットのご案内。食事・お風呂・買い物・観光・緊急時の医療機関など、キャンプ前に確認しておきたい情報をまとめました。"
-  lastUpdated="2026年5月"
+  title="周辺案内 | 里山パークおいらの森"
+  description="おいらの森周辺のスポットのご案内。食事・お風呂・買い物・観光・緊急時の医療機関など、キャンプ前に確認しておきたい情報をまとめました。"
+  lastUpdated="2026年6月"
 >
   <Fragment slot="head">
     <script is:inline type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": ["TouristAttraction", "Place"],
       "name": "里山パークおいらの森",
-      "description": "栃木県那須烏山市の里山キャンプ場。場内施設マップと周辺スポット（食事・温泉・買い物・観光）を提供。",
+      "description": "栃木県那須烏山市の里山キャンプ場。周辺スポット（食事・温泉・買い物・観光・緊急医療）を地図でご案内。",
       "url": "https://oiranomori.jp/map/",
       "hasMap": "https://oiranomori.jp/map/",
       "geo": {
@@ -101,21 +73,16 @@ const powerFacJson = JSON.stringify(powerFacilities);
   </Fragment>
 
   <Header />
-  <h1 class="sr-only">場内・周辺マップ</h1>
+  <h1 class="sr-only">周辺案内</h1>
 
   <main id="map-main">
 
-    <!-- タブバー -->
+    <!-- タブバー（周辺案内カテゴリ） -->
     <div id="tab-row">
-      <span class="map-label">Map</span>
+      <span class="map-label">周辺案内</span>
       <div id="tab-scroll">
-        <!-- 上位2択 -->
-        <button type="button" data-view="camp" class="view-btn">場内マップ</button>
-        <button type="button" data-view="surround" class="view-btn">周辺案内</button>
-        <!-- 周辺案内サブタブ（周辺案内選択時のみ表示） -->
-        <span id="surround-divider" class="tab-divider">|</span>
-        {SURROUND_CATS.map((cat) => (
-          <button type="button" data-tab={cat.key} class="tab-btn surround-tab">
+        {SURROUND_CATS.map((cat, i) => (
+          <button type="button" data-tab={cat.key} class={`tab-btn surround-tab${i === 0 ? " is-active" : ""}`}>
             {cat.label}
           </button>
         ))}
@@ -124,80 +91,6 @@ const powerFacJson = JSON.stringify(powerFacilities);
 
     <!-- マップ + パネル -->
     <div id="map-list-area">
-
-      <!-- 場内マップ: PCサイドパネル -->
-      <div id="camp-panel">
-        <div id="camp-panel-scroll">
-          <label class="cp-row cp-all">
-            <input type="checkbox" id="chk-all" checked /> 全サイト
-          </label>
-          <hr class="cp-sep" />
-
-          <div class="cp-group">
-            <label class="cp-row cp-parent">
-              <input type="checkbox" class="chk-cat" data-cat="auto" checked /> オートサイト
-            </label>
-            <div class="cp-children" id="chk-auto-children">
-              {autoSites.map((s) => (
-                <label class="cp-child">
-                  <input type="checkbox" class="chk-site" data-cat="auto" data-id={s.id} checked />
-                  {s.id}
-                </label>
-              ))}
-            </div>
-          </div>
-          <hr class="cp-sep" />
-
-          <div class="cp-group">
-            <label class="cp-row cp-parent">
-              <input type="checkbox" class="chk-cat" data-cat="block" checked /> 区画サイト
-            </label>
-            <div class="cp-children" id="chk-block-children">
-              {blockSites.map((s) => (
-                <label class="cp-child">
-                  <input type="checkbox" class="chk-site" data-cat="block" data-id={s.id} checked />
-                  {s.id}
-                </label>
-              ))}
-            </div>
-          </div>
-          <hr class="cp-sep" />
-
-          <div class="cp-group">
-            <label class="cp-row cp-parent">
-              <input type="checkbox" class="chk-cat" data-cat="solo" checked /> ソロ区画
-            </label>
-            <div class="cp-children" id="chk-solo-children">
-              {soloSites.map((s) => (
-                <label class="cp-child">
-                  <input type="checkbox" class="chk-site" data-cat="solo" data-id={s.id} checked />
-                  {s.id}
-                </label>
-              ))}
-            </div>
-          </div>
-          <hr class="cp-sep" />
-
-          <div class="cp-group">
-            <label class="cp-row cp-parent">
-              <input type="checkbox" class="chk-cat" data-cat="facility" checked /> 設備
-            </label>
-            <div class="cp-children" id="chk-facility-children">
-              <label class="cp-child">
-                <input type="checkbox" class="chk-fac" data-fac="light" checked /> トイレ・流し・受付
-              </label>
-              <label class="cp-child">
-                <input type="checkbox" class="chk-fac" data-fac="power" checked /> コンセント
-              </label>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- PC toggle for camp panel -->
-      <button id="camp-panel-toggle" aria-label="パネルを切り替え">
-        <span id="camp-panel-toggle-icon">◀</span>
-      </button>
 
       <!-- マップ -->
       <div id="map-wrapper">
@@ -229,13 +122,6 @@ const powerFacJson = JSON.stringify(powerFacilities);
         <div id="list-scroll">
           <div id="no-data-msg">このカテゴリは準備中です。</div>
           <ul id="spot-list" role="list"></ul>
-        </div>
-      </div>
-
-      <!-- Mobile: 場内マップ チェックボックスドロワー -->
-      <div id="camp-drawer">
-        <div id="camp-drawer-scroll">
-          <!-- JS でクローンを注入 -->
         </div>
       </div>
 
@@ -274,10 +160,9 @@ const powerFacJson = JSON.stringify(powerFacilities);
   display: flex;
   align-items: center;
   padding: 0 14px;
-  font-size: 9px;
-  letter-spacing: 0.28em;
-  color: #a0a0a0;
-  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: #71717a;
   border-right: 1px solid #d4d4d4;
 }
 #tab-scroll {
@@ -287,35 +172,6 @@ const powerFacJson = JSON.stringify(powerFacilities);
   scrollbar-width: none;
 }
 #tab-scroll::-webkit-scrollbar { display: none; }
-
-.view-btn {
-  flex-shrink: 0;
-  padding: 10px 14px;
-  font-size: 12px;
-  letter-spacing: 0.05em;
-  color: #71717a;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  position: relative;
-  transition: color 0.15s;
-}
-.view-btn:hover { color: #1a2421; }
-.view-btn.is-active { color: #2d3a30; font-weight: 700; }
-.view-btn.is-active::after {
-  content: "";
-  position: absolute;
-  bottom: -1px; left: 0; right: 0;
-  height: 2px;
-  background: #2d3a30;
-}
-
-.tab-divider {
-  align-self: center;
-  color: #d4d4d4;
-  padding: 0 2px;
-  font-size: 12px;
-}
 
 .tab-btn {
   flex-shrink: 0;
@@ -347,97 +203,6 @@ const powerFacJson = JSON.stringify(powerFacilities);
   flex-direction: column;
   min-height: 0;
   position: relative;
-}
-
-/* ═══ Camp panel (PC sidebar) ═══ */
-#camp-panel {
-  display: none;
-  flex-shrink: 0;
-  width: 220px;
-  background: #f4f5f2;
-  border-right: 1px solid #d4d4d4;
-  overflow: hidden;
-  transition: width 0.25s ease, opacity 0.2s ease;
-}
-#camp-panel.panel-hidden-pc {
-  width: 0;
-  opacity: 0;
-  pointer-events: none;
-}
-#camp-panel-scroll {
-  height: 100%;
-  overflow-y: auto;
-  padding: 12px 10px 20px;
-}
-
-/* Camp panel toggle (PC only) */
-#camp-panel-toggle {
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 18px;
-  background: #e8e8e4;
-  border: none;
-  border-left: 1px solid #d4d4d4;
-  border-right: 1px solid #d4d4d4;
-  color: #71717a;
-  cursor: pointer;
-  font-size: 9px;
-  transition: background 0.15s, color 0.15s;
-  z-index: 2;
-}
-#camp-panel-toggle:hover { background: #d8d8d4; color: #1a2421; }
-
-/* Checkbox panel styles */
-.cp-all {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 13px;
-  font-weight: 700;
-  color: #1a2421;
-  cursor: pointer;
-  padding: 4px 2px;
-}
-.cp-sep {
-  border: none;
-  border-top: 1px solid #ddd;
-  margin: 8px 0;
-}
-.cp-group { margin-bottom: 2px; }
-.cp-parent {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 12px;
-  font-weight: 600;
-  color: #2d3a30;
-  cursor: pointer;
-  padding: 3px 2px;
-}
-.cp-children {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 6px;
-  padding: 4px 4px 4px 18px;
-}
-.cp-child {
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  font-size: 11px;
-  color: #555;
-  cursor: pointer;
-  white-space: nowrap;
-}
-.cp-row input[type="checkbox"],
-.cp-child input[type="checkbox"] {
-  cursor: pointer;
-  accent-color: #2d3a30;
-  width: 13px;
-  height: 13px;
 }
 
 /* ═══ Map wrapper ═══ */
@@ -640,24 +405,6 @@ const powerFacJson = JSON.stringify(powerFacilities);
 }
 .route-btn:hover { border-bottom-color: var(--forest-600, #4a7c59); }
 
-/* ═══ Mobile camp drawer ═══ */
-#camp-drawer {
-  display: none;
-  flex-shrink: 0;
-  background: #f4f5f2;
-  border-top: 1px solid #d4d4d4;
-  overflow: hidden;
-  transition: height 0.25s ease;
-}
-#camp-drawer-scroll {
-  overflow-y: auto;
-  padding: 10px 12px 16px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 10px;
-  align-items: flex-start;
-}
-
 /* ═══ PC layout (md+) ═══ */
 @media (min-width: 768px) {
   #map-list-area { flex-direction: row; }
@@ -667,19 +414,6 @@ const powerFacJson = JSON.stringify(powerFacilities);
     transition: flex 0.25s ease;
   }
   #mobile-handle { display: none !important; }
-  #camp-drawer   { display: none !important; }
-
-  #camp-panel {
-    display: flex;
-    flex-direction: column;
-    order: -1;
-    height: 100%;
-  }
-  #camp-panel-toggle {
-    display: flex;
-    order: 0;
-    height: 100%;
-  }
 
   #pc-toggle {
     display: flex;
@@ -708,112 +442,32 @@ const powerFacJson = JSON.stringify(powerFacilities);
 .gm-style-iw-c { padding: 12px 14px !important; border-radius: 0 !important; }
 </style>
 
-<script is:inline define:vars={{ API_KEY, MAP_ID, surroundJson, homeJson, autoJson, blockJson, soloJson, lightFacJson, powerFacJson }}>
+<script is:inline define:vars={{ API_KEY, MAP_ID, surroundJson, homeJson }}>
   var surroundSpots = JSON.parse(surroundJson);
   var homeSpot      = JSON.parse(homeJson);
-  var autoSites     = JSON.parse(autoJson);
-  var blockSites    = JSON.parse(blockJson);
-  var soloSites     = JSON.parse(soloJson);
-  var lightFacilities = JSON.parse(lightFacJson);
-  var powerFacilities = JSON.parse(powerFacJson);
 
   var PIN_COLOR    = "#4a5d4e";
   var PIN_SELECTED = "#7c4d2a";
   var PIN_CLOSED   = "#888888";
   var HOME_COLOR   = "#C8A063";
-  var COLOR_AUTO   = "#488B37";
-  var COLOR_BLOCK  = "#C8A063";
-  var COLOR_SOLO   = "#6B8FA3";
   var DEFAULT_CENTER = { lat: 36.6399, lng: 140.0684 };
 
   var gmap           = null;
   var markers        = [];
-  var campMarkers    = {};
   var homeMarker     = null;
   var openInfoWindow = null;
   var selectedIndex  = null;
   var listOpen       = true;
-  var campPanelOpen  = true;
-  var currentMode    = "camp";
   var currentTab     = "food";
-  var lightOverlay   = null;
 
   // DOM refs
   var mapListArea, mapWrapperEl, listPanelEl;
   var mobileHandleEl, handleIconEl, pcToggleEl, pcToggleIconEl;
   var spotListEl, noDataMsgEl;
-  var campPanelEl, campPanelToggleEl, campPanelToggleIconEl;
-  var campDrawerEl, campDrawerScrollEl;
-
-  // ────────────────────────────────────────────────
-  // Circled number/letter helpers
-  // ────────────────────────────────────────────────
-
-  var CIRCLED_NUMS = ["①","②","③","④","⑤","⑥","⑦","⑧","⑨","⑩",
-    "⑪","⑫","⑬","⑭","⑮","⑯","⑰","⑱","⑲","⑳",
-    "㉑","㉒","㉓","㉔","㉕","㉖","㉗","㉘","㉙","㉚",
-    "㉛","㉜","㉝","㉞","㉟","㊱","㊲","㊳","㊴","㊵"];
-  var CIRCLED_ALPHA = {"A":"Ⓐ","B":"Ⓑ","C":"Ⓒ","D":"Ⓓ","E":"Ⓔ"};
-
-  function circledLabel(id) {
-    var n = parseInt(id, 10);
-    if (!isNaN(n) && n >= 1 && n <= 40) return CIRCLED_NUMS[n - 1];
-    if (CIRCLED_ALPHA[id]) return CIRCLED_ALPHA[id];
-    return id;
-  }
 
   // ────────────────────────────────────────────────
   // SVG pin builders
   // ────────────────────────────────────────────────
-
-  function sitePinSvg(label, color) {
-    var fs = label.length > 2 ? "9" : "12";
-    return '<svg width="28" height="28" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">'
-      + '<circle cx="14" cy="14" r="13" fill="' + color + '" stroke="rgba(255,255,255,0.85)" stroke-width="1.5"/>'
-      + '<text x="14" y="14" text-anchor="middle" dominant-baseline="central"'
-      + ' fill="white" font-family="\'Helvetica Neue\',Arial,sans-serif"'
-      + ' font-weight="700" font-size="' + fs + '">' + label + '</text>'
-      + '</svg>';
-  }
-
-  function makeSitePinEl(id, color) {
-    var el = document.createElement("div");
-    el.style.cssText = "cursor:pointer;transform-origin:center center;"
-      + "transition:transform 0.15s ease,filter 0.15s ease;";
-    el.innerHTML = sitePinSvg(circledLabel(id), color);
-    el._color = color;
-    el._id = id;
-    el._selected = false;
-    el.addEventListener("mouseover", function () {
-      if (!el._selected) {
-        el.style.transform = "scale(1.2)";
-        el.style.filter    = "brightness(0.82)";
-      }
-    });
-    el.addEventListener("mouseout", function () {
-      if (!el._selected) {
-        el.style.transform = "";
-        el.style.filter    = "";
-      }
-    });
-    return el;
-  }
-
-  function facilityIconSvg(type) {
-    var icons = { toilet:"🚻", sink:"🚿", reception:"🏠", power:"⚡" };
-    var icon = icons[type] || "📍";
-    return '<div style="font-size:20px;line-height:1;filter:drop-shadow(0 1px 2px rgba(0,0,0,0.4));">' + icon + '</div>';
-  }
-
-  function makeFacPinEl(type) {
-    var el = document.createElement("div");
-    el.style.cssText = "cursor:pointer;transform-origin:center center;"
-      + "transition:transform 0.15s ease;";
-    el.innerHTML = facilityIconSvg(type);
-    el.addEventListener("mouseover", function () { el.style.transform = "scale(1.15)"; });
-    el.addEventListener("mouseout",  function () { el.style.transform = ""; });
-    return el;
-  }
 
   function pinSvg(label, color) {
     return '<svg width="22" height="29" viewBox="0 0 36 48" xmlns="http://www.w3.org/2000/svg">'
@@ -862,26 +516,6 @@ const powerFacJson = JSON.stringify(powerFacilities);
   // ────────────────────────────────────────────────
   // InfoWindow content
   // ────────────────────────────────────────────────
-
-  function siteInfoContent(site) {
-    var sizeHtml = site.size ? '<span style="font-size:11px;color:#888;margin-left:6px;">サイズ: ' + site.size + '</span>' : '';
-    var descHtml = site.desc ? '<p style="margin:6px 0 0;font-size:12px;color:#555;line-height:1.6;">' + site.desc + '</p>' : '';
-    return '<div style="font-family:sans-serif;max-width:220px;line-height:1;">'
-      + '<div style="display:flex;align-items:center;flex-wrap:wrap;margin-bottom:3px;">'
-      + '<strong style="font-size:13px;color:#1a2421;">' + site.name + '</strong>' + sizeHtml
-      + '</div>'
-      + descHtml
-      + '</div>';
-  }
-
-  function facInfoContent(fac) {
-    return '<div style="font-family:sans-serif;max-width:220px;line-height:1;">'
-      + '<strong style="font-size:13px;color:#1a2421;">' + fac.name + '</strong>'
-      + (fac.comment || fac.desc
-        ? '<p style="margin:6px 0 0;font-size:12px;color:#555;line-height:1.6;">' + (fac.comment || fac.desc) + '</p>'
-        : '')
-      + '</div>';
-  }
 
   function infoContent(spot) {
     var mapsUrl = "https://www.google.com/maps/search/?api=1&query="
@@ -979,8 +613,6 @@ const powerFacJson = JSON.stringify(powerFacilities);
 
   function showSurroundCategory(view) {
     if (!gmap) return;
-    if (lightOverlay) lightOverlay.setMap(null);
-    clearCampMarkers();
     clearMarkers();
     homeMarker && (homeMarker.map = gmap);
 
@@ -1018,218 +650,6 @@ const powerFacJson = JSON.stringify(powerFacilities);
     } else {
       gmap.fitBounds(bounds, 60);
     }
-  }
-
-  // ────────────────────────────────────────────────
-  // Camp markers
-  // ────────────────────────────────────────────────
-
-  function clearCampMarkers() {
-    Object.keys(campMarkers).forEach(function (key) {
-      campMarkers[key].forEach(function (m) { m.marker.map = null; });
-    });
-    campMarkers = {};
-  }
-
-  function getFacType(fac) {
-    if (fac.id === "light-reception") return "reception";
-    if (fac.name.indexOf("トイレ") !== -1) return "toilet";
-    if (fac.name.indexOf("流し") !== -1) return "sink";
-    return "sink";
-  }
-
-  function placeCampMarkersForSite(site, color, cat) {
-    var el = makeSitePinEl(site.id, color);
-    var marker = new google.maps.marker.AdvancedMarkerElement({
-      map:      gmap,
-      position: { lat: site.lat, lng: site.lng },
-      content:  el,
-      title:    site.name,
-      zIndex:   5,
-    });
-    marker.addListener("click", function () {
-      if (openInfoWindow) openInfoWindow.close();
-      openIw(siteInfoContent(site), marker);
-      gmap.panTo(marker.position);
-    });
-    if (!campMarkers[cat]) campMarkers[cat] = [];
-    campMarkers[cat].push({ marker: marker, el: el, site: site });
-  }
-
-  function placeFacMarker(fac, type, cat) {
-    var el = makeFacPinEl(type);
-    var marker = new google.maps.marker.AdvancedMarkerElement({
-      map:      gmap,
-      position: { lat: fac.lat, lng: fac.lng },
-      content:  el,
-      title:    fac.name,
-      zIndex:   10,
-    });
-    marker.addListener("click", function () {
-      if (openInfoWindow) openInfoWindow.close();
-      openIw(facInfoContent(fac), marker);
-      gmap.panTo(marker.position);
-    });
-    if (!campMarkers[cat]) campMarkers[cat] = [];
-    campMarkers[cat].push({ marker: marker, el: el, site: fac });
-  }
-
-  function initCampMarkers() {
-    clearCampMarkers();
-    autoSites.forEach(function (s) { placeCampMarkersForSite(s, COLOR_AUTO, "auto-" + s.id); });
-    blockSites.forEach(function (s) { placeCampMarkersForSite(s, COLOR_BLOCK, "block-" + s.id); });
-    soloSites.forEach(function (s) { placeCampMarkersForSite(s, COLOR_SOLO, "solo-" + s.id); });
-    lightFacilities.forEach(function (f) { placeFacMarker(f, getFacType(f), "fac-light-" + f.id); });
-    powerFacilities.forEach(function (f) { placeFacMarker(f, "power", "fac-power-" + f.id); });
-  }
-
-  function showCampMap() {
-    if (!gmap) return;
-    clearMarkers();
-    homeMarker && (homeMarker.map = gmap);
-
-    if (!lightOverlay) {
-      var imageBounds = { north: 36.64157, south: 36.63905, east: 140.06974, west: 140.06561 };
-      lightOverlay = new google.maps.GroundOverlay(
-        "/images/light-field-googlemap.jpg",
-        imageBounds,
-        { opacity: 0.7 }
-      );
-    }
-    lightOverlay.setMap(gmap);
-
-    initCampMarkers();
-    applyCheckboxState();
-
-    gmap.setCenter({ lat: 36.640500, lng: 140.068000 });
-    gmap.setZoom(17);
-  }
-
-  // ────────────────────────────────────────────────
-  // Checkbox state management
-  // ────────────────────────────────────────────────
-
-  function applyCheckboxState() {
-    if (!gmap) return;
-
-    var allOn = document.getElementById("chk-all") ? document.getElementById("chk-all").checked : true;
-
-    // auto sites
-    autoSites.forEach(function (s) {
-      var catChk = document.querySelector('.chk-cat[data-cat="auto"]');
-      var siteChk = document.querySelector('.chk-site[data-cat="auto"][data-id="' + s.id + '"]');
-      var visible = allOn && catChk && catChk.checked && siteChk && siteChk.checked;
-      var key = "auto-" + s.id;
-      if (campMarkers[key]) campMarkers[key].forEach(function (m) { m.marker.map = visible ? gmap : null; });
-    });
-
-    // block sites
-    blockSites.forEach(function (s) {
-      var catChk = document.querySelector('.chk-cat[data-cat="block"]');
-      var siteChk = document.querySelector('.chk-site[data-cat="block"][data-id="' + s.id + '"]');
-      var visible = allOn && catChk && catChk.checked && siteChk && siteChk.checked;
-      var key = "block-" + s.id;
-      if (campMarkers[key]) campMarkers[key].forEach(function (m) { m.marker.map = visible ? gmap : null; });
-    });
-
-    // solo sites
-    soloSites.forEach(function (s) {
-      var catChk = document.querySelector('.chk-cat[data-cat="solo"]');
-      var siteChk = document.querySelector('.chk-site[data-cat="solo"][data-id="' + s.id + '"]');
-      var visible = allOn && catChk && catChk.checked && siteChk && siteChk.checked;
-      var key = "solo-" + s.id;
-      if (campMarkers[key]) campMarkers[key].forEach(function (m) { m.marker.map = visible ? gmap : null; });
-    });
-
-    // light facilities
-    var facCatChk = document.querySelector('.chk-cat[data-cat="facility"]');
-    var lightFacChk = document.querySelector('.chk-fac[data-fac="light"]');
-    var lightVisible = allOn && facCatChk && facCatChk.checked && lightFacChk && lightFacChk.checked;
-    lightFacilities.forEach(function (f) {
-      var key = "fac-light-" + f.id;
-      if (campMarkers[key]) campMarkers[key].forEach(function (m) { m.marker.map = lightVisible ? gmap : null; });
-    });
-
-    var powerFacChk = document.querySelector('.chk-fac[data-fac="power"]');
-    var powerVisible = allOn && facCatChk && facCatChk.checked && powerFacChk && powerFacChk.checked;
-    powerFacilities.forEach(function (f) {
-      var key = "fac-power-" + f.id;
-      if (campMarkers[key]) campMarkers[key].forEach(function (m) { m.marker.map = powerVisible ? gmap : null; });
-    });
-  }
-
-  function bindCheckboxEvents(root) {
-    var allChk = root.querySelector ? root.querySelector("#chk-all") : document.getElementById("chk-all");
-    if (!allChk) allChk = document.getElementById("chk-all");
-
-    function syncAll(checked) {
-      root.querySelectorAll(".chk-cat,.chk-site,.chk-fac").forEach(function (c) { c.checked = checked; });
-      if (allChk) allChk.checked = checked;
-      applyCheckboxState();
-    }
-
-    if (allChk) {
-      allChk.addEventListener("change", function () { syncAll(this.checked); });
-    }
-
-    root.querySelectorAll(".chk-cat").forEach(function (catChk) {
-      catChk.addEventListener("change", function () {
-        var cat = this.dataset.cat;
-        root.querySelectorAll('.chk-site[data-cat="' + cat + '"],.chk-fac').forEach(function (c) {
-          if (cat === "facility") {
-            root.querySelectorAll(".chk-fac").forEach(function (f) { f.checked = catChk.checked; });
-          } else {
-            if (c.dataset.cat === cat) c.checked = catChk.checked;
-          }
-        });
-        applyCheckboxState();
-      });
-    });
-
-    root.querySelectorAll(".chk-site,.chk-fac").forEach(function (chk) {
-      chk.addEventListener("change", function () { applyCheckboxState(); });
-    });
-  }
-
-  function buildMobileDrawer() {
-    campDrawerScrollEl.innerHTML = "";
-    var clone = document.getElementById("camp-panel-scroll").cloneNode(true);
-    // Rename chk-all id to avoid conflicts
-    var allEl = clone.querySelector("#chk-all");
-    if (allEl) allEl.id = "chk-all-drawer";
-    campDrawerScrollEl.appendChild(clone);
-    bindCheckboxEvents(campDrawerScrollEl);
-
-    // Sync drawer ↔ panel: when drawer changes, update panel and apply
-    campDrawerScrollEl.querySelectorAll("input[type='checkbox']").forEach(function (dc) {
-      dc.addEventListener("change", function () {
-        // find corresponding panel checkbox and sync
-        var cat = dc.dataset.cat || "";
-        var fac = dc.dataset.fac || "";
-        var sid = dc.dataset.id || "";
-        var match;
-        if (dc.id === "chk-all-drawer") {
-          match = document.querySelector("#camp-panel #chk-all");
-          if (match) {
-            match.checked = dc.checked;
-            document.querySelectorAll("#camp-panel .chk-cat,.chk-site,.chk-fac").forEach(function (c) { c.checked = dc.checked; });
-          }
-        } else if (dc.classList.contains("chk-cat")) {
-          match = document.querySelector('#camp-panel .chk-cat[data-cat="' + cat + '"]');
-          if (match) {
-            match.checked = dc.checked;
-            document.querySelectorAll('#camp-panel .chk-site[data-cat="' + cat + '"]').forEach(function (c) { c.checked = dc.checked; });
-          }
-        } else if (dc.classList.contains("chk-site")) {
-          match = document.querySelector('#camp-panel .chk-site[data-cat="' + cat + '"][data-id="' + sid + '"]');
-          if (match) match.checked = dc.checked;
-        } else if (dc.classList.contains("chk-fac")) {
-          match = document.querySelector('#camp-panel .chk-fac[data-fac="' + fac + '"]');
-          if (match) match.checked = dc.checked;
-        }
-        applyCheckboxState();
-      });
-    });
   }
 
   // ────────────────────────────────────────────────
@@ -1275,70 +695,29 @@ const powerFacJson = JSON.stringify(powerFacilities);
   }
 
   // ────────────────────────────────────────────────
-  // Mode / tab switching
+  // Tab switching（周辺案内カテゴリのみ）
   // ────────────────────────────────────────────────
 
-  function applyMode(mode, tab) {
-    currentMode = mode;
+  function applyTab(tab) {
+    currentTab = tab;
 
-    // View buttons
-    document.querySelectorAll(".view-btn").forEach(function (btn) {
-      btn.classList.toggle("is-active", btn.dataset.view === mode);
-    });
-
-    // Surround sub-tabs & divider visibility
-    var isSurround = mode === "surround";
-    document.getElementById("surround-divider").style.display = isSurround ? "" : "none";
-    document.querySelectorAll(".surround-tab").forEach(function (btn) {
-      btn.style.display = isSurround ? "" : "none";
-    });
-
-    if (mode === "camp") {
-      // Hide surround UI, show camp UI
-      listPanelEl.style.display = "none";
-      pcToggleEl.style.display  = "none";
-      if (window.innerWidth >= 768) {
-        campPanelEl.style.display        = "flex";
-        campPanelEl.style.flexDirection  = "column";
-        campPanelToggleEl.style.display  = "flex";
-      }
-      if (window.innerWidth < 768) {
-        mobileHandleEl.style.display = "flex";
-        campDrawerEl.style.display   = "block";
-        campDrawerEl.style.height    = "0";
-      } else {
-        mobileHandleEl.style.display = "none";
-        campDrawerEl.style.display   = "none";
-      }
-      showCampMap();
-      if (window.innerWidth < 768) applyMobileCampLayout(listOpen);
-    } else {
-      // surround
-      campPanelEl.style.display       = "none";
-      campPanelToggleEl.style.display = "none";
-      campDrawerEl.style.display      = "none";
-      listPanelEl.style.display       = "block";
-      if (window.innerWidth >= 768) {
-        pcToggleEl.style.display = "flex";
-      }
-      mobileHandleEl.style.display = window.innerWidth < 768 ? "flex" : "none";
-
-      clearCampMarkers();
-      if (lightOverlay) lightOverlay.setMap(null);
-
-      currentTab = tab;
-      document.querySelectorAll(".tab-btn[data-tab]").forEach(function (btn) {
-        btn.classList.toggle("is-active", btn.dataset.tab === tab);
-      });
-      deselectAll();
-      renderList(tab);
-      showSurroundCategory(tab);
-
-      if (window.innerWidth < 768) applyMobileLayout(listOpen);
+    listPanelEl.style.display = "block";
+    if (window.innerWidth >= 768) {
+      pcToggleEl.style.display = "flex";
     }
+    mobileHandleEl.style.display = window.innerWidth < 768 ? "flex" : "none";
 
-    var urlView = mode === "camp" ? "light" : tab;
-    history.pushState({ view: urlView }, "", "/map/?view=" + urlView);
+    document.querySelectorAll(".tab-btn[data-tab]").forEach(function (btn) {
+      btn.classList.toggle("is-active", btn.dataset.tab === tab);
+    });
+
+    deselectAll();
+    renderList(tab);
+    showSurroundCategory(tab);
+
+    if (window.innerWidth < 768) applyMobileLayout(listOpen);
+
+    history.pushState({ view: tab }, "", "/map/?view=" + tab);
   }
 
   // ────────────────────────────────────────────────
@@ -1381,48 +760,12 @@ const powerFacJson = JSON.stringify(powerFacilities);
     }
   }
 
-  function applyMobileCampLayout(open) {
-    var totalH  = mapListArea.offsetHeight;
-    var handleH = mobileHandleEl.offsetHeight;
-    campDrawerEl.style.display = "block";
-    if (open) {
-      var drawerH = Math.min(Math.round(totalH * 0.38), 220);
-      var mapH    = totalH - handleH - drawerH;
-      mapWrapperEl.style.height  = mapH + "px";
-      mapWrapperEl.style.flex    = "";
-      campDrawerEl.style.height  = drawerH + "px";
-      handleIconEl.textContent   = "∧";
-    } else {
-      mapWrapperEl.style.height  = (totalH - handleH) + "px";
-      mapWrapperEl.style.flex    = "";
-      campDrawerEl.style.height  = "0";
-      handleIconEl.textContent   = "∨";
-    }
-  }
-
   function setListOpen(open) {
     listOpen = open;
     if (isMobile()) {
-      if (currentMode === "camp") applyMobileCampLayout(open);
-      else applyMobileLayout(open);
+      applyMobileLayout(open);
     } else {
       applyPcLayout(open);
-    }
-    setTimeout(function () { if (gmap) google.maps.event.trigger(gmap, "resize"); }, 270);
-  }
-
-  function applyCampPanelPc(open) {
-    campPanelOpen = open;
-    if (open) {
-      campPanelEl.classList.remove("panel-hidden-pc");
-      campPanelEl.style.width  = "";
-      campPanelEl.style.opacity = "";
-      campPanelToggleIconEl.textContent = "◀";
-    } else {
-      campPanelEl.style.width   = "0";
-      campPanelEl.style.opacity = "0";
-      campPanelEl.style.pointerEvents = "none";
-      campPanelToggleIconEl.textContent = "▶";
     }
     setTimeout(function () { if (gmap) google.maps.event.trigger(gmap, "resize"); }, 270);
   }
@@ -1432,17 +775,18 @@ const powerFacJson = JSON.stringify(powerFacilities);
   // ────────────────────────────────────────────────
 
   function getViewFromUrl() {
-    return new URLSearchParams(window.location.search).get("view") || "light";
+    var v = new URLSearchParams(window.location.search).get("view");
+    // 旧 camp 用 view（light / camp）は周辺案内へ畳んだため food にフォールバック
+    if (!v || v === "light" || v === "camp") return "food";
+    return v;
   }
 
   window.__initGoogleMaps = function () {
     google.maps.importLibrary("maps").then(function (mapsLib) {
       return google.maps.importLibrary("marker").then(function () {
-        var urlViewInit = getViewFromUrl();
-        var initIsCamp  = (urlViewInit === "light" || urlViewInit === "camp");
         var mapOptions = {
-          center:            initIsCamp ? { lat: 36.640500, lng: 140.068000 } : { lat: 36.639896, lng: 140.068402 },
-          zoom:              initIsCamp ? 17 : 13,
+          center:            { lat: 36.639896, lng: 140.068402 },
+          zoom:              13,
           zoomControl:       true,
           mapTypeControl:    false,
           streetViewControl: false,
@@ -1549,14 +893,7 @@ const powerFacJson = JSON.stringify(powerFacilities);
         })();
 
         // Initial view
-        var urlView = getViewFromUrl();
-        var initMode = (urlView === "light" || urlView === "camp") ? "camp" : "surround";
-        var initTab  = initMode === "surround" ? urlView : "food";
-        applyMode(initMode, initTab);
-
-        if (initMode === "camp" && isMobile()) {
-          applyMobileCampLayout(listOpen);
-        }
+        applyTab(getViewFromUrl());
       });
     }).catch(function () {
       var sk = document.getElementById("map-skeleton");
@@ -1580,32 +917,13 @@ const powerFacJson = JSON.stringify(powerFacilities);
     pcToggleIconEl      = document.getElementById("pc-toggle-icon");
     spotListEl          = document.getElementById("spot-list");
     noDataMsgEl         = document.getElementById("no-data-msg");
-    campPanelEl         = document.getElementById("camp-panel");
-    campPanelToggleEl   = document.getElementById("camp-panel-toggle");
-    campPanelToggleIconEl = campPanelToggleEl.querySelector("#camp-panel-toggle-icon");
-    campDrawerEl        = document.getElementById("camp-drawer");
-    campDrawerScrollEl  = document.getElementById("camp-drawer-scroll");
 
-    // Hide surround sub-tabs initially
-    document.getElementById("surround-divider").style.display = "none";
-    document.querySelectorAll(".surround-tab").forEach(function (btn) { btn.style.display = "none"; });
-
-    // View button clicks
-    document.querySelectorAll(".view-btn").forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        var mode = btn.dataset.view;
-        if (mode === "camp") applyMode("camp", currentTab);
-        else applyMode("surround", currentTab);
-      });
-    });
+    currentTab = getViewFromUrl();
 
     // Surround sub-tab clicks
     document.querySelectorAll(".tab-btn[data-tab]").forEach(function (btn) {
-      btn.addEventListener("click", function () { applyMode("surround", btn.dataset.tab); });
+      btn.addEventListener("click", function () { applyTab(btn.dataset.tab); });
     });
-
-    // PC camp panel toggle
-    campPanelToggleEl.addEventListener("click", function () { applyCampPanelPc(!campPanelOpen); });
 
     // Mobile handle
     mobileHandleEl.addEventListener("click", function () { setListOpen(!listOpen); });
@@ -1616,37 +934,15 @@ const powerFacJson = JSON.stringify(powerFacilities);
     // PC list toggle (surround)
     pcToggleEl.addEventListener("click", function () { setListOpen(!listOpen); });
 
-    // PC panel checkbox binding
-    bindCheckboxEvents(document.getElementById("camp-panel-scroll"));
-
-    // Build mobile drawer after panel is ready
-    buildMobileDrawer();
-
     // Resize
     window.addEventListener("resize", function () {
-      if (currentMode === "surround" && isMobile()) applyMobileLayout(listOpen);
-      if (currentMode === "camp") {
-        if (isMobile()) {
-          campPanelEl.style.display       = "none";
-          campPanelToggleEl.style.display = "none";
-          mobileHandleEl.style.display    = "flex";
-          applyMobileCampLayout(listOpen);
-        } else {
-          campPanelEl.style.display       = "flex";
-          campPanelEl.style.flexDirection = "column";
-          campPanelToggleEl.style.display = "flex";
-          campDrawerEl.style.display      = "none";
-          mobileHandleEl.style.display    = "none";
-        }
-      }
+      if (isMobile()) applyMobileLayout(listOpen);
     });
 
     // Popstate
     window.addEventListener("popstate", function (e) {
-      var urlView = (e.state && e.state.view) ? e.state.view : getViewFromUrl();
-      var mode = (urlView === "light" || urlView === "camp") ? "camp" : "surround";
-      var tab  = mode === "surround" ? urlView : currentTab;
-      applyMode(mode, tab);
+      var view = (e.state && e.state.view) ? e.state.view : getViewFromUrl();
+      applyTab(view);
     });
 
     // Load Google Maps API
