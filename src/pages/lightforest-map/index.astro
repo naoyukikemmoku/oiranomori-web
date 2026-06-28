@@ -233,6 +233,12 @@ const DEFAULT_ZOOM = 17;
   align-items: center;
   justify-content: center;
 }
+/* トイレアイコン（〇なし・アイコンのみ。白縁シャドウで背景上でも視認） */
+.lf-toilet-icon {
+  font-size: 22px;
+  line-height: 1;
+  filter: drop-shadow(0 0 1px #fff) drop-shadow(0 0 2px #fff) drop-shadow(0 1px 2px rgba(0,0,0,0.4));
+}
 
 /* ═══ 現在地（GPS）コントロール ═══ */
 .lf-loc-control a {
@@ -483,19 +489,16 @@ const DEFAULT_ZOOM = 17;
       });
     }
 
-    // ③ トイレアイコン（site_type==="トイレ"）
+    // ③ トイレアイコン（site_type==="トイレ"）。〇なし・アイコンのみ。
     function toiletIcon() {
-      var html =
-        '<svg width="30" height="30" viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg">'
-        + '<circle cx="15" cy="15" r="14" fill="#3b5566" stroke="rgba(255,255,255,0.9)" stroke-width="1.5"/>'
-        + '<text x="15" y="15" text-anchor="middle" dominant-baseline="central" font-size="15">🚻</text>'
-        + '</svg>';
+      // 背景タイル上でも視認できるよう白縁のドロップシャドウを付与
+      var html = '<span class="lf-toilet-icon">🚻</span>';
       return L.divIcon({
         className: "lf-marker",
         html: html,
-        iconSize: [30, 30],
-        iconAnchor: [15, 15],
-        popupAnchor: [0, -15],
+        iconSize: [26, 26],
+        iconAnchor: [13, 13],
+        popupAnchor: [0, -13],
       });
     }
 
