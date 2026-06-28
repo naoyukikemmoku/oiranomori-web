@@ -3,8 +3,11 @@ import Header from "../../components/Header.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
 // 場内マップ（ライトフォレスト）データ源 = App 公開API。HP側に点データは持たない。
-// プロパティは現状 site_id / site_name / area / site_type / module。
-// size / desc は現APIに無いが、存在する時だけ popup に出す実装（App側が後で足せば自動表示）。
+// properties（sites_geojson.php 契約）: site_id(=site_no) / site_name / area /
+//   site_type(=stock_type) / width / depth / area_sqm / usable_area_sqm /
+//   site_category / sizeclass / parking_space / carside_tarp / drainage /
+//   popularity / peg_type / module（＋App側で notes 追加予定）。
+// popup の各属性は「値がある時だけ表示」（QGISから投入され次第 自動表示）。
 const GEOJSON_URL = "https://oiranomori.com/app/camp/api/sites_geojson.php";
 
 // ベースタイル（最下層）。未供給のため地理院標準タイルを使用。
@@ -27,14 +30,11 @@ const LIGHTFIELD = {
 	],
 };
 
-// マーカー色分け（現 /map/ のサイト色分けと parity）
-//   normal → COLOR_AUTO  (#488B37)
-//   alpha  → COLOR_BLOCK (#C8A063)
-//   solo   → COLOR_SOLO  (#6B8FA3)
+// マーカー色分けは site_category（オート / 区画）ベース。
+//   オート → #488B37 / 区画 → #C8A063 / その他・未設定 → default
 const SITE_COLORS = {
-	normal: "#488B37",
-	alpha: "#C8A063",
-	solo: "#6B8FA3",
+	オート: "#488B37",
+	区画: "#C8A063",
 	default: "#4a5d4e",
 };
 
@@ -44,7 +44,7 @@ const DEFAULT_ZOOM = 17;
 
 <BaseLayout
   title="場内マップ（ライトフォレスト）| 里山パークおいらの森"
-  description="ライトフォレストの場内マップ。オートサイト・区画サイト・ソロ区画の位置関係を地図上でご確認いただけます。"
+  description="ライトフォレストの場内マップ。オートサイト・区画サイトの位置関係や各区画の広さ・設備を地図上でご確認いただけます。"
   lastUpdated="2026年6月"
 >
   <Fragment slot="head">
@@ -194,6 +194,38 @@ const DEFAULT_ZOOM = 17;
   color: #555;
   line-height: 1.6;
 }
+/* popup サブ（site_name 等） */
+.lf-pop-sub {
+  display: block;
+  margin-top: 2px;
+  font-size: 11px;
+  color: #8a8a80;
+}
+/* popup 属性行（ラベル + 値） */
+.lf-pop-rows {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #dcdcd4;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.lf-pop-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.lf-pop-k {
+  flex: 0 0 5.5em;
+  color: #8a8a80;
+}
+.lf-pop-v {
+  flex: 1;
+  color: #2d3a30;
+  min-width: 0;
+}
 
 /* マーカー（DivIcon） */
 .lf-marker {
@@ -207,13 +239,23 @@ const DEFAULT_ZOOM = 17;
   display: flex !important;
   align-items: center;
   justify-content: center;
-  width: 34px;
+  gap: 5px;
+  width: auto;
+  min-width: 34px;
   height: 34px;
+  padding: 0 10px;
   background: #fff;
   cursor: pointer;
+  color: #2d3a30;
 }
 .lf-loc-control a:hover { background: #f5f5f5; }
-.spin-icon, .lf-loc-control svg { /* keyframes spin は既存定義を共有 */ }
+.lf-loc-icon { display: inline-flex; align-items: center; }
+.lf-loc-text {
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  color: #2d3a30;
+}
 .lf-loc-err {
   display: none;
   position: absolute;
@@ -285,7 +327,7 @@ const DEFAULT_ZOOM = 17;
 
     // 中間層: ライトフィールド場内マップ背景（静的XYZタイル）
     var lightfieldBounds = L.latLngBounds(LIGHTFIELD.bounds);
-    var lightfieldLayer = L.tileLayer(LIGHTFIELD.url, {
+    L.tileLayer(LIGHTFIELD.url, {
       pane: "lightfieldPane",
       minZoom: LIGHTFIELD.minZoom,
       maxNativeZoom: LIGHTFIELD.maxNativeZoom,
@@ -297,9 +339,6 @@ const DEFAULT_ZOOM = 17;
 
     // 初期表示を場内（背景の範囲）にスナップ。点取得後に点範囲へ微調整する。
     map.fitBounds(lightfieldBounds, { padding: [20, 20] });
-
-    // 背景マップ ON/OFF トグル（Leaflet標準のoverlay control）
-    L.control.layers(null, { "背景マップ": lightfieldLayer }, { collapsed: false, position: "topright" }).addTo(map);
 
     // ── 現在地（GPS）表示 ──────────────────────────────
     // 携帯のGPSで自位置を青ドット＋精度円で表示。watchで移動に追従。
@@ -334,8 +373,13 @@ const DEFAULT_ZOOM = 17;
           btn.title = "現在地を表示";
           btn.setAttribute("role", "button");
           btn.setAttribute("aria-label", "現在地を表示");
-          btn.innerHTML = SVG_NORMAL;
+          // ⑥ アイコン + 「現在地」テキスト。アイコンだけ差し替えるため span に分離。
+          var icon = L.DomUtil.create("span", "lf-loc-icon", btn);
+          icon.innerHTML = SVG_NORMAL;
+          var txt = L.DomUtil.create("span", "lf-loc-text", btn);
+          txt.textContent = "現在地";
           this._btn = btn;
+          this._icon = icon;
           this._err = L.DomUtil.create("div", "lf-loc-err", c);
 
           L.DomEvent.on(btn, "click", L.DomEvent.stop)
@@ -358,17 +402,17 @@ const DEFAULT_ZOOM = 17;
             watching = false;
             if (locDot) { map.removeLayer(locDot); locDot = null; }
             if (locCircle) { map.removeLayer(locCircle); locCircle = null; }
-            this._btn.innerHTML = SVG_NORMAL;
+            this._icon.innerHTML = SVG_NORMAL;
             return;
           }
-          this._btn.innerHTML = SVG_LOADING;
+          this._icon.innerHTML = SVG_LOADING;
           firstFix = true;
           watching = true;
           // watch:true で移動に追従。enableHighAccuracy で携帯GPSを使う。
           map.locate({ watch: true, enableHighAccuracy: true, maximumAge: 5000, timeout: 15000 });
         },
         _onFound: function (e) {
-          this._btn.innerHTML = SVG_ACTIVE;
+          this._icon.innerHTML = SVG_ACTIVE;
           var dot = L.divIcon({
             className: "lf-loc-dot",
             html: '<span class="lf-loc-dot-inner"></span>',
@@ -399,7 +443,7 @@ const DEFAULT_ZOOM = 17;
         _onError: function (e) {
           watching = false;
           map.stopLocate();
-          this._btn.innerHTML = SVG_NORMAL;
+          this._icon.innerHTML = SVG_NORMAL;
           var msg = (e && e.code === 1) ? "位置情報が許可されていません"
                   : (e && e.code === 2) ? "位置を取得できません" : "タイムアウトしました";
           this._showErr(msg);
@@ -413,19 +457,22 @@ const DEFAULT_ZOOM = 17;
     })();
 
     // site_type → 色
-    function colorFor(siteType) {
-      return SITE_COLORS[siteType] || SITE_COLORS.default;
+    // ① 色分けは site_category（オート / 区画）ベース
+    function colorFor(siteCategory) {
+      return SITE_COLORS[siteCategory] || SITE_COLORS.default;
     }
 
-    // 丸マーカー（現 /map/ のサイトピンに準じた円形・白縁）
-    function circleIcon(label, color) {
-      var fs = (label && label.length > 2) ? 9 : 12;
+    // ② サイト番号マーカー：〇付き数字をやめ、site_id の値をテキストで表示
+    function siteLabelIcon(label, color) {
+      var s = label != null ? String(label) : "";
+      // 文字数に応じてフォント・幅を調整（長い番号でも円内に収める）
+      var fs = s.length >= 3 ? 9 : (s.length === 2 ? 11 : 13);
       var html =
         '<svg width="28" height="28" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">'
         + '<circle cx="14" cy="14" r="13" fill="' + color + '" stroke="rgba(255,255,255,0.85)" stroke-width="1.5"/>'
         + '<text x="14" y="14" text-anchor="middle" dominant-baseline="central"'
         + ' fill="white" font-family="\'Helvetica Neue\',Arial,sans-serif"'
-        + ' font-weight="700" font-size="' + fs + '">' + (label || "") + '</text>'
+        + ' font-weight="700" font-size="' + fs + '">' + escapeHtml(s) + '</text>'
         + '</svg>';
       return L.divIcon({
         className: "lf-marker",
@@ -436,17 +483,25 @@ const DEFAULT_ZOOM = 17;
       });
     }
 
-    // site_id "1" → "①"（現 /map/ の circledLabel と parity）
-    var CIRCLED_NUMS = ["①","②","③","④","⑤","⑥","⑦","⑧","⑨","⑩",
-      "⑪","⑫","⑬","⑭","⑮","⑯","⑰","⑱","⑲","⑳",
-      "㉑","㉒","㉓","㉔","㉕","㉖","㉗","㉘","㉙","㉚",
-      "㉛","㉜","㉝","㉞","㉟","㊱","㊲","㊳","㊴","㊵"];
-    var CIRCLED_ALPHA = {"A":"Ⓐ","B":"Ⓑ","C":"Ⓒ","D":"Ⓓ","E":"Ⓔ"};
-    function circledLabel(id) {
-      var n = parseInt(id, 10);
-      if (!isNaN(n) && n >= 1 && n <= 40) return CIRCLED_NUMS[n - 1];
-      if (CIRCLED_ALPHA[id]) return CIRCLED_ALPHA[id];
-      return id != null ? String(id) : "";
+    // ③ トイレアイコン（site_type==="トイレ"）
+    function toiletIcon() {
+      var html =
+        '<svg width="30" height="30" viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg">'
+        + '<circle cx="15" cy="15" r="14" fill="#3b5566" stroke="rgba(255,255,255,0.9)" stroke-width="1.5"/>'
+        + '<text x="15" y="15" text-anchor="middle" dominant-baseline="central" font-size="15">🚻</text>'
+        + '</svg>';
+      return L.divIcon({
+        className: "lf-marker",
+        html: html,
+        iconSize: [30, 30],
+        iconAnchor: [15, 15],
+        popupAnchor: [0, -15],
+      });
+    }
+
+    // site_type がサイト点でない（設備）かどうか
+    function isToilet(p) {
+      return (p && p.site_type === "トイレ");
     }
 
     function escapeHtml(s) {
@@ -455,21 +510,54 @@ const DEFAULT_ZOOM = 17;
         .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
     }
 
-    // popup 内容：現状APIにある properties を表示。size / desc は存在する時だけ出す。
+    // 値が「実質空」か（"" / null / undefined / 数値0）を判定。0は未入力扱いで非表示。
+    function hasVal(v) {
+      if (v === null || v === undefined) return false;
+      if (typeof v === "number") return v !== 0;
+      return String(v).trim() !== "" && String(v).trim() !== "0";
+    }
+
+    // 1行（ラベル + 値）。値が空ならその行ごと省略。
+    function popRow(label, value, unit) {
+      if (!hasVal(value)) return "";
+      var v = escapeHtml(value) + (unit || "");
+      return '<div class="lf-pop-row">'
+        + '<span class="lf-pop-k">' + label + "</span>"
+        + '<span class="lf-pop-v">' + v + "</span>"
+        + "</div>";
+    }
+
+    // ④ サイトpopup：タイトル=site_category + sizeclass、以下に属性を読みやすく配置
     function popupHtml(p) {
       p = p || {};
-      var name = p.site_name || p.site_id || "サイト";
-      var areaHtml = p.area
-        ? '<span class="lf-pop-area">' + escapeHtml(p.area) + "</span>"
-        : "";
-      var meta = [];
-      if (p.size) meta.push("サイズ: " + escapeHtml(p.size));
-      if (p.desc) meta.push(escapeHtml(p.desc));
-      var metaHtml = meta.length
-        ? '<p class="lf-pop-meta">' + meta.join("<br/>") + "</p>"
-        : "";
-      return '<span class="lf-pop-name">' + escapeHtml(name) + "</span>"
-        + areaHtml + metaHtml;
+
+      // トイレ等の設備は簡素なpopup（名前のみ）
+      if (isToilet(p)) {
+        return '<span class="lf-pop-name">' + escapeHtml(p.site_name || "トイレ") + "</span>";
+      }
+
+      // タイトル: site_category & sizeclass（両方ある時は連結。片方でも可。無ければ site_name）
+      var titleParts = [];
+      if (hasVal(p.site_category)) titleParts.push(escapeHtml(p.site_category));
+      if (hasVal(p.sizeclass)) titleParts.push(escapeHtml(p.sizeclass));
+      var title = titleParts.length ? titleParts.join(" ") : escapeHtml(p.site_name || p.site_id || "サイト");
+
+      // サブ: site_name（サイト1 等）を小さく添える
+      var sub = hasVal(p.site_name) ? '<span class="lf-pop-sub">' + escapeHtml(p.site_name) + "</span>" : "";
+
+      var rows = ""
+        + popRow("面積", p.area_sqm, "㎡")
+        + popRow("有効面積", p.usable_area_sqm, "㎡")
+        + popRow("駐車スペース", p.parking_space)
+        + popRow("カーサイドタープ", p.carside_tarp)
+        + popRow("ペグ", p.peg_type)
+        + popRow("水はけ", p.drainage)
+        + popRow("人気度", p.popularity)
+        + popRow("コメント", p.notes);
+
+      var rowsHtml = rows ? '<div class="lf-pop-rows">' + rows + "</div>" : "";
+
+      return '<span class="lf-pop-name">' + title + "</span>" + sub + rowsHtml;
     }
 
     // CORS: API は origin https://oiranomori.jp 限定許可。localhost 開発では弾かれ得る。
@@ -484,9 +572,14 @@ const DEFAULT_ZOOM = 17;
           // L.geoJSON は GeoJSON の [lng, lat] を自動で [lat, lng] に変換する
           pointToLayer: function (feature, latlng) {
             var p = (feature && feature.properties) || {};
-            var color = colorFor(p.site_type);
+            // ③ トイレはトイレアイコン
+            if (isToilet(p)) {
+              return L.marker(latlng, { icon: toiletIcon(), title: p.site_name || "トイレ" });
+            }
+            // ①② site_category 色 + site_id テキストマーカー
+            var color = colorFor(p.site_category);
             return L.marker(latlng, {
-              icon: circleIcon(circledLabel(p.site_id), color),
+              icon: siteLabelIcon(p.site_id, color),
               title: p.site_name || "",
             });
           },
