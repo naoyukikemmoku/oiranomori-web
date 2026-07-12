@@ -213,28 +213,31 @@ const webPageSchema = {
       }
       a.appendChild(thumbWrap);
 
-      // テキスト列：1行目=日付+タイトル、2行目=天気予報、3行目=気温、4行目=本文
+      // テキスト列：1行目=日付+タイトル(見出し)、2行目=天気予報、3行目=気温、4行目=本文
+      //   サイズで階層化：見出し(base) > 本文(sm) > 天気(xs) > 気温(xs薄)
+      //   薄字は背景(#f4f5f2)で沈まないよう zinc-600/700 基調に統一
       const col = el("div", "min-w-0 flex-1");
 
-      // 1行目：日付＋タイトル（見出し）
-      const titleLine = el(
-        "p",
-        "text-sm font-semibold leading-snug text-zinc-800 group-hover:text-[color:var(--forest-600)]",
+      // 1行目：日付＋タイトル（見出し h2。日付はタイトルと同一書式で一体化）
+      const heading = el(
+        "h2",
+        "text-base font-semibold leading-snug text-zinc-800 group-hover:text-[color:var(--forest-600)]",
       );
-      titleLine.appendChild(
-        el("span", "mr-2 font-normal text-zinc-400", formatPostDateShort(item.postDate)),
+      heading.appendChild(
+        document.createTextNode(
+          `${formatPostDateShort(item.postDate)} ${item.title}`,
+        ),
       );
-      titleLine.appendChild(document.createTextNode(item.title));
-      col.appendChild(titleLine);
+      col.appendChild(heading);
 
-      // 2行目：今日の天気予報
+      // 2行目：今日の天気予報（xs・zinc-600）
       if (item.conditionShort) {
         col.appendChild(
-          el("p", "mt-1 text-xs text-zinc-500", `今日の天気予報：${item.conditionShort}`),
+          el("p", "mt-1.5 text-xs text-zinc-600", `今日の天気予報：${item.conditionShort}`),
         );
       }
 
-      // 3行目：気温（7時実測／予想最高最低）
+      // 3行目：気温（xs・zinc-500。天気予報より一段弱く）
       const hasTemp = item.tempC !== undefined && item.tempC !== null;
       const hasMax = item.maxTempC !== undefined && item.maxTempC !== null;
       const hasMin = item.minTempC !== undefined && item.minTempC !== null;
@@ -246,12 +249,16 @@ const webPageSchema = {
           const minStr = hasMin ? `${item.minTempC}°` : "—";
           parts.push(`予想最高最低気温：${maxStr}/${minStr}`);
         }
-        col.appendChild(el("p", "mt-1 text-xs text-zinc-400", parts.join("　")));
+        col.appendChild(el("p", "mt-0.5 text-xs text-zinc-500", parts.join("　")));
       }
 
-      // 4行目：本文スニペット
+      // 4行目：本文スニペット（sm・zinc-600・leading 広め。メタ情報と質感を分ける）
       col.appendChild(
-        el("p", "mt-1 text-xs leading-relaxed text-zinc-500 line-clamp-2", bodySnippet(item.body)),
+        el(
+          "p",
+          "mt-1.5 text-sm leading-relaxed text-zinc-600 line-clamp-2",
+          bodySnippet(item.body),
+        ),
       );
       a.appendChild(col);
 
