@@ -629,14 +629,15 @@ const plans: Array<{
   <script>
     // ════════════════════════════════════════════════════════════
     //  今日のおいらの森 トップ widget（直近7件・サムネ無しの行リスト）
-    //  - forestDaily.ts の fetchForestDailyList(7,0) を再利用
-    //  - タイトル主体（日付列は削除＝タイトルに日付が入るため重複）
-    //  - タイトルは1行 truncate（折り返さず右で省略）。余白は密に
+    //  - forestDaily.ts の fetchForestDailyList(7,0) / formatPostDateMD を再利用
+    //  - 「M月D日 タイトル」を1行に連結。日付不正時はタイトルのみへフォールバック
+    //  - 1行 truncate（折り返さず右で省略）。余白は密に
     //  - API 由来テキストは textContent でセット（XSS 回避・innerHTML 不使用）
     //  - 取得失敗・0件はセクションごと非表示のまま（空枠を残さない）
     // ════════════════════════════════════════════════════════════
     import {
       fetchForestDailyList,
+      formatPostDateMD,
       type ForestDaily,
     } from "../lib/forestDaily";
 
@@ -653,7 +654,8 @@ const plans: Array<{
       const title = document.createElement("span");
       title.className =
         "block whitespace-nowrap overflow-hidden text-ellipsis text-sm font-medium leading-snug text-zinc-700 group-hover:text-zinc-900";
-      title.textContent = item.title;
+      const md = formatPostDateMD(item.postDate);
+      title.textContent = md ? `${md} ${item.title}` : item.title;
       a.appendChild(title);
 
       li.appendChild(a);

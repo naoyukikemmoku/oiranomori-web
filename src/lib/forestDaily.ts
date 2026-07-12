@@ -87,6 +87,13 @@ export function formatPostDate(str: string): string {
 	return `${y}.${mo}.${dy}`;
 }
 
+// ゼロ埋めなしの「M月D日」。不正な日付は空文字（呼び出し側でタイトルのみ表示にフォールバック）。
+export function formatPostDateMD(str: string): string {
+	const d = new Date(str);
+	if (Number.isNaN(d.getTime())) return "";
+	return `${d.getUTCMonth() + 1}月${d.getUTCDate()}日`;
+}
+
 export function bodyToParagraphs(text: string): string[] {
 	return text
 		.split(/\r?\n/)
