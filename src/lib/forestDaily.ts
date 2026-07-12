@@ -14,6 +14,7 @@ export type ForestDaily = {
 	minTempC?: number;
 	humidity?: number;
 	condition?: string;
+	conditionShort?: string;
 	url?: string;
 };
 
@@ -92,6 +93,15 @@ export function formatPostDateMD(str: string): string {
 	const d = new Date(str);
 	if (Number.isNaN(d.getTime())) return "";
 	return `${d.getUTCMonth() + 1}月${d.getUTCDate()}日`;
+}
+
+// ゼロ埋めなしの「M月D日」。不正な日付は元文字列を返す（一覧行の日付＋タイトル用）。
+export function formatPostDateShort(str: string): string {
+	const d = new Date(str);
+	if (Number.isNaN(d.getTime())) return str;
+	const mo = d.getUTCMonth() + 1;
+	const dy = d.getUTCDate();
+	return `${mo}月${dy}日`;
 }
 
 export function bodyToParagraphs(text: string): string[] {

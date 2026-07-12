@@ -90,6 +90,7 @@ const webPageSchema = {
       fetchForestDailyDetail,
       fetchForestDailyList,
       formatPostDate,
+      formatPostDateShort,
       isDailyId,
       type ForestDaily,
     } from "../../lib/forestDaily";
@@ -212,29 +213,45 @@ const webPageSchema = {
       }
       a.appendChild(thumbWrap);
 
-      // テキスト列（投稿日は削除。condition / tempC のみ薄く添える）
+      // テキスト列：1行目=日付+タイトル、2行目=天気予報、3行目=気温、4行目=本文
       const col = el("div", "min-w-0 flex-1");
-      const meta = el("div", "mb-1.5 flex flex-wrap items-center gap-2");
-      if (item.condition) {
-        meta.appendChild(el("span", "text-xs text-zinc-500", item.condition));
-      }
-      if (item.tempC !== undefined && item.tempC !== null) {
-        meta.appendChild(el("span", "text-xs text-zinc-400", `${item.tempC}℃`));
-      }
-      if (meta.childElementCount > 0) col.appendChild(meta);
-      col.appendChild(
-        el(
-          "p",
-          "text-sm font-medium leading-snug text-zinc-800 group-hover:text-[color:var(--forest-600)]",
-          item.title,
-        ),
+
+      // 1行目：日付＋タイトル（見出し）
+      const titleLine = el(
+        "p",
+        "text-sm font-semibold leading-snug text-zinc-800 group-hover:text-[color:var(--forest-600)]",
       );
+      titleLine.appendChild(
+        el("span", "mr-2 font-normal text-zinc-400", formatPostDateShort(item.postDate)),
+      );
+      titleLine.appendChild(document.createTextNode(item.title));
+      col.appendChild(titleLine);
+
+      // 2行目：今日の天気予報
+      if (item.conditionShort) {
+        col.appendChild(
+          el("p", "mt-1 text-xs text-zinc-500", `今日の天気予報：${item.conditionShort}`),
+        );
+      }
+
+      // 3行目：気温（7時実測／予想最高最低）
+      const hasTemp = item.tempC !== undefined && item.tempC !== null;
+      const hasMax = item.maxTempC !== undefined && item.maxTempC !== null;
+      const hasMin = item.minTempC !== undefined && item.minTempC !== null;
+      if (hasTemp || hasMax || hasMin) {
+        const parts: string[] = [];
+        if (hasTemp) parts.push(`7時の気温：${item.tempC}℃`);
+        if (hasMax || hasMin) {
+          const maxStr = hasMax ? `${item.maxTempC}°` : "—";
+          const minStr = hasMin ? `${item.minTempC}°` : "—";
+          parts.push(`予想最高最低気温：${maxStr}/${minStr}`);
+        }
+        col.appendChild(el("p", "mt-1 text-xs text-zinc-400", parts.join("　")));
+      }
+
+      // 4行目：本文スニペット
       col.appendChild(
-        el(
-          "p",
-          "mt-1 text-xs leading-relaxed text-zinc-500 line-clamp-2",
-          bodySnippet(item.body),
-        ),
+        el("p", "mt-1 text-xs leading-relaxed text-zinc-500 line-clamp-2", bodySnippet(item.body)),
       );
       a.appendChild(col);
 
