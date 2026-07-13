@@ -231,14 +231,14 @@ const webPageSchema = {
       );
       col.appendChild(heading);
 
-      // 2行目：今日の天気予報（xs・zinc-600）
+      // 2行目：今日の天気予報（xs・zinc-700。薄字を濃色へ統一）
       if (item.conditionShort) {
         col.appendChild(
-          el("p", "mt-1.5 text-xs text-zinc-600", `今日の天気予報：${item.conditionShort}`),
+          el("p", "mt-1.5 text-xs text-zinc-700", `今日の天気予報：${item.conditionShort}`),
         );
       }
 
-      // 3行目：気温（xs・zinc-500。天気予報より一段弱く）
+      // 3行目：気温（xs・zinc-700。薄字を濃色へ統一）
       const hasTemp = item.tempC !== undefined && item.tempC !== null;
       const hasMax = item.maxTempC !== undefined && item.maxTempC !== null;
       const hasMin = item.minTempC !== undefined && item.minTempC !== null;
@@ -250,7 +250,7 @@ const webPageSchema = {
           const minStr = hasMin ? `${item.minTempC}°` : "—";
           parts.push(`予想最高最低気温：${maxStr}/${minStr}`);
         }
-        col.appendChild(el("p", "mt-0.5 text-xs text-zinc-500", parts.join("　")));
+        col.appendChild(el("p", "mt-0.5 text-xs text-zinc-700", parts.join("　")));
       }
 
       // 4行目：本文スニペット（sm・zinc-600・leading 広め。メタ情報と質感を分ける）
@@ -800,33 +800,33 @@ const webPageSchema = {
         // 1行目：本日の天気予報（conditionShort）
         if (hasCond) {
           const p = el("p", "text-sm text-zinc-700");
-          p.appendChild(el("span", "mr-2 text-xs text-zinc-400", "本日の天気予報"));
+          p.appendChild(el("span", "mr-2 text-xs text-zinc-700", "本日の天気予報"));
           p.appendChild(document.createTextNode(article.conditionShort ?? ""));
           rows.appendChild(p);
         }
 
         // 2行目：予想最高/最低気温（null は — で埋める）
         if (hasMax || hasMin) {
-          const p = el("p", "text-sm text-zinc-600");
-          p.appendChild(el("span", "mr-2 text-xs text-zinc-400", "予想最高/最低気温"));
+          const p = el("p", "text-sm text-zinc-700");
+          p.appendChild(el("span", "mr-2 text-xs text-zinc-700", "予想最高/最低気温"));
           p.appendChild(
             hasMax
               ? el("span", "text-red-500", `${article.maxTempC}℃`)
-              : el("span", "text-zinc-400", "—"),
+              : el("span", "text-zinc-600", "—"),
           );
-          p.appendChild(el("span", "mx-1 text-zinc-300", "/"));
+          p.appendChild(el("span", "mx-1 text-zinc-500", "/"));
           p.appendChild(
             hasMin
               ? el("span", "text-blue-500", `${article.minTempC}℃`)
-              : el("span", "text-zinc-400", "—"),
+              : el("span", "text-zinc-600", "—"),
           );
           rows.appendChild(p);
         }
 
         // 3行目：朝7時の気温・湿度
         if (hasTemp || hasHum) {
-          const p = el("p", "text-sm text-zinc-600");
-          p.appendChild(el("span", "mr-2 text-xs text-zinc-400", "朝7時の気温・湿度"));
+          const p = el("p", "text-sm text-zinc-700");
+          p.appendChild(el("span", "mr-2 text-xs text-zinc-700", "朝7時の気温・湿度"));
           const parts: string[] = [];
           if (hasTemp) parts.push(`${article.tempC}℃`);
           if (hasHum) parts.push(`湿度${article.humidity}%`);
