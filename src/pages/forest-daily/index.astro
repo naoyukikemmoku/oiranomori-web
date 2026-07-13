@@ -90,6 +90,7 @@ const webPageSchema = {
       fetchForestDailyDetail,
       fetchForestDailyList,
       formatPostDate,
+      formatPostDateJa,
       formatPostDateShort,
       isDailyId,
       type ForestDaily,
@@ -683,6 +684,22 @@ const webPageSchema = {
       return root;
     }
 
+    // 指定日の朝のadvisory解説を取得。無し/未承認/失敗はすべて null（表示なしに縮退）。
+    async function fetchAdvisoryMorning(date: string): Promise<string | null> {
+      try {
+        const r = await fetch(
+          `https://oiranomori.com/app/weather/api/public/advisory.php?date=${encodeURIComponent(date)}`,
+          { cache: "default" },
+        );
+        if (!r.ok) return null;
+        const d = await r.json();
+        const body = d?.slots?.morning?.body;
+        return typeof body === "string" && body.trim().length > 0 ? body.trim() : null;
+      } catch {
+        return null;
+      }
+    }
+
     async function renderDetail(id: string): Promise<void> {
       if (!app) return;
 
@@ -736,8 +753,8 @@ const webPageSchema = {
       header.className = "pt-8 pb-8";
       const time = el(
         "time",
-        "block text-xs tracking-[0.2em] text-zinc-400 uppercase",
-        formatPostDate(article.postDate),
+        "block text-sm text-zinc-700",
+        formatPostDateJa(article.postDate),
       );
       time.setAttribute("datetime", article.postDate);
       header.appendChild(time);
@@ -765,53 +782,59 @@ const webPageSchema = {
         articleEl.appendChild(figure);
       }
 
-      // 気象情報
-      const hasWeather =
-        (article.tempC !== undefined && article.tempC !== null) ||
-        (article.maxTempC !== undefined && article.maxTempC !== null) ||
-        (article.minTempC !== undefined && article.minTempC !== null) ||
-        (article.humidity !== undefined && article.humidity !== null) ||
-        !!article.condition;
+      // 気象情報（ラベル付き3行構成）
+      const hasCond = !!article.conditionShort;
+      const hasTemp = article.tempC !== undefined && article.tempC !== null;
+      const hasHum = article.humidity !== undefined && article.humidity !== null;
+      const hasMax = article.maxTempC !== undefined && article.maxTempC !== null;
+      const hasMin = article.minTempC !== undefined && article.minTempC !== null;
+      const hasWeather = hasCond || hasTemp || hasHum || hasMax || hasMin;
 
       if (hasWeather) {
         const box = el("div", "mb-8 border-l-2 border-zinc-300 pl-4");
         box.appendChild(
           el("p", "mb-2 text-[10px] tracking-[0.2em] text-zinc-400 uppercase", "Weather"),
         );
-        const row = el("div", "flex flex-wrap items-baseline gap-x-5 gap-y-1");
-        if (article.condition) {
-          row.appendChild(el("span", "text-sm text-zinc-700", article.condition));
+        const rows = el("div", "space-y-1.5");
+
+        // 1行目：本日の天気予報（conditionShort）
+        if (hasCond) {
+          const p = el("p", "text-sm text-zinc-700");
+          p.appendChild(el("span", "mr-2 text-xs text-zinc-400", "本日の天気予報"));
+          p.appendChild(document.createTextNode(article.conditionShort ?? ""));
+          rows.appendChild(p);
         }
-        if (article.tempC !== undefined && article.tempC !== null) {
-          const s = el("span", "text-sm text-zinc-600");
-          s.appendChild(el("span", "text-xs text-zinc-400 mr-1", "朝"));
-          s.appendChild(document.createTextNode(`${article.tempC}℃`));
-          row.appendChild(s);
-        }
-        const hasMax = article.maxTempC !== undefined && article.maxTempC !== null;
-        const hasMin = article.minTempC !== undefined && article.minTempC !== null;
+
+        // 2行目：予想最高/最低気温（null は — で埋める）
         if (hasMax || hasMin) {
-          const s = el("span", "text-sm text-zinc-600");
-          s.appendChild(el("span", "text-xs text-zinc-400 mr-1", "予想"));
-          s.appendChild(
+          const p = el("p", "text-sm text-zinc-600");
+          p.appendChild(el("span", "mr-2 text-xs text-zinc-400", "予想最高/最低気温"));
+          p.appendChild(
             hasMax
-              ? el("span", "text-red-500", `${article.maxTempC}°`)
+              ? el("span", "text-red-500", `${article.maxTempC}℃`)
               : el("span", "text-zinc-400", "—"),
           );
-          s.appendChild(el("span", "mx-1 text-zinc-300", "/"));
-          s.appendChild(
+          p.appendChild(el("span", "mx-1 text-zinc-300", "/"));
+          p.appendChild(
             hasMin
-              ? el("span", "text-blue-500", `${article.minTempC}°`)
+              ? el("span", "text-blue-500", `${article.minTempC}℃`)
               : el("span", "text-zinc-400", "—"),
           );
-          row.appendChild(s);
+          rows.appendChild(p);
         }
-        if (article.humidity !== undefined && article.humidity !== null) {
-          row.appendChild(
-            el("span", "text-xs text-zinc-400", `湿度 ${article.humidity}%`),
-          );
+
+        // 3行目：朝7時の気温・湿度
+        if (hasTemp || hasHum) {
+          const p = el("p", "text-sm text-zinc-600");
+          p.appendChild(el("span", "mr-2 text-xs text-zinc-400", "朝7時の気温・湿度"));
+          const parts: string[] = [];
+          if (hasTemp) parts.push(`${article.tempC}℃`);
+          if (hasHum) parts.push(`湿度${article.humidity}%`);
+          p.appendChild(document.createTextNode(parts.join(" / ")));
+          rows.appendChild(p);
         }
-        box.appendChild(row);
+
+        box.appendChild(rows);
         articleEl.appendChild(box);
       }
 
@@ -821,6 +844,28 @@ const webPageSchema = {
         bodyWrap.appendChild(el("p", "text-sm leading-[2.1] text-zinc-700", p));
       }
       articleEl.appendChild(bodyWrap);
+
+      // 本文の下：おいらの天気解説（daily のみ・morning slot・取得できなければ非表示のまま）
+      if (daily) {
+        const advWrap = el("div", "mb-12 border-l-4 border-zinc-300 py-2 pl-4");
+        advWrap.hidden = true;
+        advWrap.appendChild(
+          el("p", "text-xs tracking-[0.12em] text-zinc-400 uppercase", "Advisory"),
+        );
+        advWrap.appendChild(
+          el("p", "mt-0.5 text-sm font-medium text-zinc-700", "おいらの天気解説"),
+        );
+        const advBody = el("p", "mt-2 text-sm leading-relaxed text-zinc-700");
+        advWrap.appendChild(advBody);
+        articleEl.appendChild(advWrap);
+
+        void fetchAdvisoryMorning(article.postDate).then((body) => {
+          if (body) {
+            advBody.textContent = body;
+            advWrap.hidden = false;
+          }
+        });
+      }
 
       // ── 記事下部：daily なら日付ナビ再掲（カレンダーは上部のみ）＋出口導線 ──
       const bottom = el("div", "border-t border-zinc-300 pt-10 pb-4");

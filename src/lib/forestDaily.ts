@@ -104,6 +104,13 @@ export function formatPostDateShort(str: string): string {
 	return `${mo}月${dy}日`;
 }
 
+// 「YYYY年M月D日」（ゼロ埋めなし）。不正な日付は元文字列を返す（詳細ヘッダー用）。
+export function formatPostDateJa(str: string): string {
+	const d = new Date(str);
+	if (Number.isNaN(d.getTime())) return str;
+	return `${d.getUTCFullYear()}年${d.getUTCMonth() + 1}月${d.getUTCDate()}日`;
+}
+
 export function bodyToParagraphs(text: string): string[] {
 	return text
 		.split(/\r?\n/)
