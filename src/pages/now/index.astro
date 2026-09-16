@@ -3,22 +3,130 @@ import FloatingNav from "../../components/FloatingNav.astro";
 import Header from "../../components/Header.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
+import { getKoyomi, getSunTimes } from "../../lib/koyomi";
+import {
+	citiesHtml,
+	iconHtml,
+	trendTableHtml,
+	warningsHtml,
+	weeklyHtml,
+} from "../../lib/nowRender";
+import {
+	fetchNowSnapshot,
+	fmtClock,
+	fmtDate,
+	fmtDiff,
+	fmtStamp,
+	isUketsukeDown,
+	parseLocalDate,
+	timeStampClass,
+} from "../../lib/nowWeather";
+
 // ライブ中の videoID は実行時に livecam.php から取得して埋め込む（ビルド時 fetch 禁止）。
 // videoID をここに直書きしないこと（配信を作り直すと埋め込みが切れるため）。
 const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パークおいらの森
+
+// ── ビルド時スナップショット ────────────────────────────────────
+// 表示データ（センサー・アメダス・周辺比較・警報・予報・解説・気温推移）を
+// ビルド時に取得して初期HTMLへ焼き込む。JS無効・クローラーにも中身が見える。
+// ブラウザでは従来どおり最新値で上書きする。livecam だけは対象外（実行時のみ）。
+// 個別APIの失敗は null に倒し、その箇所だけ従来の空欄表示でビルドを継続する。
+const snap = await fetchNowSnapshot("1w");
+
+const uketsuke = snap.current?.stations?.uketsuke ?? null;
+const amedas = snap.current?.stations?.amedas_karasuyama ?? null;
+const ukDown = isUketsukeDown(uketsuke);
+
+// 受付棟とアメダスの気温差（受付棟が落ちている場合は出さない＝欠損は正直に）
+const ukDiff =
+	!ukDown && uketsuke?.temp_c != null && amedas?.temp_c != null
+		? `アメダスより ${fmtDiff(uketsuke.temp_c - amedas.temp_c)}℃${
+				uketsuke.temp_c - amedas.temp_c < 0 ? "、林間で日陰多め" : ""
+			}`
+		: null;
+
+// アメダスの風：風速（小数1桁）に風向を括弧で添える（クライアント表記と同一）
+const amedasWind = (() => {
+	if (!amedas) return "—";
+	const w =
+		amedas.wind_speed_mps != null ? amedas.wind_speed_mps.toFixed(1) : "—";
+	return amedas.wind_direction ? `${w}（${amedas.wind_direction}）` : w;
+})();
+
+// 直近予報の枠（frames 駆動。無ければ today/tomorrow に縮退＝クライアントと同ロジック）
+const rawFrames = Array.isArray(snap.forecast?.frames)
+	? snap.forecast.frames
+	: null;
+const isThreeFrames = !!rawFrames && rawFrames.length === 3 && !!rawFrames[2];
+const initialFrames = rawFrames
+	? rawFrames
+	: [snap.forecast?.today, snap.forecast?.tomorrow].filter(Boolean);
+const frameSlots = ["today", "tomorrow", "dayafter"] as const;
+
+// 暦（日の出入り・二十四節気・七十二候）は純関数なのでビルド時に確定できる
+function koyomiFor(dateStr: string) {
+	const d = parseLocalDate(dateStr);
+	const sun = getSunTimes(d);
+	const k = getKoyomi(d);
+	return {
+		sun: sun ? `日の出 ${sun.rise} ／ 日の入 ${sun.set}` : "",
+		term: `二十四節気：${k.solarTerm}`,
+		ko: `七十二候：${k.ko.name}（${k.ko.yomi}）`,
+	};
+}
+
+const advisoryBody =
+	typeof snap.advisory?.current?.body === "string"
+		? snap.advisory.current.body.trim()
+		: "";
+const weeklyAdvisoryBody =
+	typeof snap.advisory?.weekly?.body === "string"
+		? snap.advisory.weekly.body.trim()
+		: "";
+// 週間解説の注記は target_date を「M月D日」に整形（ゼロ埋めなし・時刻省略）
+const weeklyAdvisoryNote = (() => {
+	const td = snap.advisory?.weekly?.target_date;
+	const m =
+		typeof td === "string" ? td.match(/^(\d{4})-(\d{2})-(\d{2})$/) : null;
+	return m
+		? `気象庁${Number(m[2])}月${Number(m[3])}日発表の予報に基づく`
+		: "気象庁の予報に基づく";
+})();
+
+// ブロック別の取得時刻注記（分単位・JST）。各APIの generated_at を優先し、
+// 無ければスナップショット取得時刻にフォールバックする。
+const stampOf = (v: { generated_at?: string } | null): string =>
+	fmtStamp(v?.generated_at ?? snap.fetchedAt);
+const stampCurrent = stampOf(snap.current);
+const stampForecast = stampOf(snap.forecast);
+const stampWarning = stampOf(snap.warning);
+const stampTrend = stampOf(snap.timeseries);
+const stampAdvisory = fmtStamp(
+	snap.advisory?.current?.generated_at ?? snap.fetchedAt,
+);
+const stampWeeklyAdvisory = fmtStamp(
+	snap.advisory?.weekly?.generated_at ?? snap.fetchedAt,
+);
+
+const trendTable = trendTableHtml(snap.timeseries);
+const weeklyCards = weeklyHtml(snap.forecast);
+
+const TITLE = "おいらの森の天気予報と解説　現地の気温 | 里山パークおいらの森";
+const DESCRIPTION =
+	"那須烏山市の里山、おいらの森の今の天気。現地センサーで気温・湿度を見える化、アメダス、周辺3県との比較、警報、直近と週間の予報。さらにおいらが現地を解説。";
 ---
 
 <BaseLayout
-  title="現地の天気・気温・予報 | 里山パークおいらの森"
-  description="おいらの森の今の天気・気象など現地情報をお知らせ。直近予報・周辺5地点の比較・警報注意報・現地センサーの現況を、キャンプ直前の準備に活用してください。"
-  lastUpdated="2026年6月"
+  title={TITLE}
+  description={DESCRIPTION}
+  lastUpdated="2026年9月"
 >
 
   <script slot="head" is:inline type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@type": "WebPage",
-    "name": "現地の天気・気温・予報 | 里山パークおいらの森",
-    "description": "おいらの森の今の天気・気象など現地情報をお知らせ。直近予報・周辺5地点の比較・警報注意報・現地センサーの現況を、キャンプ直前の準備に活用してください。",
+    "name": TITLE,
+    "description": DESCRIPTION,
     "url": "https://oiranomori.jp/now/",
     "isPartOf": {
       "@type": "WebSite",
@@ -37,7 +145,11 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
       <div class="mx-auto max-w-6xl">
         <p class="text-[11px] tracking-[0.28em] text-zinc-400 uppercase">Forest Now</p>
         <h1 class="mt-1 text-3xl font-semibold tracking-tight text-zinc-900">森の今の天気・気温・予報</h1>
-        <p class="mt-1 text-xs text-zinc-500">おいら監修｜現地センサーと周辺観測をもとに構築</p>
+        <div class="mt-3 max-w-3xl space-y-1.5 text-sm leading-relaxed text-zinc-600">
+          <p>出発前に森の今を確かめる。滞在中に、この後の天候の変化を確認する。</p>
+          <p>現地センサーの気温と湿度、那須烏山アメダス、周辺3県との比較を並べています。</p>
+          <p>天気予報って案外わかりにくい。「で、どうなの？」に、おいらが毎朝現地から解説付きで答えます。</p>
+        </div>
         <a
           href="/forest-daily/"
           class="mt-2 inline-flex items-center gap-1 text-xs tracking-[0.08em] text-zinc-600 underline underline-offset-4 transition hover:text-zinc-900"
@@ -83,27 +195,31 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
         <p class="text-[11px] tracking-[0.24em] text-zinc-400 uppercase">Local Now</p>
         <h2 class="mt-1 mb-3 text-lg font-semibold text-zinc-800">現地の今</h2>
 
-        {/* 上：受付棟センサー */}
+        {/* 上：受付棟センサー。値はビルド時のスナップショットを初期表示に焼き込み、
+            ブラウザでは renderA4 が最新値で上書きする。 */}
         <div id="a4-uketsuke" class="border border-zinc-200 bg-white p-4">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
               <p class="text-sm tracking-[0.12em] text-zinc-600">おいらの森(受付)</p>
-              <div id="a4-uketsuke-icon" class="flex h-[72px] w-[72px] items-center justify-center"></div>
+              <div id="a4-uketsuke-icon" class="flex h-[72px] w-[72px] items-center justify-center" set:html={uketsuke?.icon_key ? iconHtml(uketsuke.icon_key, 72) : ""} />
             </div>
-            <p id="a4-uketsuke-time" class="text-xs text-zinc-500"></p>
+            <p
+              id="a4-uketsuke-time"
+              class={!ukDown && uketsuke?.observed_at ? timeStampClass(uketsuke.age_seconds) : "text-xs text-zinc-500"}
+            >{!ukDown && uketsuke?.observed_at ? `${fmtClock(uketsuke.observed_at)} 観測` : ""}</p>
           </div>
-          <div id="a4-uketsuke-body" class="mt-3 flex flex-wrap items-end gap-x-8 gap-y-2">
+          <div id="a4-uketsuke-body" class="mt-3 flex flex-wrap items-end gap-x-8 gap-y-2" hidden={ukDown}>
             <div>
-              <span id="a4-uketsuke-temp" class="text-4xl font-semibold text-zinc-800">—</span>
+              <span id="a4-uketsuke-temp" class="text-4xl font-semibold text-zinc-800">{!ukDown && uketsuke?.temp_c != null ? uketsuke.temp_c.toFixed(1) : "—"}</span>
               <span class="text-sm text-zinc-500">℃</span>
             </div>
             <div>
-              <span id="a4-uketsuke-hum" class="text-2xl font-semibold text-zinc-700">—</span>
+              <span id="a4-uketsuke-hum" class="text-2xl font-semibold text-zinc-700">{!ukDown && uketsuke?.humidity != null ? String(uketsuke.humidity) : "—"}</span>
               <span class="text-sm text-zinc-500">%（湿度）</span>
             </div>
           </div>
-          <p id="a4-uketsuke-diff" class="mt-3 text-sm text-zinc-600" hidden></p>
-          <p id="a4-uketsuke-down" class="mt-3 text-sm text-amber-600" hidden>
+          <p id="a4-uketsuke-diff" class="mt-3 text-sm text-zinc-600" hidden={!ukDiff}>{ukDiff ?? ""}</p>
+          <p id="a4-uketsuke-down" class="mt-3 text-sm text-amber-600" hidden={!ukDown}>
             センサー一時停止中（復旧作業中）
           </p>
         </div>
@@ -113,43 +229,46 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
               <p class="text-sm tracking-[0.12em] text-zinc-600">那須烏山アメダス</p>
-              <div id="a4-amedas-icon" class="flex h-[72px] w-[72px] items-center justify-center"></div>
+              <div id="a4-amedas-icon" class="flex h-[72px] w-[72px] items-center justify-center" set:html={amedas?.icon_key ? iconHtml(amedas.icon_key, 72) : ""} />
             </div>
-            <p id="a4-amedas-time" class="text-xs text-zinc-500"></p>
+            <p
+              id="a4-amedas-time"
+              class={amedas?.observed_at ? timeStampClass(amedas.age_seconds) : "text-xs text-zinc-500"}
+            >{amedas?.observed_at ? `${fmtClock(amedas.observed_at)} 観測` : ""}</p>
           </div>
           <div class="mt-3 grid grid-cols-2 gap-x-6 gap-y-3 md:grid-cols-4">
             <div>
               <p class="text-sm text-zinc-500">気温</p>
-              <p class="mt-1"><span id="a4-amedas-temp" class="text-2xl font-semibold text-zinc-800">—</span><span class="text-sm text-zinc-500"> ℃</span></p>
+              <p class="mt-1"><span id="a4-amedas-temp" class="text-2xl font-semibold text-zinc-800">{amedas?.temp_c != null ? amedas.temp_c.toFixed(1) : "—"}</span><span class="text-sm text-zinc-500"> ℃</span></p>
             </div>
             <div>
               <p class="text-sm text-zinc-500">風向 / 風速</p>
-              <p class="mt-1"><span id="a4-amedas-wind" class="text-2xl font-semibold text-zinc-800">—</span><span class="text-sm text-zinc-500"> m/s</span></p>
+              <p class="mt-1"><span id="a4-amedas-wind" class="text-2xl font-semibold text-zinc-800">{amedasWind}</span><span class="text-sm text-zinc-500"> m/s</span></p>
             </div>
             <div>
               <p class="text-sm text-zinc-500">降水（1h）</p>
-              <p class="mt-1"><span id="a4-amedas-rain" class="text-2xl font-semibold text-zinc-800">—</span><span class="text-sm text-zinc-500"> mm</span></p>
+              <p class="mt-1"><span id="a4-amedas-rain" class="text-2xl font-semibold text-zinc-800">{amedas?.rainfall_1h_mm != null ? String(amedas.rainfall_1h_mm) : "—"}</span><span class="text-sm text-zinc-500"> mm</span></p>
             </div>
             <div>
               <p class="text-sm text-zinc-500">日照（1h）</p>
-              <p class="mt-1"><span id="a4-amedas-sun" class="text-2xl font-semibold text-zinc-800">—</span><span class="text-sm text-zinc-500"> h</span></p>
+              <p class="mt-1"><span id="a4-amedas-sun" class="text-2xl font-semibold text-zinc-800">{amedas?.daylight_1h_h != null ? String(amedas.daylight_1h_h) : "—"}</span><span class="text-sm text-zinc-500"> h</span></p>
             </div>
           </div>
         </div>
 
-        {/* 周辺3都市（東京・埼玉・宇都宮）。JSで current.stations から描画 */}
-        <div id="a4-cities" class="mt-3 grid grid-cols-3 gap-3">
-          {/* JS で描画 */}
-        </div>
+        {/* 周辺3都市（東京・埼玉・宇都宮）。ビルド時に焼き込み、JSが同じ関数で上書き */}
+        <div id="a4-cities" class="mt-3 grid grid-cols-3 gap-3" set:html={citiesHtml(snap.current)} />
+
+        <p class="mt-3 text-xs text-zinc-400" data-stamp="current">取得時刻：{stampCurrent}</p>
       </section>
 
       {/* ═══ A3：警報・注意報 ═══════════════════════════════════ */}
       <section id="warning" class="scroll-mt-[3.5rem] border-t border-zinc-200 py-6">
         <p class="text-[11px] tracking-[0.24em] text-zinc-400 uppercase">Warning / Advisory</p>
         <h2 class="mt-1 mb-3 text-lg font-semibold text-zinc-800">警報・注意報（那須烏山市）</h2>
-        <div id="a3-warnings" class="text-sm text-zinc-700">
-          <p class="text-zinc-500">取得中…</p>
-        </div>
+        {/* ビルド時に焼き込み、JSが同じ関数で上書きする */}
+        <div id="a3-warnings" class="text-sm text-zinc-700" set:html={warningsHtml(snap.warning)} />
+        <p class="mt-3 text-xs text-zinc-400" data-stamp="warning">取得時刻：{stampWarning}</p>
 
         {/* 雨雲レーダー：気象庁ナウキャストは frame 表示を拒否するため外部リンク化 */}
         <p class="mt-4 mb-2 text-sm text-zinc-600">雨雲レーダー</p>
@@ -166,90 +285,70 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
         <p class="text-[11px] tracking-[0.24em] text-zinc-400 uppercase">Forecast</p>
         <h2 class="mt-1 mb-3 text-lg font-semibold text-zinc-800">直近予報</h2>
 
-        {/* 今日(/今夜)・明日・明後日。枠数は frames.length で2/3切替（JS）。 */}
-        <div id="a1-frames-grid" class="grid grid-cols-2 gap-3">
-          <div id="a1-today" class="border border-zinc-200 bg-white p-4 text-center" hidden>
-            <p id="a1-today-label" class="text-sm tracking-[0.12em] text-zinc-600">今日</p>
-            <p id="a1-today-date" class="mt-1 text-sm text-zinc-500">—</p>
-            <div class="my-3 flex h-16 items-center justify-center" id="a1-today-icon"></div>
-            <p class="text-sm"><span class="text-zinc-500">降水</span> <span class="font-medium text-zinc-800"><span id="a1-today-pop">—</span>%</span></p>
-            <p class="mt-1 text-sm">
-              <span class="font-medium text-red-500" id="a1-today-max">—°</span> /
-              <span class="font-medium text-blue-500" id="a1-today-min">—°</span>
-            </p>
+        {/* 今日(/今夜)・明日・明後日。枠数は frames.length で2/3切替。
+            値はビルド時に焼き込み、ブラウザでは renderA1 が最新値で上書きする。
+            ID は従来どおり（JS の参照先を変えない）。 */}
+        <div id="a1-frames-grid" class:list={["grid gap-3", isThreeFrames ? "grid-cols-3" : "grid-cols-2"]}>
+          {frameSlots.map((slot, i) => {
+            const f = slot === "dayafter" && !isThreeFrames ? null : initialFrames[i];
+            const koyomiId = slot === "today" ? "a1-koyomi" : `a1-${slot}-koyomi`;
+            const k = f?.date ? koyomiFor(f.date) : null;
+            const label =
+              slot === "today"
+                ? f?.kind === "tonight" ? "今夜" : "今日"
+                : slot === "tomorrow" ? "明日" : "明後日";
+            return (
+              <div id={`a1-${slot}`} class="border border-zinc-200 bg-white p-4 text-center" hidden={!f}>
+                <p id={slot === "today" ? "a1-today-label" : undefined} class="text-sm tracking-[0.12em] text-zinc-600">{label}</p>
+                <p id={`a1-${slot}-date`} class="mt-1 text-sm text-zinc-500">{f?.date ? fmtDate(f.date) : "—"}</p>
+                <div class="my-3 flex h-16 items-center justify-center" id={`a1-${slot}-icon`} set:html={f?.icon_key ? iconHtml(f.icon_key, 60) : ""} />
+                <p class="text-sm"><span class="text-zinc-500">降水</span> <span class="font-medium text-zinc-800"><span id={`a1-${slot}-pop`}>{f?.pop != null ? String(f.pop) : "—"}</span>%</span></p>
+                <p class="mt-1 text-sm">
+                  <span class="font-medium text-red-500" id={`a1-${slot}-max`}>{f?.temp_max != null ? `${f.temp_max}°` : "—°"}</span> /
+                  <span class="font-medium text-blue-500" id={`a1-${slot}-min`}>{f?.temp_min != null ? `${f.temp_min}°` : "—°"}</span>
+                </p>
 
-            {/* 暦（控えめ）: 日の出入り・二十四節気・七十二候。JSで流し込む */}
-            <div id="a1-koyomi" class="mt-4 border-t border-zinc-100 pt-3 text-[11px] leading-relaxed text-zinc-500" hidden>
-              <p id="a1-koyomi-sun"></p>
-              <p id="a1-koyomi-term" class="mt-0.5"></p>
-              <p id="a1-koyomi-ko" class="mt-0.5"></p>
-            </div>
-          </div>
-          <div id="a1-tomorrow" class="border border-zinc-200 bg-white p-4 text-center" hidden>
-            <p class="text-sm tracking-[0.12em] text-zinc-600">明日</p>
-            <p id="a1-tomorrow-date" class="mt-1 text-sm text-zinc-500">—</p>
-            <div class="my-3 flex h-16 items-center justify-center" id="a1-tomorrow-icon"></div>
-            <p class="text-sm"><span class="text-zinc-500">降水</span> <span class="font-medium text-zinc-800"><span id="a1-tomorrow-pop">—</span>%</span></p>
-            <p class="mt-1 text-sm">
-              <span class="font-medium text-red-500" id="a1-tomorrow-max">—°</span> /
-              <span class="font-medium text-blue-500" id="a1-tomorrow-min">—°</span>
-            </p>
-
-            {/* 暦（控えめ）: 今日カードと同じ3項目 */}
-            <div id="a1-tomorrow-koyomi" class="mt-4 border-t border-zinc-100 pt-3 text-[11px] leading-relaxed text-zinc-500" hidden>
-              <p id="a1-tomorrow-koyomi-sun"></p>
-              <p id="a1-tomorrow-koyomi-term" class="mt-0.5"></p>
-              <p id="a1-tomorrow-koyomi-ko" class="mt-0.5"></p>
-            </div>
-          </div>
-          {/* 明後日カード（夕17時発表など frames 3枠時のみ表示）。#a1-tomorrow と同一構造。 */}
-          <div id="a1-dayafter" class="border border-zinc-200 bg-white p-4 text-center" hidden>
-            <p class="text-sm tracking-[0.12em] text-zinc-600">明後日</p>
-            <p id="a1-dayafter-date" class="mt-1 text-sm text-zinc-500">—</p>
-            <div class="my-3 flex h-16 items-center justify-center" id="a1-dayafter-icon"></div>
-            <p class="text-sm"><span class="text-zinc-500">降水</span> <span class="font-medium text-zinc-800"><span id="a1-dayafter-pop">—</span>%</span></p>
-            <p class="mt-1 text-sm">
-              <span class="font-medium text-red-500" id="a1-dayafter-max">—°</span> /
-              <span class="font-medium text-blue-500" id="a1-dayafter-min">—°</span>
-            </p>
-
-            {/* 暦（控えめ）: 今日カードと同じ3項目 */}
-            <div id="a1-dayafter-koyomi" class="mt-4 border-t border-zinc-100 pt-3 text-[11px] leading-relaxed text-zinc-500" hidden>
-              <p id="a1-dayafter-koyomi-sun"></p>
-              <p id="a1-dayafter-koyomi-term" class="mt-0.5"></p>
-              <p id="a1-dayafter-koyomi-ko" class="mt-0.5"></p>
-            </div>
-          </div>
+                {/* 暦（控えめ）: 日の出入り・二十四節気・七十二候 */}
+                <div id={koyomiId} class="mt-4 border-t border-zinc-100 pt-3 text-[11px] leading-relaxed text-zinc-500" hidden={!k}>
+                  <p id={`${koyomiId}-sun`}>{k?.sun ?? ""}</p>
+                  <p id={`${koyomiId}-term`} class="mt-0.5">{k?.term ?? ""}</p>
+                  <p id={`${koyomiId}-ko`} class="mt-0.5">{k?.ko ?? ""}</p>
+                </div>
+              </div>
+            );
+          })}
         </div>
+
+        <p class="mt-3 text-xs text-zinc-400" data-stamp="forecast">取得時刻：{stampForecast}</p>
 
         {/* advisory 解説テキスト。advisory.php の current.body をクライアント取得して流し込む。
             current=null 時は非表示のまま（静かに非挿入）。 */}
-        <div id="a1-advisory" class="mt-4 border-l-4 border-zinc-300 py-2 pl-4" hidden>
+        <div id="a1-advisory" class="mt-4 border-l-4 border-zinc-300 py-2 pl-4" hidden={!advisoryBody}>
           <p class="text-xs tracking-[0.12em] text-zinc-400 uppercase">Advisory</p>
           <p class="mt-0.5 text-sm font-medium text-zinc-700">おいらの天気解説</p>
-          <p id="a1-advisory-short" class="mt-2 text-sm leading-relaxed text-zinc-700"></p>
+          <p id="a1-advisory-short" class="mt-2 text-sm leading-relaxed text-zinc-700">{advisoryBody}</p>
           <p class="mt-3 text-right text-[11px] text-zinc-400">気象庁の予報をもとにおいらが解説しています。</p>
+          <p class="mt-1 text-right text-[11px] text-zinc-400" data-stamp="advisory">取得時刻：{stampAdvisory}</p>
         </div>
 
-        {/* 週間予報（weekly[1] 以降） */}
+        {/* 週間予報（weekly[1] 以降）。ビルド時に焼き込み、JSが同じ関数で上書き */}
         <p class="mt-4 mb-3 text-sm text-zinc-600">週間</p>
-        <div id="a1-weekly" class="flex gap-2 overflow-x-auto pb-2">
-          {/* JSで weekly[1..] を描画 */}
-        </div>
+        <div id="a1-weekly" class="flex gap-2 overflow-x-auto pb-2" set:html={weeklyCards} />
 
         {/* weekly 解説テキスト。advisory.weekly.body をクライアント取得して流し込む。
             null/空 時は非表示のまま（静かに非挿入）。週間予報の地続き。 */}
-        <div id="a1-weekly-advisory" class="mt-4 border-l-4 border-zinc-300 py-2 pl-4" hidden>
+        <div id="a1-weekly-advisory" class="mt-4 border-l-4 border-zinc-300 py-2 pl-4" hidden={!weeklyAdvisoryBody}>
           <p class="text-xs tracking-[0.12em] text-zinc-400 uppercase">Weekly Advisory</p>
           <p class="mt-0.5 text-sm font-medium text-zinc-700">おいらの週間天気解説</p>
-          <p id="a1-weekly-advisory-body" class="mt-2 text-sm leading-relaxed text-zinc-700"></p>
-          <p id="a1-weekly-advisory-note" class="mt-3 text-right text-[11px] text-zinc-400"></p>
+          <p id="a1-weekly-advisory-body" class="mt-2 text-sm leading-relaxed text-zinc-700">{weeklyAdvisoryBody}</p>
+          <p id="a1-weekly-advisory-note" class="mt-3 text-right text-[11px] text-zinc-400">{weeklyAdvisoryBody ? weeklyAdvisoryNote : ""}</p>
+          <p class="mt-1 text-right text-[11px] text-zinc-400" data-stamp="weekly-advisory">取得時刻：{stampWeeklyAdvisory}</p>
         </div>
       </section>
 
       {/* ═══ A5：推移グラフ（過去ゾーン） ═══════════════════════ */}
       {/* 取得失敗時はセクションごと非表示（他セクションは壊さない） */}
-      <section id="trend" class="scroll-mt-[3.5rem] border-t border-zinc-200 py-6" hidden>
+      <section id="trend" class="scroll-mt-[3.5rem] border-t border-zinc-200 py-6" hidden={!trendTable}>
         <div class="flex flex-wrap items-start justify-between gap-y-3 gap-x-4">
           <div>
             <p class="text-[11px] tracking-[0.24em] text-zinc-400 uppercase">Trend</p>
@@ -303,6 +402,15 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
           <p class="text-sm text-zinc-600">平年比（平年値：那須烏山・2009-2020）</p>
           <p id="a5-normal-summary-text" class="mt-1"></p>
         </div>
+
+        {/* 数値表（グラフの代替テキスト）。SVG はクライアント描画のため、
+            JS無効・クローラーには同じ数値をこの表で届ける。期間切替時は JS が同じ関数で差し替える。 */}
+        <details id="a5-table-wrap" class="mt-5">
+          <summary class="cursor-pointer text-xs tracking-[0.1em] text-zinc-500 transition hover:text-zinc-800">数値で見る</summary>
+          <div id="a5-table" class="mt-3 overflow-x-auto" set:html={trendTable} />
+        </details>
+
+        <p class="mt-3 text-xs text-zinc-400" data-stamp="trend">取得時刻：{stampTrend}</p>
       </section>
 
       {/* ═══ A6：補助タブ（天気図・衛星画像・台風） ══════════════════ */}
@@ -468,7 +576,19 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
 
   <script>
     import { iconSvg, iconColor } from "../../lib/weatherIcon";
-    import { getKoyomi, getSunTimes, getMoonAge, moonPhaseSvg } from "../../lib/koyomi";
+    import { getKoyomi, getSunTimes } from "../../lib/koyomi";
+    import {
+      citiesHtml,
+      trendTableHtml,
+      warningsHtml,
+      weeklyHtml,
+    } from "../../lib/nowRender";
+    import {
+      fmtClock as fmtClockJst,
+      fmtStamp,
+      isUketsukeDown,
+      timeStampClass,
+    } from "../../lib/nowWeather";
 
     // ════════════════════════════════════════════════════════════
     //  データ取得層（A1〜A4 共通の土台）
@@ -492,8 +612,7 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
     const LIVECAM_STALE_MAX_S = 3600; // stale:true かつ checked_at がこの秒数超 → live でもプレースホルダ落とし
 
     // 鮮度閾値（A4 で使用）
-    const STALE_WARN_S = 1200; // 20分超 → 警告色
-    const STALE_DOWN_S = 3600; // 1時間超 → 停止中扱い
+    // 鮮度閾値（STALE_WARN_S / STALE_DOWN_S）と判定は lib/nowWeather に一元化。
 
     const DOW = ["日", "月", "火", "水", "木", "金", "土"];
 
@@ -550,10 +669,14 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
       box.hidden = false;
     }
 
-    function fmtClock(iso: string): string {
-      const d = new Date(iso);
-      const p = (n: number) => String(n).padStart(2, "0");
-      return `${d.getMonth() + 1}/${d.getDate()} ${p(d.getHours())}:${p(d.getMinutes())}`;
+    // 時刻整形は lib/nowWeather に一元化（JST 固定。ビルド時＝UTC の CI でも
+    // クライアントと同じ文字列になる）。
+    const fmtClock = fmtClockJst;
+
+    // ブロック別の取得時刻注記を現在時刻へ更新する（data-stamp 属性で対応付け）。
+    function touchStamp(key: string, iso?: string | null): void {
+      const el = document.querySelector(`[data-stamp="${key}"]`);
+      if (el) el.textContent = `取得時刻：${fmtStamp(iso ?? new Date().toISOString())}`;
     }
 
     async function fetchJson(url: string): Promise<Json> {
@@ -638,45 +761,15 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
         }
       }
 
-      // 週間（weekly[0]=明日は描画しない）。直近枠との重複解消で slice 起点を frames.length に連動：
-      // 3枠（明後日まで直近表示）→ slice(2)（明々後日〜）／2枠・frames無 → slice(1)（明後日〜）。
-      const weekly: Json[] = Array.isArray(forecast.weekly) ? forecast.weekly : [];
-      const weeklyStart = frames && frames.length === 3 ? 2 : 1;
+      // 週間（weekly[0]=明日は描画しない）。slice 起点の決定を含め
+      // 描画は lib/nowRender に一元化（ビルド時の初期HTMLと同一関数＝表示差分なし）。
       const wrap = getEl("a1-weekly");
-      if (wrap && weekly.length > weeklyStart) {
-        wrap.replaceChildren();
-        for (const day of weekly.slice(weeklyStart)) {
-          const card = document.createElement("div");
-          card.className = "shrink-0 border border-zinc-200 bg-white p-3 text-center";
-          card.style.width = "96px";
-          const date = document.createElement("p");
-          date.className = "text-xs text-zinc-500";
-          date.textContent = fmtDate(day.date);
-          const icon = document.createElement("div");
-          icon.className = "my-2 flex h-11 items-center justify-center";
-          if (day.icon_key) {
-            const img = iconFromKey(day.icon_key, 44);
-            if (img) icon.appendChild(img);
-          }
-          const pop = document.createElement("p");
-          pop.className = "text-xs text-zinc-500";
-          pop.textContent = day.pop != null ? `${day.pop}%` : "—";
-          const temp = document.createElement("p");
-          temp.className = "mt-1 text-xs";
-          temp.innerHTML =
-            `<span class="text-red-500">${day.temp_max != null ? day.temp_max + "°" : "—"}</span>` +
-            ` / <span class="text-blue-500">${day.temp_min != null ? day.temp_min + "°" : "—"}</span>`;
-
-          // 月齢（控えめ）: 月相アイコン＋数値
-          const moon = document.createElement("p");
-          moon.className = "mt-1.5 flex items-center justify-center gap-1 text-[10px] text-zinc-400";
-          const age = getMoonAge(parseLocalDate(day.date));
-          moon.innerHTML = `${moonPhaseSvg(age, 12)}<span>月齢${age.toFixed(0)}</span>`;
-
-          card.append(date, icon, pop, temp, moon);
-          wrap.appendChild(card);
-        }
+      if (wrap) {
+        const html = weeklyHtml(forecast);
+        if (html) wrap.innerHTML = html;
       }
+
+      touchStamp("forecast", forecast.generated_at);
 
       // advisory 解説テキスト（current.body のみ表示。null 時は静かに非挿入）
       const advisoryEl = getEl("a1-advisory");
@@ -685,6 +778,7 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
       if (advisoryEl && shortEl && typeof body === "string" && body.trim().length > 0) {
         shortEl.textContent = body.trim();
         advisoryEl.hidden = false;
+        touchStamp("advisory", advisory?.current?.generated_at);
       } else if (advisoryEl) {
         advisoryEl.hidden = true;
       }
@@ -705,50 +799,19 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
             : "気象庁の予報に基づく";
         }
         wkEl.hidden = false;
+        touchStamp("weekly-advisory", advisory?.weekly?.generated_at);
       } else if (wkEl) {
         wkEl.hidden = true;
       }
     }
 
     // ── A3：警報・注意報 ─────────────────────────────────────────
+    // 描画は lib/nowRender に一元化（ビルド時の初期HTMLと同一関数＝表示差分なし）。
     function renderA3(warning: Json | null): void {
       const wrap = getEl("a3-warnings");
       if (!wrap) return;
-      if (!warning) {
-        wrap.innerHTML = `<p class="text-zinc-500">警報・注意報の取得に失敗しました。</p>`;
-        return;
-      }
-
-      const warnings: Json[] = Array.isArray(warning.warnings) ? warning.warnings : [];
-      if (warnings.length === 0) {
-        wrap.innerHTML = `<p class="text-zinc-500">現在、発表中の警報・注意報はありません。</p>`;
-        return;
-      }
-
-      // level で3段階に出し分け（emergency / warning / advisory）
-      const styleByLevel = (level: string) => {
-        switch (level) {
-          case "emergency":
-            return "border-2 border-purple-600 bg-purple-50 text-purple-800 font-semibold";
-          case "warning":
-            return "border border-red-400 bg-red-50 text-red-700";
-          default: // advisory
-            return "border border-amber-400 bg-amber-50 text-amber-700";
-        }
-      };
-      const rank = (level: string) =>
-        level === "emergency" ? 0 : level === "warning" ? 1 : 2;
-
-      const sorted = [...warnings].sort((a, b) => rank(a.level) - rank(b.level));
-
-      wrap.replaceChildren();
-      for (const w of sorted) {
-        const span = document.createElement("span");
-        const lv = String(w.level ?? "advisory");
-        span.className = `mr-2 mb-2 inline-block px-3 py-1 text-xs ${styleByLevel(lv)}`;
-        span.textContent = w.name ?? w.text ?? `コード ${w.code ?? "—"}`;
-        wrap.appendChild(span);
-      }
+      wrap.innerHTML = warningsHtml(warning);
+      touchStamp("warning", warning?.generated_at);
     }
 
     // ── A4：現地の今（受付棟・アメダス・周辺3都市）───────────────
@@ -763,10 +826,8 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
       const downEl = getEl("a4-uketsuke-down");
       const timeEl = getEl("a4-uketsuke-time");
 
-      // 停止中判定：temp_c が null、または鮮度 1時間超
-      const ukDown =
-        !uketsuke || uketsuke.temp_c == null ||
-        (uketsuke.age_seconds != null && uketsuke.age_seconds > STALE_DOWN_S);
+      // 停止中判定：temp_c が null、または鮮度 1時間超（lib/nowWeather に一元化）
+      const ukDown = isUketsukeDown(uketsuke);
 
       if (ukDown) {
         if (bodyEl) bodyEl.hidden = true;
@@ -780,10 +841,7 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
         // 鮮度（20分超で警告色）と時刻スタンプ（強調）
         if (timeEl && uketsuke.observed_at) {
           timeEl.textContent = `${fmtClock(uketsuke.observed_at)} 観測`;
-          timeEl.className =
-            (uketsuke.age_seconds != null && uketsuke.age_seconds > STALE_WARN_S)
-              ? "text-xs font-semibold text-amber-600"
-              : "text-xs font-semibold text-zinc-600";
+          timeEl.className = timeStampClass(uketsuke.age_seconds);
         }
       }
 
@@ -810,10 +868,7 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
         const aTimeEl = getEl("a4-amedas-time");
         if (aTimeEl && amedas.observed_at) {
           aTimeEl.textContent = `${fmtClock(amedas.observed_at)} 観測`;
-          aTimeEl.className =
-            (amedas.age_seconds != null && amedas.age_seconds > STALE_WARN_S)
-              ? "text-xs font-semibold text-amber-600"
-              : "text-xs font-semibold text-zinc-600";
+          aTimeEl.className = timeStampClass(amedas.age_seconds);
         }
       }
 
@@ -843,53 +898,11 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
       }
 
       // --- 周辺3都市（東京・埼玉・宇都宮）---
+      // 描画は lib/nowRender に一元化（ビルド時の初期HTMLと同一関数＝表示差分なし）。
       const citiesWrap = getEl("a4-cities");
-      if (citiesWrap) {
-        const cityOrder = [
-          { key: "amedas_tokyo",      label: "東京" },
-          { key: "amedas_saitama",    label: "埼玉" },
-          { key: "amedas_utsunomiya", label: "宇都宮" },
-        ];
-        const baseTemp = uketsuke?.temp_c ?? null;
-        citiesWrap.replaceChildren();
+      if (citiesWrap) citiesWrap.innerHTML = citiesHtml(current);
 
-        for (const { key, label } of cityOrder) {
-          const st = current?.stations?.[key];
-          const card = document.createElement("div");
-          card.className = "border border-zinc-200 bg-white p-4 text-center";
-
-          const name = document.createElement("p");
-          name.className = "text-xs tracking-[0.12em] text-zinc-400";
-          name.textContent = st?.label ?? label;
-          card.appendChild(name);
-
-          const iconBox = document.createElement("div");
-          iconBox.className = "my-2 flex h-16 items-center justify-center";
-          if (st?.icon_key) {
-            const icon = iconFromKey(st.icon_key, 66);
-            if (icon) iconBox.appendChild(icon);
-          }
-          card.appendChild(iconBox);
-
-          const temp = document.createElement("p");
-          temp.className = "text-2xl font-semibold text-zinc-800";
-          temp.innerHTML = (st?.temp_c != null)
-            ? `${st.temp_c.toFixed(1)}<span class="text-xs text-zinc-400"> ℃</span>`
-            : `<span class="text-zinc-300">—</span>`;
-          card.appendChild(temp);
-
-          if (st?.temp_c != null && baseTemp != null) {
-            const diff = st.temp_c - baseTemp;
-            const sign = diff >= 0 ? "+" : "−";
-            const d = document.createElement("p");
-            d.className = "mt-1 text-xs text-zinc-400";
-            d.textContent = `おいらの森比 ${sign}${Math.abs(diff).toFixed(1)}℃`;
-            card.appendChild(d);
-          }
-
-          citiesWrap.appendChild(card);
-        }
-      }
+      touchStamp("current", current?.generated_at);
     }
 
     // ── ライブカメラ（#livecam）：実行時に livecam.php を見て埋め込み切替 ──
@@ -1148,6 +1161,10 @@ const YT_CHANNEL_ID = "UCZ3xCKDzSHpxJm5jyWfJkbg"; // @Oiranomori 里山パーク
       try {
         const data = await fetchJson(`${API.timeseries}?range=${range}`);
         drawTrend(data);
+        // 数値表（グラフの代替テキスト）もビルド時と同一関数で差し替える
+        const table = getEl("a5-table");
+        if (table) table.innerHTML = trendTableHtml(data);
+        touchStamp("trend", data?.generated_at);
         if (section) section.hidden = false; // 取得成功時のみ表示
       } catch (e) {
         // 取得失敗 → A5セクションごと非表示（他セクションは壊さない）
