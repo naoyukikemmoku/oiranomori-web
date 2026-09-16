@@ -1,6 +1,26 @@
 ---
 import Header from "../../components/Header.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { type ForestDaily, fetchForestDailyList } from "../../lib/forestDaily";
+import { listHtml } from "../../lib/forestDailyList";
+
+// 一覧の初期表示（直近50日分）はビルド時に取得してHTMLへ埋め込む。
+// クローラー・JS無効環境に本文が見えるようにするため（旧: client-fetch のみ）。
+// 取得失敗時はビルドを落とさず空リストに倒し、クライアント側 fetch が拾う。
+const LIST_LIMIT = 50;
+let initialItems: ForestDaily[] = [];
+let initialOk = false;
+try {
+	const data = await fetchForestDailyList(LIST_LIMIT, 0);
+	initialItems = data.contents;
+	initialOk = true;
+} catch (e) {
+	console.warn(
+		"[forest-daily] ビルド時の一覧取得に失敗。client-fetch にフォールバックします:",
+		e,
+	);
+}
+const initialListHtml = initialOk ? listHtml(initialItems) : "";
 
 const TITLE = "今日のおいらの森 | 里山パークおいらの森";
 const DESCRIPTION =
@@ -48,10 +68,26 @@ const webPageSchema = {
       {/* 一覧フィルタ（年/月/週）のマウント点。個別ビュー時は JS で隠す。 */}
       <div id="fd-filter" hidden></div>
 
-      {/* マウント点。client-fetch で一覧／個別を描画。初期は読み込み中。 */}
-      <div id="fd-app" data-state="loading">
-        <p class="py-8 text-sm text-zinc-400">読み込み中…</p>
-      </div>
+      {/* マウント点。初期一覧はビルド時に埋め込み済み（SEO対象）。
+          フィルタ後の再描画・個別ビューは client-fetch が同じ描画関数で差し替える。
+          ビルド時取得に失敗した場合のみ「読み込み中…」で client-fetch に委ねる。 */}
+      {initialOk ? (
+        <div id="fd-app" data-state="ready" set:html={initialListHtml} />
+      ) : (
+        <div id="fd-app" data-state="loading">
+          <p class="py-8 text-sm text-zinc-400">読み込み中…</p>
+        </div>
+      )}
+
+      {/* ビルド時に埋め込んだ初期一覧データ。週フィルタ（client絞り込み）の元配列に使う。
+          これにより初回の直近50件 fetch はクライアントで不要になる。 */}
+      {initialOk && (
+        <script
+          id="fd-initial"
+          type="application/json"
+          set:html={JSON.stringify(initialItems)}
+        />
+      )}
 
       {/* 末尾 Reserve 導線（静的・常設） */}
       <div class="mt-16 border-t border-zinc-200 pt-10 pb-4">
@@ -95,6 +131,12 @@ const webPageSchema = {
       isDailyId,
       type ForestDaily,
     } from "../../lib/forestDaily";
+    import {
+      bodySnippet,
+      isSpecialType,
+      listHtml,
+      typeLabel,
+    } from "../../lib/forestDailyList";
 
     // ════════════════════════════════════════════════════════════
     //  forest-daily client-fetch widget
@@ -102,32 +144,13 @@ const webPageSchema = {
     //  - 一覧: 年/月フィルタ（API再取得）＋週フィルタ（client絞り込み）
     //  - 個別 daily: 前後/前週翌週/今日ナビ＋投稿日カレンダー（dates 配列基準）
     //  - 個別 seasonal/special: 日付ナビ・カレンダーなし
-    //  - API 由来テキストは textContent でセット（XSS 回避・innerHTML 不使用）
+    //  - 一覧の初期表示はビルド時にHTML埋め込み済み。ここでは再取得しない
+    //    （フィルタ操作時のみ再取得・再描画。描画は lib/forestDailyList に一元化）
+    //  - API 由来テキストは textContent もしくは escapeHtml 経由でセット（XSS 回避）
     //  - fetch 失敗・ok:false はプレースホルダに倒し、ページ骨格は静的なので保持
     // ════════════════════════════════════════════════════════════
 
     const LIST_LIMIT = 50;
-
-    const TYPE_LABEL: Record<string, string> = {
-      daily: "日常",
-      seasonal: "季節",
-      special: "特別",
-    };
-
-    function typeLabel(types: string[]): string {
-      if (types.includes("special")) return TYPE_LABEL.special;
-      if (types.includes("seasonal")) return TYPE_LABEL.seasonal;
-      return TYPE_LABEL.daily;
-    }
-
-    function isSpecialType(types: string[]): boolean {
-      return types.includes("special") || types.includes("seasonal");
-    }
-
-    function bodySnippet(body: string, len = 80): string {
-      const text = body.replace(/\r?\n/g, " ").trim();
-      return text.length > len ? `${text.slice(0, len)}…` : text;
-    }
 
     const app = document.getElementById("fd-app");
     const intro = document.getElementById("fd-intro");
@@ -180,91 +203,17 @@ const webPageSchema = {
     // dates 由来の利用可能な年月オプション（降順）。初期化時に1度だけ算出。
     let ymOptions: { y: number; m: number }[] = [];
 
-    // 一覧の1行（日付列なし＝タイトル主体）
-    function listRow(item: ForestDaily): HTMLElement {
-      const li = document.createElement("li");
-      const a = el(
-        "a",
-        "group flex gap-4 py-6 -mx-2 px-2 transition hover:bg-zinc-100/60",
-      ) as HTMLAnchorElement;
-      a.href = `/forest-daily/?id=${encodeURIComponent(item.id)}`;
-
-      // サムネ
-      const thumbWrap = el("div", "relative shrink-0 overflow-hidden bg-zinc-200");
-      thumbWrap.style.width = "88px";
-      thumbWrap.style.height = "66px";
-      const img = document.createElement("img");
-      img.src = item.imageUrl ?? "https://oiranomori.jp/images/lp/hero.jpg";
-      img.alt = "";
-      img.width = 88;
-      img.height = 66;
-      img.loading = "lazy";
-      img.className =
-        "h-full w-full object-cover transition duration-300 group-hover:scale-105";
-      thumbWrap.appendChild(img);
-      const types = item.postType ?? [];
-      if (isSpecialType(types)) {
-        thumbWrap.appendChild(
-          el(
-            "span",
-            "absolute bottom-1 left-1 bg-[color:var(--forest-700)] px-1.5 py-0.5 text-[10px] tracking-[0.1em] text-zinc-200",
-            typeLabel(types),
-          ),
-        );
+    // ビルド時に埋め込んだ初期一覧データ。無ければ null（＝client-fetch フォールバック）。
+    function readInitialItems(): ForestDaily[] | null {
+      const node = document.getElementById("fd-initial");
+      if (!node?.textContent) return null;
+      try {
+        const parsed = JSON.parse(node.textContent);
+        return Array.isArray(parsed) ? (parsed as ForestDaily[]) : null;
+      } catch (e) {
+        console.warn("[forest-daily] 初期データの解析に失敗", e);
+        return null;
       }
-      a.appendChild(thumbWrap);
-
-      // テキスト列：1行目=日付+タイトル(見出し)、2行目=天気予報、3行目=気温、4行目=本文
-      //   サイズで階層化：見出し(base) > 本文(sm) > 天気(xs) > 気温(xs薄)
-      //   薄字は背景(#f4f5f2)で沈まないよう zinc-600/700 基調に統一
-      const col = el("div", "min-w-0 flex-1");
-
-      // 1行目：日付＋タイトル（見出し h2。日付はタイトルと同一書式で一体化）
-      const heading = el(
-        "h2",
-        "text-base font-semibold leading-snug text-zinc-800 group-hover:text-[color:var(--forest-600)]",
-      );
-      heading.appendChild(
-        document.createTextNode(
-          `${formatPostDateShort(item.postDate)} ${item.title}`,
-        ),
-      );
-      col.appendChild(heading);
-
-      // 2行目：今日の天気予報（xs・zinc-700。薄字を濃色へ統一）
-      if (item.conditionShort) {
-        col.appendChild(
-          el("p", "mt-1.5 text-xs text-zinc-700", `今日の天気予報：${item.conditionShort}`),
-        );
-      }
-
-      // 3行目：気温（xs・zinc-700。薄字を濃色へ統一）
-      const hasTemp = item.tempC !== undefined && item.tempC !== null;
-      const hasMax = item.maxTempC !== undefined && item.maxTempC !== null;
-      const hasMin = item.minTempC !== undefined && item.minTempC !== null;
-      if (hasTemp || hasMax || hasMin) {
-        const parts: string[] = [];
-        if (hasTemp) parts.push(`7時の気温：${item.tempC}℃`);
-        if (hasMax || hasMin) {
-          const maxStr = hasMax ? `${item.maxTempC}°` : "—";
-          const minStr = hasMin ? `${item.minTempC}°` : "—";
-          parts.push(`予想最高最低気温：${maxStr}/${minStr}`);
-        }
-        col.appendChild(el("p", "mt-0.5 text-xs text-zinc-700", parts.join("　")));
-      }
-
-      // 4行目：本文スニペット（sm・zinc-600・leading 広め。メタ情報と質感を分ける）
-      col.appendChild(
-        el(
-          "p",
-          "mt-1.5 text-sm leading-relaxed text-zinc-600 line-clamp-2",
-          bodySnippet(item.body),
-        ),
-      );
-      a.appendChild(col);
-
-      li.appendChild(a);
-      return li;
     }
 
     // 月内の「週」インデックス（1始まり）。ISO 風に「その月の1日を含む週=第1週」で
@@ -294,20 +243,9 @@ const webPageSchema = {
     function paintList(): void {
       if (!app) return;
       app.dataset.state = "ready";
-      app.replaceChildren();
-      const items = visibleItems();
-      if (items.length === 0) {
-        app.appendChild(
-          el("p", "py-8 text-sm text-zinc-500", "この期間の記録はまだありません。"),
-        );
-        return;
-      }
-      const ul = el("ul", "divide-y divide-zinc-300 border-t border-zinc-300");
-      for (const item of items) ul.appendChild(listRow(item));
-      app.appendChild(ul);
-      app.appendChild(
-        el("p", "mt-8 text-xs text-zinc-400", `${items.length}件を表示しています`),
-      );
+      // ビルド時と同一の描画関数（listHtml）で組み立てる＝サーバー/クライアント差分なし。
+      // API 由来テキストは listHtml 内で escapeHtml 済み。
+      app.innerHTML = listHtml(visibleItems());
     }
 
     // 年月の取得（API再取得）→ monthItems 更新 → 週UI更新 → リスト再描画
@@ -473,30 +411,39 @@ const webPageSchema = {
         console.warn("[forest-daily] dates 取得失敗（フィルタは縮退）", e);
       }
 
-      try {
-        const data = await fetchForestDailyList(LIST_LIMIT, 0);
-        listState.monthItems = data.contents;
-        // dates と list 双方の postDate を年月オプションに統合
-        const ymSet = new Map<string, { y: number; m: number }>();
-        for (const ds of dates) {
-          const { y, m } = ymOf(ds);
-          ymSet.set(`${y}-${m}`, { y, m });
+      // 初期一覧はビルド時に埋め込み済み。それを読むだけで初回 fetch は不要。
+      // 埋め込みが無い場合（ビルド時取得に失敗）のみ client-fetch にフォールバック。
+      let items = readInitialItems();
+      if (items === null) {
+        try {
+          const data = await fetchForestDailyList(LIST_LIMIT, 0);
+          items = data.contents;
+        } catch (e) {
+          console.warn("[forest-daily] 一覧取得失敗", e);
+          showPlaceholder("いまは読み込めません。時間をおいてお試しください。");
+          return;
         }
-        for (const it of data.contents) {
-          const { y, m } = ymOf(it.postDate);
-          ymSet.set(`${y}-${m}`, { y, m });
-        }
-        ymOptions = Array.from(ymSet.values()).sort(
-          (a, b) => b.y - a.y || b.m - a.m,
-        );
-      } catch (e) {
-        console.warn("[forest-daily] 一覧取得失敗", e);
-        showPlaceholder("いまは読み込めません。時間をおいてお試しください。");
-        return;
       }
+      listState.monthItems = items;
+
+      // dates と list 双方の postDate を年月オプションに統合
+      const ymSet = new Map<string, { y: number; m: number }>();
+      for (const ds of dates) {
+        const { y, m } = ymOf(ds);
+        ymSet.set(`${y}-${m}`, { y, m });
+      }
+      for (const it of items) {
+        const { y, m } = ymOf(it.postDate);
+        ymSet.set(`${y}-${m}`, { y, m });
+      }
+      ymOptions = Array.from(ymSet.values()).sort(
+        (a, b) => b.y - a.y || b.m - a.m,
+      );
 
       if (ymOptions.length > 0) renderFilterControl();
-      paintList();
+      // 埋め込み済みHTMLは listHtml と同一結果なので、初期表示では再描画しない
+      // （不要な DOM 差し替えとチラつきを避ける）。フォールバック時のみ描画する。
+      if (app.dataset.state !== "ready") paintList();
     }
 
     // ════════════════════════════════════════════════════════════
@@ -706,6 +653,12 @@ const webPageSchema = {
       // 個別時は常設の一覧イントロ・フィルタを隠す
       if (intro) intro.hidden = true;
       if (filterMount) filterMount.hidden = true;
+
+      // ビルド時に埋め込んだ一覧HTMLを即座に落とす（記事 fetch 待ちで一覧が
+      // ちらつくのを防ぐ）。
+      app.dataset.state = "loading";
+      app.replaceChildren();
+      app.appendChild(el("p", "py-8 text-sm text-zinc-400", "読み込み中…"));
 
       let article: ForestDaily | null;
       try {
