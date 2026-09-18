@@ -10,14 +10,7 @@ import SeasonSlider from "../components/SeasonSlider.astro";
 import LpLayout from "../layouts/LpLayout.astro";
 import { getOshirase } from "../lib/oshirase";
 
-let contents: any[] = [];
-
-try {
-	const response = await getOshirase(3);
-	contents = response.contents;
-} catch (error) {
-	console.warn("Failed to fetch news from microCMS.", error);
-}
+const { contents } = await getOshirase(3);
 
 const plans: Array<{
 	name: string;

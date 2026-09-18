@@ -1,32 +1,16 @@
 ﻿---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Header from "../../components/Header.astro";
-import { getOshirasePage, getOshiraseDetail } from "../../lib/oshirase";
+import { getAllOshiraseIds, getOshiraseDetail } from "../../lib/oshirase";
 
 export async function getStaticPaths() {
-  const LIMIT = 100;
-  let allIds: string[] = [];
-
-  try {
-    // 最大100件取得（それ以上ある場合は適宜増やす）
-    const res = await getOshirasePage(1, LIMIT);
-    allIds = res.contents.map((c: any) => c.id);
-  } catch (e) {
-    console.warn("[news/[id]] microCMS 取得失敗", e);
-    return [];
-  }
-
+  const allIds = await getAllOshiraseIds();
   return allIds.map((id) => ({ params: { id } }));
 }
 
 const { id } = Astro.params;
 
-let article: any = null;
-try {
-  article = await getOshiraseDetail(id);
-} catch (e) {
-  console.warn("[news/[id]] 記事取得失敗", e);
-}
+const article = await getOshiraseDetail(id);
 
 function formatDate(str: string) {
   const d = new Date(str);
@@ -34,7 +18,7 @@ function formatDate(str: string) {
   return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, "0")}.${String(d.getDate()).padStart(2, "0")}`;
 }
 
-const articleSchema = article ? {
+const articleSchema = {
   "@context": "https://schema.org",
   "@type": "Article",
   "headline": article.title,
@@ -55,17 +39,15 @@ const articleSchema = article ? {
     "@type": "WebPage",
     "@id": `https://oiranomori.jp/news/${id}/`
   }
-} : null;
+};
 ---
 
 <BaseLayout
-  title={article ? `${article.title} | 里山パークおいらの森` : "お知らせ | 里山パークおいらの森"}
-  description={article?.description ?? "おいらの森からのお知らせです。"}
+  title={`${article.title} | 里山パークおいらの森`}
+  description={article.description ?? "おいらの森からのお知らせです。"}
   ogType="article"
 >
-  {articleSchema && (
-    <script is:inline type="application/ld+json" slot="head" set:html={JSON.stringify(articleSchema)} />
-  )}
+  <script is:inline type="application/ld+json" slot="head" set:html={JSON.stringify(articleSchema)} />
   <Header />
   <div class="min-h-screen bg-[#f4f5f2] pb-24">
     <div class="mx-auto max-w-3xl px-5">
@@ -82,8 +64,7 @@ const articleSchema = article ? {
         </a>
       </div>
 
-      {article ? (
-        <article class="pt-8">
+      <article class="pt-8">
           <header class="mb-8 border-b border-zinc-300 pb-8">
             <div class="flex flex-wrap items-center gap-3 mb-4">
               <time class="text-xs tracking-[0.12em] text-zinc-400" datetime={article.publishedAt}>
@@ -116,12 +97,7 @@ const articleSchema = article ? {
               お知らせ一覧へ
             </a>
           </div>
-        </article>
-      ) : (
-        <div class="pt-12">
-          <p class="text-sm text-zinc-500">記事が見つかりませんでした。</p>
-        </div>
-      )}
+      </article>
 
     </div>
   </div>

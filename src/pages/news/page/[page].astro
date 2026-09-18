@@ -5,15 +5,7 @@ import { getOshirasePage } from "../../../lib/oshirase";
 
 export async function getStaticPaths() {
   const LIMIT = 10;
-
-  let totalCount = 0;
-  try {
-    const res = await getOshirasePage(1, LIMIT);
-    totalCount = res.totalCount;
-  } catch (e) {
-    console.warn("[news/page] microCMS 取得失敗", e);
-    return [];
-  }
+  const { totalCount } = await getOshirasePage(1, LIMIT);
 
   const totalPages = Math.ceil(totalCount / LIMIT);
   // page 1 は /news/index.astro が担当するので 2 以降を生成
@@ -25,16 +17,7 @@ export async function getStaticPaths() {
 const LIMIT = 10;
 const page = Number(Astro.params.page);
 
-let items: any[] = [];
-let totalCount = 0;
-
-try {
-  const res = await getOshirasePage(page, LIMIT);
-  items = res.contents;
-  totalCount = res.totalCount;
-} catch (e) {
-  console.warn("[news/page] microCMS 取得失敗", e);
-}
+const { contents: items, totalCount } = await getOshirasePage(page, LIMIT);
 
 const totalPages = Math.ceil(totalCount / LIMIT);
 

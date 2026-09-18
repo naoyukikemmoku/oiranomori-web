@@ -6,16 +6,7 @@ import { getOshirasePage } from "../../lib/oshirase";
 const LIMIT = 10;
 const page = 1;
 
-let items: any[] = [];
-let totalCount = 0;
-
-try {
-  const res = await getOshirasePage(page, LIMIT);
-  items = res.contents;
-  totalCount = res.totalCount;
-} catch (e) {
-  console.warn("[news] microCMS 取得失敗", e);
-}
+const { contents: items, totalCount } = await getOshirasePage(page, LIMIT);
 
 const totalPages = Math.ceil(totalCount / LIMIT);
 
