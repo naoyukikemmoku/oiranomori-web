@@ -1,0 +1,31 @@
+---
+import PageLayout from "../layouts/PageLayout.astro";
+---
+
+<PageLayout
+  title="ページが見つかりません | 里山パークおいらの森"
+  description="お探しのページは見つかりませんでした。里山パークおいらの森のトップ、予約ガイド、よくある質問をご案内します。"
+  noindex={true}
+>
+  <section class="mx-auto flex min-h-[60vh] max-w-3xl flex-col justify-center py-16 md:py-24">
+    <p class="text-xs tracking-[0.28em] text-zinc-400">404 / NOT FOUND</p>
+    <h1 class="mt-4 text-3xl font-semibold leading-snug text-zinc-800 md:text-5xl">
+      ページが見つかりません
+    </h1>
+    <p class="mt-6 max-w-xl text-sm leading-loose text-zinc-600 md:text-base">
+      URLが変わったか、ページが移動した可能性があります。目的に近いページから、もう一度お探しください。
+    </p>
+
+    <nav class="mt-10 flex flex-wrap gap-x-8 gap-y-4 text-sm" aria-label="ページが見つからない場合の案内">
+      <a href="/" class="border-b border-zinc-400 pb-1 text-zinc-700 transition hover:border-zinc-800 hover:text-zinc-900">
+        トップへ
+      </a>
+      <a href="/reservation-guide/" class="border-b border-zinc-400 pb-1 text-zinc-700 transition hover:border-zinc-800 hover:text-zinc-900">
+        予約ガイドへ
+      </a>
+      <a href="/faq/" class="border-b border-zinc-400 pb-1 text-zinc-700 transition hover:border-zinc-800 hover:text-zinc-900">
+        よくある質問へ
+      </a>
+    </nav>
+  </section>
+</PageLayout>

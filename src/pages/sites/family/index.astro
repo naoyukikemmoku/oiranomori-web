@@ -42,7 +42,7 @@ const experiences = [
 ];
 ---
 
-<PageLayout title={TITLE} description={DESC}>
+<PageLayout title={TITLE} description={DESC} noindex={true}>
   <Fragment slot="head">
     <script is:inline type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",

@@ -3,7 +3,8 @@ import { topSwitch } from "../config/nav";
 import HamburgerMenu from "./HamburgerMenu.astro";
 
 const pathname = Astro.url.pathname;
-const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
+const isActive = (href: string) =>
+	href === "/" ? pathname === "/" : pathname.startsWith(href);
 ---
 
 <header id="site-header" class="site-header">
@@ -11,7 +12,7 @@ const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.s
   {/* Row 1: ロゴ ／ [PCのみ切り替えタブ] ／ 天気 ＋ ハンバーガー */}
   <div class="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-2 md:py-3">
     <a href="/" class="flex items-center gap-2 shrink-0" aria-label="おいらの森トップへ">
-      <img src="/images/logo/logo-w512.png" alt="おいらの森ロゴ" class="h-8 md:h-10 w-auto" />
+      <img src="/images/logo/logo-w512.png" alt="おいらの森ロゴ" width="506" height="159" class="h-8 md:h-10 w-auto" />
       <span class="sr-only">おいらの森</span>
     </a>
 

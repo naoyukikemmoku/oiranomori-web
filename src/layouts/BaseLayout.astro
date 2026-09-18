@@ -13,7 +13,7 @@ const {
 
 const BASE_URL = "https://oiranomori.jp";
 const canonicalUrl = BASE_URL + Astro.url.pathname;
-const breadcrumbName = title.includes(" | ") ? title.split(" | ")[0].trim() : title;
+const breadcrumbName = title.split(/\s*[|｜]\s*/u, 1)[0].trim();
 
 const segmentLabels: Record<string, string> = {
   access:              "アクセス",
@@ -49,16 +49,23 @@ const segmentLabels: Record<string, string> = {
 };
 
 const pathSegments = Astro.url.pathname.split("/").filter(Boolean);
+const breadcrumbSegments = pathSegments
+  .map((segment, pathIndex) => ({ segment, pathIndex }))
+  .filter(({ segment, pathIndex }) => !(
+    segment === "page" &&
+    pathSegments[pathIndex - 1] === "news" &&
+    /^\d+$/.test(pathSegments[pathIndex + 1] ?? "")
+  ));
 
 const breadcrumbJson = pathSegments.length > 0 ? JSON.stringify({
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   "itemListElement": [
     { "@type": "ListItem", "position": 1, "name": "里山パークおいらの森", "item": BASE_URL },
-    ...pathSegments.map((seg, i) => {
-      const isLast = i === pathSegments.length - 1;
-      const cumPath = "/" + pathSegments.slice(0, i + 1).join("/") + "/";
-      const name = isLast ? breadcrumbName : (segmentLabels[seg] ?? seg);
+    ...breadcrumbSegments.map(({ segment, pathIndex }, i) => {
+      const isLast = i === breadcrumbSegments.length - 1;
+      const cumPath = "/" + pathSegments.slice(0, pathIndex + 1).join("/") + "/";
+      const name = isLast ? breadcrumbName : (segmentLabels[segment] ?? segment);
       return { "@type": "ListItem", "position": i + 2, "name": name, "item": BASE_URL + cumPath };
     }),
   ],
@@ -85,6 +92,7 @@ const breadcrumbJson = pathSegments.length > 0 ? JSON.stringify({
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description ?? ""} />
     <meta property="og:image" content={ogImage} />
+    <meta property="og:image:alt" content={breadcrumbName} />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:site_name" content="Satoyama Park Oira no Mori" />
     <meta property="og:locale" content="ja_JP" />
@@ -92,9 +100,10 @@ const breadcrumbJson = pathSegments.length > 0 ? JSON.stringify({
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@oiranomori" />
     <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={breadcrumbName} />
     <!-- canonical -->
     <link rel="canonical" href={canonicalUrl} />
-    {noindex && <meta name="robots" content="noindex,nofollow" />}
+    {noindex && <meta name="robots" content="noindex,follow" />}
     <!-- BreadcrumbList -->
     {breadcrumbJson && <script is:inline type="application/ld+json" set:html={breadcrumbJson} />}
     <slot name="head" />
