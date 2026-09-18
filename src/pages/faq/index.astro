@@ -39,10 +39,12 @@ const categories = [
       { "@type": "Question", "name": "キャンプが初めてですが大丈夫ですか？", "acceptedAnswer": { "@type": "Answer", "text": "大丈夫です。ライトフォレストはおいら家族が敷地内に常駐しており、初心者・女性・ファミリーも安心してご利用いただけます。売店で薪・焚き火台・斧などのレンタル・販売もあります。まずはオートサイト（車横付け可）がおすすめです。" } },
       { "@type": "Question", "name": "シャワーはありますか？", "acceptedAnswer": { "@type": "Answer", "text": "ありません。車で10分以内の範囲に日帰り温泉が複数あるため、そちらをご利用ください。" } },
       { "@type": "Question", "name": "トイレは？", "acceptedAnswer": { "@type": "Answer", "text": "ライトフォレストは水洗・洋式の新築トイレ（男女各2室）があります。ディープフォレスト内にはトイレがないため、ライトフォレスト管理棟の水洗トイレをご利用ください。" } },
+      { "@type": "Question", "name": "水道・流しはありますか？", "acceptedAnswer": { "@type": "Answer", "text": "ライトフォレストに2か所（うち給湯器付き1か所）あります。すべて水道水（飲用可）です。洗剤・油・残飯は流さないでください。ディープフォレストに水道・流しはありません。" } },
       { "@type": "Question", "name": "Wi-Fi・携帯電波は？", "acceptedAnswer": { "@type": "Answer", "text": "ライトフォレストでは無料Wi-Fiが利用可能です（ソロ区画・オートA・Bはエリア外）。携帯電波は両フィールドとも入ります。" } },
-      { "@type": "Question", "name": "AC電源は使えますか？", "acceptedAnswer": { "@type": "Answer", "text": "ライトフォレストの一部サイトで有料オプションとしてご利用いただけます（消費電力600Wまで）。ディープフォレストにはありません。" } },
+      { "@type": "Question", "name": "AC電源は使えますか？", "acceptedAnswer": { "@type": "Answer", "text": "AC電源は有料オプション・要予約でご利用いただけます。消費電力600Wまで（ブレーカーが落ちた場合はセルフ復旧）。対応サイト：オート1・2・3・4・17・20・32・33・34・35・36番／オートE／ドッグランサイト。上記以外のサイト（オートA・Bなど）も、ご相談いただければ対応できる場合があります。事前にお問い合わせいただくか、当日ご相談ください。ディープフォレストにAC電源はありません。" } },
       { "@type": "Question", "name": "発電機は使えますか？", "acceptedAnswer": { "@type": "Answer", "text": "両フィールドとも使用禁止です。" } },
       { "@type": "Question", "name": "花火はできますか？", "acceptedAnswer": { "@type": "Answer", "text": "打ち上げ花火は両フィールドとも禁止です。手持ち花火はできます。" } },
+      { "@type": "Question", "name": "ライトフォレストの禁止事項は？", "acceptedAnswer": { "@type": "Answer", "text": "スピーカー・アイドリング・打ち上げ花火・発電機・21時以降の談笑・楽器の演奏・深夜早朝のバトニングは禁止です。" } },
       { "@type": "Question", "name": "BBQはできますか？", "acceptedAnswer": { "@type": "Answer", "text": "できます。ライトフォレストは全サイトで焚き火台使用可。直火は直火エリアで可能です。食材はお持ち込みください。" } },
       { "@type": "Question", "name": "ゴミは捨てられますか？", "acceptedAnswer": { "@type": "Answer", "text": "灰以外はすべてお持ち帰りください。灰は指定のペール缶（ライトフォレスト薪小屋の黒ペール缶）に蓋をして入れてください。" } },
       { "@type": "Question", "name": "ペットは連れて来られますか？", "acceptedAnswer": { "@type": "Answer", "text": "ライトフォレストのドッグランサイトはノーリードOK、その他のサイトはリード必須です。ふんの処理・管理は飼い主の責任でお願いします。ディープフォレストもペット可です（運用はライトフォレストと同じ・リード必須）。" } },
@@ -50,7 +52,7 @@ const categories = [
       { "@type": "Question", "name": "ライトフォレストにはどんなサイトがありますか？", "acceptedAnswer": { "@type": "Answer", "text": "オートサイト（車乗り入れ可）、区画サイト（近隣駐車場）、ソロ区画、ドッグランサイト、区画外（お好きな場所でキャンプ）があります。" } },
       { "@type": "Question", "name": "ライトフォレストで直火はできますか？", "acceptedAnswer": { "@type": "Answer", "text": "直火エリアで可能です。区画サイトC・ソロ区画3〜11番が直火エリア、オートサイトは焚き火台使用となります。" } },
       { "@type": "Question", "name": "ディープフォレストはどんなフィールドですか？", "acceptedAnswer": { "@type": "Answer", "text": "樹齢80年のスギ・ヒノキの針葉樹林、敷地14,000坪。野営・ブッシュクラフト・静寂を求める上級者向けフィールドです。ライトフォレストから車で約7分。" } },
-      { "@type": "Question", "name": "ディープフォレストは誰でも利用できますか？", "acceptedAnswer": { "@type": "Answer", "text": "18歳以上限定です。入場時に年齢確認書類（免許証・パスポート等）のご提示が必要です。未成年の方はいかなる理由でも入場できません。" } },
+      { "@type": "Question", "name": "ディープフォレストは誰でも利用できますか？", "acceptedAnswer": { "@type": "Answer", "text": "18歳以上限定です。1グループ3名まで（4名以上のグループ利用は不可）。入場時に年齢確認書類（免許証・パスポート等）のご提示が必要です。未成年の方はいかなる理由でも入場できません。" } },
       { "@type": "Question", "name": "ディープフォレストで直火はできますか？", "acceptedAnswer": { "@type": "Answer", "text": "直火エリアで可能です。ただし火消し壺の持参が必須（受付で500円レンタルあり）、立木の枯れ枝・積んである丸太の使用は厳禁です。" } },
       { "@type": "Question", "name": "ディープフォレストの設備は？", "acceptedAnswer": { "@type": "Answer", "text": "仮設トイレのみ。水道・電源・売店はありません。自己完結型のフィールドです。飲料水・必要物資はライトフォレストで調達してください。" } },
       { "@type": "Question", "name": "ディープフォレストの場所はどこですか？", "acceptedAnswer": { "@type": "Answer", "text": "場所は非公開です。ライトフォレスト管理棟で受付・案内を受けた後、現地へ移動していただきます。" } },
@@ -60,6 +62,7 @@ const categories = [
       { "@type": "Question", "name": "手ぶらキャンプはできますか？", "acceptedAnswer": { "@type": "Answer", "text": "可能です（食材のみご持参ください）。" } },
       { "@type": "Question", "name": "場所はどこですか？", "acceptedAnswer": { "@type": "Answer", "text": "栃木県那須烏山市、東京から車で約2時間です。" } },
       { "@type": "Question", "name": "おいらの森がカーナビに出てこない。", "acceptedAnswer": { "@type": "Answer", "text": "ライトフォレストは「栃木県那須烏山市福岡1047」でご検索ください。ディープフォレストは場所非公開のため、ライトフォレストで受付後に現地案内します。それでも到達できない場合はお電話ください。" } },
+      { "@type": "Question", "name": "大型車・トレーラーで利用できますか？ バリアフリーに対応していますか？", "acceptedAnswer": { "@type": "Answer", "text": "全長6m以上のお車、トレーラーでお越しの場合は、事前にご確認ください。バリアフリーには対応していません（段差・未舗装路があります）。" } },
       { "@type": "Question", "name": "電車で行けますか？", "acceptedAnswer": { "@type": "Answer", "text": "JR烏山線「鴻野山駅」が最寄りです。電車キャンパー向けに駅送迎プランがあります。" } },
       { "@type": "Question", "name": "周辺の温泉は？", "acceptedAnswer": { "@type": "Answer", "text": "車で10分以内に複数の日帰り温泉があります。" } },
       { "@type": "Question", "name": "クマはいますか？", "acceptedAnswer": { "@type": "Answer", "text": "いません。" } },
@@ -68,6 +71,7 @@ const categories = [
       { "@type": "Question", "name": "蛍は見られますか？", "acceptedAnswer": { "@type": "Answer", "text": "見られます。ライトフォレストの谷で6月頃にゲンジボタルが飛びます。毎年「ホタル観賞会」イベントも開催しています。" } },
       { "@type": "Question", "name": "管理人はいますか？", "acceptedAnswer": { "@type": "Answer", "text": "ライトフォレストにはおいら家族が敷地内に常駐しています。ディープフォレストは無人管理で、受付はライトフォレストで行います。" } },
       { "@type": "Question", "name": "雨でも営業していますか？", "acceptedAnswer": { "@type": "Answer", "text": "基本的に営業します。台風等の荒天時は事前にお知らせします。" } },
+      { "@type": "Question", "name": "臨時休業はありますか？", "acceptedAnswer": { "@type": "Answer", "text": "基本は年中無休ですが、ご予約がない日は臨時休業とする場合があります。当日のご来場をお考えの場合は、事前にお電話ください。当日のご予約はお電話で承ります。" } },
       { "@type": "Question", "name": "団体・撮影・貸し切りは可能ですか？", "acceptedAnswer": { "@type": "Answer", "text": "「団体・貸し切り・撮影会プラン」があります。ご予約ページからどうぞ。" } },
       { "@type": "Question", "name": "忘れ物をしてしまいました。どうすればいいですか？", "acceptedAnswer": { "@type": "Answer", "text": "お問い合わせフォームまたはお電話でご連絡ください。場内で見つかった忘れ物は3ヶ月間保管しています。ご宿泊日とサイト名、お忘れ物の内容を教えていただければ、保管状況をお調べします。返送をご希望の場合は、着払いでお送りします。3ヶ月を過ぎたものは処分しますので、お早めにご連絡ください。なお、こちらから個別にご連絡することはありません（プライバシー配慮のため）。食品・飲料など衛生上の問題があるものは、当日中に処分します。" } },
       { "@type": "Question", "name": "問い合わせ先は？", "acceptedAnswer": { "@type": "Answer", "text": "TEL: 050-3647-1047 / Mail: oira@oiranomori.jp / お問い合わせフォーム: https://oiranomori.jp/contact/" } }
@@ -260,6 +264,14 @@ const categories = [
       </div>
 
       <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. 水道・流しはありますか？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          ライトフォレストに2か所（うち給湯器付き1か所）あります。すべて水道水（飲用可）です。<br />
+          洗剤・油・残飯は流さないでください。ディープフォレストに水道・流しはありません。
+        </p>
+      </div>
+
+      <div class="py-6">
         <p class="font-semibold text-zinc-800">Q. Wi-Fi・携帯電波は？</p>
         <p class="mt-3 text-sm leading-loose text-zinc-600">
           ライトフォレストでは無料Wi-Fiが利用可能です（ソロ区画・オートA・Bはエリア外）。携帯電波は両フィールドとも入ります。
@@ -269,7 +281,17 @@ const categories = [
       <div class="py-6">
         <p class="font-semibold text-zinc-800">Q. AC電源は使えますか？</p>
         <p class="mt-3 text-sm leading-loose text-zinc-600">
-          ライトフォレストの一部サイトで有料オプションとしてご利用いただけます（消費電力600Wまで）。ディープフォレストにはありません。
+          AC電源は有料オプション・要予約でご利用いただけます。消費電力600Wまで（ブレーカーが落ちた場合はセルフ復旧）。
+        </p>
+        <p class="mt-2 text-sm leading-loose text-zinc-600">
+          対応サイト：オート1・2・3・4・17・20・32・33・34・35・36番／オートE／ドッグランサイト
+        </p>
+        <p class="mt-2 text-sm leading-loose text-zinc-600">
+          上記以外のサイト（オートA・Bなど）も、ご相談いただければ対応できる場合があります。<br />
+          事前にお問い合わせいただくか、当日ご相談ください。
+        </p>
+        <p class="mt-2 text-sm leading-loose text-zinc-600">
+          ディープフォレストにAC電源はありません。
         </p>
       </div>
 
@@ -284,6 +306,13 @@ const categories = [
         <p class="font-semibold text-zinc-800">Q. 花火はできますか？</p>
         <p class="mt-3 text-sm leading-loose text-zinc-600">
           <strong class="text-zinc-800">打ち上げ花火は両フィールドとも禁止</strong>です。手持ち花火はできます。
+        </p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. ライトフォレストの禁止事項は？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          スピーカー・アイドリング・打ち上げ花火・発電機・21時以降の談笑・楽器の演奏・深夜早朝のバトニングは禁止です。
         </p>
       </div>
 
@@ -361,7 +390,7 @@ const categories = [
       <div class="py-6">
         <p class="font-semibold text-zinc-800">Q. 誰でも利用できますか？</p>
         <p class="mt-3 text-sm leading-loose text-zinc-600">
-          <strong class="text-zinc-800">18歳以上限定</strong>です。入場時に年齢確認書類（免許証・パスポート等）のご提示が必要です。未成年の方はいかなる理由でも入場できません。
+          <strong class="text-zinc-800">18歳以上限定</strong>です。1グループ3名まで（4名以上のグループ利用は不可）。入場時に年齢確認書類（免許証・パスポート等）のご提示が必要です。未成年の方はいかなる理由でも入場できません。
         </p>
       </div>
 
@@ -450,6 +479,14 @@ const categories = [
       </div>
 
       <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. 大型車・トレーラーで利用できますか？ バリアフリーに対応していますか？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          全長6m以上のお車、トレーラーでお越しの場合は、事前にご確認ください。<br />
+          バリアフリーには対応していません（段差・未舗装路があります）。
+        </p>
+      </div>
+
+      <div class="py-6">
         <p class="font-semibold text-zinc-800">Q. 電車で行けますか？</p>
         <p class="mt-3 text-sm leading-loose text-zinc-600">
           JR烏山線「鴻野山駅」が最寄りです。電車キャンパー向けに駅送迎プランがあります。
@@ -517,6 +554,15 @@ const categories = [
         <p class="font-semibold text-zinc-800">Q. 雨でも営業していますか？</p>
         <p class="mt-3 text-sm leading-loose text-zinc-600">
           基本的に営業します。台風等の荒天時は事前にお知らせします。
+        </p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. 臨時休業はありますか？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          基本は年中無休ですが、ご予約がない日は臨時休業とする場合があります。<br />
+          当日のご来場をお考えの場合は、事前にお電話ください。<br />
+          当日のご予約はお電話で承ります。
         </p>
       </div>
 

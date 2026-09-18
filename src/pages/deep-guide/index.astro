@@ -57,6 +57,7 @@ const facilities = [
 
     <p class="mt-5 max-w-2xl text-base leading-loose text-zinc-400">
       ディープフォレストは18歳以上限定のフィールド。<br />
+      1グループ3名まで（4名以上のグループ利用は不可）。<br />
       樹齢80年以上のスギ・ヒノキが立ち並ぶ深い針葉樹林。直火、ブッシュクラフト、圧倒的な静寂。<br />
       整備された快適さよりも、自然との真剣な対話を求める方のためのフィールドです。
     </p>
@@ -89,7 +90,7 @@ const facilities = [
     <dl class="divide-y divide-zinc-800 border-y border-zinc-700 text-sm">
       {[
         { label: "通常チェックイン",    value: "12:00〜17:00。受付場所はライトフォレスト管理棟。管理棟にて支払いと利用説明を受け、手続き完了となります。" },
-        { label: "アーリーチェックイン", value: "09:00〜。無料。エリアに余裕がある場合に限り可能。前日までに電話または問い合わせフォームより要連絡。" },
+        { label: "アーリーチェックイン", value: "9:00〜。無料。エリアに余裕がある場合に限り可能。前日までに電話または問い合わせフォームより要連絡。" },
         { label: "チェックインリミット", value: "17:00（厳守）。超過時は入場不可。連絡なき場合は無断キャンセル扱いとし、キャンセル料を請求します。遅れる場合は必ず連絡してください。" },
         { label: "直接入場特例",        value: "年間半年パスポート保持者のみ、管理棟を通らず直接入場可能です。" },
       ].map((item) => (
@@ -116,6 +117,12 @@ const facilities = [
         </div>
       ))}
     </dl>
+  </section>
+
+  {/* 消灯 */}
+  <section class="mb-14">
+    <h2 class="mb-5 text-xl font-semibold text-white">消灯</h2>
+    <p class="border-y border-zinc-700 py-5 text-sm text-zinc-300">22:00 消灯</p>
   </section>
 
   {/* 設備・スペック */}

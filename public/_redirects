@@ -12,6 +12,8 @@
 /home-1-2/                                /                                                       301
 /testpage/                                /                                                       410
 /気象データテスト/                          /now/                                                  301
+/deep-forest/                            /deep-guide/                                            301
+/light-forest/                           /light-guide/                                           301
 
 
 # ---------- 2. /guide/ 系（案内ページ） ----------
@@ -65,6 +67,7 @@
 /properties/                             /lightforest-map/                                        301
 
 # /properties_type/ → 旧WPカスタムタクソノミー（具体→ワイルドカードの順）
+/properties_type/dogrunsite/             /light-guide/                                           301
 /properties_type/deepforest/              /deep/                                                  301
 /properties_type/autosite/               /                                                        301
 /properties_type/*                        /                                                       301

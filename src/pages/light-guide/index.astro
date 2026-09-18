@@ -19,9 +19,10 @@ const sizeGuide = [
 const facilities = [
   { label: "受付・売店",   value: "9:00〜17:30。飲料（水・ビール等）、薪の販売。", linkHref: "/firewood/", linkText: "薪の詳細", avail: true  },
   { label: "トイレ",       value: "水洗・洋式。男女各2室完備（新築）。",                        avail: true  },
-  { label: "水道・流し",   value: "給湯器付き。すべて水道水（飲用可）。洗剤・油・残飯は流さないこと。", avail: true  },
+  { label: "水道・流し",   value: "2か所（うち給湯器付き1か所）。すべて水道水（飲用可）。洗剤・油・残飯は流さないこと。", avail: true  },
   { label: "Wi-Fi",        value: "無料Wi-Fiあり（接続詳細は場内掲示）。※ソロ区画・オートA・オートBはエリア外のため接続不可。", avail: true },
-  { label: "AC電源",       value: "有料オプション。消費電力600Wまで。ブレーカー落ちはセルフ復旧。", avail: true  },
+  { label: "AC電源",       value: "有料オプション・要予約でご利用いただけます。消費電力600Wまで（ブレーカーが落ちた場合はセルフ復旧）。対応サイト：オート1・2・3・4・17・20・32・33・34・35・36番／オートE／ドッグランサイト。上記以外のサイト（オートA・Bなど）も、ご相談いただければ対応できる場合があります。事前にお問い合わせいただくか、当日ご相談ください。ディープフォレストにAC電源はありません。", avail: true  },
+  { label: "車両料金",     value: "オートサイトのサイト料金には、車両1台分が含まれています。2台目以降　普通車 2,200円／バイク 1,320円（現地精算）", avail: true  },
   { label: "駐車場",       value: "オートサイト以外に15台分（1台 2,200円）。",                  avail: true  },
   { label: "シャワー",     value: "なし。近隣温泉をご利用ください。",                            avail: false },
   { label: "ゴミ",         value: "灰以外は全て持ち帰り。灰は指定ペール缶へ（蓋を必ず閉める）。", avail: false },
@@ -57,7 +58,7 @@ const rules = [
   },
   {
     title: "やめてほしいこと（音と光で他の方の体験が壊れるため）",
-    body: "スピーカー・アイドリング・打ち上げ花火・発電機・21時以降の談笑。",
+    body: "スピーカー・アイドリング・打ち上げ花火・発電機・21時以降の談笑・楽器の演奏・深夜早朝のバトニング。",
   },
   {
     title: "法令違反として対応すること",
@@ -178,9 +179,9 @@ const plans = [
       ))}
     </dl>
     <div class="mt-5 border-l-4 border-[color:var(--light-accent)] pl-5">
-      <p class="text-sm font-semibold text-zinc-700">アーリーチェックイン（9:00〜）</p>
+      <p class="text-sm font-semibold text-zinc-700">チェックイン 12:00〜17:00（9:00〜アーリーチェックイン無料）</p>
       <p class="mt-1 text-sm leading-loose text-zinc-600">
-        キャンプをしっかり楽しんでもらうため、アーリーチェックインは無料としています。朝9時から来て、ゆっくり過ごしてください。
+        チェックアウト 翌12:00。キャンプをしっかり楽しんでもらうため、アーリーチェックインは無料としています。朝9時から来て、ゆっくり過ごしてください。
         エリアに余裕がある場合に限り可能です。前日までに電話または問い合わせフォームよりご連絡ください。
       </p>
     </div>
@@ -202,6 +203,9 @@ const plans = [
   {/* サイト種別 */}
   <section id="sites" class="mb-14">
     <h2 class="mb-5 text-xl font-semibold text-zinc-800">サイト種別</h2>
+    <p class="mb-5 text-sm leading-loose text-zinc-600">
+      オートサイト 37区画／区画サイト 10区画／ドッグランサイト 1区画（計48区画）
+    </p>
 
     <div class="mb-8 grid gap-5 sm:grid-cols-3">
       {siteTypes.map((s) => (
@@ -234,6 +238,10 @@ const plans = [
       </table>
     </div>
     <p class="mt-3 text-xs text-zinc-400">※ 有効面積は車両スペースを除いたキャンプサイト部分の広さです。</p>
+    <p class="mt-5 text-sm leading-loose text-zinc-600">
+      全長6m以上のお車、トレーラーでお越しの場合は、事前にご確認ください。<br />
+      バリアフリーには対応していません（段差・未舗装路があります）。
+    </p>
   </section>
 
   {/* 利用ルール */}
