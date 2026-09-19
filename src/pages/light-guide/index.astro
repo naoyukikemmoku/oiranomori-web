@@ -7,15 +7,6 @@ const siteTypes = [
   { name: "ドッグランサイト", desc: "柵内でキャンプ可能。車乗り入れ可・ノーリードOK。" },
 ];
 
-const sizeGuide = [
-  { size: "XL", area: "110㎡以上",  guide: "10人以上：超大型テント＋タープ、車3台＋ソロテント3張り" },
-  { size: "LL", area: "80〜109㎡",  guide: "6〜8人：超大型テント1張り＋タープ、ソロテント数張り" },
-  { size: "L",  area: "60〜79㎡",   guide: "4〜6人：大型テント1〜2張り＋タープ" },
-  { size: "M",  area: "40〜59㎡",   guide: "2〜4人：中型テント1張り＋タープ" },
-  { size: "S",  area: "20〜39㎡",   guide: "2人以下：小型テント1張り＋タープ" },
-  { size: "SS", area: "20㎡未満",   guide: "2人以下：ソロテント1張り。通称ソロ区画。プライベート感重視。" },
-];
-
 const facilities = [
   { label: "受付・売店",   value: "9:00〜17:30。飲料（水・ビール等）、薪の販売。", linkHref: "/firewood/", linkText: "薪の詳細", avail: true  },
   { label: "トイレ",       value: "水洗・洋式。男女各2室完備（新築）。",                        avail: true  },
@@ -216,28 +207,21 @@ const plans = [
       ))}
     </div>
 
-    <h3 class="mb-3 text-base font-semibold text-zinc-700">サイズ別目安（有効面積＝駐車スペースを除く）</h3>
-    <div class="overflow-x-auto border-y border-zinc-200">
-      <table class="w-full min-w-[520px] text-sm">
-        <thead>
-          <tr class="border-b border-zinc-200 bg-zinc-50">
-            <th class="px-4 py-3 text-left font-medium text-zinc-600">サイズ</th>
-            <th class="px-4 py-3 text-left font-medium text-zinc-600">有効面積</th>
-            <th class="px-4 py-3 text-left font-medium text-zinc-600">収容・レイアウト目安</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-zinc-100">
-          {sizeGuide.map((s) => (
-            <tr class="hover:bg-zinc-50 transition">
-              <td class="px-4 py-3 font-medium text-zinc-700">{s.size}</td>
-              <td class="px-4 py-3 text-zinc-600">{s.area}</td>
-              <td class="px-4 py-3 text-zinc-600">{s.guide}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-    <p class="mt-3 text-xs text-zinc-400">※ 有効面積は車両スペースを除いたキャンプサイト部分の広さです。</p>
+    {/* サイズの実寸・比較は /sites/ を正本とする（本ページは設備・時間・ルール担当） */}
+    <h3 class="mb-3 text-base font-semibold text-zinc-700">自分に合うサイトを選ぶ</h3>
+    <p class="text-sm leading-loose text-zinc-600">
+      区画の広さ、人数別のおすすめ、車横付け・電源などの条件は、<br />
+      「ライトのサイト・区画を選ぶ」で比較できます。
+    </p>
+    <p class="mt-4 text-sm">
+      <a
+        href="/sites/"
+        class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80"
+        data-cta="light-guide-to-sites"
+      >
+        ライトのサイト・区画を選ぶ →
+      </a>
+    </p>
     <p class="mt-5 text-sm leading-loose text-zinc-600">
       全長6m以上のお車、トレーラーでお越しの場合は、事前にご確認ください。<br />
       バリアフリーには対応していません（段差・未舗装路があります）。
