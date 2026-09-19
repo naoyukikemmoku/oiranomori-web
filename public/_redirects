@@ -67,10 +67,36 @@
 /properties/                             /lightforest-map/                                        301
 
 # /properties_type/ → 旧WPカスタムタクソノミー（具体→ワイルドカードの順）
-/properties_type/dogrunsite/             /light-guide/                                           301
-/properties_type/deepforest/              /deep/                                                  301
-/properties_type/autosite/               /                                                        301
-/properties_type/*                        /                                                       301
+/properties_type/dogrunsite/              /sites/dogrun/                                          301
+/properties_type/deepforest/              /deep/                                                   301
+/properties_type/autosite/                /sites/                                                  301
+/properties_type/*                        /                                                        301
+
+# properties_labels: bushcraft 系は Deep へ（具体→ワイルドカード）
+/properties_labels/bushcraft/             /deep/                                                   301
+/properties_labels/*                      /                                                        301
+
+# properties_features: 設備タクソノミー（Deep系→Light系→ワイルドカード）
+/properties_features/open-fire/           /deep/                                                   301
+/properties_features/firestand/           /deep/                                                   301
+/properties_features/with-private-parking/   /sites/                                               301
+/properties_features/*                    /                                                        301
+
+# 旧・単独スラッグ（客層／設備条件）→ 現行ページへ
+/suitable-for-bushcraft/                  /deep/                                                   301
+/suitable-for-solo-group/                 /sites/group/                                            301
+/suitable-for-solo/                       /sites/solo/                                             301
+/car-side-tarp-available/                 /sites/                                                  301
+/hammock-available/                       /sites/solo/                                             301
+/suitable-for-hammock/                    /sites/solo/                                             301
+
+# firestand 系 → Deep へ
+/firestand/                               /deep/                                                   301
+/firestand/*                              /deep/                                                   301
+
+# services_group: 成人向け区分は Deep へ
+/services_group/adults/                   /deep/                                                   301
+/services_group/*                         /                                                        301
 
 # /services/ → 体験系は当面ホームへ（/experience/ 未実装のため）
 /services/*                               /                                                       301
