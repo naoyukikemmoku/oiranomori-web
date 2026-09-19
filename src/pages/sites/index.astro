@@ -87,8 +87,8 @@ const sizeGuide = [
 	{ size: "LL", area: "80〜109㎡", guide: "6〜8人：超大型テント1張り＋タープ、ソロテント数張り" },
 	{ size: "L", area: "60〜79㎡", guide: "4〜6人：大型テント1〜2張り＋タープ" },
 	{ size: "M", area: "40〜59㎡", guide: "2〜4人：中型テント1張り＋タープ" },
-	{ size: "S", area: "20〜39㎡", guide: "2人以下：小型テント1張り＋タープ" },
-	{ size: "SS", area: "20㎡未満", guide: "2人以下：ソロテント1張り。通称ソロ区画。プライベート感重視。" },
+	{ size: "S", area: "20〜39㎡", guide: "1〜2人：小型テント1張り＋タープ" },
+	{ size: "SS", area: "20㎡未満", guide: "1人：ソロテント1張り。通称ソロ区画。プライベート感重視。" },
 ];
 ---
 
@@ -121,29 +121,32 @@ const sizeGuide = [
     </p>
   </div>
 
-  {/* 1. 人数・過ごし方から選ぶ */}
+  {/* 1. 人数・過ごし方から選ぶ
+      白いカードUI・枠線・影は使わない（AGENTS.md 禁忌事項）。
+      背景になじむフラットなリンク一覧とし、区切り線・余白・字組みで階層を作る。 */}
   <section class="mb-14">
     <h2 class="mb-2 text-xl font-semibold text-zinc-800">人数・過ごし方から選ぶ</h2>
-    <p class="mb-5 text-sm text-zinc-500">何人で、どう過ごすか。それだけ決まっていれば選べます。</p>
-    <div class="grid gap-px overflow-hidden border border-zinc-200 sm:grid-cols-2">
+    <p class="mb-6 text-sm text-zinc-500">何人で、どう過ごすか。それだけ決まっていれば選べます。</p>
+    <ul class="divide-y divide-zinc-200 border-y border-zinc-200 sm:grid sm:grid-cols-2 sm:gap-x-12 sm:divide-y-0">
       {audienceCards.map((c) => (
-        <a
-          href={c.href}
-          class="group flex flex-col gap-2 bg-white px-6 py-7 outline outline-1 outline-zinc-100 transition hover:bg-zinc-50"
-          data-cta="sites-audience"
-          data-cta-target={c.href}
-        >
-          <span class="flex flex-wrap items-baseline gap-x-3">
-            <span class="text-lg font-semibold text-zinc-800 group-hover:text-zinc-900">{c.label}</span>
-            <span class="text-xs tracking-[0.14em] text-zinc-400">{c.size}</span>
-          </span>
-          <span class="text-sm leading-loose text-zinc-600">{c.copy}</span>
-          <span class="mt-1 text-xs tracking-[0.14em] text-zinc-400 transition group-hover:text-zinc-700">見る →</span>
-        </a>
+        <li class="sm:border-b sm:border-zinc-200">
+          <a
+            href={c.href}
+            class="group block py-6 transition"
+            data-cta="sites-audience"
+            data-cta-target={c.href}
+          >
+            <span class="flex flex-wrap items-baseline gap-x-3">
+              <span class="text-lg font-semibold text-zinc-800 transition group-hover:text-[color:var(--light-accent)]">{c.label}</span>
+              <span class="text-xs tracking-[0.14em] text-zinc-400">{c.size}</span>
+            </span>
+            <span class="mt-2 block text-sm leading-loose text-zinc-600">{c.copy}</span>
+            <span class="mt-2 inline-block text-xs tracking-[0.16em] text-zinc-400 transition group-hover:text-[color:var(--light-accent)]">見る →</span>
+          </a>
+        </li>
       ))}
-    </div>
+    </ul>
   </section>
-
   {/* 2. 条件から選ぶ */}
   <section class="mb-14">
     <h2 class="mb-2 text-xl font-semibold text-zinc-800">条件から選ぶ</h2>
