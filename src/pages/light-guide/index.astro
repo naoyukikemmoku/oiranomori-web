@@ -1,5 +1,6 @@
 ﻿---
 import PageLayout from "../../layouts/PageLayout.astro";
+import { PROX_SEARCH_URL, proxPlanUrl } from "../../config/nav";
 
 const siteTypes = [
   { name: "オートサイト",   desc: "区画内に車を乗り入れ・横付け可能。有効面積は車の面積を除いた広さ。" },
@@ -267,7 +268,7 @@ const plans = [
               <td class="px-4 py-3 font-medium text-zinc-700">{plan.name}</td>
               <td class="px-4 py-3 text-zinc-500">{plan.note}</td>
               <td class="px-4 py-3 text-right">
-                <a href={`https://www.489pro-x.com/ja/s/oiranomori/search/?plans=${plan.id}&show=plan`}
+                <a href={proxPlanUrl(plan.id)}
                   target="_blank"
                   rel="noopener noreferrer"
                   class="text-xs tracking-[0.14em] text-zinc-400 transition hover:text-zinc-700"
@@ -282,7 +283,7 @@ const plans = [
     </div>
 
     <div class="mt-5">
-      <a href="https://www.489pro-x.com/ja/s/oiranomori/search/"
+      <a href={PROX_SEARCH_URL}
         target="_blank"
         rel="noopener noreferrer"
         class="inline-flex items-center justify-center rounded-full bg-[color:var(--forest-600)] px-7 py-3 text-sm text-white shadow-sm transition hover:bg-[color:var(--forest-700)]"
@@ -300,7 +301,7 @@ const plans = [
       会員登録で複数プラン・複数日程の同時予約が可能です。
     </p>
     <div class="mt-6 flex flex-wrap justify-center gap-3">
-      <a href="https://www.489pro-x.com/ja/s/oiranomori/search/"
+      <a href={PROX_SEARCH_URL}
         target="_blank"
         rel="noopener noreferrer"
         class="inline-flex items-center justify-center rounded-full bg-[color:var(--forest-600)] px-8 py-3 text-sm text-white shadow-sm transition hover:bg-[color:var(--forest-700)]"
