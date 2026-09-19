@@ -12,7 +12,9 @@ export default defineConfig({
 			filter: (page) => {
 				const pathname = new URL(page).pathname;
 				return (
-					!pathname.startsWith("/sites/") &&
+					// /sites/ 本体はライトフォレストの選択ハブとして index 対象。
+					// 子ページ（/sites/solo/ 等）は noindex のため sitemap からも除外する。
+					!(pathname.startsWith("/sites/") && pathname !== "/sites/") &&
 					pathname !== "/404/" &&
 					!pathname.startsWith("/checkout/") &&
 					!pathname.includes("/thanks/")
