@@ -9,6 +9,7 @@ import OshiraseList from "../components/OshiraseList.astro";
 import SeasonSlider from "../components/SeasonSlider.astro";
 import LpLayout from "../layouts/LpLayout.astro";
 import { getOshirase } from "../lib/oshirase";
+import { PROX_SEARCH_URL, proxPlanUrl } from "../config/nav";
 
 const { contents } = await getOshirase(3);
 
@@ -412,16 +413,29 @@ const plans: Array<{
             おいらが家族と隣接地に住んでいる、管理人常駐のキャンプ場です。<br />
             女性一人でも安心してお越しいただけます。
           </p>
-          <a
-            href="/light-guide/"
-            class="mt-8 inline-flex items-center gap-2 text-sm tracking-[0.14em] text-zinc-600 transition hover:text-zinc-900"
-          >
-            利用案内を見る
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M5 12h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-              <path d="M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </a>
+          <div class="mt-8 flex flex-wrap items-center gap-x-8 gap-y-3">
+            <a
+              href="/sites/"
+              class="inline-flex items-center gap-2 text-sm tracking-[0.14em] text-zinc-700 transition hover:text-[color:var(--light-accent)]"
+              data-cta="top-to-sites"
+            >
+              自分に合うサイトを選ぶ
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M5 12h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                <path d="M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+            <a
+              href="/light-guide/"
+              class="inline-flex items-center gap-2 text-sm tracking-[0.14em] text-zinc-600 transition hover:text-zinc-900"
+            >
+              利用案内を見る
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M5 12h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                <path d="M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -562,7 +576,7 @@ const plans: Array<{
 
       <div class="mt-10 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
         {plans.map((plan) => (
-          <a href={`https://www.489pro-x.com/ja/s/oiranomori/search/?plans=${plan.id}&show=plan`}
+          <a href={proxPlanUrl(plan.id)}
             target="_blank"
             rel="noopener noreferrer"
             class="group relative flex flex-col justify-end overflow-hidden bg-zinc-900"
@@ -608,8 +622,20 @@ const plans: Array<{
         ))}
       </div>
 
-      <div class="mt-8 text-right">
-        <a href="https://www.489pro-x.com/ja/s/oiranomori/search/"
+      {/* 予約の前に、人数・過ごし方から区画を選べる導線（比較・検討＝予約CTAより上流） */}
+      <div class="mt-8 flex flex-wrap items-center justify-between gap-4">
+        <a
+          href="/sites/"
+          class="inline-flex items-center gap-2 text-xs tracking-[0.2em] text-zinc-600 transition hover:text-[color:var(--light-accent)]"
+          data-cta="top-plans-to-sites"
+        >
+          人数・過ごし方からサイトを選ぶ
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M5 12h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <a href={PROX_SEARCH_URL}
           target="_blank"
           rel="noopener noreferrer"
           class="inline-flex items-center gap-2 text-xs tracking-[0.2em] text-zinc-500 transition hover:text-zinc-800"
