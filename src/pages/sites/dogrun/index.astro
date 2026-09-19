@@ -1,5 +1,6 @@
 ---
 import PageLayout from "../../../layouts/PageLayout.astro";
+import { proxPlanUrl } from "../../../config/nav";
 
 const TITLE = "貸切ドッグラン付きキャンプ｜里山パークおいらの森（栃木）";
 const DESC =
@@ -87,10 +88,8 @@ const experiences = [
     </p>
   </section>
 
-  {/* 動的枠プレースホルダ（②③：サイズ別空き＋個別区画一覧） */}
-  <section id="size-availability" class="mb-14">
-    {/* TODO: client-fetch でサイズ別空き＋個別区画一覧。App handoff 後に実装 */}
-  </section>
+  {/* 将来: サイズ別の空き状況＋個別区画一覧を client-fetch で描画する予定地点。
+      実装までは DOM を生成しない（空セクションの余白を残さないため）。 */}
 
   {/* 体験 */}
   <section class="mb-14">
@@ -135,7 +134,7 @@ const experiences = [
     <p class="mb-5 text-sm leading-loose text-zinc-500">
       料金・空き状況は予約システムでご確認ください。
     </p>
-    <a href="https://www.489pro-x.com/ja/s/oiranomori/search/?plans=7&show=plan"
+    <a href={proxPlanUrl(7)}
       target="_blank"
       rel="noopener noreferrer"
       class="inline-flex items-center justify-center rounded-full bg-[color:var(--forest-600)] px-7 py-3 text-sm text-white shadow-sm transition hover:bg-[color:var(--forest-700)]"

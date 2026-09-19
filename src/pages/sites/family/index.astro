@@ -1,5 +1,6 @@
 ---
 import PageLayout from "../../../layouts/PageLayout.astro";
+import { PROX_SEARCH_URL } from "../../../config/nav";
 
 const TITLE = "ファミリーキャンプ｜里山パークおいらの森（栃木）";
 const DESC =
@@ -99,10 +100,8 @@ const experiences = [
     </p>
   </section>
 
-  {/* 動的枠プレースホルダ（②③：サイズ別空き＋個別区画一覧） */}
-  <section id="size-availability" class="mb-14">
-    {/* TODO: client-fetch でサイズ別空き＋個別区画一覧。App handoff 後に実装 */}
-  </section>
+  {/* 将来: サイズ別の空き状況＋個別区画一覧を client-fetch で描画する予定地点。
+      実装までは DOM を生成しない（空セクションの余白を残さないため）。 */}
 
   {/* 体験 */}
   <section class="mb-14">
@@ -127,18 +126,18 @@ const experiences = [
   <section class="mb-14">
     <h2 class="mb-2 text-xl font-semibold text-zinc-800">場内の設備と、1日の流れ</h2>
     <p class="mb-5 text-sm leading-loose text-zinc-500">
-      9時に入って、翌12時に出る。アーリーチェックインは無料です。
+      通常チェックインは12:00〜17:00です。前日夕方までに確認し、当日の空きに余裕がある場合は、9:00から無料でアーリーチェックインできます。
     </p>
     <dl class="divide-y divide-zinc-200 border-y border-zinc-200">
       {[
-        { label: "9:00", value: "受付オープン。アーリーチェックイン開始（無料）。設営して、昼は森で過ごす。" },
         { label: "12:00〜17:00", value: "通常チェックイン。17:00を過ぎると安全管理上、入場できません。" },
+        { label: "9:00〜（条件付き）", value: "受付オープン。前日夕方までの確認と当日の空きに余裕がある場合、9:00から無料でアーリーチェックインできます。" },
         { label: "翌12:00", value: "チェックアウト。空きがあれば延長できる場合があります。" },
         { label: "トイレ", value: "水洗・洋式。男女各2室（新築）。" },
         { label: "炊事場", value: "水道・流しが2か所（うち給湯器付き1か所）。水道水は飲用可。洗剤・油・残飯は流せません。" },
         { label: "受付・売店", value: "9:00〜17:30。飲料と薪を販売。" },
         { label: "管理体制", value: "おいら家族が敷地内に常駐しています。受付時間外も人がいる環境です。" },
-        { label: "シャワー", value: "ありません。近隣の温泉を利用してください。" },
+        { label: "シャワー", value: "場内にはありません。車で行ける温泉がいくつもあります。" },
       ].map((r) => (
         <div class="grid gap-1 py-4 sm:grid-cols-[10rem_1fr] sm:gap-6">
           <dt class="text-sm font-medium text-zinc-700">{r.label}</dt>
@@ -152,7 +151,7 @@ const experiences = [
   <section class="mb-14">
     <h2 class="mb-2 text-xl font-semibold text-zinc-800">温泉・買い出し・もしものとき</h2>
     <p class="mb-5 text-sm leading-loose text-zinc-500">
-      場内にシャワーはないので、温泉とセットで組むと楽です。
+      場内にシャワーはありません。そのぶん、温泉とセットで組むと一日が気持ちよく収まります。
     </p>
     <ul class="space-y-3 text-sm leading-loose text-zinc-600">
       <li>温泉：道の駅たかねざわ 元気あっぷむらが最寄り。喜連川方面には美肌の湯もあります。</li>
@@ -171,37 +170,47 @@ const experiences = [
     </p>
   </section>
 
-  {/* 向き・不向き */}
+  {/* 楽しみ方・事前に知っておきたいこと（トーンガイド §4・§5 準拠：
+      読み手を評価せず、「ない」は代わりにあるものとセットで書く） */}
   <section class="mb-14">
-    <h2 class="mb-2 text-xl font-semibold text-zinc-800">向いている家族と、向いていない家族</h2>
+    <h2 class="mb-2 text-xl font-semibold text-zinc-800">この森で気持ちよく過ごすために</h2>
     <p class="mb-5 text-sm leading-loose text-zinc-500">
-      来てからの落差が出ないように、先に書いておきます。
+      来てからの発見が、いい方向に転がるように。先に書いておきます。
     </p>
     <div class="grid gap-10 sm:grid-cols-2">
       <div>
-        <h3 class="border-b border-zinc-200 pb-3 text-base font-semibold text-zinc-800">向いている</h3>
+        <h3 class="border-b border-zinc-200 pb-3 text-base font-semibold text-zinc-800">楽しみ方が合う方</h3>
         <ul class="mt-4 space-y-3 text-sm leading-loose text-zinc-600">
           {[
             "森の中で、静かに過ごしたい",
             "焚き火や自然そのものを楽しみにしている",
-            "設備は最低限でよく、温泉は外で済ませられる",
-            "初めてで、聞ける相手がいると安心",
+            "道具を広げて、自分たちのペースで過ごしたい",
+            "初めてで、聞ける相手が近くにいると心強い",
           ].map((t) => <li class="flex items-start gap-3"><span class="mt-2 h-px w-3 shrink-0 bg-zinc-300"></span><span>{t}</span></li>)}
         </ul>
       </div>
       <div>
-        <h3 class="border-b border-zinc-200 pb-3 text-base font-semibold text-zinc-800">向いていない</h3>
-        <ul class="mt-4 space-y-3 text-sm leading-loose text-zinc-600">
-          {[
-            "大型遊具やアクティビティを目当てにしている",
-            "高規格リゾートの快適さを求めている",
-            "虫のいない環境で過ごしたい",
-            "シャワーが場内にないと厳しい",
-          ].map((t) => <li class="flex items-start gap-3"><span class="mt-2 h-px w-3 shrink-0 bg-zinc-300"></span><span>{t}</span></li>)}
-        </ul>
-        <p class="mt-5 text-sm leading-loose text-zinc-500">
-          こうした設備を中心に選ぶなら、高規格のキャンプ場の方が満足度は高くなります。
-        </p>
+        <h3 class="border-b border-zinc-200 pb-3 text-base font-semibold text-zinc-800">先に知っておきたいこと</h3>
+        <dl class="mt-4 space-y-4 text-sm leading-loose text-zinc-600">
+          <div>
+            <dt class="font-medium text-zinc-700">シャワーは場内にありません</dt>
+            <dd class="mt-1">
+              その代わり、車で行ける温泉がいくつもあります。最寄りは道の駅たかねざわ 元気あっぷむら。
+            </dd>
+          </div>
+          <div>
+            <dt class="font-medium text-zinc-700">大型遊具はありません</dt>
+            <dd class="mt-1">
+              遊び道具は森のほうにあります。木立、落ち葉、虫。区画の中に、遊べる余白も残ります。
+            </dd>
+          </div>
+          <div>
+            <dt class="font-medium text-zinc-700">里山なので、虫がいます</dt>
+            <dd class="mt-1">
+              季節によって蚊やブヨ、夏にはカブトムシやクワガタも。虫除けと、肌の出にくい服装があると快適です。
+            </dd>
+          </div>
+        </dl>
       </div>
     </div>
   </section>
@@ -212,7 +221,7 @@ const experiences = [
     <p class="mb-5 text-sm leading-loose text-zinc-500">
       料金・空き状況は予約システムでご確認ください。
     </p>
-    <a href="https://www.489pro-x.com/ja/s/oiranomori/search/"
+    <a href={PROX_SEARCH_URL}
       target="_blank"
       rel="noopener noreferrer"
       class="inline-flex items-center justify-center rounded-full bg-[color:var(--forest-600)] px-7 py-3 text-sm text-white shadow-sm transition hover:bg-[color:var(--forest-700)]"

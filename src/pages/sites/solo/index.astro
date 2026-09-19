@@ -1,5 +1,6 @@
 ---
 import PageLayout from "../../../layouts/PageLayout.astro";
+import { proxPlanUrl } from "../../../config/nav";
 
 const TITLE = "ソロキャンプ｜里山パークおいらの森（栃木・那須烏山）";
 const DESC =
@@ -11,12 +12,12 @@ const sizeGuide = [
 	{
 		size: "SS",
 		area: "20㎡未満",
-		guide: "ソロテント1張り。通称ソロ区画。プライベート感重視。",
+		guide: "ソロテント1張り。通称ソロ区画。区画が小さいぶん、まわりとの距離が近すぎない場所を選べます。",
 	},
 	{
 		size: "S",
 		area: "20〜39㎡",
-		guide: "小型テント1張り＋タープ。ゆったり張りたいソロに。",
+		guide: "小型テント1張り＋タープ。タープも張って、道具を広げたい人に。",
 	},
 ];
 
@@ -68,7 +69,7 @@ const hammockSites = [
   {/* あなたの人数なら、このサイズ */}
   <section class="mb-14">
     <h2 class="mb-2 text-xl font-semibold text-zinc-800">あなたなら、このサイズ</h2>
-    <p class="mb-5 text-sm text-zinc-500">ソロ（2人以下）に合うのは SS・S。</p>
+    <p class="mb-5 text-sm text-zinc-500">1人で使うなら SS・S。</p>
     <div class="overflow-x-auto border-y border-zinc-200">
       <table class="w-full min-w-[480px] text-sm">
         <thead>
@@ -96,10 +97,8 @@ const hammockSites = [
     </p>
   </section>
 
-  {/* 動的枠プレースホルダ（②③：サイズ別空き＋個別区画一覧） */}
-  <section id="size-availability" class="mb-14">
-    {/* TODO: client-fetch でサイズ別空き＋個別区画一覧。App handoff 後に実装 */}
-  </section>
+  {/* 将来: サイズ別の空き状況＋個別区画一覧を client-fetch で描画する予定地点。
+      実装までは DOM を生成しない（空セクションの余白を残さないため）。 */}
 
   {/* 体験 */}
   <section class="mb-14">
@@ -142,7 +141,7 @@ const hammockSites = [
   <section class="mb-14">
     <h2 class="mb-2 text-xl font-semibold text-zinc-800">ひとりで来るときの、場内の条件</h2>
     <p class="mb-5 text-sm leading-loose text-zinc-500">
-      安全をお約束はできません。判断の材料になる事実だけ書きます。
+      ひとりで来る前に知っておきたい場内の条件をまとめました。管理人の滞在、受付時間、夜間の明かり、通信環境をご確認ください。
     </p>
     <dl class="divide-y divide-zinc-200 border-y border-zinc-200">
       {[
@@ -150,7 +149,7 @@ const hammockSites = [
         { label: "管理人", value: "おいら家族が敷地内に常駐しています。受付時間外も人がいる環境です。" },
         { label: "トイレ", value: "水洗・洋式。男女各2室（新築）。" },
         { label: "水道・流し", value: "2か所（うち給湯器付き1か所）。水道水は飲用可。" },
-        { label: "明かり", value: "場内に全域を照らす照明はありません。ヘッドライト等の携行を推奨します。" },
+        { label: "明かり", value: "場内全域を照らす照明はありません。そのぶん夜は暗く、星がよく見えます。ヘッドライトの携行がおすすめです。" },
         { label: "連絡", value: "無料Wi-Fiあり。ソロ区画・オートA・オートBはエリア外です。" },
       ].map((r) => (
         <div class="grid gap-1 py-4 sm:grid-cols-[10rem_1fr] sm:gap-6">
@@ -170,7 +169,7 @@ const hammockSites = [
     <ul class="space-y-3 text-sm">
       <li>
         <a
-          href="https://www.489pro-x.com/ja/s/oiranomori/search/?plans=21&show=plan"
+          href={proxPlanUrl(21)}
           target="_blank"
           rel="noopener noreferrer"
           class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80"
@@ -181,7 +180,7 @@ const hammockSites = [
       </li>
       <li>
         <a
-          href="https://www.489pro-x.com/ja/s/oiranomori/search/?plans=16&show=plan"
+          href={proxPlanUrl(16)}
           target="_blank"
           rel="noopener noreferrer"
           class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80"
@@ -217,7 +216,7 @@ const hammockSites = [
     <p class="mb-5 text-sm leading-loose text-zinc-500">
       料金・空き状況は予約システムでご確認ください。平日ソロ向けの割引プランもあります。
     </p>
-    <a href="https://www.489pro-x.com/ja/s/oiranomori/search/?plans=21&show=plan"
+    <a href={proxPlanUrl(21)}
       target="_blank"
       rel="noopener noreferrer"
       class="inline-flex items-center justify-center rounded-full bg-[color:var(--forest-600)] px-7 py-3 text-sm text-white shadow-sm transition hover:bg-[color:var(--forest-700)]"

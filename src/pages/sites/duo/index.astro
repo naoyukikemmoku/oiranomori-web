@@ -1,5 +1,6 @@
 ---
 import PageLayout from "../../../layouts/PageLayout.astro";
+import { PROX_SEARCH_URL } from "../../../config/nav";
 
 const TITLE = "デュオ・カップルキャンプ｜里山パークおいらの森";
 const DESC =
@@ -7,7 +8,7 @@ const DESC =
 const URL = "https://oiranomori.jp/sites/duo/";
 
 const sizeGuide = [
-	{ size: "S", area: "20〜39㎡", guide: "2人以下：小型テント1張り＋タープ。" },
+	{ size: "S", area: "20〜39㎡", guide: "1〜2人：小型テント1張り＋タープ。" },
 	{
 		size: "M",
 		area: "40〜59㎡",
@@ -56,7 +57,7 @@ const experiences = [
   {/* あなたの人数なら、このサイズ */}
   <section class="mb-14">
     <h2 class="mb-2 text-xl font-semibold text-zinc-800">あなたなら、このサイズ</h2>
-    <p class="mb-5 text-sm text-zinc-500">ふたり（2〜4人）に合うのは S・M。</p>
+    <p class="mb-5 text-sm text-zinc-500">2人に合うのは S・M。コンパクトならS、ゆったりならM。</p>
     <div class="overflow-x-auto border-y border-zinc-200">
       <table class="w-full min-w-[480px] text-sm">
         <thead>
@@ -84,10 +85,8 @@ const experiences = [
     </p>
   </section>
 
-  {/* 動的枠プレースホルダ（②③：サイズ別空き＋個別区画一覧） */}
-  <section id="size-availability" class="mb-14">
-    {/* TODO: client-fetch でサイズ別空き＋個別区画一覧。App handoff 後に実装 */}
-  </section>
+  {/* 将来: サイズ別の空き状況＋個別区画一覧を client-fetch で描画する予定地点。
+      実装までは DOM を生成しない（空セクションの余白を残さないため）。 */}
 
   {/* 体験 */}
   <section class="mb-14">
@@ -125,7 +124,7 @@ const experiences = [
     <p class="mb-5 text-sm leading-loose text-zinc-500">
       料金・空き状況は予約システムでご確認ください。
     </p>
-    <a href="https://www.489pro-x.com/ja/s/oiranomori/search/"
+    <a href={PROX_SEARCH_URL}
       target="_blank"
       rel="noopener noreferrer"
       class="inline-flex items-center justify-center rounded-full bg-[color:var(--forest-600)] px-7 py-3 text-sm text-white shadow-sm transition hover:bg-[color:var(--forest-700)]"
