@@ -7,9 +7,10 @@
 export const CONGESTION_API =
 	"https://oiranomori.com/app/camp/api/congestion.php";
 
-// fetch 失敗時フォールバックの予約導線（ProX planlist）。
+// fetch 失敗時フォールバックの予約導線。
+// planlist は 0件表示になる事象を確認済みのため、日付・人数から入れる search/ を使う。
 export const RESERVE_FALLBACK_URL =
-	"https://www.489pro-x.com/ja/s/oiranomori/planlist/";
+	"https://www.489pro-x.com/ja/s/oiranomori/search/";
 
 export type AreaKey = "auto" | "kukaku" | "deep" | "dogrun";
 

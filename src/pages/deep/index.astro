@@ -1,6 +1,7 @@
 ﻿---
 import LpLayout from "../../layouts/LpLayout.astro";
 import SilenceCalendar from "../../components/SilenceCalendar.astro";
+import { DEEP_RESERVE_LABEL, PROX_DEEP_RESERVE_URL } from "../../config/nav";
 import { Image } from "astro:assets";
 import deepHeroImg       from "../../assets/images/deep_hero.jpg";
 import deepSilentImg     from "../../assets/images/deep_silentforest.JPEG";
@@ -89,12 +90,14 @@ const experiences = [
       </p>
       <div class="mt-10 flex flex-wrap gap-4">
         <a
-          href="https://www.489pro-x.com/ja/s/oiranomori/planlist/"
+          href={PROX_DEEP_RESERVE_URL}
           target="_blank"
           rel="noopener noreferrer"
           class="inline-flex items-center justify-center rounded-full border border-white/50 bg-white/10 px-7 py-3 text-sm text-white backdrop-blur-sm transition hover:bg-white hover:text-zinc-900"
+          data-cta="reserve"
+          data-cta-field="deep"
         >
-          予約する
+          {DEEP_RESERVE_LABEL}
         </a>
         <a
           href="#experiences"
@@ -213,6 +216,67 @@ const experiences = [
     <div class="absolute inset-0 bg-black/55"></div>
   </div>
 
+  {/* Fit: 利用適性。情緒的体験と利用規定の間に置く */}
+  <section id="fit" class="bg-[color:var(--forest-600)] py-16 md:py-20">
+    <div class="mx-auto max-w-6xl px-5">
+      <p class="text-xs tracking-[0.28em] text-zinc-500 uppercase">Fit</p>
+      <h2 class="mt-4 text-3xl font-semibold text-white md:text-4xl">この森が、合う人と合わない人</h2>
+      <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-500">
+        設備のない森です。予約の前に、ここで確かめてください。
+      </p>
+
+      <div class="mt-10 grid gap-10 md:grid-cols-2 md:gap-14">
+        <div>
+          <h3 class="border-b border-zinc-700 pb-3 text-lg font-semibold text-zinc-200">向いている人</h3>
+          <ul class="mt-5 space-y-3 text-sm leading-loose text-zinc-400">
+            {[
+              "18歳以上の1〜3名",
+              "水道や電源に頼らず準備できる",
+              "静寂と暗さを楽しめる",
+              "荷物を自分で運べる",
+              "不便さも体験として受け入れられる",
+              "現状回復と森のルールを守れる",
+            ].map((t) => (
+              <li class="flex items-start gap-3">
+                <span class="mt-2 h-px w-3 shrink-0 bg-zinc-600"></span>
+                <span>{t}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="border-b border-zinc-700 pb-3 text-lg font-semibold text-zinc-200">向いていない人</h3>
+          <ul class="mt-5 space-y-3 text-sm leading-loose text-zinc-500">
+            {[
+              "18歳未満を含むグループ",
+              "4名以上のグループ",
+              "車をテント横へ付けたい",
+              "水道・炊事場・電源・売店が必要",
+              "明るい場所や管理人常駐を求める",
+              "音楽や宴会を目的としている",
+              "高規格キャンプ場を想定している",
+            ].map((t) => (
+              <li class="flex items-start gap-3">
+                <span class="mt-2 h-px w-3 shrink-0 bg-zinc-700"></span>
+                <span>{t}</span>
+              </li>
+            ))}
+          </ul>
+          <p class="mt-6 text-sm leading-loose text-zinc-500">
+            ひとつでも当てはまるなら、
+            <a
+              href="/"
+              class="underline underline-offset-2 text-zinc-400 transition hover:text-zinc-200"
+              data-cta="deep-to-light"
+            >ライトフォレスト</a>
+            の方が気持ちよく過ごせます。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   {/* Specs & Rules summary */}
   <section class="bg-[color:var(--forest-700)] py-16 md:py-20">
     <div class="mx-auto max-w-6xl px-5">
@@ -222,6 +286,8 @@ const experiences = [
       <dl class="mt-10 divide-y divide-zinc-700 border-t border-b border-zinc-700">
         {[
           { label: "利用制限",         value: "18歳以上のみ（入場時に年齢確認書類を提示）" },
+          { label: "定員",             value: "1〜3名（4名以上のグループ利用は不可）" },
+          { label: "区画指定",         value: "なし。事前の区画指定は行いません。" },
           { label: "チェックイン",     value: "12:00〜17:00（ライトフォレスト管理棟にて受付）" },
           { label: "チェックアウト",   value: "12:00（空きがある場合、17:00まで無料延長可）" },
           { label: "直火・焚き火",     value: "可（枯れた木の伐採、丸太の使用はご遠慮ください）" },
@@ -291,12 +357,14 @@ const experiences = [
       </p>
       <div class="mt-10">
         <a
-          href="https://www.489pro-x.com/ja/s/oiranomori/planlist/"
+          href={PROX_DEEP_RESERVE_URL}
           target="_blank"
           rel="noopener noreferrer"
           class="inline-flex items-center justify-center rounded-full border border-white/40 bg-white/10 px-10 py-4 text-sm text-white backdrop-blur-sm transition hover:bg-white hover:text-zinc-900"
+          data-cta="reserve"
+          data-cta-field="deep"
         >
-          予約ページへ進む
+          {DEEP_RESERVE_LABEL}
         </a>
       </div>
     </div>

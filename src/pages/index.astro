@@ -562,13 +562,12 @@ const plans: Array<{
 
       <div class="mt-10 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
         {plans.map((plan) => (
-          <a
-            href={`https://www.489pro-x.com/ja/s/oiranomori/search/?plans=${plan.id}&show=plan`}
+          <a href={`https://www.489pro-x.com/ja/s/oiranomori/search/?plans=${plan.id}&show=plan`}
             target="_blank"
             rel="noopener noreferrer"
             class="group relative flex flex-col justify-end overflow-hidden bg-zinc-900"
             style="aspect-ratio: 3/4;"
-          >
+           data-cta="reserve" data-cta-field="light">
             {plan.badge && (
               <p class="absolute left-2 top-2 z-20 bg-white/15 px-2 py-0.5 text-[10px] tracking-wide text-white/90 backdrop-blur-sm">
                 {plan.badge}
@@ -610,12 +609,11 @@ const plans: Array<{
       </div>
 
       <div class="mt-8 text-right">
-        <a
-          href="https://www.489pro-x.com/ja/s/oiranomori/planlist/"
+        <a href="https://www.489pro-x.com/ja/s/oiranomori/search/"
           target="_blank"
           rel="noopener noreferrer"
           class="inline-flex items-center gap-2 text-xs tracking-[0.2em] text-zinc-500 transition hover:text-zinc-800"
-        >
+         data-cta="reserve" data-cta-field="light">
           すべてのプランを見る
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M5 12h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>

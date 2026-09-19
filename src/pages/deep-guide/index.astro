@@ -1,5 +1,6 @@
 ﻿---
 import PageLayout from "../../layouts/PageLayout.astro";
+import { DEEP_RESERVE_LABEL, PROX_DEEP_RESERVE_URL } from "../../config/nav";
 
 const facilities = [
   { label: "トイレ",    value: "仮設トイレのみ（様式便座設置済み）",                                                      avail: true  },
@@ -235,13 +236,22 @@ const facilities = [
       {[
         { title: "装備で完結する準備を",  desc: "ここで揃えられるものは限られます。下見しておくと安心です。" },
         { title: "管理人は常駐しません",  desc: "受付はライトフォレストです。困ったときはお問い合わせください。" },
-        { title: "静かに過ごす場所",      desc: "賑やかに過ごしたい日は、ライトフォレストへどうぞ。" },
+        { title: "静かに過ごす場所",      desc: "賑やかに過ごしたい日は、", linkHref: "/", linkText: "ライトフォレストへ" },
         { title: "足元の備え",            desc: "雨後はぬかるみやすいので、長靴の携行を推奨します。" },
         { title: "装備の運び方",          desc: "広場から先は傾斜があるため、キャリーカーは使いにくい場所です。大容量のバックパックをお持ちになるか、何度か往復して運んでください。" },
       ].map((item) => (
         <li class="py-4 text-sm">
           <span class="font-semibold text-zinc-300">・{item.title}：</span>
-          <span class="text-zinc-500">{item.desc}</span>
+          <span class="text-zinc-500">
+            {item.desc}
+            {item.linkHref && (
+              <a
+                href={item.linkHref}
+                class="underline underline-offset-2 text-zinc-400 transition hover:text-zinc-200"
+                data-cta="deep-to-light"
+              >{item.linkText} →</a>
+            )}
+          </span>
         </li>
       ))}
     </ul>
@@ -280,13 +290,15 @@ const facilities = [
     </p>
     <div class="mt-6 flex flex-wrap justify-center gap-3">
       <a
-        href="https://www.489pro-x.com/ja/s/oiranomori/planlist/"
+        href={PROX_DEEP_RESERVE_URL}
         target="_blank"
         rel="noopener noreferrer"
         class="inline-flex items-center justify-center rounded-full px-8 py-3 text-sm font-semibold shadow-sm transition hover:opacity-90"
         style="background:var(--light-accent);color:var(--light-accent-text);"
+        data-cta="reserve"
+        data-cta-field="deep"
       >
-        予約する ↗
+        {DEEP_RESERVE_LABEL} ↗
       </a>
       <a
         href="/reservation-guide/"
