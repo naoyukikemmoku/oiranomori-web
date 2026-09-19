@@ -45,8 +45,9 @@ const conditions = [
 	{
 		label: "車を横付けしたい",
 		body: "オートサイトなら区画内に車を乗り入れ・横付けできます。全37区画。サイト料金に車両1台分が含まれます。",
-		href: "/light-guide/#sites",
-		linkText: "サイト種別を見る",
+		// サイト種別の説明は本ページと往復になるため、位置確認に意味のある場内マップへ送る。
+		href: "/lightforest-map/",
+		linkText: "場内マップで位置を見る",
 	},
 	{
 		label: "ハンモックを使いたい",
@@ -80,7 +81,7 @@ const conditions = [
 	},
 ];
 
-// サイズ実寸。light-guide の sizeGuide を正本として参照する。
+// サイズ実寸。本ページを正本とする（light-guide からは本ページへ誘導）。
 const sizeGuide = [
 	{ size: "XL", area: "110㎡以上", guide: "10人以上：超大型テント＋タープ、車3台＋ソロテント3張り" },
 	{ size: "LL", area: "80〜109㎡", guide: "6〜8人：超大型テント1張り＋タープ、ソロテント数張り" },
@@ -91,8 +92,9 @@ const sizeGuide = [
 ];
 ---
 
-{/* ライトフォレストのサイト選択ハブ。旧URLの301受け皿かつ検索入口のため index 対象。
-    子ページ（solo/duo/family/group/dogrun）は noindex のまま据え置く。 */}
+{/* ライトフォレストのサイト選択ハブ。旧URLの301受け皿かつ検索入口。
+    本ページと客層ページ5件（solo/duo/family/group/dogrun）はいずれも index 対象。
+    サイズの実寸・比較は本ページを正本とし、客層ページからはここへリンクする。 */}
 <PageLayout title={TITLE} description={DESC}>
   <Fragment slot="head">
     <script is:inline type="application/ld+json" set:html={JSON.stringify({
@@ -231,7 +233,7 @@ const sizeGuide = [
         <a href="/light-guide/" class="text-zinc-600 underline underline-offset-2 transition hover:text-zinc-800">
           ライトフォレスト 利用案内
         </a>
-        <span class="ml-2 text-zinc-400">— 設備・サイズ別目安・利用ルール</span>
+        <span class="ml-2 text-zinc-400">— 設備・利用時間・利用ルール</span>
       </li>
       <li>
         <a href="/rental/" class="text-zinc-600 underline underline-offset-2 transition hover:text-zinc-800">
