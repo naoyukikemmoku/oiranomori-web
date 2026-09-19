@@ -80,6 +80,11 @@ const experiences = [
         </tbody>
       </table>
     </div>
+    <p class="mt-4 text-sm">
+      <a href="/sites/" class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80">
+        全サイズの実寸・設営例を見る →
+      </a>
+    </p>
   </section>
 
   {/* 動的枠プレースホルダ（②③：サイズ別空き＋個別区画一覧） */}
@@ -99,21 +104,44 @@ const experiences = [
     </div>
   </section>
 
+  {/* 利用条件 */}
+  <section class="mb-14">
+    <h2 class="mb-2 text-xl font-semibold text-zinc-800">利用条件</h2>
+    <p class="mb-5 text-sm leading-loose text-zinc-500">
+      場内に1区画だけのサイトです。1日1組の貸切になります。
+    </p>
+    <dl class="divide-y divide-zinc-200 border-y border-zinc-200">
+      {[
+        { label: "組数", value: "1日1組。場内にドッグランサイトは1区画のみです。" },
+        { label: "広さ", value: "約400㎡（柵内）。" },
+        { label: "柵", value: "区画は柵で囲まれています。柵内はノーリードで過ごせます。" },
+        { label: "車", value: "区画内に車を乗り入れできます。" },
+        { label: "AC電源", value: "対応サイトです（有料オプション・要予約、600Wまで）。" },
+        { label: "共用部分", value: "柵の外（通路・炊事場・トイレ等の共用部分）ではリードを着けてください。" },
+        { label: "ほかの区画", value: "場内のほかのサイトも犬連れで利用できます。ノーリードが許されるのはこの区画だけです。" },
+        { label: "飼い主の責任", value: "ふんの処理・管理は飼い主が行ってください。" },
+      ].map((r) => (
+        <div class="grid gap-1 py-4 sm:grid-cols-[10rem_1fr] sm:gap-6">
+          <dt class="text-sm font-medium text-zinc-700">{r.label}</dt>
+          <dd class="text-sm leading-loose text-zinc-600">{r.value}</dd>
+        </div>
+      ))}
+    </dl>
+  </section>
+
   {/* 予約導線 */}
   <section class="mb-14">
     <h2 class="mb-2 text-xl font-semibold text-zinc-800">予約する</h2>
     <p class="mb-5 text-sm leading-loose text-zinc-500">
       料金・空き状況は予約システムでご確認ください。
     </p>
-    <a
-      href="https://www.489pro-x.com/ja/s/oiranomori/planlist/#plans"
+    <a href="https://www.489pro-x.com/ja/s/oiranomori/search/?plans=7&show=plan"
       target="_blank"
       rel="noopener noreferrer"
       class="inline-flex items-center justify-center rounded-full bg-[color:var(--forest-600)] px-7 py-3 text-sm text-white shadow-sm transition hover:bg-[color:var(--forest-700)]"
-    >
+     data-cta="reserve" data-cta-field="light">
       空き状況・予約はこちら ↗
     </a>
-    {/* TODO: 貸切ドッグランサイト該当プランの個別 id に差し替え（#plans は仮置き）。proX プラン id 確定後に更新 */}
   </section>
 
   {/* 関連内部リンク */}

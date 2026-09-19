@@ -3,7 +3,7 @@ import PageLayout from "../../../layouts/PageLayout.astro";
 
 const TITLE = "ファミリーキャンプ｜里山パークおいらの森（栃木）";
 const DESC =
-	"子どもが走れる広さと、トイレ至近の安心。管理人常駐で初めての家族キャンプにも。栃木・那須烏山のファミリー向けサイト。";
+	"区画内に遊べる余白があり、トイレも近い。初めての家族キャンプにも。栃木・那須烏山のファミリー向けキャンプサイト。";
 const URL = "https://oiranomori.jp/sites/family/";
 
 const sizeGuide = [
@@ -22,8 +22,8 @@ const sizeGuide = [
 
 const experiences = [
 	{
-		h: "子どもが、走れる",
-		body: "区画に余白がある。テントの外で遊べる広さ。目の届くところで、自由にさせておけます。",
+		h: "区画の中に、遊べる余白",
+		body: "テントを張っても、その外に余白が残る広さ。目の届く自分たちの区画の中で遊ばせられます。通路や他の区画は、走り回る場所ではありません。",
 	},
 	{
 		h: "トイレが、近い",
@@ -63,8 +63,8 @@ const experiences = [
     <p class="text-xs tracking-[0.26em] text-zinc-400 uppercase">Family</p>
     <h1 class="mt-3 text-3xl font-semibold text-zinc-800 md:text-4xl">家族で、気持ちよく</h1>
     <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-500">
-      子どもが駆け回れる広さと、すぐ近くのトイレ。管理人が常駐しているから、
-      初めての家族キャンプでも安心して過ごせます。
+      区画の中に遊べる余白があり、トイレも近い。
+      初めての家族キャンプでも、落ち着いて過ごせます。
     </p>
   </div>
 
@@ -92,6 +92,11 @@ const experiences = [
         </tbody>
       </table>
     </div>
+    <p class="mt-4 text-sm">
+      <a href="/sites/" class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80">
+        全サイズの実寸・設営例を見る →
+      </a>
+    </p>
   </section>
 
   {/* 動的枠プレースホルダ（②③：サイズ別空き＋個別区画一覧） */}
@@ -118,21 +123,103 @@ const experiences = [
     </div>
   </section>
 
+  {/* 場内の設備と、1日の流れ */}
+  <section class="mb-14">
+    <h2 class="mb-2 text-xl font-semibold text-zinc-800">場内の設備と、1日の流れ</h2>
+    <p class="mb-5 text-sm leading-loose text-zinc-500">
+      9時に入って、翌12時に出る。アーリーチェックインは無料です。
+    </p>
+    <dl class="divide-y divide-zinc-200 border-y border-zinc-200">
+      {[
+        { label: "9:00", value: "受付オープン。アーリーチェックイン開始（無料）。設営して、昼は森で過ごす。" },
+        { label: "12:00〜17:00", value: "通常チェックイン。17:00を過ぎると安全管理上、入場できません。" },
+        { label: "翌12:00", value: "チェックアウト。空きがあれば延長できる場合があります。" },
+        { label: "トイレ", value: "水洗・洋式。男女各2室（新築）。" },
+        { label: "炊事場", value: "水道・流しが2か所（うち給湯器付き1か所）。水道水は飲用可。洗剤・油・残飯は流せません。" },
+        { label: "受付・売店", value: "9:00〜17:30。飲料と薪を販売。" },
+        { label: "管理体制", value: "おいら家族が敷地内に常駐しています。受付時間外も人がいる環境です。" },
+        { label: "シャワー", value: "ありません。近隣の温泉を利用してください。" },
+      ].map((r) => (
+        <div class="grid gap-1 py-4 sm:grid-cols-[10rem_1fr] sm:gap-6">
+          <dt class="text-sm font-medium text-zinc-700">{r.label}</dt>
+          <dd class="text-sm leading-loose text-zinc-600">{r.value}</dd>
+        </div>
+      ))}
+    </dl>
+  </section>
+
+  {/* 周辺と自然環境 */}
+  <section class="mb-14">
+    <h2 class="mb-2 text-xl font-semibold text-zinc-800">温泉・買い出し・もしものとき</h2>
+    <p class="mb-5 text-sm leading-loose text-zinc-500">
+      場内にシャワーはないので、温泉とセットで組むと楽です。
+    </p>
+    <ul class="space-y-3 text-sm leading-loose text-zinc-600">
+      <li>温泉：道の駅たかねざわ 元気あっぷむらが最寄り。喜連川方面には美肌の湯もあります。</li>
+      <li>買い出し：かましん大金店、近くにセブン-イレブン 那須烏山大金店。</li>
+      <li>医療機関・緊急連絡先を含む周辺情報は、周辺マップにまとめています。</li>
+    </ul>
+    <p class="mt-4 text-sm">
+      <a href="/map/" class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80">
+        周辺マップを見る →
+      </a>
+    </p>
+    <h3 class="mt-8 text-lg font-semibold text-zinc-800">自然環境と虫</h3>
+    <p class="mt-3 text-sm leading-loose text-zinc-600">
+      里山の森なので、季節によって蚊・ブヨ・蜂、夏にはカブトムシやクワガタもいます。
+      虫除けと、肌の出にくい服装を用意してください。虫が苦手なお子さんがいる場合は、時期を選ぶと過ごしやすくなります。
+    </p>
+  </section>
+
+  {/* 向き・不向き */}
+  <section class="mb-14">
+    <h2 class="mb-2 text-xl font-semibold text-zinc-800">向いている家族と、向いていない家族</h2>
+    <p class="mb-5 text-sm leading-loose text-zinc-500">
+      来てからの落差が出ないように、先に書いておきます。
+    </p>
+    <div class="grid gap-10 sm:grid-cols-2">
+      <div>
+        <h3 class="border-b border-zinc-200 pb-3 text-base font-semibold text-zinc-800">向いている</h3>
+        <ul class="mt-4 space-y-3 text-sm leading-loose text-zinc-600">
+          {[
+            "森の中で、静かに過ごしたい",
+            "焚き火や自然そのものを楽しみにしている",
+            "設備は最低限でよく、温泉は外で済ませられる",
+            "初めてで、聞ける相手がいると安心",
+          ].map((t) => <li class="flex items-start gap-3"><span class="mt-2 h-px w-3 shrink-0 bg-zinc-300"></span><span>{t}</span></li>)}
+        </ul>
+      </div>
+      <div>
+        <h3 class="border-b border-zinc-200 pb-3 text-base font-semibold text-zinc-800">向いていない</h3>
+        <ul class="mt-4 space-y-3 text-sm leading-loose text-zinc-600">
+          {[
+            "大型遊具やアクティビティを目当てにしている",
+            "高規格リゾートの快適さを求めている",
+            "虫のいない環境で過ごしたい",
+            "シャワーが場内にないと厳しい",
+          ].map((t) => <li class="flex items-start gap-3"><span class="mt-2 h-px w-3 shrink-0 bg-zinc-300"></span><span>{t}</span></li>)}
+        </ul>
+        <p class="mt-5 text-sm leading-loose text-zinc-500">
+          こうした設備を中心に選ぶなら、高規格のキャンプ場の方が満足度は高くなります。
+        </p>
+      </div>
+    </div>
+  </section>
+
   {/* 予約導線 */}
   <section class="mb-14">
     <h2 class="mb-2 text-xl font-semibold text-zinc-800">予約する</h2>
     <p class="mb-5 text-sm leading-loose text-zinc-500">
       料金・空き状況は予約システムでご確認ください。
     </p>
-    <a
-      href="https://www.489pro-x.com/ja/s/oiranomori/planlist/#plans"
+    <a href="https://www.489pro-x.com/ja/s/oiranomori/search/"
       target="_blank"
       rel="noopener noreferrer"
       class="inline-flex items-center justify-center rounded-full bg-[color:var(--forest-600)] px-7 py-3 text-sm text-white shadow-sm transition hover:bg-[color:var(--forest-700)]"
-    >
+     data-cta="reserve" data-cta-field="light">
       空き状況・予約はこちら ↗
     </a>
-    {/* TODO: ファミリー該当プランの個別 id に差し替え（#plans は仮置き）。proX プラン id 確定後に更新 */}
+    {/* 該当プランID未確定のため全体検索（search/）へ着地。ID確定後に proxPlanUrl(id) 形式へ差し替える */}
   </section>
 
   {/* 関連内部リンク */}

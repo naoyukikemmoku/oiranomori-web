@@ -1,9 +1,9 @@
 ---
 import PageLayout from "../../../layouts/PageLayout.astro";
 
-const TITLE = "グループキャンプ・貸切｜里山パークおいらの森（栃木）";
+const TITLE = "グループ・ソログルキャンプ・貸切｜里山パークおいらの森";
 const DESC =
-	"連結して広く使う区画から、最大150名の貸切まで。大型テントもグルキャンも軍幕の連張りも。栃木・那須烏山。";
+	"各自がソロテントを張るソログルキャンプから、区画を連結した大人数利用、最大150名の貸切まで。栃木・那須烏山のキャンプ場。";
 const URL = "https://oiranomori.jp/sites/group/";
 
 const sizeGuide = [
@@ -65,8 +65,8 @@ const experiences = [
     <p class="text-xs tracking-[0.26em] text-zinc-400 uppercase">Group</p>
     <h1 class="mt-3 text-3xl font-semibold text-zinc-800 md:text-4xl">大人数で、囲む</h1>
     <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-500">
-      仲間と、サークルで、会社で。区画を連結して広く使うことも、フィールドごと貸し切ることもできます。
-      大きな幕も、軍幕の連張りも、ここなら収まります。
+      各自がソロテントを張るソログルキャンプも、ひとつの大きな幕を囲む使い方も。
+      区画を連結して広く使うことも、フィールドごと貸し切ることもできます。
     </p>
   </div>
 
@@ -94,6 +94,11 @@ const experiences = [
         </tbody>
       </table>
     </div>
+    <p class="mt-4 text-sm">
+      <a href="/sites/" class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80">
+        全サイズの実寸・設営例を見る →
+      </a>
+    </p>
   </section>
 
   {/* 動的枠プレースホルダ（②③：サイズ別空き＋個別区画一覧） */}
@@ -113,21 +118,78 @@ const experiences = [
     </div>
   </section>
 
+  {/* ソログルキャンプ */}
+  <section id="solo-group" class="mb-14">
+    <h2 class="mb-2 text-xl font-semibold text-zinc-800">ソログルキャンプ</h2>
+    <p class="mb-5 text-sm leading-loose text-zinc-500">
+      一緒に来て、それぞれのテントで眠る。焚き火は囲むけれど、寝床は自分の幕。
+    </p>
+
+    <h3 class="mt-8 text-lg font-semibold text-zinc-800">何張り置けるか</h3>
+    <p class="mt-3 text-sm leading-loose text-zinc-600">
+      サイズ別の目安です。実際の張り数はテントの大きさと車の台数で変わります。
+    </p>
+    <dl class="mt-5 divide-y divide-zinc-200 border-y border-zinc-200">
+      {[
+        { label: "XL（110㎡以上）", value: "超大型テント＋タープ、または車3台＋ソロテント3張り。オートBは6人・6台・パップテント6張りがぎりぎり収まります。" },
+        { label: "LL（80〜109㎡）", value: "超大型テント1張り＋タープ、またはソロテントを数張り。" },
+        { label: "連結して使う", value: "隣り合う区画をつなげれば、さらに張れます。オートDは連結すると場内で最も広く取れます。" },
+      ].map((r) => (
+        <div class="grid gap-1 py-4 sm:grid-cols-[14rem_1fr] sm:gap-6">
+          <dt class="text-sm font-medium text-zinc-700">{r.label}</dt>
+          <dd class="text-sm leading-loose text-zinc-600">{r.value}</dd>
+        </div>
+      ))}
+    </dl>
+
+    <h3 class="mt-8 text-lg font-semibold text-zinc-800">隣接区画の組み合わせ</h3>
+    <p class="mt-3 text-sm leading-loose text-zinc-600">
+      区画サイトの10番と11番は貫通して使えます。オートサイトも隣り合う番号で取れば、
+      幕を並べてひとつの陣地にできます。どの区画が隣り合うかは場内マップで確認してください。
+    </p>
+    <p class="mt-4 text-sm">
+      <a
+        href="/lightforest-map/"
+        class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80"
+        data-cta="group-map"
+      >場内マップで隣接関係を見る →</a>
+    </p>
+    <p class="mt-3 text-sm leading-loose text-zinc-500">
+      連結や隣接の希望は、予約時にご相談ください。空き状況によっては添えないことがあります。
+    </p>
+  </section>
+
+  {/* 貸切 */}
+  <section id="charter" class="mb-14">
+    <h2 class="mb-2 text-xl font-semibold text-zinc-800">フィールドごと貸し切る</h2>
+    <p class="mb-5 text-sm leading-loose text-zinc-500">
+      通常のグループ利用とは別枠です。最大150名。
+    </p>
+    <p class="text-sm leading-loose text-zinc-600">
+      区画ではなくライトフォレストごと貸し切ります。人数・日程によって調整できるため、
+      まずはご相談ください。
+    </p>
+    <p class="mt-4 text-sm">
+      <a href="/contact/" class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80">
+        貸切について問い合わせる →
+      </a>
+    </p>
+  </section>
+
   {/* 予約導線 */}
   <section class="mb-14">
     <h2 class="mb-2 text-xl font-semibold text-zinc-800">予約する</h2>
     <p class="mb-5 text-sm leading-loose text-zinc-500">
       料金・空き状況は予約システムでご確認ください。貸切は人数・日程によって調整できます。
     </p>
-    <a
-      href="https://www.489pro-x.com/ja/s/oiranomori/planlist/#plans"
+    <a href="https://www.489pro-x.com/ja/s/oiranomori/search/"
       target="_blank"
       rel="noopener noreferrer"
       class="inline-flex items-center justify-center rounded-full bg-[color:var(--forest-600)] px-7 py-3 text-sm text-white shadow-sm transition hover:bg-[color:var(--forest-700)]"
-    >
+     data-cta="reserve" data-cta-field="light">
       空き状況・予約はこちら ↗
     </a>
-    {/* TODO: グループ・貸切該当プランの個別 id に差し替え（#plans は仮置き）。proX プラン id 確定後に更新 */}
+    {/* 該当プランID未確定のため全体検索（search/）へ着地。ID確定後に proxPlanUrl(id) 形式へ差し替える */}
   </section>
 
   {/* 関連内部リンク */}
@@ -137,10 +199,6 @@ const experiences = [
       <li>
         <a href="/light-guide/" class="text-zinc-600 underline underline-offset-2 transition hover:text-zinc-800">ライトフォレスト 利用案内</a>
         <span class="ml-2 text-zinc-400">— 設備・サイズ別目安・利用ルール</span>
-      </li>
-      <li>
-        <a href="/deep/" class="text-zinc-600 underline underline-offset-2 transition hover:text-zinc-800">ディープフォレスト</a>
-        <span class="ml-2 text-zinc-400">— 静寂と焚き火のフィールド</span>
       </li>
       <li>
         <a href="/lightforest-map/" class="text-zinc-600 underline underline-offset-2 transition hover:text-zinc-800">場内マップ（ライト）</a>

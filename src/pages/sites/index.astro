@@ -1,41 +1,99 @@
 ---
 import PageLayout from "../../layouts/PageLayout.astro";
 
-const TITLE = "キャンプサイトを選ぶ｜里山パークおいらの森";
+const TITLE = "ライトフォレストのサイトを選ぶ｜里山パークおいらの森";
 const DESC =
-	"人数やスタイルから、あなたに合うキャンプサイトを。ソロからグループ、ドッグランまで。里山パークおいらの森の区画案内。";
+	"全48区画のライトフォレスト。人数・過ごし方と、車の横付けや電源などの条件から、あなたに合う区画を選べます。栃木・那須烏山のキャンプ場。";
 const URL = "https://oiranomori.jp/sites/";
 
-const cards = [
+// 人数・過ごし方から選ぶ（客層ページへの入口）
+const audienceCards = [
 	{
 		href: "/sites/solo/",
 		label: "ソロ",
+		size: "SS・S",
 		copy: "隣を気にしない距離感。ひとりの森時間を。",
 	},
 	{
 		href: "/sites/duo/",
 		label: "デュオ・カップル",
+		size: "S・M",
 		copy: "焚き火を挟んで向き合う、ふたりの夜。",
 	},
 	{
 		href: "/sites/family/",
 		label: "ファミリー",
-		copy: "子どもが走れる広さと、トイレ至近の安心。",
+		size: "M・L・LL",
+		copy: "余白のある広さと、トイレ至近の安心。",
 	},
 	{
 		href: "/sites/group/",
-		label: "グループ・貸切",
+		label: "グループ・ソログル・貸切",
+		size: "LL・XL・貸切",
 		copy: "連結して広く。最大150名の貸切まで。",
 	},
 	{
 		href: "/sites/dogrun/",
 		label: "ドッグラン",
+		size: "専用1区画",
 		copy: "囲いの中、リードなしで遊べる貸切サイト。",
 	},
 ];
+
+// 条件から選ぶ。事実は light-guide（設備・サイト種別）を正とする。
+const conditions = [
+	{
+		label: "車を横付けしたい",
+		body: "オートサイトなら区画内に車を乗り入れ・横付けできます。全37区画。サイト料金に車両1台分が含まれます。",
+		href: "/light-guide/#sites",
+		linkText: "サイト種別を見る",
+	},
+	{
+		label: "ハンモックを使いたい",
+		body: "木立の間隔が合う区画があります。区画11はハンモック最適、オートAは向きません。",
+		href: "/sites/solo/#hammock",
+		linkText: "ハンモックの条件",
+	},
+	{
+		label: "AC電源を使いたい",
+		body: "有料オプション・要予約。600Wまで。オート1・2・3・4・17・20・32〜36／オートE／ドッグランサイトが対応します。",
+		href: "/light-guide/",
+		linkText: "設備一覧を見る",
+	},
+	{
+		label: "トイレとの距離を重視したい",
+		body: "水洗・洋式、男女各2室（新築）。近い区画は場内マップで位置関係を確認できます。",
+		href: "/lightforest-map/",
+		linkText: "場内マップで見る",
+	},
+	{
+		label: "大型テントを設営したい",
+		body: "80㎡以上の LL・XL なら超大型テント＋タープも収まります。",
+		href: "/sites/group/",
+		linkText: "大人数向けを見る",
+	},
+	{
+		label: "複数区画を隣接して使いたい",
+		body: "隣り合う区画を連結して使えます。オートDは連結すると場内で最も広く取れます。",
+		href: "/sites/group/",
+		linkText: "連結・貸切を見る",
+	},
+];
+
+// サイズ実寸。light-guide の sizeGuide を正本として参照する。
+const sizeGuide = [
+	{ size: "XL", area: "110㎡以上", guide: "10人以上：超大型テント＋タープ、車3台＋ソロテント3張り" },
+	{ size: "LL", area: "80〜109㎡", guide: "6〜8人：超大型テント1張り＋タープ、ソロテント数張り" },
+	{ size: "L", area: "60〜79㎡", guide: "4〜6人：大型テント1〜2張り＋タープ" },
+	{ size: "M", area: "40〜59㎡", guide: "2〜4人：中型テント1張り＋タープ" },
+	{ size: "S", area: "20〜39㎡", guide: "2人以下：小型テント1張り＋タープ" },
+	{ size: "SS", area: "20㎡未満", guide: "2人以下：ソロテント1張り。通称ソロ区画。プライベート感重視。" },
+];
 ---
 
-<PageLayout title={TITLE} description={DESC} noindex={true}>
+{/* ライトフォレストのサイト選択ハブ。旧URLの301受け皿かつ検索入口のため index 対象。
+    子ページ（solo/duo/family/group/dogrun）は noindex のまま据え置く。 */}
+<PageLayout title={TITLE} description={DESC}>
   <Fragment slot="head">
     <script is:inline type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
@@ -53,24 +111,30 @@ const cards = [
 
   {/* ページ見出し */}
   <div class="mb-10 border-b border-zinc-200 pb-8">
-    <p class="text-xs tracking-[0.26em] text-zinc-400 uppercase">Sites</p>
-    <h1 class="mt-3 text-3xl font-semibold text-zinc-800 md:text-4xl">サイトを選ぶ</h1>
+    <p class="text-xs tracking-[0.26em] text-zinc-400 uppercase">Light Forest Sites</p>
+    <h1 class="mt-3 text-3xl font-semibold text-zinc-800 md:text-4xl">ライトフォレストのサイトを選ぶ</h1>
     <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-500">
-      何人で、どう過ごすか。それだけ決まっていれば、サイトは選べます。
-      ソロのひとり時間から、家族の週末、大人数の貸切、愛犬と走る一日まで。
-      あなたに合う区画を、ここから。
+      オートサイト37区画、区画サイト10区画、ドッグランサイト1区画。全48区画のライトフォレストから、
+      人数と過ごし方、あるいは必要な条件で選べます。
     </p>
   </div>
 
-  {/* 客層カード導線 */}
+  {/* 1. 人数・過ごし方から選ぶ */}
   <section class="mb-14">
+    <h2 class="mb-2 text-xl font-semibold text-zinc-800">人数・過ごし方から選ぶ</h2>
+    <p class="mb-5 text-sm text-zinc-500">何人で、どう過ごすか。それだけ決まっていれば選べます。</p>
     <div class="grid gap-px overflow-hidden border border-zinc-200 sm:grid-cols-2">
-      {cards.map((c) => (
+      {audienceCards.map((c) => (
         <a
           href={c.href}
           class="group flex flex-col gap-2 bg-white px-6 py-7 outline outline-1 outline-zinc-100 transition hover:bg-zinc-50"
+          data-cta="sites-audience"
+          data-cta-target={c.href}
         >
-          <span class="text-lg font-semibold text-zinc-800 group-hover:text-zinc-900">{c.label}</span>
+          <span class="flex flex-wrap items-baseline gap-x-3">
+            <span class="text-lg font-semibold text-zinc-800 group-hover:text-zinc-900">{c.label}</span>
+            <span class="text-xs tracking-[0.14em] text-zinc-400">{c.size}</span>
+          </span>
           <span class="text-sm leading-loose text-zinc-600">{c.copy}</span>
           <span class="mt-1 text-xs tracking-[0.14em] text-zinc-400 transition group-hover:text-zinc-700">見る →</span>
         </a>
@@ -78,10 +142,91 @@ const cards = [
     </div>
   </section>
 
-  {/* 関連内部リンク */}
+  {/* 2. 条件から選ぶ */}
+  <section class="mb-14">
+    <h2 class="mb-2 text-xl font-semibold text-zinc-800">条件から選ぶ</h2>
+    <p class="mb-5 text-sm text-zinc-500">外せない条件が決まっている場合は、こちらから。</p>
+    <dl class="divide-y divide-zinc-200 border-y border-zinc-200">
+      {conditions.map((c) => (
+        <div class="grid gap-2 py-5 sm:grid-cols-[14rem_1fr] sm:gap-6">
+          <dt class="text-sm font-semibold text-zinc-800">{c.label}</dt>
+          <dd class="text-sm leading-loose text-zinc-600">
+            {c.body}
+            <a
+              href={c.href}
+              class="ml-1 whitespace-nowrap underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80"
+            >
+              {c.linkText} →
+            </a>
+          </dd>
+        </div>
+      ))}
+    </dl>
+  </section>
+
+  {/* 3. サイズ別の実寸・設営例 */}
+  <section class="mb-14">
+    <h2 class="mb-2 text-xl font-semibold text-zinc-800">サイズ別の広さと設営例</h2>
+    <p class="mb-5 text-sm text-zinc-500">
+      有効面積は、オートサイトの場合は車の面積を除いた広さです。
+    </p>
+    <div class="overflow-x-auto border-y border-zinc-200">
+      <table class="w-full min-w-[520px] text-sm">
+        <thead>
+          <tr class="border-b border-zinc-200 bg-zinc-50">
+            <th scope="col" class="px-4 py-3 text-left font-medium text-zinc-600">サイズ</th>
+            <th scope="col" class="px-4 py-3 text-left font-medium text-zinc-600">有効面積</th>
+            <th scope="col" class="px-4 py-3 text-left font-medium text-zinc-600">設営例の目安</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-zinc-100">
+          {sizeGuide.map((s) => (
+            <tr class="transition hover:bg-zinc-50">
+              <th scope="row" class="px-4 py-3 text-left font-medium text-zinc-700">{s.size}</th>
+              <td class="px-4 py-3 text-zinc-600">{s.area}</td>
+              <td class="px-4 py-3 text-zinc-600">{s.guide}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <p class="mt-5 text-sm leading-loose text-zinc-600">
+      車両料金：オートサイトのサイト料金には車両1台分が含まれます。2台目以降は普通車2,200円／バイク1,320円（現地精算）。
+      オートサイト以外の駐車場は15台分（1台2,200円）。
+    </p>
+    <p class="mt-4 text-sm">
+      <a
+        href="/lightforest-map/"
+        class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80"
+        data-cta="sites-map"
+      >
+        場内マップで区画の位置関係を見る →
+      </a>
+    </p>
+  </section>
+
+  {/* 4. ディープフォレスト（補助導線。選択ゲートにはしない） */}
   <section class="mb-14">
     <h2 class="mb-5 text-xl font-semibold text-zinc-800">あわせて見る</h2>
-    <ul class="space-y-3 text-sm">
+    <div class="border-t border-zinc-200 pt-5">
+      <h3 class="text-lg font-semibold text-zinc-800">利便性より、森の静寂を選ぶ</h3>
+      <p class="mt-3 text-sm leading-loose text-zinc-600">
+        場所非公開、18歳以上、1〜3名限定。<br />
+        設備のない森で過ごす野営フィールドです。<br />
+        区画の事前指定はありません。
+      </p>
+      <p class="mt-4 text-sm">
+        <a
+          href="/deep/"
+          class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80"
+          data-cta="sites-to-deep"
+        >
+          ディープフォレストを見る →
+        </a>
+      </p>
+    </div>
+
+    <ul class="mt-8 space-y-3 text-sm">
       <li>
         <a href="/light-guide/" class="text-zinc-600 underline underline-offset-2 transition hover:text-zinc-800">
           ライトフォレスト 利用案内
@@ -89,16 +234,10 @@ const cards = [
         <span class="ml-2 text-zinc-400">— 設備・サイズ別目安・利用ルール</span>
       </li>
       <li>
-        <a href="/deep/" class="text-zinc-600 underline underline-offset-2 transition hover:text-zinc-800">
-          ディープフォレスト
+        <a href="/rental/" class="text-zinc-600 underline underline-offset-2 transition hover:text-zinc-800">
+          レンタル
         </a>
-        <span class="ml-2 text-zinc-400">— 静寂と焚き火のフィールド</span>
-      </li>
-      <li>
-        <a href="/lightforest-map/" class="text-zinc-600 underline underline-offset-2 transition hover:text-zinc-800">
-          場内マップ（ライト）
-        </a>
-        <span class="ml-2 text-zinc-400">— 区画の位置関係を見る</span>
+        <span class="ml-2 text-zinc-400">— 手ぶらでも始められる</span>
       </li>
     </ul>
   </section>

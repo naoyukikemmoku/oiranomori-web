@@ -3,7 +3,7 @@ import PageLayout from "../../../layouts/PageLayout.astro";
 
 const TITLE = "ソロキャンプ｜里山パークおいらの森（栃木・那須烏山）";
 const DESC =
-	"隣を気にしない距離感のソロ向けサイト。管理人常駐で女性ソロも安心。栃木・那須烏山でひとりの森時間を。";
+	"隣を気にしない距離感のソロ向けサイト。ハンモック可否や場内の条件も掲載。栃木・那須烏山でひとりの森時間を。";
 const URL = "https://oiranomori.jp/sites/solo/";
 
 // 「あなたの人数なら、このサイズ」変換ブロック（light-guide の sizeGuide 構造を流用）
@@ -26,13 +26,16 @@ const experiences = [
 		body: "森に距離をもらう。区画の間に木立が入り、視線も音も遮られる。ひとりの時間が薄まらない。",
 	},
 	{
-		h: "女性ソロも、安心して",
-		body: "管理人が常駐している。明かりのない夜も、人の気配がある安心。派手な設備はない。代わりに、静けさと、目の届く距離があります。",
+		h: "平日なら、もっと静かに",
+		body: "平日ソロ限定の割引プランがあります。仕事を持ち込むワーケーションプランも平日ソロ向け。",
 	},
-	{
-		h: "ハンモックを、吊る",
-		body: "木と木の間に。揺れながら見上げる葉の天井。ハンモック向きの区画もあります。",
-	},
+];
+
+// ハンモック可否は spots.json の区画メモ（desc）を正とする。
+const hammockSites = [
+	{ site: "区画11", note: "ハンモック最適。プライベート感あり、10番と貫通利用可。" },
+	{ site: "オート19・20", note: "ハンモックは張りにくい（見通し重視の区画）。" },
+	{ site: "オートA", note: "ハンモックは張りにくい。" },
 ];
 ---
 
@@ -86,6 +89,11 @@ const experiences = [
         </tbody>
       </table>
     </div>
+    <p class="mt-4 text-sm">
+      <a href="/sites/" class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80">
+        全サイズの実寸・設営例を見る →
+      </a>
+    </p>
   </section>
 
   {/* 動的枠プレースホルダ（②③：サイズ別空き＋個別区画一覧） */}
@@ -105,21 +113,117 @@ const experiences = [
     </div>
   </section>
 
+  {/* ハンモック */}
+  <section id="hammock" class="mb-14">
+    <h2 class="mb-2 text-xl font-semibold text-zinc-800">ハンモックを吊る</h2>
+    <p class="mb-5 text-sm leading-loose text-zinc-500">
+      木と木の間隔で決まります。向く区画と、向かない区画があります。
+    </p>
+    <dl class="divide-y divide-zinc-200 border-y border-zinc-200">
+      {hammockSites.map((h) => (
+        <div class="grid gap-1 py-4 sm:grid-cols-[10rem_1fr] sm:gap-6">
+          <dt class="text-sm font-medium text-zinc-700">{h.site}</dt>
+          <dd class="text-sm leading-loose text-zinc-600">{h.note}</dd>
+        </div>
+      ))}
+    </dl>
+    <p class="mt-5 text-sm leading-loose text-zinc-600">
+      本体を持っていなくても、DDハンモックを1,100円で借りられます。タープも同額です。
+      <a href="/rental/" class="ml-1 underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80">レンタル一覧を見る →</a>
+    </p>
+    <p class="mt-3 text-sm leading-loose text-zinc-600">
+      区画ごとの位置関係は
+      <a href="/lightforest-map/" class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80">場内マップ</a>
+      で確認できます。
+    </p>
+  </section>
+
+  {/* ひとりで来るときの場内の条件 */}
+  <section class="mb-14">
+    <h2 class="mb-2 text-xl font-semibold text-zinc-800">ひとりで来るときの、場内の条件</h2>
+    <p class="mb-5 text-sm leading-loose text-zinc-500">
+      安全をお約束はできません。判断の材料になる事実だけ書きます。
+    </p>
+    <dl class="divide-y divide-zinc-200 border-y border-zinc-200">
+      {[
+        { label: "受付・管理棟", value: "9:00〜17:30。受付は管理棟で行います。" },
+        { label: "管理人", value: "おいら家族が敷地内に常駐しています。受付時間外も人がいる環境です。" },
+        { label: "トイレ", value: "水洗・洋式。男女各2室（新築）。" },
+        { label: "水道・流し", value: "2か所（うち給湯器付き1か所）。水道水は飲用可。" },
+        { label: "明かり", value: "場内に全域を照らす照明はありません。ヘッドライト等の携行を推奨します。" },
+        { label: "連絡", value: "無料Wi-Fiあり。ソロ区画・オートA・オートBはエリア外です。" },
+      ].map((r) => (
+        <div class="grid gap-1 py-4 sm:grid-cols-[10rem_1fr] sm:gap-6">
+          <dt class="text-sm font-medium text-zinc-700">{r.label}</dt>
+          <dd class="text-sm leading-loose text-zinc-600">{r.value}</dd>
+        </div>
+      ))}
+    </dl>
+  </section>
+
+  {/* 平日ソロ・ワーケーション */}
+  <section class="mb-14">
+    <h2 class="mb-2 text-xl font-semibold text-zinc-800">平日ソロ・ワーケーション</h2>
+    <p class="mb-5 text-sm leading-loose text-zinc-500">
+      平日ソロ限定のプランが2つあります。詳細と料金は利用案内のプラン表から。
+    </p>
+    <ul class="space-y-3 text-sm">
+      <li>
+        <a
+          href="https://www.489pro-x.com/ja/s/oiranomori/search/?plans=21&show=plan"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80"
+          data-cta="reserve"
+          data-cta-field="light"
+        >ソロ割りオートサイト ↗</a>
+        <span class="ml-2 text-zinc-500">— 平日ソロ限定</span>
+      </li>
+      <li>
+        <a
+          href="https://www.489pro-x.com/ja/s/oiranomori/search/?plans=16&show=plan"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80"
+          data-cta="reserve"
+          data-cta-field="light"
+        >ワーケーション ↗</a>
+        <span class="ml-2 text-zinc-500">— 平日ソロ限定</span>
+      </li>
+    </ul>
+  </section>
+
+  {/* Deep への積極提案（ソロは適合者） */}
+  <section class="mb-14">
+    <div class="border-t border-zinc-200 pt-5">
+      <h2 class="text-xl font-semibold text-zinc-800">もっと深い静けさを求める方へ</h2>
+      <p class="mt-3 text-sm leading-loose text-zinc-600">
+        18歳以上・1〜3名限定で、設備のない森を利用する<br />
+        ディープフォレストもあります。
+      </p>
+      <p class="mt-4 text-sm">
+        <a
+          href="/deep/"
+          class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80"
+          data-cta="solo-to-deep"
+        >ディープフォレストを見る →</a>
+      </p>
+    </div>
+  </section>
+
   {/* 予約導線 */}
   <section class="mb-14">
     <h2 class="mb-2 text-xl font-semibold text-zinc-800">予約する</h2>
     <p class="mb-5 text-sm leading-loose text-zinc-500">
       料金・空き状況は予約システムでご確認ください。平日ソロ向けの割引プランもあります。
     </p>
-    <a
-      href="https://www.489pro-x.com/ja/s/oiranomori/planlist/#plans"
+    <a href="https://www.489pro-x.com/ja/s/oiranomori/search/?plans=21&show=plan"
       target="_blank"
       rel="noopener noreferrer"
       class="inline-flex items-center justify-center rounded-full bg-[color:var(--forest-600)] px-7 py-3 text-sm text-white shadow-sm transition hover:bg-[color:var(--forest-700)]"
-    >
+     data-cta="reserve" data-cta-field="light">
       空き状況・予約はこちら ↗
     </a>
-    {/* TODO: ソロ該当プランの個別 id に差し替え（#plans は仮置き）。proX プラン id 確定後に更新 */}
   </section>
 
   {/* 関連内部リンク */}
