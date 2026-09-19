@@ -121,5 +121,26 @@ const breadcrumbJson = pathSegments.length > 0 ? JSON.stringify({
     <slot />
 
     <Footer lastUpdated={lastUpdated} />
+
+    <script is:inline>
+      // ══════════════════════════════════════════════════════════
+      //  CTAクリック計測（既存 GA4 / gtag のみ使用。新規サービスは導入しない）
+      //  - イベント委譲。data-cta を持つ要素のクリックを1か所で拾う
+      //  - 予約CTA: data-cta="reserve" + data-cta-field="light|deep"
+      //  - 内部遷移: data-cta="sites-audience" 等
+      //  gtag 未読込（ブロッカー等）でも黙って何もしない。
+      // ══════════════════════════════════════════════════════════
+      document.addEventListener("click", function (e) {
+        var el = e.target instanceof Element ? e.target.closest("[data-cta]") : null;
+        if (!el || typeof window.gtag !== "function") return;
+        var name = el.getAttribute("data-cta") || "";
+        window.gtag("event", name === "reserve" ? "reserve_cta_click" : "internal_cta_click", {
+          cta: name,
+          field: el.getAttribute("data-cta-field") || "",
+          target: el.getAttribute("data-cta-target") || el.getAttribute("href") || "",
+          page_path: location.pathname,
+        });
+      });
+    </script>
   </body>
 </html>
