@@ -1,0 +1,205 @@
+---
+import { PROX_SEARCH_URL } from "../../config/nav";
+import PageLayout from "../../layouts/PageLayout.astro";
+
+const TITLE = "ライトフォレストで過ごす一泊｜里山パークおいらの森";
+const DESC =
+	"受付や水洗トイレのあるライトフォレストで、チェックイン、設営、森の夜、翌朝の片付けまで。おいらの森で過ごす一泊を時間の流れに沿って紹介します。";
+const URL = "https://oiranomori.jp/stay-light/";
+
+// 時間軸セクション。時刻表記の正本は /light-guide/（タイムライン）。
+// ここは体験の文脈に必要な範囲だけを示し、設備一覧は複製しない。
+//   body: 段落（配列＝複数段落）
+//   link: 節末の補助導線（任意）
+//   photo: 写真枠の役割メモ。写真未選定のため DOM は生成しない（AGENTS.md：仮画像を置かない）
+const chapters = [
+	{
+		id: "checkin",
+		time: "12:00〜17:00",
+		heading: "受付をして、森へ入る",
+		body: [
+			"到着したら、まず受付へ。利用方法と当日の案内を確認してから、予約したサイトへ向かいます。ライトフォレストは、受付、炊事場、水洗トイレのあるフィールドです。",
+			"前日の利用状況など条件が合う日は、事前確認のうえ9:00から無料で入場できます。利用できるかどうかは、必ず来場前に確認してください。",
+		],
+		photo:
+			"受付から木立のサイトへ向かう流れが分かる写真。施設案内写真だけにしない。",
+	},
+	{
+		id: "pitch",
+		time: "受付後",
+		heading: "木立の中に、居場所をつくる",
+		body: [
+			"サイトに着いたら、車、テント、タープをどこへ置くかを決めます。木の位置や地面の形は、区画ごとに少しずつ違います。張り綱まで区画内に収め、歩くための余白を残して設営します。",
+		],
+		link: {
+			href: "/sites/",
+			text: "自分に合うサイトを選ぶ",
+			cta: "stay-light-to-sites",
+		},
+		photo: "木、地面、車、テントの位置関係が分かる全景。",
+	},
+	{
+		id: "afternoon",
+		time: "午後",
+		heading: "何かをしても、何もしなくてもいい",
+		body: [
+			"設営が終わったら、過ごし方はそれぞれです。遅い昼食をとる。コーヒーを淹れる。本を読む。森の中を歩く。椅子に座ったまま、木漏れ日や風の変化を眺める。決められたプログラムはありません。",
+			"子ども連れ、ソロ、ふたり、グループでは、必要な広さも過ごし方も変わります。同行者に合う選び方は、各案内ページで確認できます。",
+		],
+		link: {
+			href: "/sites/",
+			text: "人数・過ごし方からサイトを選ぶ",
+			cta: "stay-light-to-sites-audience",
+		},
+		photo: "食事、読書、休憩など、作り込みすぎていない実際の過ごし方。",
+	},
+	{
+		id: "evening",
+		time: "夕方",
+		heading: "暗くなる前に、夜の準備をする",
+		body: [
+			"森は日が傾くと、思ったより早く暗くなります。明るいうちに食事の支度を進め、ライトや寝具を使える状態にしておきます。焚き火をするなら、周囲との距離や風を確かめ、火から離れないようにします。",
+			"場内全体を照らす照明はありません。移動用のライトは、手に取りやすい場所へ置いてください。",
+		],
+		photo:
+			"日没前後の光と、夕食または焚き火。大人数の宴会に見える写真は使わない。",
+	},
+	{
+		id: "starry",
+		time: "21:00",
+		heading: "森の夜を、みんなで静かにつくる",
+		body: [
+			"21時からは星空タイムです。明かりを落とし、話し声を抑える時間。大きな音が消えると、風や木々、夜の生き物の気配が近くなります。自分のサイトだけでなく、周りの人も同じ森に泊まっていることを忘れずに過ごします。",
+			"23時が消灯時間です。そこから先は、明かりも話し声も落として、森が眠る夜へ。",
+			"夜間の移動にはライトを携行し、足元を確認してください。",
+		],
+		photo:
+			"明るすぎないサイトと控えめな灯り。長時間露光で実際より明るく見せすぎない。",
+	},
+	{
+		id: "night",
+		time: "就寝",
+		heading: "森の暗さと音の中で眠る",
+		body: [
+			"テントの布一枚を隔てた向こうは、夜の森です。風の音、落ち葉の音、鳥や動物の声が聞こえることもあります。ホテルのように音を遮る場所ではありません。それも含めて、森に泊まる一夜です。",
+		],
+		photo: "消灯後の外観または夜明け前のサイト。人物の寝姿は不要。",
+	},
+	{
+		id: "morning",
+		time: "翌朝",
+		heading: "鳥の声と、朝の光",
+		body: [
+			"朝は、夜とは違う森の明るさから始まります。湯を沸かし、朝食をとり、濡れた道具があれば乾かしながら片付けます。ごみは持ち帰り、落とし物がないか、使った場所に忘れ物がないかを確認します。",
+		],
+		photo: "朝の光、湯気、朝食、撤収前の静かなサイト。",
+	},
+	{
+		id: "checkout",
+		time: "翌12:00",
+		heading: "来たときの森へ戻して、帰る",
+		body: [
+			"チェックアウトは翌12:00です。テントや車を動かした後に、ペグ、ごみ、炭などが残っていないかをもう一度確認してください。チェックアウトの連絡方法は、利用案内に従います。",
+		],
+		photo: "撤収後の区画、または帰り際の森。",
+	},
+];
+---
+
+{/* ライトフォレストの一泊を時間順に伝える体験理解ページ。
+    サイト選択は /sites/、設備・利用時間・ルールの正本は /light-guide/。
+    本ページで設備一覧を複製しないこと（AGENTS.md §0 情報は1層だけ）。
+    時刻表記（12:00 チェックアウト／21:00 星空タイム／23:00 消灯）は
+    /light-guide/ のタイムラインを正とする。変更時は両方を同時に直す。 */}
+<PageLayout title={TITLE} description={DESC} ogType="article">
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": TITLE,
+      "description": DESC,
+      "url": URL,
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "里山パークおいらの森",
+        "url": "https://oiranomori.jp"
+      }
+    })} />
+  </Fragment>
+
+  {/* ファーストビュー */}
+  <div class="mb-12 border-b border-zinc-200 pb-8">
+    <p class="text-xs tracking-[0.26em] text-zinc-400 uppercase">A Night in the Light Forest</p>
+    <h1 class="mt-3 text-3xl font-semibold text-zinc-800 md:text-4xl">ライトフォレストで過ごす一泊</h1>
+    <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-500">
+      森に着き、木立の中に自分たちの居場所をつくる。食べて、火を眺め、静かな夜を過ごし、鳥の声で朝を迎える。
+      ライトフォレストの一泊を、到着から順に紹介します。
+    </p>
+    <p class="mt-6 text-sm text-zinc-600">
+      通常チェックイン 12:00〜17:00／チェックアウト 翌12:00
+    </p>
+  </div>
+
+  {/* 時間軸本編。スマホで上から自然に読めるよう、1カラムの縦の流れを崩さない。
+      md 以上でのみ時刻を左カラムへ寄せる。白いカードは使わない（禁忌事項）。 */}
+  <div class="mb-14 divide-y divide-zinc-200 border-b border-zinc-200">
+    {chapters.map((c) => (
+      <section id={c.id} class="py-9 md:grid md:grid-cols-[9rem_1fr] md:gap-10">
+        <p class="text-sm tracking-[0.16em] text-zinc-400 md:pt-1">{c.time}</p>
+        <div class="mt-2 md:mt-0">
+          <h2 class="text-xl font-semibold text-zinc-800">{c.heading}</h2>
+          {c.body.map((p) => (
+            <p class="mt-4 text-sm leading-loose text-zinc-600">{p}</p>
+          ))}
+          {c.link && (
+            <p class="mt-4 text-sm">
+              <a
+                href={c.link.href}
+                class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80"
+                data-cta={c.link.cta}
+                data-cta-target={c.link.href}
+              >
+                {c.link.text} →
+              </a>
+            </p>
+          )}
+        </div>
+      </section>
+    ))}
+  </div>
+
+  {/* 予約前に確認する */}
+  <section class="mb-14">
+    <h2 class="mb-2 text-xl font-semibold text-zinc-800">予約前に確認する</h2>
+    <p class="mb-6 max-w-2xl text-sm leading-loose text-zinc-500">
+      一泊の様子が想像できたら、次はサイトと利用条件を確認してください。
+      サイトの広さや場所はそれぞれ違い、料金は利用日と人数によって決まります。
+    </p>
+    <div class="flex flex-wrap items-center gap-x-8 gap-y-4">
+      <a
+        href={PROX_SEARCH_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center justify-center rounded-full bg-[color:var(--forest-600)] px-7 py-3 text-sm text-white shadow-sm transition hover:bg-[color:var(--forest-700)]"
+        data-cta="reserve"
+        data-cta-field="light"
+      >
+        空き状況と料金を確認する ↗
+      </a>
+      <a
+        href="/sites/"
+        class="text-sm underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80"
+        data-cta="stay-light-to-sites"
+        data-cta-target="/sites/"
+      >
+        自分に合うサイトを選ぶ →
+      </a>
+      <a
+        href="/light-guide/"
+        class="text-sm text-zinc-600 underline underline-offset-2 transition hover:text-zinc-800"
+      >
+        設備・利用時間・ルールを見る →
+      </a>
+    </div>
+  </section>
+</PageLayout>

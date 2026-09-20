@@ -1,0 +1,205 @@
+---
+import { DEEP_RESERVE_LABEL, PROX_DEEP_RESERVE_URL } from "../../config/nav";
+import LpLayout from "../../layouts/LpLayout.astro";
+
+const TITLE = "ディープフォレストで過ごす一泊｜里山パークおいらの森";
+const DESC =
+	"場所非公開、18歳以上、1〜3名限定。水道や電源、売店のないディープフォレストで、受付から設営、森の夜、撤収までの一泊を紹介します。";
+const URL = "https://oiranomori.jp/stay-deep/";
+
+// 予約前に必要な事実として提示する。不便さの演出には使わない。
+const conditions = [
+	"18歳以上",
+	"1〜3名限定",
+	"場所非公開",
+	"水道・電源・売店なし",
+];
+
+// 時間軸セクション。利用条件・必要装備の正本は /deep/ と /deep-guide/。
+// 所在地・経路を特定できる情報は本ページに載せない。
+//   photo: 写真枠の役割メモ。写真未選定のため DOM は生成しない。
+const chapters = [
+	{
+		id: "prepare",
+		time: "来場前",
+		heading: "必要なものを、自分でそろえる",
+		body: [
+			"ディープフォレストでは、現地の設備をあてにした準備はできません。飲み水、調理に使う水、食料、照明、予備電源、防寒・雨具、救急用品など、一泊に必要なものを自分でそろえます。",
+			"利用できるのは18歳以上の1〜3名です。全員分の年齢確認書類と、利用条件を事前に確認してください。",
+		],
+		link: {
+			href: "/deep/",
+			text: "利用条件と必要装備を確認する",
+			cta: "stay-deep-to-deep",
+		},
+		photo: "一泊分の装備が分かる荷姿。過剰なサバイバル演出は避ける。",
+	},
+	{
+		id: "reception",
+		time: "受付",
+		heading: "まず、ライトフォレストへ",
+		body: [
+			"ディープフォレストへ直接向かうことはできません。はじめにライトフォレストの受付で、年齢確認と当日の案内を受けます。場所は受付後に案内します。",
+			"受付からディープフォレストまでは、車で約7分です。案内に従って移動してください。",
+		],
+		photo:
+			"受付または移動準備。所在地を特定できる地図、分岐、看板は掲載しない。",
+	},
+	{
+		id: "pitch",
+		time: "到着・設営",
+		heading: "設備のない森に、自分の場所をつくる",
+		body: [
+			"到着したら、案内された範囲と地面の状態を確認して設営します。水道、電源、売店はありません。忘れ物があっても、その場で簡単に補うことはできません。",
+			"日が落ちてから慌てないよう、明るいうちに寝る場所、食事、照明まで整えます。",
+		],
+		photo:
+			"少人数の幕と周囲の森。ライト側の設備や区画サイトに見える写真は使わない。",
+	},
+	{
+		id: "evening",
+		time: "夕方",
+		heading: "持ってきたもので、夜を整える",
+		body: [
+			"食事も灯りも、持ってきたものの中で組み立てます。暗くなる前に水と照明の残量を確認し、使う道具を手の届く場所へ置きます。",
+			"ディープフォレストは、便利な設備を減らしたライトフォレストではありません。設備のない環境を自分で整えて過ごすための、別のフィールドです。",
+		],
+		photo: "夕方の準備と必要最小限の灯り。豪華な常設設備があるように見せない。",
+	},
+	{
+		id: "night",
+		time: "夜",
+		heading: "人工の明かりから離れる",
+		body: [
+			"周囲にあるのは、森の暗さと音です。風、木々、鳥や動物の気配が、昼より近く感じられます。大きな声や強い照明で夜を消さず、少人数で静かに過ごします。",
+			"用意された便利さより、自分で判断して夜を整える時間を選ぶ場所です。",
+		],
+		photo:
+			"少ない灯りと暗い森。長時間露光による誤認や、危険な行為に見える写真は避ける。",
+	},
+	{
+		id: "morning",
+		time: "翌朝",
+		heading: "持ち込んだものを、すべて持ち帰る",
+		body: [
+			"朝食をとり、道具を片付け、持ち込んだものをすべて持ち帰ります。ごみや食べ物、道具の一部を森に残さず、利用した場所を最後に確認します。",
+			"チェックアウトの方法と時刻は、予約時の案内と利用案内の現行情報に従ってください。",
+		],
+		link: {
+			href: "/deep-guide/",
+			text: "ディープフォレスト 利用案内を見る",
+			cta: "stay-deep-to-deep-guide",
+		},
+		photo: "朝の森、撤収、荷物をまとめた状態。",
+	},
+];
+---
+
+{/* ディープフォレスト固有の一泊。ライトの上級版ではなく別商品として書く。
+    利用条件・必要装備の正本は /deep/、時刻・ルールの正本は /deep-guide/。
+    所在地・経路を特定できる情報（地図・分岐・看板）は本ページに載せない。
+    予約CTAは PROX_DEEP_RESERVE_URL / DEEP_RESERVE_LABEL 定数を使う
+    （scripts/check-deep-cta.mjs が文言とクエリを検証する）。 */}
+<LpLayout title={TITLE} description={DESC} ogType="article" ogImage="https://oiranomori.jp/images/lp/scene-01.jpg">
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": TITLE,
+      "description": DESC,
+      "url": URL,
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "里山パークおいらの森",
+        "url": "https://oiranomori.jp"
+      }
+    })} />
+  </Fragment>
+
+  {/* ファーストビュー */}
+  <section class="bg-[color:var(--forest-700)] py-20 md:py-28">
+    <div class="mx-auto max-w-6xl px-5">
+      <p class="text-xs tracking-[0.32em] text-zinc-500 uppercase">A Night in the Deep Forest</p>
+      <h1 class="mt-5 text-3xl font-semibold leading-tight text-white md:text-5xl">
+        ディープフォレストで過ごす一泊
+      </h1>
+      <p class="mt-7 max-w-2xl text-sm leading-loose text-zinc-400 md:text-base">
+        水道も、電源も、売店もない。場所を公開していない森へ、必要なものを自分で持って入る。
+        ディープフォレストは、ライトフォレストとは場所も条件も異なる、1〜3名のためのフィールドです。
+      </p>
+
+      {/* 利用条件。予約前に必要な事実として明示する */}
+      <ul class="mt-9 flex flex-wrap gap-x-8 gap-y-3 border-t border-zinc-700 pt-6 text-sm text-zinc-300">
+        {conditions.map((c) => (
+          <li class="flex items-start gap-3">
+            <span class="mt-2.5 h-px w-3 shrink-0 bg-zinc-600"></span>
+            <span>{c}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  {/* 時間軸本編。スマホで上から自然に読める1カラムの縦の流れ。
+      md 以上でのみ時刻を左カラムへ寄せる。 */}
+  <section class="bg-[color:var(--forest-700)] pb-20 md:pb-28">
+    <div class="mx-auto max-w-6xl px-5">
+      <div class="divide-y divide-zinc-700 border-t border-b border-zinc-700">
+        {chapters.map((c) => (
+          <div id={c.id} class="py-9 md:grid md:grid-cols-[9rem_1fr] md:gap-10">
+            <p class="text-sm tracking-[0.16em] text-zinc-500 md:pt-1">{c.time}</p>
+            <div class="mt-2 md:mt-0">
+              <h2 class="text-xl font-semibold text-white md:text-2xl">{c.heading}</h2>
+              {c.body.map((p) => (
+                <p class="mt-4 text-sm leading-loose text-zinc-400">{p}</p>
+              ))}
+              {c.link && (
+                <p class="mt-4 text-sm">
+                  <a
+                    href={c.link.href}
+                    class="text-zinc-300 underline underline-offset-2 transition hover:text-white"
+                    data-cta={c.link.cta}
+                    data-cta-target={c.link.href}
+                  >
+                    {c.link.text} →
+                  </a>
+                </p>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {/* 条件を理解してから予約する */}
+  <section class="bg-[color:var(--forest-700)] pb-20 md:pb-28">
+    <div class="mx-auto max-w-6xl px-5">
+      <h2 class="text-2xl font-semibold text-white md:text-3xl">条件を理解してから予約する</h2>
+      <p class="mt-5 max-w-2xl text-sm leading-loose text-zinc-400">
+        ディープフォレストは、18歳以上の1〜3名が、設備のない森で静かに過ごすためのフィールドです。
+        条件と必要装備を確認し、自分たちに合うと判断してから予約へ進んでください。
+      </p>
+      <div class="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
+        <a
+          href={PROX_DEEP_RESERVE_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center justify-center rounded-full border border-white/40 bg-white/10 px-10 py-4 text-sm text-white backdrop-blur-sm transition hover:bg-white hover:text-zinc-900"
+          data-cta="reserve"
+          data-cta-field="deep"
+        >
+          {DEEP_RESERVE_LABEL}
+        </a>
+        <a
+          href="/deep/"
+          class="text-sm text-zinc-300 underline underline-offset-2 transition hover:text-white"
+          data-cta="stay-deep-to-deep"
+          data-cta-target="/deep/"
+        >
+          利用条件と必要装備を見る →
+        </a>
+      </div>
+    </div>
+  </section>
+</LpLayout>
