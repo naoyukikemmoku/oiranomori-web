@@ -303,14 +303,23 @@ const experiences = [
         ))}
       </dl>
 
-      <p class="mt-6">
+      <div class="mt-6 flex flex-wrap gap-x-8 gap-y-3">
         <a
           href="/deep-guide/"
           class="text-xs tracking-[0.2em] text-zinc-500 underline transition hover:text-zinc-300"
         >
           ディープフォレスト 利用案内（詳細）→
         </a>
-      </p>
+        {/* 同商品の滞在像へ。ライトの /stay-light/ とは混ぜない */}
+        <a
+          href="/stay-deep/"
+          class="text-xs tracking-[0.2em] text-zinc-500 underline transition hover:text-zinc-300"
+          data-cta="deep-to-stay-deep"
+          data-cta-target="/stay-deep/"
+        >
+          ディープフォレストで過ごす一泊 →
+        </a>
+      </div>
     </div>
   </section>
 

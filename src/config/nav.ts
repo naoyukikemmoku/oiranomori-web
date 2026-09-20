@@ -113,7 +113,10 @@ export const siteNav: SiteNavGroup[] = [
 			// /sites/ はライトフォレスト専用ハブ。Deep を選べる誤解を避けるため
 			// ラベルに必ず「ライト」を明示する（Deep 用の同種リンクは作らない）。
 			{ label: "ライトのサイト・区画を選ぶ", href: "/sites/" },
+			// 「選ぶ → 過ごす → 調べる」の順。ライト／ディープは別商品として対で並べる。
+			{ label: "ライトフォレストで過ごす一泊", href: "/stay-light/" },
 			{ label: "ライトフォレスト 利用案内", href: "/light-guide/" },
+			{ label: "ディープフォレストで過ごす一泊", href: "/stay-deep/" },
 			{ label: "ディープフォレスト 利用案内", href: "/deep-guide/" },
 			{ label: "場内マップ（ライト）", href: "/lightforest-map/" },
 			{ label: "おいらの薪", href: "/firewood/" },

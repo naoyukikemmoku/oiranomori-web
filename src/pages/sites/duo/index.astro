@@ -108,13 +108,20 @@ const experiences = [
         設備のない森で過ごすディープフォレストも選べます。1〜3名限定、場所は非公開。
         水道・電源・売店はありません。
       </p>
-      <p class="mt-4 text-sm">
+      {/* ライトとは別商品。/stay-light/ と同じ行に並べず、Deep 専用の導線として分ける */}
+      <div class="mt-4 flex flex-wrap gap-x-8 gap-y-3 text-sm">
         <a
           href="/deep/"
           class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80"
           data-cta="duo-to-deep"
         >ディープフォレストを見る →</a>
-      </p>
+        <a
+          href="/stay-deep/"
+          class="text-zinc-600 underline underline-offset-2 transition hover:text-zinc-800"
+          data-cta="duo-to-stay-deep"
+          data-cta-target="/stay-deep/"
+        >ディープフォレストで過ごす一泊を見る →</a>
+      </div>
     </div>
   </section>
 
@@ -138,6 +145,10 @@ const experiences = [
   <section class="mb-14">
     <h2 class="mb-5 text-xl font-semibold text-zinc-800">あわせて見る</h2>
     <ul class="space-y-3 text-sm">
+      <li>
+        <a href="/stay-light/" class="text-zinc-600 underline underline-offset-2 transition hover:text-zinc-800">ライトフォレストで過ごす一泊</a>
+        <span class="ml-2 text-zinc-400">— 到着から翌朝までの流れ</span>
+      </li>
       <li>
         <a href="/light-guide/" class="text-zinc-600 underline underline-offset-2 transition hover:text-zinc-800">ライトフォレスト 利用案内</a>
         <span class="ml-2 text-zinc-400">— 設備・サイズ別目安・利用ルール</span>
