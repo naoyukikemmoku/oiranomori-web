@@ -1,4 +1,5 @@
 ---
+import { PROX_SEARCH_URL } from "../../config/nav";
 import PageLayout from "../../layouts/PageLayout.astro";
 
 const TITLE = "ライトフォレストのサイトを選ぶ｜里山パークおいらの森";
@@ -12,32 +13,81 @@ const audienceCards = [
 		href: "/sites/solo/",
 		label: "ソロ",
 		size: "SS・S",
-		copy: "隣を気にしない距離感。ひとりの森時間を。",
+		copy: "小さく張るか、タープまで広げるか。ひとりに合う広さと場内環境を確認できます。",
 	},
 	{
 		href: "/sites/duo/",
 		label: "デュオ・カップル",
 		size: "S・M",
-		copy: "焚き火を挟んで向き合う、ふたりの夜。",
+		copy: "コンパクトに過ごすS、ゆったり使うM。2人の道具量から選べます。",
 	},
 	{
 		href: "/sites/family/",
 		label: "ファミリー",
 		size: "M・L・LL",
-		copy: "余白のある広さと、トイレ至近の安心。",
+		copy: "テント、タープ、車と、区画内に残したい余白から選びます。",
 	},
 	{
 		href: "/sites/group/",
 		label: "グループ・ソログル・貸切",
 		size: "LL・XL・貸切",
-		copy: "連結して広く。最大150名の貸切まで。",
+		copy: "大型幕、複数テント、隣接区画、貸切を分けて確認できます。",
 	},
 	{
 		href: "/sites/dogrun/",
 		label: "ドッグラン",
 		size: "専用1区画",
-		copy: "囲いの中、リードなしで遊べる貸切サイト。",
+		copy: "柵内約400㎡を1日1組で利用する、犬連れ専用のサイトです。",
 	},
+];
+
+// 設営するものから選ぶ（仕様書 2-5）。サイズ記号より先に道具量から入る導線。
+const gearRoutes = [
+	{
+		label: "小型テントのみ",
+		body: "ソロテント1張りを中心に、荷物を小さくまとめる使い方。",
+		size: "SS・S",
+		href: "/sites/solo/",
+		linkText: "ソロ向けを見る",
+	},
+	{
+		label: "テント＋タープ",
+		body: "寝る場所と、食事や焚き火の場所を分けたい使い方。",
+		size: "S・M",
+		href: "/sites/duo/",
+		linkText: "デュオ向けを見る",
+	},
+	{
+		label: "大型テント＋タープ",
+		body: "2ルームや大型幕に加え、区画内へ余白も残したい使い方。",
+		size: "L・LL",
+		href: "/sites/family/",
+		linkText: "ファミリー向けを見る",
+	},
+	{
+		label: "複数のテント",
+		body: "各自のテントを並べる場合は、XLまたは隣接区画を検討します。",
+		size: "XL・連結",
+		href: "/sites/group/",
+		linkText: "グループ向けを見る",
+	},
+	{
+		label: "ハンモック",
+		body: "木の位置と間隔が合う区画を選ぶ必要があります。",
+		size: "要確認",
+		href: "/sites/solo/#hammock",
+		linkText: "ハンモックの条件",
+	},
+];
+
+// サイト選びに影響する共通条件だけを置く。
+// 設備・利用時間・ルールの全文は /light-guide/ を正本とし、ここでは複製しない。
+const commonNotes = [
+	"場内にシャワーはありません。入浴は周辺の温泉を利用します。",
+	"ごみは灰以外すべて持ち帰りです。分別袋をご持参ください。",
+	"夜は暗いため、移動用のライトを人数分ご用意ください。",
+	"地面は土で、雨天時はぬかるむことがあります。",
+	"林間のため、季節に応じた虫対策が必要です。",
 ];
 
 // 条件から選ぶ。事実は light-guide（設備・サイト種別）を正とする。
@@ -83,12 +133,24 @@ const conditions = [
 
 // サイズ実寸。本ページを正本とする（light-guide からは本ページへ誘導）。
 const sizeGuide = [
-	{ size: "XL", area: "110㎡以上", guide: "10人以上：超大型テント＋タープ、車3台＋ソロテント3張り" },
-	{ size: "LL", area: "80〜109㎡", guide: "6〜8人：超大型テント1張り＋タープ、ソロテント数張り" },
+	{
+		size: "XL",
+		area: "110㎡以上",
+		guide: "10人以上：超大型テント＋タープ、車3台＋ソロテント3張り",
+	},
+	{
+		size: "LL",
+		area: "80〜109㎡",
+		guide: "6〜8人：超大型テント1張り＋タープ、ソロテント数張り",
+	},
 	{ size: "L", area: "60〜79㎡", guide: "4〜6人：大型テント1〜2張り＋タープ" },
 	{ size: "M", area: "40〜59㎡", guide: "2〜4人：中型テント1張り＋タープ" },
 	{ size: "S", area: "20〜39㎡", guide: "1〜2人：小型テント1張り＋タープ" },
-	{ size: "SS", area: "20㎡未満", guide: "1人：ソロテント1張り。通称ソロ区画。プライベート感重視。" },
+	{
+		size: "SS",
+		area: "20㎡未満",
+		guide: "1人：ソロテント1張り。通称ソロ区画。プライベート感重視。",
+	},
 ];
 ---
 
@@ -116,8 +178,12 @@ const sizeGuide = [
     <p class="text-xs tracking-[0.26em] text-zinc-400 uppercase">Light Forest Sites</p>
     <h1 class="mt-3 text-3xl font-semibold text-zinc-800 md:text-4xl">ライトフォレストのサイトを選ぶ</h1>
     <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-500">
-      オートサイト37区画、区画サイト10区画、ドッグランサイト1区画。全48区画のライトフォレストから、
-      人数と過ごし方、あるいは必要な条件で選べます。
+      木立の間に、それぞれ広さや形の違うサイトがあります。
+      誰と来るか、何を張るか、外せない条件は何か。順に確かめながら、自分に合う場所を選んでください。
+    </p>
+    <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-500">
+      このページでは、受付や水洗トイレ、炊事場のあるライトフォレスト全48区画をご案内します。
+      ディープフォレストは、設備や利用条件の異なる別のフィールドです。
     </p>
   </div>
 
@@ -126,7 +192,7 @@ const sizeGuide = [
       背景になじむフラットなリンク一覧とし、区切り線・余白・字組みで階層を作る。 */}
   <section class="mb-14">
     <h2 class="mb-2 text-xl font-semibold text-zinc-800">人数・過ごし方から選ぶ</h2>
-    <p class="mb-6 text-sm text-zinc-500">何人で、どう過ごすか。それだけ決まっていれば選べます。</p>
+    <p class="mb-6 max-w-2xl text-sm leading-loose text-zinc-500">何人で、どう過ごすか。それだけ決まっていれば選べます。</p>
     <ul class="divide-y divide-zinc-200 border-y border-zinc-200 sm:grid sm:grid-cols-2 sm:gap-x-12 sm:divide-y-0">
       {audienceCards.map((c) => (
         <li class="sm:border-b sm:border-zinc-200">
@@ -147,10 +213,45 @@ const sizeGuide = [
       ))}
     </ul>
   </section>
-  {/* 2. 条件から選ぶ */}
+
+  {/* 2. 設営するものから選ぶ。サイズ記号より先に「何を張るか」で絞る導線 */}
+  <section class="mb-14">
+    <h2 class="mb-2 text-xl font-semibold text-zinc-800">何を設営しますか</h2>
+    <p class="mb-5 max-w-2xl text-sm leading-loose text-zinc-500">
+      同じ人数でも、テントの大きさやタープの有無で必要な広さは変わります。サイズ記号より先に、持っていく道具から考えてください。
+    </p>
+    <dl class="divide-y divide-zinc-200 border-y border-zinc-200">
+      {gearRoutes.map((g) => (
+        <div class="grid gap-2 py-5 sm:grid-cols-[14rem_1fr] sm:gap-6">
+          <dt class="flex flex-wrap items-baseline gap-x-3">
+            <span class="text-sm font-semibold text-zinc-800">{g.label}</span>
+            <span class="text-xs tracking-[0.14em] text-zinc-400">{g.size}</span>
+          </dt>
+          <dd class="text-sm leading-loose text-zinc-600">
+            {g.body}
+            <a
+              href={g.href}
+              class="ml-1 whitespace-nowrap underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80"
+              data-cta="sites-gear"
+              data-cta-target={g.href}
+            >
+              {g.linkText} →
+            </a>
+          </dd>
+        </div>
+      ))}
+    </dl>
+    <p class="mt-5 max-w-2xl text-sm leading-loose text-zinc-600">
+      テント・タープの寸法や張り綱の取り方によって、同じサイズ表記でも収まり方が変わります。大型幕や特殊な形状は、予約前に実寸をご確認ください。
+    </p>
+  </section>
+
+  {/* 3. 条件から選ぶ */}
   <section class="mb-14">
     <h2 class="mb-2 text-xl font-semibold text-zinc-800">条件から選ぶ</h2>
-    <p class="mb-5 text-sm text-zinc-500">外せない条件が決まっている場合は、こちらから。</p>
+    <p class="mb-5 max-w-2xl text-sm leading-loose text-zinc-500">
+      外せない条件がある場合は、先に確認してください。すべての区画が同じ設備・形状ではありません。
+    </p>
     <dl class="divide-y divide-zinc-200 border-y border-zinc-200">
       {conditions.map((c) => (
         <div class="grid gap-2 py-5 sm:grid-cols-[14rem_1fr] sm:gap-6">
@@ -169,11 +270,11 @@ const sizeGuide = [
     </dl>
   </section>
 
-  {/* 3. サイズ別の実寸・設営例 */}
+  {/* 4. サイズ別の実寸・設営例 */}
   <section class="mb-14">
     <h2 class="mb-2 text-xl font-semibold text-zinc-800">サイズ別の広さと設営例</h2>
-    <p class="mb-5 text-sm text-zinc-500">
-      有効面積は、オートサイトの場合は車の面積を除いた広さです。
+    <p class="mb-5 max-w-2xl text-sm leading-loose text-zinc-500">
+      人数はあくまで目安です。実際には、テント、タープ、車、張り綱まで含めて判断してください。オートサイトの有効面積は、車を置く部分を除いた広さです。
     </p>
     <div class="overflow-x-auto border-y border-zinc-200">
       <table class="w-full min-w-[520px] text-sm">
@@ -195,43 +296,149 @@ const sizeGuide = [
         </tbody>
       </table>
     </div>
-    <p class="mt-5 text-sm leading-loose text-zinc-600">
-      車両料金：オートサイトのサイト料金には車両1台分が含まれます。2台目以降は普通車2,200円／バイク1,320円（現地精算）。
-      オートサイト以外の駐車場は15台分（1台2,200円）。
+    <p class="mt-5 max-w-2xl text-sm leading-loose text-zinc-600">
+      迷ったときは、人数だけでなく「何を張るか」と「区画内にどれだけ余白を残したいか」で、一つ上のサイズも比較してください。
     </p>
-    <p class="mt-4 text-sm">
+  </section>
+
+  {/* 5. 場内マップ。広さだけでなく位置で選ぶ視点を足す */}
+  <section class="mb-14">
+    <h2 class="mb-2 text-xl font-semibold text-zinc-800">広さだけでなく、場所で選ぶ</h2>
+    <p class="mb-5 max-w-2xl text-sm leading-loose text-zinc-500">
+      トイレや炊事場までの距離、隣接区画との関係、車の進入方向も、使い勝手を左右します。候補のサイズが決まったら、場内マップで位置を確認してください。
+    </p>
+    <p class="text-sm">
       <a
         href="/lightforest-map/"
         class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80"
         data-cta="sites-map"
       >
-        場内マップで区画の位置関係を見る →
+        場内マップで区画の位置を見る →
       </a>
     </p>
   </section>
 
-  {/* 4. ディープフォレスト（補助導線。選択ゲートにはしない） */}
+  {/* 6. 選ぶ前に知っておく共通条件。
+      サイト選びに影響する条件だけに絞る。設備一覧・利用ルールの全文は
+      /light-guide/ を正本とし、ここで複製しない（AGENTS.md §0 情報は1層だけ）。 */}
+  <section class="mb-14">
+    <h2 class="mb-2 text-xl font-semibold text-zinc-800">選ぶ前に知っておきたいこと</h2>
+    <p class="mb-5 max-w-2xl text-sm leading-loose text-zinc-500">
+      サイト選びに影響する条件だけを、ここで先に確認します。設備の詳細、利用時間、ルールは利用案内にまとめています。
+    </p>
+    <ul class="space-y-3 text-sm leading-loose text-zinc-600">
+      {commonNotes.map((n) => (
+        <li class="flex items-start gap-3">
+          <span class="mt-3 h-px w-3 shrink-0 bg-zinc-300"></span>
+          <span>{n}</span>
+        </li>
+      ))}
+    </ul>
+    <p class="mt-5 text-sm">
+      <a
+        href="/light-guide/"
+        class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80"
+        data-cta="sites-to-light-guide"
+      >
+        設備・利用時間・ルールを詳しく見る →
+      </a>
+    </p>
+  </section>
+
+  {/* 7. 料金の仕組み。総額の代表例は子ども料金・対象日のサイト料金確定後に追加する。
+      推測値は載せない。 */}
+  <section class="mb-14">
+    <h2 class="mb-2 text-xl font-semibold text-zinc-800">料金は、人数とサイトで決まります</h2>
+    <p class="mb-5 max-w-2xl text-sm leading-loose text-zinc-500">
+      宿泊料金は、利用人数に応じた料金と、日付・サイトサイズによって変わるサイト料金を合計して計算します。
+      オートサイトのサイト料金には車1台分が含まれ、2台目以降は追加車両料金がかかります。AC電源などを利用する場合は、オプション料金が加わります。
+    </p>
+    <p class="border-y border-zinc-200 py-5 text-sm leading-loose text-zinc-700">
+      人数料金　＋　日付・サイズ別のサイト料金　＋　追加車両・電源等のオプション
+    </p>
+    <p class="mt-5 max-w-2xl text-sm leading-loose text-zinc-600">
+      2台目以降の車両料金は普通車2,200円／バイク1,320円（現地精算）。オートサイト以外の駐車場は15台分（1台2,200円）です。
+    </p>
+    <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-600">
+      正確な総額は、予約システムで利用日と人数を指定すると確認できます。表示された内容を確認してから予約手続きへ進めるため、この時点では予約は確定しません。
+    </p>
+  </section>
+
+  {/* 8. ライトの一泊への補助導線。サイト比較の途中には置かず、料金説明の後に短く置く */}
+  <section class="mb-14">
+    <h2 class="mb-2 text-xl font-semibold text-zinc-800">選んだサイトで、どんな一泊を過ごすか</h2>
+    <p class="mb-5 max-w-2xl text-sm leading-loose text-zinc-500">
+      チェックインして設営し、森の夜を過ごし、朝に片付けて帰るまで。ライトフォレストでの一泊を、時間の流れに沿って紹介します。
+    </p>
+    <p class="text-sm">
+      <a
+        href="/stay-light/"
+        class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80"
+        data-cta="sites-to-stay-light"
+        data-cta-target="/stay-light/"
+      >
+        ライトフォレストで過ごす一泊を見る →
+      </a>
+    </p>
+  </section>
+
+  {/* 9. ディープフォレスト（別商品の補助導線。選択ゲートにはしない） */}
+  <section class="mb-14">
+    <h2 class="mb-2 text-xl font-semibold text-zinc-800">設備のあるライトとは、別の森もあります</h2>
+    <p class="mb-5 max-w-2xl text-sm leading-loose text-zinc-500">
+      ディープフォレストは、場所非公開、18歳以上、1〜3名限定。水道や電源、売店のない森で過ごす、ライトフォレストとは別条件のフィールドです。
+      ライトの上級版ではなく、求める過ごし方が違う方のための選択肢です。
+    </p>
+    <div class="flex flex-wrap gap-x-8 gap-y-3 text-sm">
+      <a
+        href="/deep/"
+        class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80"
+        data-cta="sites-to-deep"
+      >
+        ディープフォレストを見る →
+      </a>
+      <a
+        href="/stay-deep/"
+        class="text-zinc-600 underline underline-offset-2 transition hover:text-zinc-800"
+        data-cta="sites-to-stay-deep"
+        data-cta-target="/stay-deep/"
+      >
+        ディープフォレストで過ごす一泊を見る →
+      </a>
+    </div>
+  </section>
+
+  {/* 10. 予約CTA */}
+  <section class="mb-14">
+    <h2 class="mb-2 text-xl font-semibold text-zinc-800">日付ごとの空き状況と料金を見る</h2>
+    <p class="mb-6 max-w-2xl text-sm leading-loose text-zinc-500">
+      利用日と人数を入力すると、その日に予約できるプランと料金が表示されます。サイトの候補が決まったら、予約システムで確認してください。
+    </p>
+    <div class="flex flex-wrap items-center gap-x-8 gap-y-4">
+      <a
+        href={PROX_SEARCH_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center justify-center rounded-full bg-[color:var(--forest-600)] px-7 py-3 text-sm text-white shadow-sm transition hover:bg-[color:var(--forest-700)]"
+        data-cta="reserve"
+        data-cta-field="light"
+      >
+        空き状況と料金を確認する ↗
+      </a>
+      <a
+        href="/reservation-guide/"
+        class="text-sm underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80"
+        data-cta="sites-to-reservation-guide"
+      >
+        予約方法を確認する →
+      </a>
+    </div>
+  </section>
+
+  {/* 11. 関連内部リンク */}
   <section class="mb-14">
     <h2 class="mb-5 text-xl font-semibold text-zinc-800">あわせて見る</h2>
-    <div class="border-t border-zinc-200 pt-5">
-      <h3 class="text-lg font-semibold text-zinc-800">利便性より、森の静寂を選ぶ</h3>
-      <p class="mt-3 text-sm leading-loose text-zinc-600">
-        場所非公開、18歳以上、1〜3名限定。<br />
-        設備のない森で過ごす野営フィールドです。<br />
-        区画の事前指定はありません。
-      </p>
-      <p class="mt-4 text-sm">
-        <a
-          href="/deep/"
-          class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80"
-          data-cta="sites-to-deep"
-        >
-          ディープフォレストを見る →
-        </a>
-      </p>
-    </div>
-
-    <ul class="mt-8 space-y-3 text-sm">
+    <ul class="space-y-3 text-sm">
       <li>
         <a href="/light-guide/" class="text-zinc-600 underline underline-offset-2 transition hover:text-zinc-800">
           ライトフォレスト 利用案内

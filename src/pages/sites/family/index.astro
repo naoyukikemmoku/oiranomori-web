@@ -1,45 +1,75 @@
 ---
-import PageLayout from "../../../layouts/PageLayout.astro";
 import { PROX_SEARCH_URL } from "../../../config/nav";
+import PageLayout from "../../../layouts/PageLayout.astro";
 
 const TITLE = "ファミリーキャンプ｜里山パークおいらの森（栃木）";
 const DESC =
-	"区画内に遊べる余白があり、トイレも近い。初めての家族キャンプにも。栃木・那須烏山のファミリー向けキャンプサイト。";
+	"テント・タープ・車と残したい余白からサイズを選ぶ。設営例、確認したいこと、料金の仕組みまで。栃木・那須烏山のファミリー向けキャンプサイト。";
 const URL = "https://oiranomori.jp/sites/family/";
 
 const sizeGuide = [
-	{ size: "M", area: "40〜59㎡", guide: "3〜4人：中型テント1張り＋タープ。" },
+	{
+		size: "M",
+		area: "40〜59㎡",
+		guide: "道具をコンパクトにまとめる3〜4人向け。",
+	},
 	{
 		size: "L",
 		area: "60〜79㎡",
-		guide: "4〜6人：大型テント1〜2張り＋タープ。",
+		guide: "大型テントやタープを使う4〜6人向け。",
 	},
 	{
 		size: "LL",
 		area: "80〜109㎡",
-		guide: "6人前後：大型テント＋タープ、子どもの遊ぶ余白あり。",
+		guide: "大型幕とタープに加え、区画内へ余白も残したい家族向け。",
 	},
 ];
 
-const experiences = [
+// 一泊の共通の流れは /stay-light/ が正本。ここでは家族で判断が変わる点だけを扱う。
+const familyPoints = [
+	"設営中も子どもが区画内で過ごせる余白を残す",
+	"暗くなる前に食事と夜の準備を進める",
+	"21時からの星空タイムを、就寝を含めて家族で守る",
+	"翌朝は子どもの支度も含め、片付け時間に余裕を持つ",
+];
+
+// 設備の再掲ではなく、「家族が何を準備・判断するか」へ置き換える。
+// 設備・利用時間・ルールの事実は /light-guide/ を正本とする。
+const familyChecks = [
 	{
-		h: "区画の中に、遊べる余白",
-		body: "テントを張っても、その外に余白が残る広さ。目の届く自分たちの区画の中で遊ばせられます。通路や他の区画は、走り回る場所ではありません。",
+		h: "区画の中に余白を残せるか",
+		body: "子どもが過ごす場所は、自分たちの区画の中で考えます。テントとタープを張った後も余白が必要なら、道具が収まる最小サイズより一つ上も比較してください。通路やほかの区画は遊び場ではありません。",
 	},
 	{
-		h: "トイレが、近い",
-		body: "水洗・洋式が近くにある区画を選べます。夜中も、子どもがいても、慌てない。",
+		h: "トイレまでの距離",
+		body: "水洗・洋式トイレがあります。夜中の移動や小さな子どもとの利用を考える場合は、広さだけでなく場内マップで位置も確認してください。",
+		linkHref: "/lightforest-map/",
+		linkText: "場内マップで位置を見る",
 	},
 	{
-		h: "道具がなくても",
-		body: "一式そろわなくても始められます。足りないものは借りればいい。",
+		h: "初めてでも聞ける相手がいるか",
+		body: "管理人は敷地内に常駐しています。受付時間外も人がいる環境ですが、場内全域が照明で明るいわけではありません。夜間用のヘッドライトを家族分用意してください。",
+	},
+	{
+		h: "足りない道具を借りられるか",
+		body: "テントやタープなど、レンタルできる用品があります。すべてを買いそろえる前に、必要なものだけ借りる方法も選べます。",
 		linkHref: "/rental/",
-		linkText: "レンタルを見る",
+		linkText: "レンタル用品を見る",
 	},
-	{
-		h: "初めての家族キャンプでも",
-		body: "管理人が常駐しています。困ったら聞ける距離に人がいる安心。",
-	},
+];
+
+// 予約前の最終確認。事実の正本は /light-guide/。ここは家族が確認する項目として並べる。
+const preReserveChecks = [
+	"通常チェックインは12:00〜17:00",
+	"9:00からの無料アーリーチェックインは、事前確認と当日の条件が必要",
+	"サイトへ置く車両台数と追加車両料金",
+	"AC電源が必要な場合は、対応区画・600W上限・要予約を確認",
+	"場内にシャワーはない",
+	"ごみは灰以外すべて持ち帰り",
+	"夜間用のライトを家族分用意する",
+	"里山の虫、土、雨天への準備をする",
+	"21時からの星空タイムは照明と話し声を抑える",
+	"ペット同伴の場合は、通常サイトとドッグランサイトの条件を確認する",
 ];
 ---
 
@@ -62,17 +92,49 @@ const experiences = [
   {/* ページ見出し */}
   <div class="mb-10 border-b border-zinc-200 pb-8">
     <p class="text-xs tracking-[0.26em] text-zinc-400 uppercase">Family</p>
-    <h1 class="mt-3 text-3xl font-semibold text-zinc-800 md:text-4xl">家族で、気持ちよく</h1>
+    <h1 class="mt-3 text-3xl font-semibold text-zinc-800 md:text-4xl">家族で、森に泊まる</h1>
     <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-500">
-      区画の中に遊べる余白があり、トイレも近い。
-      初めての家族キャンプでも、落ち着いて過ごせます。
+      テントを張り、同じ場所で食べ、暗くなったら火を囲む。朝は鳥の声で目を覚ます。
+      大型遊具や場内イベントではなく、家族で森の一泊を楽しむためのキャンプ場です。
+    </p>
+    <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-500">
+      区画の中に余白を残せるサイトや、水洗トイレに近いサイトも選べます。必要な広さと場所を、家族の人数や道具に合わせて確認してください。
     </p>
   </div>
 
+  {/* 一泊の流れを、家族の目線で。
+      共通の「到着→設営→夜→朝」は /stay-light/ が正本。ここで再掲しない。 */}
+  <section class="mb-14">
+    <h2 class="mb-2 text-xl font-semibold text-zinc-800">一泊の流れを、家族の目線で考える</h2>
+    <p class="mb-5 max-w-2xl text-sm leading-loose text-zinc-500">
+      到着から翌朝までの共通の流れは滞在ページにまとめています。このページでは、家族で利用するときに判断が変わる点だけを扱います。
+    </p>
+    <ul class="space-y-3 text-sm leading-loose text-zinc-600">
+      {familyPoints.map((p) => (
+        <li class="flex items-start gap-3">
+          <span class="mt-3 h-px w-3 shrink-0 bg-zinc-300"></span>
+          <span>{p}</span>
+        </li>
+      ))}
+    </ul>
+    <p class="mt-5 text-sm">
+      <a
+        href="/stay-light/"
+        class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80"
+        data-cta="family-to-stay-light"
+        data-cta-target="/stay-light/"
+      >
+        ライトフォレストで過ごす一泊を見る →
+      </a>
+    </p>
+  </section>
+
   {/* あなたの人数なら、このサイズ */}
   <section class="mb-14">
-    <h2 class="mb-2 text-xl font-semibold text-zinc-800">あなたなら、このサイズ</h2>
-    <p class="mb-5 text-sm text-zinc-500">家族（3〜6人）に合うのは M・L・LL。</p>
+    <h2 class="mb-2 text-xl font-semibold text-zinc-800">テント、タープ、車と、残したい余白で選ぶ</h2>
+    <p class="mb-5 max-w-2xl text-sm leading-loose text-zinc-500">
+      同じ4人家族でも、テントの大きさやタープの有無で必要な広さは変わります。人数だけでなく、設営後に区画内へどれだけ余白を残したいかで選んでください。
+    </p>
     <div class="overflow-x-auto border-y border-zinc-200">
       <table class="w-full min-w-[480px] text-sm">
         <thead>
@@ -93,6 +155,9 @@ const experiences = [
         </tbody>
       </table>
     </div>
+    <p class="mt-5 max-w-2xl text-sm leading-loose text-zinc-600">
+      表示面積は設営の目安です。テント・タープの実寸、張り綱、車種によって収まり方は変わります。
+    </p>
     <p class="mt-4 text-sm">
       <a href="/sites/" class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80">
         全サイズの実寸・設営例を見る →
@@ -103,12 +168,14 @@ const experiences = [
   {/* 将来: サイズ別の空き状況＋個別区画一覧を client-fetch で描画する予定地点。
       実装までは DOM を生成しない（空セクションの余白を残さないため）。 */}
 
-  {/* 体験 */}
+  {/* 家族利用で確認したいこと。
+      設備の事実を再掲せず、家族が何を準備・判断するかへ置き換える。 */}
   <section class="mb-14">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">家族利用で確認したいこと</h2>
     <div class="grid gap-8 sm:grid-cols-2">
-      {experiences.map((e) => (
+      {familyChecks.map((e) => (
         <div class="border-t border-zinc-200 pt-5">
-          <h2 class="text-lg font-semibold text-zinc-800">{e.h}</h2>
+          <h3 class="text-lg font-semibold text-zinc-800">{e.h}</h3>
           <p class="mt-3 text-sm leading-loose text-zinc-600">
             {e.body}
             {e.linkHref && (
@@ -122,122 +189,164 @@ const experiences = [
     </div>
   </section>
 
-  {/* 場内の設備と、1日の流れ */}
+  {/* 設営例。写真・図は未選定のため、確認すべき観点のみ文章で示す。
+      仮画像・空の img は置かない（AGENTS.md）。写真確定後にここへ3例を差し込む。 */}
   <section class="mb-14">
-    <h2 class="mb-2 text-xl font-semibold text-zinc-800">場内の設備と、1日の流れ</h2>
-    <p class="mb-5 text-sm leading-loose text-zinc-500">
-      通常チェックインは12:00〜17:00です。前日夕方までに確認し、当日の空きに余裕がある場合は、9:00から無料でアーリーチェックインできます。
+    <h2 class="mb-2 text-xl font-semibold text-zinc-800">設営した状態で、広さを確認する</h2>
+    <p class="mb-5 max-w-2xl text-sm leading-loose text-zinc-500">
+      空の区画だけを見ると、実際より広く感じることがあります。テント、タープ、車、張り綱を置いた状態で、食事や子どもの動線に使える余白がどれだけ残るかを確認してください。
     </p>
-    <dl class="divide-y divide-zinc-200 border-y border-zinc-200">
-      {[
-        { label: "12:00〜17:00", value: "通常チェックイン。17:00を過ぎると安全管理上、入場できません。" },
-        { label: "9:00〜（条件付き）", value: "受付オープン。前日夕方までの確認と当日の空きに余裕がある場合、9:00から無料でアーリーチェックインできます。" },
-        { label: "翌12:00", value: "チェックアウト。空きがあれば延長できる場合があります。" },
-        { label: "トイレ", value: "水洗・洋式。男女各2室（新築）。" },
-        { label: "炊事場", value: "水道・流しが2か所（うち給湯器付き1か所）。水道水は飲用可。洗剤・油・残飯は流せません。" },
-        { label: "受付・売店", value: "9:00〜17:30。飲料と薪を販売。" },
-        { label: "管理体制", value: "おいら家族が敷地内に常駐しています。受付時間外も人がいる環境です。" },
-        { label: "シャワー", value: "場内にはありません。車で行ける温泉がいくつもあります。" },
-      ].map((r) => (
-        <div class="grid gap-1 py-4 sm:grid-cols-[10rem_1fr] sm:gap-6">
-          <dt class="text-sm font-medium text-zinc-700">{r.label}</dt>
-          <dd class="text-sm leading-loose text-zinc-600">{r.value}</dd>
-        </div>
-      ))}
-    </dl>
-  </section>
-
-  {/* 周辺と自然環境 */}
-  <section class="mb-14">
-    <h2 class="mb-2 text-xl font-semibold text-zinc-800">温泉・買い出し・もしものとき</h2>
-    <p class="mb-5 text-sm leading-loose text-zinc-500">
-      場内にシャワーはありません。そのぶん、温泉とセットで組むと一日が気持ちよく収まります。
-    </p>
-    <ul class="space-y-3 text-sm leading-loose text-zinc-600">
-      <li>温泉：道の駅たかねざわ 元気あっぷむらが最寄り。喜連川方面には美肌の湯もあります。</li>
-      <li>買い出し：かましん大金店、近くにセブン-イレブン 那須烏山大金店。</li>
-      <li>医療機関・緊急連絡先を含む周辺情報は、周辺マップにまとめています。</li>
-    </ul>
-    <p class="mt-4 text-sm">
-      <a href="/map/" class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80">
-        周辺マップを見る →
-      </a>
-    </p>
-    <h3 class="mt-8 text-lg font-semibold text-zinc-800">自然環境と虫</h3>
-    <p class="mt-3 text-sm leading-loose text-zinc-600">
-      里山の森なので、季節によって蚊・ブヨ・蜂、夏にはカブトムシやクワガタもいます。
-      虫除けと、肌の出にくい服装を用意してください。虫が苦手なお子さんがいる場合は、時期を選ぶと過ごしやすくなります。
+    <p class="max-w-2xl text-sm leading-loose text-zinc-600">
+      比較するときは、お使いのテント・タープの実寸と車体寸法を書き出し、サイズ表の有効面積と照らし合わせると判断しやすくなります。
+      オートサイトの有効面積は、車を置く部分を除いた広さです。
     </p>
   </section>
-
-  {/* 楽しみ方・事前に知っておきたいこと（トーンガイド §4・§5 準拠：
-      読み手を評価せず、「ない」は代わりにあるものとセットで書く） */}
+  {/* 向いている家族／先に確認してほしいこと（トーンガイド §4・§5 準拠：
+      読み手を評価せず、「ない」は予約判断に必要な事実として書く） */}
   <section class="mb-14">
     <h2 class="mb-2 text-xl font-semibold text-zinc-800">この森で気持ちよく過ごすために</h2>
-    <p class="mb-5 text-sm leading-loose text-zinc-500">
+    <p class="mb-5 max-w-2xl text-sm leading-loose text-zinc-500">
       来てからの発見が、いい方向に転がるように。先に書いておきます。
     </p>
     <div class="grid gap-10 sm:grid-cols-2">
       <div>
-        <h3 class="border-b border-zinc-200 pb-3 text-base font-semibold text-zinc-800">楽しみ方が合う方</h3>
+        <h3 class="border-b border-zinc-200 pb-3 text-base font-semibold text-zinc-800">楽しみ方が合う家族</h3>
         <ul class="mt-4 space-y-3 text-sm leading-loose text-zinc-600">
           {[
-            "森の中で、静かに過ごしたい",
-            "焚き火や自然そのものを楽しみにしている",
-            "道具を広げて、自分たちのペースで過ごしたい",
-            "初めてで、聞ける相手が近くにいると心強い",
+            "森の中で、家族の食事や焚き火を楽しみたい",
+            "大型遊具やイベントより、自然そのものを見つけて過ごしたい",
+            "夜は照明と話し声を抑え、静かに過ごせる",
+            "土、落ち葉、虫など、里山の環境もキャンプの一部として準備できる",
+            "初めてのキャンプで、管理人に聞ける環境があると助かる",
           ].map((t) => <li class="flex items-start gap-3"><span class="mt-2 h-px w-3 shrink-0 bg-zinc-300"></span><span>{t}</span></li>)}
         </ul>
       </div>
       <div>
-        <h3 class="border-b border-zinc-200 pb-3 text-base font-semibold text-zinc-800">先に知っておきたいこと</h3>
+        <h3 class="border-b border-zinc-200 pb-3 text-base font-semibold text-zinc-800">先に確認してほしいこと</h3>
         <dl class="mt-4 space-y-4 text-sm leading-loose text-zinc-600">
           <div>
-            <dt class="font-medium text-zinc-700">シャワーは場内にありません</dt>
+            <dt class="font-medium text-zinc-700">大型遊具や常設アクティビティはありません</dt>
             <dd class="mt-1">
-              その代わり、車で行ける温泉がいくつもあります。最寄りは道の駅たかねざわ 元気あっぷむら。
+              木立、落ち葉、鳥や虫など、その日の森を見つけて過ごす場所です。管理された遊びを次々に体験する施設ではありません。
             </dd>
           </div>
           <div>
-            <dt class="font-medium text-zinc-700">大型遊具はありません</dt>
+            <dt class="font-medium text-zinc-700">場内にシャワーはありません</dt>
             <dd class="mt-1">
-              遊び道具は森のほうにあります。木立、落ち葉、虫。区画の中に、遊べる余白も残ります。
+              入浴は周辺の温泉を利用します。到着前または滞在中の予定に組み込んでください。
             </dd>
           </div>
           <div>
-            <dt class="font-medium text-zinc-700">里山なので、虫がいます</dt>
+            <dt class="font-medium text-zinc-700">ごみは持ち帰りです</dt>
             <dd class="mt-1">
-              季節によって蚊やブヨ、夏にはカブトムシやクワガタも。虫除けと、肌の出にくい服装があると快適です。
+              生ごみや包装材も含めて持ち帰れるよう、袋や密閉容器をご用意ください。灰のみ指定ペール缶へ。
+            </dd>
+          </div>
+          <div>
+            <dt class="font-medium text-zinc-700">地面は土で、虫もいます</dt>
+            <dd class="mt-1">
+              雨具、汚れてもよい靴、着替え、虫除けなど、季節と天候に合わせた準備が必要です。
+            </dd>
+          </div>
+          <div>
+            <dt class="font-medium text-zinc-700">21時からは星空タイムです</dt>
+            <dd class="mt-1">
+              明かりを落とし、話し声を抑える時間。23時が消灯時間です。音楽を流したいという利用には合いません。静かな森の夜を、ほかの利用者と一緒につくるキャンプ場です。
             </dd>
           </div>
         </dl>
+        {/* 設備・ルールの事実はここで増やさず、正本へ接続する */}
+        <ul class="mt-6 space-y-2 text-sm">
+          <li>
+            <a href="/light-guide/" class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80">
+              設備・利用時間・ルールを見る →
+            </a>
+          </li>
+          <li>
+            <a href="/lightforest-map/" class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80">
+              場内マップを見る →
+            </a>
+          </li>
+          <li>
+            <a href="/map/" class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80">
+              周辺マップを見る →
+            </a>
+          </li>
+        </ul>
       </div>
     </div>
   </section>
 
+  {/* 料金の仕組み。総額の代表例は子ども料金・対象日のサイト料金確定後に追加する。
+      推測値は載せない（AGENTS.md：未確定の料金を作らない）。 */}
+  <section class="mb-14">
+    <h2 class="mb-2 text-xl font-semibold text-zinc-800">家族利用の料金を確認する</h2>
+    <p class="mb-5 max-w-2xl text-sm leading-loose text-zinc-500">
+      料金は、人数料金と日付・サイズ別のサイト料金を合計して決まります。
+      オートサイトのサイト料金には車1台分が含まれ、追加車両やAC電源を利用する場合はオプション料金が加わります。
+    </p>
+    <p class="border-y border-zinc-200 py-5 text-sm leading-loose text-zinc-700">
+      人数料金　＋　日付・サイズ別のサイト料金　＋　追加車両・電源等のオプション
+    </p>
+    <p class="mt-5 max-w-2xl text-sm leading-loose text-zinc-600">
+      正確な総額は、予約システムで利用日と人数を入力すると表示されます。確認画面へ進むだけでは予約は確定しません。
+    </p>
+    <p class="mt-4 text-sm">
+      <a href="/sites/" class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80">
+        料金の仕組みを詳しく見る →
+      </a>
+    </p>
+  </section>
+
+  {/* 予約前の最終確認 */}
+  <section class="mb-14">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">予約前に、家族で確認してください</h2>
+    <ul class="space-y-3 text-sm leading-loose text-zinc-600">
+      {preReserveChecks.map((c) => (
+        <li class="flex items-start gap-3">
+          <span class="mt-3 h-px w-3 shrink-0 bg-zinc-300"></span>
+          <span>{c}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+
   {/* 予約導線 */}
   <section class="mb-14">
-    <h2 class="mb-2 text-xl font-semibold text-zinc-800">予約する</h2>
-    <p class="mb-5 text-sm leading-loose text-zinc-500">
-      料金・空き状況は予約システムでご確認ください。
+    <h2 class="mb-2 text-xl font-semibold text-zinc-800">利用日と人数から、料金を確認する</h2>
+    <p class="mb-6 max-w-2xl text-sm leading-loose text-zinc-500">
+      日付と人数を入力すると、その日に予約できるプランと料金が表示されます。家族に合うサイズの候補を決めてから確認してください。
     </p>
-    <a href={PROX_SEARCH_URL}
-      target="_blank"
-      rel="noopener noreferrer"
-      class="inline-flex items-center justify-center rounded-full bg-[color:var(--forest-600)] px-7 py-3 text-sm text-white shadow-sm transition hover:bg-[color:var(--forest-700)]"
-     data-cta="reserve" data-cta-field="light">
-      空き状況・予約はこちら ↗
-    </a>
+    <div class="flex flex-wrap items-center gap-x-8 gap-y-4">
+      <a href={PROX_SEARCH_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center justify-center rounded-full bg-[color:var(--forest-600)] px-7 py-3 text-sm text-white shadow-sm transition hover:bg-[color:var(--forest-700)]"
+       data-cta="reserve" data-cta-field="light">
+        空き状況と料金を確認する ↗
+      </a>
+      <a
+        href="/reservation-guide/"
+        class="text-sm underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80"
+        data-cta="family-to-reservation-guide"
+      >
+        予約方法を確認する →
+      </a>
+    </div>
     {/* 該当プランID未確定のため全体検索（search/）へ着地。ID確定後に proxPlanUrl(id) 形式へ差し替える */}
   </section>
 
-  {/* 関連内部リンク */}
+  {/* 関連内部リンク。Deep へは案内しない（ライト利用が前提の客層ページ） */}
   <section class="mb-14">
     <h2 class="mb-5 text-xl font-semibold text-zinc-800">あわせて見る</h2>
     <ul class="space-y-3 text-sm">
       <li>
+        <a href="/stay-light/" class="text-zinc-600 underline underline-offset-2 transition hover:text-zinc-800">ライトフォレストで過ごす一泊</a>
+        <span class="ml-2 text-zinc-400">— 到着から翌朝までの流れ</span>
+      </li>
+      <li>
         <a href="/light-guide/" class="text-zinc-600 underline underline-offset-2 transition hover:text-zinc-800">ライトフォレスト 利用案内</a>
-        <span class="ml-2 text-zinc-400">— 設備・サイズ別目安・利用ルール</span>
+        <span class="ml-2 text-zinc-400">— 設備・利用時間・利用ルール</span>
       </li>
       <li>
         <a href="/rental/" class="text-zinc-600 underline underline-offset-2 transition hover:text-zinc-800">レンタル</a>
