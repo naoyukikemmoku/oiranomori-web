@@ -1,5 +1,32 @@
-﻿---
+---
 import BaseLayout from "../../../layouts/BaseLayout.astro";
+
+// Google ビジネスプロフィールのクチコミ投稿リンク（短縮URL）
+const REVIEW_URL = "https://g.page/r/CTCou_Vjk30qEBE/review";
+
+// 再来場につながる導線。順番は「次に来る理由」が強い順。
+const nextVisitLinks = [
+	{
+		href: "/passport/",
+		label: "年間パスポート・回数券",
+		body: "通うほど割引が効きます。年に数回来るなら、こちらのほうが安くなります。",
+	},
+	{
+		href: "/forest-daily/",
+		label: "今日のおいらの森",
+		body: "森の様子を毎日更新しています。次に来る季節を決める材料に。",
+	},
+	{
+		href: "/firewood/",
+		label: "おいらの薪",
+		body: "自分の山から伐り出した薪。含水率15%以下で全数チェックしています。",
+	},
+	{
+		href: "/news/",
+		label: "お知らせ",
+		body: "イベントや営業の変更はこちらから。",
+	},
+];
 ---
 
 <BaseLayout
@@ -7,22 +34,100 @@ import BaseLayout from "../../../layouts/BaseLayout.astro";
   noindex={true}
   description="チェックアウトのご連絡を受け付けました。"
 >
-  <div class="flex min-h-screen flex-col items-center justify-center bg-[#f4f5f2] px-5 py-24">
-    <div class="max-w-xl text-center">
+  <div class="min-h-screen bg-[#f4f5f2] px-5 py-24">
+    <div class="mx-auto max-w-xl">
 
-      <p class="text-xs tracking-[0.28em] text-zinc-400 uppercase">Checkout</p>
-      <h1 class="mt-5 text-2xl font-semibold leading-snug text-zinc-800 md:text-3xl">
-        ご連絡ありがとうございました
-      </h1>
-
-      <div class="mt-8 border-t border-zinc-300 pt-8 text-sm leading-loose text-zinc-500">
-        <p>
-          チェックアウトのご連絡を受け付けました。<br />
-          またのお越しを心よりお待ちしております。
+      {/* 感謝を主役にする。事務連絡は受付確認の一行に留め、
+          来場そのものへの御礼を見出しと本文で正面から書く。 */}
+      <div class="text-center">
+        <p class="text-xs tracking-[0.28em] text-zinc-400 uppercase">Thank You</p>
+        <h1 class="mt-5 text-2xl font-semibold leading-snug text-zinc-800 md:text-3xl">
+          森で過ごしてくれて、<br />ありがとうございました
+        </h1>
+        <div class="mt-8 text-sm leading-loose text-zinc-600">
+          <p>
+            数ある場所のなかから、この森を選んでもらえたこと。
+            焚き火を囲んだ時間も、朝の空気も、ぜんぶ持って帰ってください。
+          </p>
+          <p class="mt-4">
+            帰り道、どうぞお気をつけて。またこの森で会いましょう。
+          </p>
+        </div>
+        <p class="mt-8 border-t border-zinc-300 pt-6 text-xs leading-loose text-zinc-400">
+          チェックアウトのご連絡を受け付けました。
         </p>
       </div>
 
-      <div class="mt-12">
+      {/* クチコミ導線。再来場施策の主軸のため、単独ブロックで最初に置く。 */}
+      <section class="mt-14 border-t border-zinc-300 pt-10">
+        <h2 class="text-base font-semibold text-zinc-800">森の感想を、聞かせてください</h2>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          よかったことも、こうだったらもっとよかったことも。
+          次に来る人が場所を選ぶときの手がかりになり、おいらたちが森を整えるときの道しるべになります。
+        </p>
+        <div class="mt-6">
+          <a
+            href={REVIEW_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 border border-[color:var(--forest-700)] bg-[color:var(--forest-700)] px-7 py-3 text-sm tracking-[0.1em] text-white transition hover:bg-[color:var(--forest-600)]"
+            data-cta="review"
+            data-cta-target="google"
+          >
+            Googleにクチコミを書く
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><path d="M15 3h6v6" /><path d="M10 14 21 3" />
+            </svg>
+          </a>
+        </div>
+        <p class="mt-4 text-xs leading-loose text-zinc-400">
+          Googleのページが開きます。写真も一緒に載せてもらえると、森の様子がより伝わります。
+        </p>
+      </section>
+
+      {/* SNS。クチコミに次ぐ再訪接点として短く置く。 */}
+      <section class="mt-12 border-t border-zinc-200 pt-8">
+        <h2 class="text-base font-semibold text-zinc-800">森の続きは、こちらで</h2>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          撮った写真に <span class="whitespace-nowrap">#おいらの森</span> を付けてもらえたら、おいらたちも見に行きます。
+        </p>
+        <p class="mt-4 text-sm">
+          <a
+            href="https://instagram.com/oiranomori"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80"
+            data-cta="sns"
+            data-cta-target="instagram"
+          >
+            Instagram @oiranomori →
+          </a>
+        </p>
+      </section>
+
+      {/* 次に来る理由を具体的に並べる。単なる「戻る」で終わらせない。 */}
+      <section class="mt-12 border-t border-zinc-200 pt-8">
+        <h2 class="text-base font-semibold text-zinc-800">次に来るときのために</h2>
+        <ul class="mt-5 divide-y divide-zinc-200 border-y border-zinc-200">
+          {nextVisitLinks.map((l) => (
+            <li>
+              <a
+                href={l.href}
+                class="group block py-5"
+                data-cta="rebook"
+                data-cta-target={l.href}
+              >
+                <span class="text-sm font-semibold text-zinc-800 transition group-hover:text-[color:var(--light-accent)]">
+                  {l.label}
+                </span>
+                <span class="mt-1.5 block text-sm leading-loose text-zinc-600">{l.body}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <div class="mt-12 text-center">
         <a
           href="/"
           class="inline-flex items-center gap-2 border-b border-zinc-400 pb-0.5 text-sm tracking-[0.12em] text-zinc-600 transition hover:border-zinc-700 hover:text-zinc-800"
