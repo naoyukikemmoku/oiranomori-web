@@ -32,7 +32,7 @@ const experiences = [
 	},
 	{
 		h: "平日なら、もっと静かに",
-		body: "平日ソロ限定の割引プランがあります。仕事を持ち込むワーケーションプランも平日ソロ向け。",
+		body: "平日ソロ限定の割引プランがあります。",
 	},
 ];
 
@@ -70,7 +70,7 @@ const hammockSites = [
   <Picture
     src={soloHero}
     formats={["avif", "webp"]}
-    alt="落ち葉の森に張ったソロ用タープとコット"
+    alt="杉林のサイトで焚き火のそばに座るソロキャンパー"
     loading="eager"
     fetchpriority="high"
     sizes="(max-width: 768px) 100vw, 72rem"
@@ -181,13 +181,13 @@ const hammockSites = [
     </dl>
   </section>
 
-  {/* 平日ソロ・ワーケーション */}
+  {/* 平日ソロ限定プラン */}
   <section class="mb-14">
-    <h2 class="mb-2 text-xl font-semibold text-zinc-800">平日ソロ・ワーケーション</h2>
+    <h2 class="mb-2 text-xl font-semibold text-zinc-800">平日ソロ限定プラン</h2>
     <Picture
       src={soloWorkation}
       formats={["avif", "webp"]}
-      alt="タープの下にノートパソコンとキャンプ道具を広げたサイト"
+      alt="夜の杉林でタープを張り焚き火を囲むソロサイト"
       loading="lazy"
       sizes="(max-width: 768px) 100vw, 26rem"
       class="mb-5 aspect-[4/5] w-full max-w-2xl object-cover"

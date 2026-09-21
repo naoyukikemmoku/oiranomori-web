@@ -7,9 +7,9 @@ import planTrain from "../assets/images/plan_train.JPEG";
 import CongestionMatrix from "../components/CongestionMatrix.astro";
 import OshiraseList from "../components/OshiraseList.astro";
 import SeasonSlider from "../components/SeasonSlider.astro";
+import { PROX_SEARCH_URL, proxPlanUrl } from "../config/nav";
 import LpLayout from "../layouts/LpLayout.astro";
 import { getOshirase } from "../lib/oshirase";
-import { PROX_SEARCH_URL, proxPlanUrl } from "../config/nav";
 
 const { contents } = await getOshirase(3);
 
@@ -182,7 +182,7 @@ const plans: Array<{
               src="/images/lp/lp-forest-now-1200.jpg"
               srcset="/images/lp/lp-forest-now-1200.jpg 1200w, /images/lp/lp-forest-now.jpg 2400w"
               sizes="(max-width: 768px) 100vw, 50vw"
-              alt="おいらの森の木漏れ日と空"
+              alt="夕日が広葉樹林の木立の間から差し込むおいらの森"
               width="1200"
               height="675"
               loading="lazy"
@@ -279,7 +279,7 @@ const plans: Array<{
               src="/images/lp/lp-early-checkin-1200.jpg"
               srcset="/images/lp/lp-early-checkin-1200.jpg 1200w, /images/lp/lp-early-checkin.jpg 2400w"
               sizes="(max-width: 768px) 100vw, 50vw"
-              alt="朝のおいらの森 — 木漏れ日の差し込む広葉樹林"
+              alt="朝の光が幾筋も差し込むおいらの森の広葉樹林"
               width="1200"
               height="675"
               loading="lazy"
@@ -375,7 +375,7 @@ const plans: Array<{
               src="/images/lp/lp-neighborhood-1200.jpg"
               srcset="/images/lp/lp-neighborhood-1200.jpg 1200w, /images/lp/lp-neighborhood.jpg 2400w"
               sizes="(max-width: 768px) 100vw, 50vw"
-              alt="那須烏山市の里山の風景"
+              alt="犬と並んで那須烏山の棚田と里山を見渡す人の後ろ姿"
               width="1200"
               height="801"
               loading="lazy"
