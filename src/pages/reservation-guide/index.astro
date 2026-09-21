@@ -109,6 +109,7 @@ const steps = [
         { href: "#change", label: "キャンセル・変更のやり方", accent: true },
         { href: "#account", label: "ログイン・予約確認" },
         { href: "#steps",  label: "予約の手順" },
+        { href: "#price",  label: "料金の決まり方" },
         { href: "#phone",  label: "電話予約について" },
         { href: "#merit",  label: "公式予約のメリット" },
         { href: "#member", label: "会員制度・ポイント" },
@@ -225,10 +226,68 @@ const steps = [
     </div>
   </section>
 
+  {/* 料金の仕組み。/sites/ から詳細を移設し、ここを正本とする。 */}
+  <section id="price" class="mb-16 scroll-mt-24 border-t border-zinc-300 pt-10">
+    <p class="text-xs tracking-[0.2em] text-zinc-400">
+      <span class="text-[color:var(--light-accent)]">03</span>
+      <span class="ml-2">料金</span>
+    </p>
+    <h2 class="mt-2 mb-5 text-xl font-semibold text-zinc-800">料金の決まり方</h2>
+    <p class="mb-5 max-w-2xl text-sm leading-loose text-zinc-600">
+      宿泊料金は、利用人数に応じた料金と、日付・サイトサイズによって変わるサイト料金を合計して計算します。
+      オートサイトのサイト料金には車1台分が含まれ、2台目以降は追加車両料金がかかります。AC電源などを利用する場合は、オプション料金が加わります。
+    </p>
+
+    <p class="border-y border-zinc-200 py-5 text-sm leading-loose text-zinc-700">
+      人数料金　＋　日付・サイズ別のサイト料金　＋　追加車両・電源等のオプション
+    </p>
+
+    <dl class="mt-8 divide-y divide-zinc-100 border-y border-zinc-200 text-sm">
+      <div class="grid grid-cols-[10rem_1fr] gap-4 py-5 sm:grid-cols-[14rem_1fr]">
+        <dt class="text-zinc-500">追加車両</dt>
+        <dd class="text-zinc-700">2台目以降は普通車2,200円／バイク1,320円（現地精算）。オートサイトのサイト料金には車1台分が含まれます。</dd>
+      </div>
+      <div class="grid grid-cols-[10rem_1fr] gap-4 py-5 sm:grid-cols-[14rem_1fr]">
+        <dt class="text-zinc-500">駐車場</dt>
+        <dd class="text-zinc-700">オートサイト以外の駐車場は15台分あります（1台2,200円）。</dd>
+      </div>
+      <div class="grid grid-cols-[10rem_1fr] gap-4 py-5 sm:grid-cols-[14rem_1fr]">
+        <dt class="text-zinc-500">支払い</dt>
+        <dd class="text-zinc-700">現地決済のみです。クレジットカード・電子マネー・QRコード決済・現金が使えます。</dd>
+      </div>
+      <div class="grid grid-cols-[10rem_1fr] gap-4 py-5 sm:grid-cols-[14rem_1fr]">
+        <dt class="text-zinc-500">正確な総額</dt>
+        <dd class="text-zinc-700">
+          予約システムで利用日と人数を指定すると確認できます。表示された内容を確認してから手続きへ進めるため、この時点では予約は確定しません。
+        </dd>
+      </div>
+    </dl>
+
+    <div class="mt-6 flex flex-wrap gap-x-8 gap-y-3 text-sm">
+      <a
+        href={proXPlanlist}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-1.5 text-[color:var(--light-accent)] underline underline-offset-4 transition hover:opacity-80"
+        data-cta="reserve" data-cta-field="light"
+      >
+        利用日と人数から料金を確認する
+        <span aria-hidden="true">↗</span>
+      </a>
+      <a
+        href="/sites/"
+        class="inline-flex items-center gap-1.5 text-zinc-600 underline underline-offset-4 transition hover:text-zinc-900"
+      >
+        サイトのサイズと広さを見る
+        <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </section>
+
   {/* 電話予約 */}
   <section id="phone" class="mb-16 scroll-mt-24 border-t border-zinc-300 pt-10">
     <p class="text-xs tracking-[0.2em] text-zinc-400">
-      <span class="text-[color:var(--light-accent)]">03</span>
+      <span class="text-[color:var(--light-accent)]">04</span>
       <span class="ml-2">電話予約</span>
     </p>
     <h2 class="mt-2 mb-5 text-xl font-semibold text-zinc-800">電話予約・当日予約について</h2>
@@ -255,7 +314,7 @@ const steps = [
   {/* 変更・キャンセル */}
   <section id="change" class="mb-16 scroll-mt-24 border-t border-zinc-300 pt-10">
     <p class="text-xs tracking-[0.2em] text-zinc-400">
-      <span class="text-[color:var(--light-accent)]">04</span>
+      <span class="text-[color:var(--light-accent)]">05</span>
       <span class="ml-2">変更・キャンセル</span>
     </p>
     <h2 class="mt-2 mb-5 text-xl font-semibold text-zinc-800">変更・キャンセルのやり方</h2>
@@ -335,7 +394,7 @@ const steps = [
   {/* 公式予約のメリット */}
   <section id="merit" class="mb-16 scroll-mt-24 border-t border-zinc-300 pt-10">
     <p class="text-xs tracking-[0.2em] text-zinc-400">
-      <span class="text-[color:var(--light-accent)]">05</span>
+      <span class="text-[color:var(--light-accent)]">06</span>
       <span class="ml-2">公式予約のメリット</span>
     </p>
     <h2 class="mt-2 mb-5 text-xl font-semibold text-zinc-800">公式予約のメリット</h2>
@@ -367,7 +426,7 @@ const steps = [
   {/* 会員制度 */}
   <section id="member" class="mb-16 scroll-mt-24 border-t border-zinc-300 pt-10">
     <p class="text-xs tracking-[0.2em] text-zinc-400">
-      <span class="text-[color:var(--light-accent)]">06</span>
+      <span class="text-[color:var(--light-accent)]">07</span>
       <span class="ml-2">会員制度</span>
     </p>
     <h2 class="mt-2 mb-5 text-xl font-semibold text-zinc-800">会員制度について</h2>
@@ -406,7 +465,7 @@ const steps = [
   {/* ネット予約の特徴 */}
   <section id="online" class="mb-16 scroll-mt-24 border-t border-zinc-300 pt-10">
     <p class="text-xs tracking-[0.2em] text-zinc-400">
-      <span class="text-[color:var(--light-accent)]">07</span>
+      <span class="text-[color:var(--light-accent)]">08</span>
       <span class="ml-2">ネット予約の特徴</span>
     </p>
     <h2 class="mt-2 mb-5 text-xl font-semibold text-zinc-800">ネット予約の便利な機能</h2>
@@ -433,7 +492,7 @@ const steps = [
   {/* 外部予約 */}
   <section id="rakuten" class="mb-16 scroll-mt-24 border-t border-zinc-300 pt-10">
     <p class="text-xs tracking-[0.2em] text-zinc-400">
-      <span class="text-[color:var(--light-accent)]">08</span>
+      <span class="text-[color:var(--light-accent)]">09</span>
       <span class="ml-2">外部予約サイト</span>
     </p>
     <h2 class="mt-2 mb-5 text-xl font-semibold text-zinc-800">楽天トラベルキャンプから予約する</h2>

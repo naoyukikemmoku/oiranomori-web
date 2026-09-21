@@ -13,6 +13,17 @@ const DESC =
 	"全48区画のライトフォレスト。人数・過ごし方と、車の横付けや電源などの条件から、あなたに合う区画を選べます。栃木・那須烏山のキャンプ場。";
 const URL = "https://oiranomori.jp/sites/";
 
+// ページ内目次。セクションの並びと一致させる。
+const toc = [
+	{ href: "#audience", label: "人数・過ごし方から選ぶ" },
+	{ href: "#gear", label: "設営するテントで選ぶ" },
+	{ href: "#conditions", label: "条件から選ぶ" },
+	{ href: "#size", label: "サイズ別の広さ" },
+	{ href: "#map", label: "場内マップで選ぶ" },
+	{ href: "#notes", label: "選ぶ前に知っておきたいこと" },
+	{ href: "#price", label: "料金の仕組み" },
+];
+
 // 人数・過ごし方から選ぶ（客層ページへの入口）
 const audienceCards = [
 	{
@@ -43,6 +54,8 @@ const audienceCards = [
 		href: "/sites/group/",
 		label: "グループ・ソログル・貸切",
 		size: "LL・XL・貸切",
+		img: null,
+		alt: "",
 		copy: "大型幕、複数テント、隣接区画、貸切を分けて確認できます。",
 	},
 	{
@@ -194,8 +207,8 @@ const sizeGuide = [
     alt="木立の間に複数のテントが並ぶライトフォレストの林間サイト"
     loading="eager"
     fetchpriority="high"
-    sizes="(max-width: 768px) 100vw, 72rem"
-    class="mb-10 aspect-[2/1] w-full object-cover"
+    sizes="100vw"
+    class="relative left-1/2 mb-10 w-screen max-w-none -translate-x-1/2 object-cover aspect-[16/9] sm:aspect-[2.6/1]"
   />
 
   {/* ページ見出し */}
@@ -210,12 +223,24 @@ const sizeGuide = [
       このページでは、受付や水洗トイレ、炊事場のあるライトフォレスト全48区画をご案内します。
       ディープフォレストは、設備や利用条件の異なる別のフィールドです。
     </p>
+
+    {/* ページ内目次。長いページのため、最初に全体像と飛び先を示す。 */}
+    <nav class="mt-7 flex flex-wrap gap-2.5 text-sm" aria-label="このページの目次">
+      {toc.map((t) => (
+        <a
+          href={t.href}
+          class="rounded-full border border-zinc-300 px-4 py-1.5 text-zinc-600 transition hover:border-[color:var(--light-accent)] hover:text-[color:var(--light-accent)]"
+        >
+          {t.label}
+        </a>
+      ))}
+    </nav>
   </div>
 
   {/* 1. 人数・過ごし方から選ぶ
       白いカードUI・枠線・影は使わない（AGENTS.md 禁忌事項）。
       背景になじむフラットなリンク一覧とし、区切り線・余白・字組みで階層を作る。 */}
-  <section class="mb-14">
+  <section id="audience" class="mb-16 scroll-mt-24">
     <h2 class="mb-2 text-xl font-semibold text-zinc-800">人数・過ごし方から選ぶ</h2>
     <p class="mb-6 max-w-2xl text-sm leading-loose text-zinc-500">何人で、どう過ごすか。それだけ決まっていれば選べます。</p>
     <ul class="divide-y divide-zinc-200 border-y border-zinc-200 sm:grid sm:grid-cols-2 sm:gap-x-12 sm:divide-y-0">
@@ -227,22 +252,29 @@ const sizeGuide = [
             data-cta="sites-audience"
             data-cta-target={c.href}
           >
-            {c.img && (
+            <span class="flex flex-wrap items-baseline gap-x-3">
+              <span class="text-lg font-semibold text-zinc-800 underline decoration-zinc-300 underline-offset-4 transition group-hover:text-[color:var(--light-accent)] group-hover:decoration-[color:var(--light-accent)]">{c.label}</span>
+              <span class="text-xs tracking-[0.14em] text-zinc-400">{c.size}</span>
+            </span>
+            {c.img ? (
               <Picture
                 src={c.img}
                 formats={["avif", "webp"]}
                 alt={c.alt}
                 loading="lazy"
                 sizes="(max-width: 640px) 100vw, 22rem"
-                class="mb-4 aspect-[4/3] w-full object-cover"
+                class="mt-4 aspect-[4/3] w-full object-cover"
               />
+            ) : (
+              <span class="mt-4 flex aspect-[4/3] w-full items-center justify-center border border-dashed border-zinc-300 bg-zinc-50">
+                <span class="text-xs tracking-[0.16em] text-zinc-400">写真 準備中</span>
+              </span>
             )}
-            <span class="flex flex-wrap items-baseline gap-x-3">
-              <span class="text-lg font-semibold text-zinc-800 transition group-hover:text-[color:var(--light-accent)]">{c.label}</span>
-              <span class="text-xs tracking-[0.14em] text-zinc-400">{c.size}</span>
+            <span class="mt-3 block text-sm leading-loose text-zinc-600">{c.copy}</span>
+            <span class="mt-3 inline-flex items-center gap-1.5 text-sm text-[color:var(--light-accent)] underline underline-offset-4 transition group-hover:opacity-80">
+              {c.label}のサイトを見る
+              <span aria-hidden="true">→</span>
             </span>
-            <span class="mt-2 block text-sm leading-loose text-zinc-600">{c.copy}</span>
-            <span class="mt-2 inline-block text-xs tracking-[0.16em] text-zinc-400 transition group-hover:text-[color:var(--light-accent)]">見る →</span>
           </a>
         </li>
       ))}
@@ -250,39 +282,46 @@ const sizeGuide = [
   </section>
 
   {/* 2. 設営するものから選ぶ。サイズ記号より先に「何を張るか」で絞る導線 */}
-  <section class="mb-14">
-    <h2 class="mb-2 text-xl font-semibold text-zinc-800">何を設営しますか</h2>
-    <p class="mb-5 max-w-2xl text-sm leading-loose text-zinc-500">
+  <section id="gear" class="mb-16 scroll-mt-24">
+    <h2 class="mb-2 text-xl font-semibold text-zinc-800">設営するテントで選ぶ</h2>
+    <p class="mb-6 max-w-2xl text-sm leading-loose text-zinc-500">
       同じ人数でも、テントの大きさやタープの有無で必要な広さは変わります。サイズ記号より先に、持っていく道具から考えてください。
     </p>
-    <dl class="divide-y divide-zinc-200 border-y border-zinc-200">
+    <ul class="divide-y divide-zinc-200 border-y border-zinc-200 sm:grid sm:grid-cols-2 sm:gap-x-12 sm:divide-y-0">
       {gearRoutes.map((g) => (
-        <div class="grid gap-2 py-5 sm:grid-cols-[14rem_1fr] sm:gap-6">
-          <dt class="flex flex-wrap items-baseline gap-x-3">
-            <span class="text-sm font-semibold text-zinc-800">{g.label}</span>
-            <span class="text-xs tracking-[0.14em] text-zinc-400">{g.size}</span>
-          </dt>
-          <dd class="text-sm leading-loose text-zinc-600">
-            {g.body}
-            <a
-              href={g.href}
-              class="ml-1 whitespace-nowrap underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80"
-              data-cta="sites-gear"
-              data-cta-target={g.href}
-            >
-              {g.linkText} →
-            </a>
-          </dd>
-        </div>
+        <li class="sm:border-b sm:border-zinc-200">
+          <div class="py-6">
+            <p class="flex flex-wrap items-baseline gap-x-3">
+              <span class="text-lg font-semibold text-zinc-800">{g.label}</span>
+              <span class="text-xs tracking-[0.14em] text-zinc-400">{g.size}</span>
+            </p>
+            {/* 写真は別途選定。枠だけ先に確保する。 */}
+            <span class="mt-4 flex aspect-[4/3] w-full items-center justify-center border border-dashed border-zinc-300 bg-zinc-50">
+              <span class="text-xs tracking-[0.16em] text-zinc-400">写真 準備中</span>
+            </span>
+            <p class="mt-3 text-sm leading-loose text-zinc-600">{g.body}</p>
+            <p class="mt-3">
+              <a
+                href={g.href}
+                class="inline-flex items-center gap-1.5 text-sm text-[color:var(--light-accent)] underline underline-offset-4 transition hover:opacity-80"
+                data-cta="sites-gear"
+                data-cta-target={g.href}
+              >
+                {g.linkText}
+                <span aria-hidden="true">→</span>
+              </a>
+            </p>
+          </div>
+        </li>
       ))}
-    </dl>
+    </ul>
     <p class="mt-5 max-w-2xl text-sm leading-loose text-zinc-600">
       テント・タープの寸法や張り綱の取り方によって、同じサイズ表記でも収まり方が変わります。大型幕や特殊な形状は、予約前に実寸をご確認ください。
     </p>
   </section>
 
   {/* 3. 条件から選ぶ */}
-  <section class="mb-14">
+  <section id="conditions" class="mb-16 scroll-mt-24">
     <h2 class="mb-2 text-xl font-semibold text-zinc-800">条件から選ぶ</h2>
     <p class="mb-5 max-w-2xl text-sm leading-loose text-zinc-500">
       外せない条件がある場合は、先に確認してください。すべての区画が同じ設備・形状ではありません。
@@ -295,7 +334,7 @@ const sizeGuide = [
             {c.body}
             <a
               href={c.href}
-              class="ml-1 whitespace-nowrap underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80"
+              class="ml-1 whitespace-nowrap text-[color:var(--light-accent)] underline underline-offset-4 transition hover:opacity-80"
             >
               {c.linkText} →
             </a>
@@ -306,7 +345,7 @@ const sizeGuide = [
   </section>
 
   {/* 4. サイズ別の実寸・設営例 */}
-  <section class="mb-14">
+  <section id="size" class="mb-16 scroll-mt-24">
     <h2 class="mb-2 text-xl font-semibold text-zinc-800">サイズ別の広さと設営例</h2>
     <p class="mb-5 max-w-2xl text-sm leading-loose text-zinc-500">
       人数はあくまで目安です。実際には、テント、タープ、車、張り綱まで含めて判断してください。オートサイトの有効面積は、車を置く部分を除いた広さです。
@@ -337,26 +376,36 @@ const sizeGuide = [
   </section>
 
   {/* 5. 場内マップ。広さだけでなく位置で選ぶ視点を足す */}
-  <section class="mb-14">
+  <section id="map" class="mb-16 scroll-mt-24">
     <h2 class="mb-2 text-xl font-semibold text-zinc-800">広さだけでなく、場所で選ぶ</h2>
-    <p class="mb-5 max-w-2xl text-sm leading-loose text-zinc-500">
+    <p class="mb-6 max-w-2xl text-sm leading-loose text-zinc-500">
       トイレや炊事場までの距離、隣接区画との関係、車の進入方向も、使い勝手を左右します。候補のサイズが決まったら、場内マップで位置を確認してください。
     </p>
-    <p class="text-sm">
-      <a
-        href="/lightforest-map/"
-        class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80"
-        data-cta="sites-map"
-      >
-        場内マップで区画の位置を見る →
-      </a>
-    </p>
+    <a
+      href="/lightforest-map/"
+      class="group block"
+      data-cta="sites-map"
+    >
+      <img
+        src="/images/light-field-map.jpg"
+        alt="ライトフォレストの場内マップ。区画の配置とトイレ・炊事場の位置がわかる"
+        width="1806"
+        height="1364"
+        loading="lazy"
+        decoding="async"
+        class="w-full border border-zinc-200 object-cover transition group-hover:opacity-90"
+      />
+      <span class="mt-3 inline-flex items-center gap-1.5 text-sm text-[color:var(--light-accent)] underline underline-offset-4 transition group-hover:opacity-80">
+        拡大できる場内マップを開く
+        <span aria-hidden="true">→</span>
+      </span>
+    </a>
   </section>
 
   {/* 6. 選ぶ前に知っておく共通条件。
       サイト選びに影響する条件だけに絞る。設備一覧・利用ルールの全文は
       /light-guide/ を正本とし、ここで複製しない（AGENTS.md §0 情報は1層だけ）。 */}
-  <section class="mb-14">
+  <section id="notes" class="mb-16 scroll-mt-24">
     <h2 class="mb-2 text-xl font-semibold text-zinc-800">選ぶ前に知っておきたいこと</h2>
     <p class="mb-5 max-w-2xl text-sm leading-loose text-zinc-500">
       サイト選びに影響する条件だけを、ここで先に確認します。設備の詳細、利用時間、ルールは利用案内にまとめています。
@@ -372,7 +421,7 @@ const sizeGuide = [
     <p class="mt-5 text-sm">
       <a
         href="/light-guide/"
-        class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80"
+        class="inline-flex items-center gap-1.5 text-[color:var(--light-accent)] underline underline-offset-4 transition hover:opacity-80"
         data-cta="sites-to-light-guide"
       >
         設備・利用時間・ルールを詳しく見る →
@@ -382,20 +431,24 @@ const sizeGuide = [
 
   {/* 7. 料金の仕組み。総額の代表例は子ども料金・対象日のサイト料金確定後に追加する。
       推測値は載せない。 */}
-  <section class="mb-14">
+  <section id="price" class="mb-16 scroll-mt-24">
     <h2 class="mb-2 text-xl font-semibold text-zinc-800">料金は、人数とサイトで決まります</h2>
     <p class="mb-5 max-w-2xl text-sm leading-loose text-zinc-500">
-      宿泊料金は、利用人数に応じた料金と、日付・サイトサイズによって変わるサイト料金を合計して計算します。
-      オートサイトのサイト料金には車1台分が含まれ、2台目以降は追加車両料金がかかります。AC電源などを利用する場合は、オプション料金が加わります。
+      宿泊料金は、利用人数に応じた料金と、日付・サイトサイズによって変わるサイト料金の合計です。
+      追加の車両やAC電源などを使う場合は、オプション料金が加わります。
     </p>
     <p class="border-y border-zinc-200 py-5 text-sm leading-loose text-zinc-700">
       人数料金　＋　日付・サイズ別のサイト料金　＋　追加車両・電源等のオプション
     </p>
-    <p class="mt-5 max-w-2xl text-sm leading-loose text-zinc-600">
-      2台目以降の車両料金は普通車2,200円／バイク1,320円（現地精算）。オートサイト以外の駐車場は15台分（1台2,200円）です。
-    </p>
-    <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-600">
-      正確な総額は、予約システムで利用日と人数を指定すると確認できます。表示された内容を確認してから予約手続きへ進めるため、この時点では予約は確定しません。
+    <p class="mt-5">
+      <a
+        href="/reservation-guide/#price"
+        class="inline-flex items-center gap-1.5 text-sm text-[color:var(--light-accent)] underline underline-offset-4 transition hover:opacity-80"
+        data-cta="sites-to-price"
+      >
+        料金の決まり方を詳しく見る
+        <span aria-hidden="true">→</span>
+      </a>
     </p>
   </section>
 
@@ -408,7 +461,7 @@ const sizeGuide = [
     <p class="text-sm">
       <a
         href="/stay-light/"
-        class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80"
+        class="inline-flex items-center gap-1.5 text-[color:var(--light-accent)] underline underline-offset-4 transition hover:opacity-80"
         data-cta="sites-to-stay-light"
         data-cta-target="/stay-light/"
       >
@@ -427,14 +480,14 @@ const sizeGuide = [
     <div class="flex flex-wrap gap-x-8 gap-y-3 text-sm">
       <a
         href="/deep/"
-        class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80"
+        class="inline-flex items-center gap-1.5 text-[color:var(--light-accent)] underline underline-offset-4 transition hover:opacity-80"
         data-cta="sites-to-deep"
       >
         ディープフォレストを見る →
       </a>
       <a
         href="/stay-deep/"
-        class="text-zinc-600 underline underline-offset-2 transition hover:text-zinc-800"
+        class="text-zinc-700 underline underline-offset-4 transition hover:text-zinc-900"
         data-cta="sites-to-stay-deep"
         data-cta-target="/stay-deep/"
       >
@@ -462,7 +515,7 @@ const sizeGuide = [
       </a>
       <a
         href="/reservation-guide/"
-        class="text-sm underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80"
+        class="inline-flex items-center gap-1.5 text-sm text-[color:var(--light-accent)] underline underline-offset-4 transition hover:opacity-80"
         data-cta="sites-to-reservation-guide"
       >
         予約方法を確認する →
@@ -475,13 +528,13 @@ const sizeGuide = [
     <h2 class="mb-5 text-xl font-semibold text-zinc-800">あわせて見る</h2>
     <ul class="space-y-3 text-sm">
       <li>
-        <a href="/light-guide/" class="text-zinc-600 underline underline-offset-2 transition hover:text-zinc-800">
+        <a href="/light-guide/" class="text-zinc-700 underline underline-offset-4 transition hover:text-zinc-900">
           ライトフォレスト 利用案内
         </a>
         <span class="ml-2 text-zinc-400">— 設備・利用時間・利用ルール</span>
       </li>
       <li>
-        <a href="/rental/" class="text-zinc-600 underline underline-offset-2 transition hover:text-zinc-800">
+        <a href="/rental/" class="text-zinc-700 underline underline-offset-4 transition hover:text-zinc-900">
           レンタル
         </a>
         <span class="ml-2 text-zinc-400">— 手ぶらでも始められる</span>
