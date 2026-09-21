@@ -1,6 +1,10 @@
 ---
-import PageLayout from "../../../layouts/PageLayout.astro";
+import { Picture } from "astro:assets";
+import dogrunDog from "../../../assets/images/sites_dogrun_dog.jpg";
+import dogrunHero from "../../../assets/images/sites_dogrun_hero.jpg";
+import dogrunStay from "../../../assets/images/sites_dogrun_stay.jpg";
 import { proxPlanUrl } from "../../../config/nav";
+import PageLayout from "../../../layouts/PageLayout.astro";
 
 const TITLE = "貸切ドッグラン付きキャンプ｜里山パークおいらの森（栃木）";
 const DESC =
@@ -47,6 +51,17 @@ const experiences = [
     })} />
   </Fragment>
 
+  {/* ヒーロー */}
+  <Picture
+    src={dogrunHero}
+    formats={["avif", "webp"]}
+    alt="森のキャンプサイトで焚き火のそばにくつろぐ犬"
+    loading="eager"
+    fetchpriority="high"
+    sizes="(max-width: 768px) 100vw, 72rem"
+    class="mb-10 aspect-[16/9] w-full object-cover"
+  />
+
   {/* ページ見出し */}
   <div class="mb-10 border-b border-zinc-200 pb-8">
     <p class="text-xs tracking-[0.26em] text-zinc-400 uppercase">Dog Run</p>
@@ -60,6 +75,14 @@ const experiences = [
   {/* あなたの人数なら、このサイズ */}
   <section class="mb-14">
     <h2 class="mb-2 text-xl font-semibold text-zinc-800">愛犬と泊まるなら、この区画</h2>
+    <Picture
+      src={dogrunDog}
+      formats={["avif", "webp"]}
+      alt="木陰の草地で休む犬"
+      loading="lazy"
+      sizes="(max-width: 768px) 100vw, 36rem"
+      class="mb-5 aspect-[3/2] w-full max-w-2xl object-cover"
+    />
     <p class="mb-5 text-sm text-zinc-500">柵内・約400㎡を貸し切るドッグランサイト。</p>
     <div class="overflow-x-auto border-y border-zinc-200">
       <table class="w-full min-w-[480px] text-sm">
@@ -106,6 +129,14 @@ const experiences = [
   {/* 利用条件 */}
   <section class="mb-14">
     <h2 class="mb-2 text-xl font-semibold text-zinc-800">利用条件</h2>
+    <Picture
+      src={dogrunStay}
+      formats={["avif", "webp"]}
+      alt="ハンモックのそばで焚き火を眺める犬"
+      loading="lazy"
+      sizes="(max-width: 768px) 100vw, 36rem"
+      class="mb-5 aspect-[3/2] w-full max-w-2xl object-cover"
+    />
     <p class="mb-5 text-sm leading-loose text-zinc-500">
       場内に1区画だけのサイトです。1日1組の貸切になります。
     </p>

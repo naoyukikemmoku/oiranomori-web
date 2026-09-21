@@ -1,4 +1,8 @@
 ---
+import { Picture } from "astro:assets";
+import familyAuto from "../../../assets/images/sites_family_auto.jpg";
+import familyHero from "../../../assets/images/sites_family_hero.jpg";
+import familySpace from "../../../assets/images/sites_family_space.jpg";
 import { PROX_SEARCH_URL } from "../../../config/nav";
 import PageLayout from "../../../layouts/PageLayout.astro";
 
@@ -89,6 +93,17 @@ const preReserveChecks = [
     })} />
   </Fragment>
 
+  {/* ヒーロー */}
+  <Picture
+    src={familyHero}
+    formats={["avif", "webp"]}
+    alt="犬と一緒に森の小道を歩く親子の後ろ姿"
+    loading="eager"
+    fetchpriority="high"
+    sizes="(max-width: 768px) 100vw, 72rem"
+    class="mb-10 aspect-[16/9] w-full object-cover"
+  />
+
   {/* ページ見出し */}
   <div class="mb-10 border-b border-zinc-200 pb-8">
     <p class="text-xs tracking-[0.26em] text-zinc-400 uppercase">Family</p>
@@ -132,6 +147,14 @@ const preReserveChecks = [
   {/* あなたの人数なら、このサイズ */}
   <section class="mb-14">
     <h2 class="mb-2 text-xl font-semibold text-zinc-800">テント、タープ、車と、残したい余白で選ぶ</h2>
+    <Picture
+      src={familySpace}
+      formats={["avif", "webp"]}
+      alt="木漏れ日が差す広い林間サイト"
+      loading="lazy"
+      sizes="(max-width: 768px) 100vw, 36rem"
+      class="mb-5 aspect-[3/2] w-full max-w-2xl object-cover"
+    />
     <p class="mb-5 max-w-2xl text-sm leading-loose text-zinc-500">
       同じ4人家族でも、テントの大きさやタープの有無で必要な広さは変わります。人数だけでなく、設営後に区画内へどれだけ余白を残したいかで選んでください。
     </p>
@@ -193,6 +216,14 @@ const preReserveChecks = [
       仮画像・空の img は置かない（AGENTS.md）。写真確定後にここへ3例を差し込む。 */}
   <section class="mb-14">
     <h2 class="mb-2 text-xl font-semibold text-zinc-800">設営した状態で、広さを確認する</h2>
+    <Picture
+      src={familyAuto}
+      formats={["avif", "webp"]}
+      alt="木立のサイトに設営したテントと横付けした白い車"
+      loading="lazy"
+      sizes="(max-width: 768px) 100vw, 36rem"
+      class="mb-5 aspect-[3/2] w-full max-w-2xl object-cover"
+    />
     <p class="mb-5 max-w-2xl text-sm leading-loose text-zinc-500">
       空の区画だけを見ると、実際より広く感じることがあります。テント、タープ、車、張り綱を置いた状態で、食事や子どもの動線に使える余白がどれだけ残るかを確認してください。
     </p>

@@ -1,6 +1,10 @@
 ---
-import PageLayout from "../../../layouts/PageLayout.astro";
+import { Picture } from "astro:assets";
+import duoExperience from "../../../assets/images/sites_duo_experience.jpg";
+import duoHero from "../../../assets/images/sites_duo_hero.jpg";
+import duoSize from "../../../assets/images/sites_duo_size.jpg";
 import { PROX_SEARCH_URL } from "../../../config/nav";
+import PageLayout from "../../../layouts/PageLayout.astro";
 
 const TITLE = "デュオ・カップルキャンプ｜里山パークおいらの森";
 const DESC =
@@ -44,6 +48,17 @@ const experiences = [
     })} />
   </Fragment>
 
+  {/* ヒーロー */}
+  <Picture
+    src={duoHero}
+    formats={["avif", "webp"]}
+    alt="森のテーブルに置かれたマグカップとコーヒーの瓶"
+    loading="eager"
+    fetchpriority="high"
+    sizes="(max-width: 768px) 100vw, 72rem"
+    class="mb-10 aspect-[16/9] w-full object-cover"
+  />
+
   {/* ページ見出し */}
   <div class="mb-10 border-b border-zinc-200 pb-8">
     <p class="text-xs tracking-[0.26em] text-zinc-400 uppercase">Duo</p>
@@ -57,6 +72,14 @@ const experiences = [
   {/* あなたの人数なら、このサイズ */}
   <section class="mb-14">
     <h2 class="mb-2 text-xl font-semibold text-zinc-800">あなたなら、このサイズ</h2>
+    <Picture
+      src={duoSize}
+      formats={["avif", "webp"]}
+      alt="木立のサイトに設営した小型テントと横付けした車"
+      loading="lazy"
+      sizes="(max-width: 768px) 100vw, 36rem"
+      class="mb-5 aspect-[3/2] w-full max-w-2xl object-cover"
+    />
     <p class="mb-5 text-sm text-zinc-500">2人に合うのは S・M。コンパクトならS、ゆったりならM。</p>
     <div class="overflow-x-auto border-y border-zinc-200">
       <table class="w-full min-w-[480px] text-sm">
@@ -104,6 +127,14 @@ const experiences = [
   <section class="mb-14">
     <div class="border-t border-zinc-200 pt-5">
       <h2 class="text-xl font-semibold text-zinc-800">ふたりとも18歳以上なら</h2>
+    <Picture
+      src={duoExperience}
+      formats={["avif", "webp"]}
+      alt="炭火の網で焼いている大きな肉"
+      loading="lazy"
+      sizes="(max-width: 768px) 100vw, 36rem"
+      class="mb-5 aspect-[3/2] w-full max-w-2xl object-cover"
+    />
       <p class="mt-3 text-sm leading-loose text-zinc-600">
         設備のない森で過ごすディープフォレストも選べます。1〜3名限定、場所は非公開。
         水道・電源・売店はありません。

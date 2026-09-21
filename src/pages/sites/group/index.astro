@@ -1,6 +1,9 @@
 ---
-import PageLayout from "../../../layouts/PageLayout.astro";
+import { Picture } from "astro:assets";
+import groupExperience from "../../../assets/images/sites_group_experience.jpg";
+import groupSize from "../../../assets/images/sites_group_size.jpg";
 import { PROX_SEARCH_URL } from "../../../config/nav";
+import PageLayout from "../../../layouts/PageLayout.astro";
 
 const TITLE = "グループ・ソログルキャンプ・貸切｜里山パークおいらの森";
 const DESC =
@@ -74,6 +77,14 @@ const experiences = [
   {/* あなたの人数なら、このサイズ */}
   <section class="mb-14">
     <h2 class="mb-2 text-xl font-semibold text-zinc-800">あなたなら、このサイズ</h2>
+    <Picture
+      src={groupSize}
+      formats={["avif", "webp"]}
+      alt="木立に囲まれた見通しのよい広いサイト"
+      loading="lazy"
+      sizes="(max-width: 768px) 100vw, 36rem"
+      class="mb-5 aspect-[16/9] w-full max-w-2xl object-cover"
+    />
     <p class="mb-5 text-sm text-zinc-500">大人数に合うのは LL・XL、そして貸切。</p>
     <div class="overflow-x-auto border-y border-zinc-200">
       <table class="w-full min-w-[480px] text-sm">
@@ -120,6 +131,14 @@ const experiences = [
   {/* ソログルキャンプ */}
   <section id="solo-group" class="mb-14">
     <h2 class="mb-2 text-xl font-semibold text-zinc-800">ソログルキャンプ</h2>
+    <Picture
+      src={groupExperience}
+      formats={["avif", "webp"]}
+      alt="複数のテントとタープが並ぶライトフォレスト"
+      loading="lazy"
+      sizes="(max-width: 768px) 100vw, 36rem"
+      class="mb-5 aspect-[2/1] w-full max-w-2xl object-cover"
+    />
     <p class="mb-5 text-sm leading-loose text-zinc-500">
       一緒に来て、それぞれのテントで眠る。焚き火は囲むけれど、寝床は自分の幕。
     </p>

@@ -1,6 +1,9 @@
 ---
-import PageLayout from "../../../layouts/PageLayout.astro";
+import { Picture } from "astro:assets";
+import soloHero from "../../../assets/images/sites_solo_hero.jpg";
+import soloWorkation from "../../../assets/images/sites_solo_workation.jpg";
 import { proxPlanUrl } from "../../../config/nav";
+import PageLayout from "../../../layouts/PageLayout.astro";
 
 const TITLE = "ソロキャンプ｜里山パークおいらの森（栃木・那須烏山）";
 const DESC =
@@ -12,7 +15,8 @@ const sizeGuide = [
 	{
 		size: "SS",
 		area: "20㎡未満",
-		guide: "ソロテント1張り。通称ソロ区画。区画が小さいぶん、まわりとの距離が近すぎない場所を選べます。",
+		guide:
+			"ソロテント1張り。通称ソロ区画。区画が小さいぶん、まわりとの距離が近すぎない場所を選べます。",
 	},
 	{
 		size: "S",
@@ -34,8 +38,14 @@ const experiences = [
 
 // ハンモック可否は spots.json の区画メモ（desc）を正とする。
 const hammockSites = [
-	{ site: "区画11", note: "ハンモック最適。プライベート感あり、10番と貫通利用可。" },
-	{ site: "オート19・20", note: "ハンモックは張りにくい（見通し重視の区画）。" },
+	{
+		site: "区画11",
+		note: "ハンモック最適。プライベート感あり、10番と貫通利用可。",
+	},
+	{
+		site: "オート19・20",
+		note: "ハンモックは張りにくい（見通し重視の区画）。",
+	},
 	{ site: "オートA", note: "ハンモックは張りにくい。" },
 ];
 ---
@@ -55,6 +65,17 @@ const hammockSites = [
       }
     })} />
   </Fragment>
+
+  {/* ヒーロー */}
+  <Picture
+    src={soloHero}
+    formats={["avif", "webp"]}
+    alt="落ち葉の森に張ったソロ用タープとコット"
+    loading="eager"
+    fetchpriority="high"
+    sizes="(max-width: 768px) 100vw, 72rem"
+    class="mb-10 aspect-[16/9] w-full object-cover"
+  />
 
   {/* ページ見出し */}
   <div class="mb-10 border-b border-zinc-200 pb-8">
@@ -163,6 +184,14 @@ const hammockSites = [
   {/* 平日ソロ・ワーケーション */}
   <section class="mb-14">
     <h2 class="mb-2 text-xl font-semibold text-zinc-800">平日ソロ・ワーケーション</h2>
+    <Picture
+      src={soloWorkation}
+      formats={["avif", "webp"]}
+      alt="タープの下にノートパソコンとキャンプ道具を広げたサイト"
+      loading="lazy"
+      sizes="(max-width: 768px) 100vw, 26rem"
+      class="mb-5 aspect-[4/5] w-full max-w-2xl object-cover"
+    />
     <p class="mb-5 text-sm leading-loose text-zinc-500">
       平日ソロ限定のプランが2つあります。詳細と料金は利用案内のプラン表から。
     </p>

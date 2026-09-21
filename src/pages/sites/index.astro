@@ -1,4 +1,10 @@
 ---
+import { Picture } from "astro:assets";
+import sitesHero from "../../assets/images/sites_hero.jpg";
+import thumbDogrun from "../../assets/images/sites_thumb_dogrun.jpg";
+import thumbDuo from "../../assets/images/sites_thumb_duo.jpg";
+import thumbFamily from "../../assets/images/sites_thumb_family.jpg";
+import thumbSolo from "../../assets/images/sites_thumb_solo.jpg";
 import { PROX_SEARCH_URL } from "../../config/nav";
 import PageLayout from "../../layouts/PageLayout.astro";
 
@@ -13,18 +19,24 @@ const audienceCards = [
 		href: "/sites/solo/",
 		label: "ソロ",
 		size: "SS・S",
+		img: thumbSolo,
+		alt: "落ち葉の森に張ったソロ用タープとコット",
 		copy: "小さく張るか、タープまで広げるか。ひとりに合う広さと場内環境を確認できます。",
 	},
 	{
 		href: "/sites/duo/",
 		label: "デュオ・カップル",
 		size: "S・M",
+		img: thumbDuo,
+		alt: "森のテーブルに置かれたマグカップとコーヒーの瓶",
 		copy: "コンパクトに過ごすS、ゆったり使うM。2人の道具量から選べます。",
 	},
 	{
 		href: "/sites/family/",
 		label: "ファミリー",
 		size: "M・L・LL",
+		img: thumbFamily,
+		alt: "犬と一緒に森の小道を歩く親子の後ろ姿",
 		copy: "テント、タープ、車と、区画内に残したい余白から選びます。",
 	},
 	{
@@ -37,6 +49,8 @@ const audienceCards = [
 		href: "/sites/dogrun/",
 		label: "ドッグラン",
 		size: "専用1区画",
+		img: thumbDogrun,
+		alt: "森のキャンプサイトで焚き火のそばにくつろぐ犬",
 		copy: "柵内約400㎡を1日1組で利用する、犬連れ専用のサイトです。",
 	},
 ];
@@ -173,6 +187,17 @@ const sizeGuide = [
     })} />
   </Fragment>
 
+  {/* ヒーロー。木立・高低差・設営後の区画を一度に見せる */}
+  <Picture
+    src={sitesHero}
+    formats={["avif", "webp"]}
+    alt="木立の間に複数のテントが並ぶライトフォレストの林間サイト"
+    loading="eager"
+    fetchpriority="high"
+    sizes="(max-width: 768px) 100vw, 72rem"
+    class="mb-10 aspect-[2/1] w-full object-cover"
+  />
+
   {/* ページ見出し */}
   <div class="mb-10 border-b border-zinc-200 pb-8">
     <p class="text-xs tracking-[0.26em] text-zinc-400 uppercase">Light Forest Sites</p>
@@ -202,6 +227,16 @@ const sizeGuide = [
             data-cta="sites-audience"
             data-cta-target={c.href}
           >
+            {c.img && (
+              <Picture
+                src={c.img}
+                formats={["avif", "webp"]}
+                alt={c.alt}
+                loading="lazy"
+                sizes="(max-width: 640px) 100vw, 22rem"
+                class="mb-4 aspect-[4/3] w-full object-cover"
+              />
+            )}
             <span class="flex flex-wrap items-baseline gap-x-3">
               <span class="text-lg font-semibold text-zinc-800 transition group-hover:text-[color:var(--light-accent)]">{c.label}</span>
               <span class="text-xs tracking-[0.14em] text-zinc-400">{c.size}</span>
