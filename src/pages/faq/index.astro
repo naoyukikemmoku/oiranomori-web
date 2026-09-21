@@ -26,9 +26,9 @@ const categories = [
     "mainEntity": [
       { "@type": "Question", "name": "予約はどこからできますか？", "acceptedAnswer": { "@type": "Answer", "text": "当HPの予約ボタン、または楽天トラベルキャンプからご予約いただけます。会員登録（無料）をすると、次回以降の入力省略・複数プラン同時予約・ポイント付与などの特典があります。" } },
       { "@type": "Question", "name": "当日予約はできますか？", "acceptedAnswer": { "@type": "Answer", "text": "サイトに空きがあれば、お電話のみで当日受付いたします。ただし料金は当日料金となり、HP表示の料金とは異なります。事前のご予約をおすすめします。TEL: 050-3647-1047" } },
-      { "@type": "Question", "name": "予約の内容を変更したい。", "acceptedAnswer": { "@type": "Answer", "text": "軽微な変更（人数・車台数）は当日清算で対応します。サイト追加は新規予約としてお手続きください。日程変更やサイト数の減少は、一度キャンセルしてから再予約、またはお電話でご相談ください。" } },
-      { "@type": "Question", "name": "キャンセルしたい。", "acceptedAnswer": { "@type": "Answer", "text": "予約確認メールに記載のリンクからキャンセル手続きができます。当日キャンセルのみキャンセル料100%を申し受けます（それ以前は無料）。無断キャンセルは100%請求となります。" } },
-      { "@type": "Question", "name": "予約日を間違えた。", "acceptedAnswer": { "@type": "Answer", "text": "気づいた時点でキャンセルし、正しい日程で再予約してください。当日扱いになる前であればキャンセル料はかかりません。間に合わない場合はすぐにお電話ください。" } },
+      { "@type": "Question", "name": "予約の内容を変更したい。", "acceptedAnswer": { "@type": "Answer", "text": "人数・車の台数はオンライン操作不要で、当日現地で清算します。サイトの追加は新規予約としてお手続きください。日程の変更やサイト数を減らす場合は、一度キャンセルしてから取り直してください。" } },
+      { "@type": "Question", "name": "キャンセルしたい。", "acceptedAnswer": { "@type": "Answer", "text": "ご自身のオンライン手続きで完結します。予約完了メールに記載のリンクから、または会員の方はマイページから手続きできます。キャンセル料は当日キャンセルと無断キャンセルのみ100%、前日までは無料です。楽天トラベルキャンプで予約した場合は、楽天側の画面で手続きしてください。" } },
+      { "@type": "Question", "name": "予約日を間違えた。", "acceptedAnswer": { "@type": "Answer", "text": "気づいた時点でキャンセルし、正しい日程で取り直してください。当日扱いになる前であればキャンセル料はかかりません。オンラインの操作期限を過ぎていて手続きできない場合のみ、お電話かメールでご連絡ください。" } },
       { "@type": "Question", "name": "支払い方法は？ キャッシュレス決済は使えますか？", "acceptedAnswer": { "@type": "Answer", "text": "お支払いは現地のみです（事前のオンライン決済はありません）。クレジットカード、電子マネー（交通系IC・iD・QUICPay）、QRコード決済（PayPay・楽天ペイ・au PAY・d払い・メルペイ 等）、現金に対応しています。" } },
       { "@type": "Question", "name": "チェックイン・チェックアウトの時間は？", "acceptedAnswer": { "@type": "Answer", "text": "チェックイン 12:00〜17:00 / チェックアウト 12:00 です。17時以降のチェックイン・合流・夜間の出入りはできません。" } },
       { "@type": "Question", "name": "アーリーチェックインはできますか？", "acceptedAnswer": { "@type": "Answer", "text": "エリアに余裕がある場合に限り、9:00から無料でアーリーチェックインが可能です。前日までにお問い合わせフォームまたはお電話よりご連絡ください。" } },
@@ -122,7 +122,7 @@ const categories = [
       <div class="py-6">
         <p class="font-semibold text-zinc-800">Q. 予約の内容を変更したい。</p>
         <p class="mt-3 text-sm leading-loose text-zinc-600">
-          軽微な変更（人数・車台数）は当日清算で対応します。サイト追加は新規予約としてお手続きください。日程変更やサイト数の減少は、一度キャンセルしてから再予約、またはお電話でご相談ください。
+          人数・車の台数はオンライン操作不要で、当日現地で清算します。サイトの追加は新規予約としてお手続きください。日程の変更やサイト数を減らす場合は、一度キャンセルしてから取り直してください。
         </p>
         <p class="mt-2 text-sm">
           <a href="/reservation-guide/#change" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">詳しくは予約ガイドへ →</a>
@@ -132,17 +132,23 @@ const categories = [
       <div class="py-6">
         <p class="font-semibold text-zinc-800">Q. キャンセルしたい。</p>
         <p class="mt-3 text-sm leading-loose text-zinc-600">
-          予約確認メールに記載のリンクからキャンセル手続きができます。<strong class="text-zinc-800">当日キャンセルのみキャンセル料100%</strong>を申し受けます（それ以前は無料）。無断キャンセルは100%請求となります。
+          ご自身のオンライン手続きで完結します。入口は2つあり、<strong class="text-zinc-800">予約完了メールに記載のリンク</strong>から、または会員の方は<strong class="text-zinc-800">マイページ</strong>から手続きできます。お電話をいただく必要はありません。
+        </p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          キャンセル料は<strong class="text-zinc-800">当日キャンセルと無断キャンセルのみ100%</strong>、前日までは無料です。楽天トラベルキャンプで予約した場合は、楽天側の画面で手続きしてください。
         </p>
         <p class="mt-2 text-sm">
-          <a href="/policy/#cancel" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">キャンセルポリシーの詳細 →</a>
+          <a href="/reservation-guide/#change" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">キャンセルのやり方を見る →</a>
         </p>
       </div>
 
       <div class="py-6">
         <p class="font-semibold text-zinc-800">Q. 予約日を間違えた。</p>
         <p class="mt-3 text-sm leading-loose text-zinc-600">
-          気づいた時点でキャンセルし、正しい日程で再予約してください。当日扱いになる前であればキャンセル料はかかりません。間に合わない場合はすぐにお電話ください。
+          気づいた時点でキャンセルし、正しい日程で取り直してください。当日扱いになる前であればキャンセル料はかかりません。オンラインの操作期限を過ぎていて手続きできない場合のみ、お電話かメールでご連絡ください。
+        </p>
+        <p class="mt-2 text-sm">
+          <a href="/reservation-guide/#change" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">キャンセルのやり方を見る →</a>
         </p>
       </div>
 
