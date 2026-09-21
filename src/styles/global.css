@@ -22,6 +22,23 @@
     scroll-behavior: smooth;
   }
 
+  /* 左右スクロールを禁止（上下は通常どおり）。
+     100vw はスクロールバー幅を含むため、単体で使うと body が viewport より
+     広くなり、横にドラッグできてしまう。モバイルでは自動ズームアウトが
+     かかって文字が小さく見える原因にもなる。 */
+  html,
+  body {
+    overflow-x: clip;
+    max-width: 100%;
+  }
+
+  /* 横幅の都合でブラウザが文字サイズを勝手に縮めるのを防ぐ。
+     横スクロール禁止と併用しても本文サイズを維持する。 */
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
   body {
     font-family: "Noto Serif JP", serif;
     letter-spacing: 0.05em;
@@ -118,8 +135,32 @@
   }
 
 
+  /* コンテナ幅を突き破って全幅表示する。
+     幅は親の 100% のまま、左右の負マージンで viewport 端まで広げる。
+     100vw を使わないのでスクロールバー幅の影響を受けず、
+     html/body の overflow-x: clip と合わせて横スクロールが発生しない。 */
+  .full-bleed {
+    width: auto;
+    max-width: none;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+  }
+
   .floating-tab {
     @apply inline-flex min-h-[84px] w-[30px] select-none items-center justify-center rounded-l-xl border border-zinc-200 bg-white/95 px-1 py-2 shadow-lg;
+  }
+
+  /* スマホでは本文にかぶるため、縦タブを小さくして画面端へ寄せる。
+     タップ領域は 44px 以上を保つ（アクセシビリティ最低ライン）。 */
+  @media (max-width: 767px) {
+    .floating-tab {
+      @apply min-h-[62px] w-[26px] px-0.5 py-1.5;
+    }
+
+    .floating-tab__text {
+      @apply text-[10px];
+      letter-spacing: 0.06em;
+    }
   }
 
   .floating-tab--active {

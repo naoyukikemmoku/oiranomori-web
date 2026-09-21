@@ -12,7 +12,8 @@ const { title = "おいらの森", description, heading = "", noindex = false, o
   <FloatingNav />
   <ReserveCTA />
 
-  <main class="mx-auto max-w-6xl px-4 pb-10 pt-[calc(var(--header-offset)+1.25rem)]">
+  {/* 右余白は縦タブ（FloatingNav）の逃げ。スマホで本文が隠れないようにする。 */}
+  <main class="mx-auto max-w-6xl px-4 pr-9 pb-10 pt-[calc(var(--header-offset)+1.25rem)] sm:pr-4">
     {heading && <h1 class="mb-6">{heading}</h1>}
     <slot />
   </main>
