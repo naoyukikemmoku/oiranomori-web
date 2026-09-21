@@ -11,15 +11,17 @@ const URL = "https://oiranomori.jp/stay-light/";
 // ここは体験の文脈に必要な範囲だけを示し、設備一覧は複製しない。
 //   body: 段落（配列＝複数段落）
 //   link: 節末の補助導線（任意）
-//   photo: 写真枠の役割メモ。写真未選定のため DOM は生成しない（AGENTS.md：仮画像を置かない）
+//   photo: 写真枠の役割メモ（写真は別途選定）
+//   slides: 枚数を指定すると、その枚数のスライダー枠を出す（午後・夕方＝5枚）
 const chapters = [
 	{
 		id: "checkin",
-		time: "12:00〜17:00",
+		time: "9:00〜17:00",
 		heading: "受付をして、森へ入る",
 		body: [
 			"到着したら、まず受付へ。利用方法と当日の案内を確認してから、予約したサイトへ向かいます。ライトフォレストは、受付、炊事場、水洗トイレのあるフィールドです。",
-			"前日の利用状況など条件が合う日は、事前確認のうえ9:00から無料で入場できます。利用できるかどうかは、必ず来場前に確認してください。",
+			"受付は9:00に開きます。9:00〜12:00はアーリーチェックインの時間帯で、前日の利用状況など条件が合えば無料で入場できます。利用できるかどうかは、必ず来場前に確認してください。通常のチェックインは12:00からです。",
+			"17:00がチェックインリミットです。安全管理上、これを過ぎると入場できません。遅れそうなときは必ずご連絡ください。",
 		],
 		photo:
 			"受付から木立のサイトへ向かう流れが分かる写真。施設案内写真だけにしない。",
@@ -30,6 +32,7 @@ const chapters = [
 		heading: "木立の中に、居場所をつくる",
 		body: [
 			"サイトに着いたら、車、テント、タープをどこへ置くかを決めます。木の位置や地面の形は、区画ごとに少しずつ違います。張り綱まで区画内に収め、歩くための余白を残して設営します。",
+			"空いている日は、当日の状況を受付で確認のうえ、お好きなサイトを選んでいただけます。木立の間隔や地面の傾き、トイレまでの距離を実際に見てから決められます。",
 		],
 		link: {
 			href: "/sites/",
@@ -52,6 +55,7 @@ const chapters = [
 			cta: "stay-light-to-sites-audience",
 		},
 		photo: "食事、読書、休憩など、作り込みすぎていない実際の過ごし方。",
+		slides: 5,
 	},
 	{
 		id: "evening",
@@ -59,10 +63,12 @@ const chapters = [
 		heading: "暗くなる前に、夜の準備をする",
 		body: [
 			"森は日が傾くと、思ったより早く暗くなります。明るいうちに食事の支度を進め、ライトや寝具を使える状態にしておきます。焚き火をするなら、周囲との距離や風を確かめ、火から離れないようにします。",
+			"夕食は、炭火で焼くか、焚き火で煮込むか、持ち込んだものを温めるだけでも構いません。薪や炭、飲み物は売店で購入できます。売店と薪販売は17:30に終わるので、必要なものは明るいうちに揃えておくと安心です。",
 			"場内全体を照らす照明はありません。移動用のライトは、手に取りやすい場所へ置いてください。",
 		],
 		photo:
 			"日没前後の光と、夕食または焚き火。大人数の宴会に見える写真は使わない。",
+		slides: 5,
 	},
 	{
 		id: "starry",
@@ -135,8 +141,8 @@ const chapters = [
       森に着き、木立の中に自分たちの居場所をつくる。食べて、火を眺め、静かな夜を過ごし、鳥の声で朝を迎える。
       ライトフォレストの一泊を、到着から順に紹介します。
     </p>
-    <p class="mt-6 text-sm text-zinc-600">
-      通常チェックイン 12:00〜17:00／チェックアウト 翌12:00
+    <p class="mt-6 text-sm leading-loose text-zinc-600">
+      アーリーチェックイン 9:00〜12:00（無料・要確認）／通常チェックイン 12:00〜／チェックインリミット 17:00／チェックアウト 翌12:00
     </p>
   </div>
 
@@ -148,6 +154,29 @@ const chapters = [
         <p class="text-sm tracking-[0.16em] text-zinc-400 md:pt-1">{c.time}</p>
         <div class="mt-2 md:mt-0">
           <h2 class="text-xl font-semibold text-zinc-800">{c.heading}</h2>
+
+          {c.slides ? (
+            <div class="mt-5">
+              <ul
+                class="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2"
+                aria-label={`${c.heading}の写真`}
+              >
+                {Array.from({ length: c.slides }).map((_, i) => (
+                  <li class="w-[78%] shrink-0 snap-start sm:w-[46%]">
+                    <span class="flex aspect-[4/3] w-full items-center justify-center border border-dashed border-zinc-300 bg-zinc-50">
+                      <span class="text-xs tracking-[0.16em] text-zinc-400">写真 準備中 {i + 1}</span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+              <p class="mt-1 text-xs text-zinc-400">横にスワイプすると続きの写真を見られます。</p>
+            </div>
+          ) : (
+            <span class="mt-5 flex aspect-[16/9] w-full items-center justify-center border border-dashed border-zinc-300 bg-zinc-50">
+              <span class="text-xs tracking-[0.16em] text-zinc-400">写真 準備中</span>
+            </span>
+          )}
+
           {c.body.map((p) => (
             <p class="mt-4 text-sm leading-loose text-zinc-600">{p}</p>
           ))}

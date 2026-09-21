@@ -56,6 +56,21 @@
   :is(section[id], article[id], div[id]) {
     scroll-margin-top: calc(var(--header-height) + 16px);
   }
+
+  /* 本文中のリンクが押せると分かるように、下線を文字から離して見やすくする。
+     ページ個別に underline-offset を書かなくても全ページへ効かせる。
+     下線を持たないリンク（ボタン・タブ・カード全体リンク等）は対象外。 */
+  a.underline,
+  a:where(:not([class*="no-underline"])) .underline {
+    text-underline-offset: 4px;
+    text-decoration-thickness: from-font;
+  }
+
+  /* キーボード操作時のフォーカスを全ページで明示（フォーカス可視化を消さない）。 */
+  :is(a, button, input, select, textarea, summary):focus-visible {
+    outline: 2px solid var(--light-accent);
+    outline-offset: 2px;
+  }
 }
 
 @layer components {
