@@ -9,17 +9,21 @@ import PageLayout from "../../layouts/PageLayout.astro";
 // 予約手順・料金は /reservation-guide/、体験としての一泊は /stay-light/、
 // 個別の疑問は /faq/ を正本とし、ここでは複製しない。
 
-// 設備。img があるものは写真、null は「準備中」枠。
-// avail=false（ない設備）は写真枠を出さない。
+// 設備。並びは タイトル → 写真 → 説明。
+//   img: 写真あり / null: 「準備中」枠 / photo:false: 写真枠を出さない（写真が存在しない設備）
+//   avail=false（ない設備）も写真枠を出さない。
 const facilities = [
 	{
 		id: "reception",
 		label: "受付・売店",
-		summary: "9:00〜17:30。飲料、薪、炭、着火剤などを販売。",
+		summary:
+			"9:00〜17:30。飲料、薪、炭、着火剤などを販売。レンタル品の受け渡しもここで。",
 		img: shopStore,
 		alt: "電球の灯る木造の受付・売店小屋",
-		linkHref: "/shop/",
-		linkText: "売店の品揃えを見る",
+		links: [
+			{ href: "/shop/", text: "売店の品揃え" },
+			{ href: "/rental/", text: "レンタル品" },
+		],
 		avail: true,
 	},
 	{
@@ -27,7 +31,6 @@ const facilities = [
 		label: "トイレ",
 		summary: "水洗・洋式。男女各2室（新築）。",
 		img: null,
-		alt: "",
 		avail: true,
 	},
 	{
@@ -36,7 +39,6 @@ const facilities = [
 		summary: "2か所（うち1か所は給湯器付き）。すべて飲用可の水道水。",
 		note: "洗剤・油・残飯は流さないでください。",
 		img: null,
-		alt: "",
 		avail: true,
 	},
 	{
@@ -44,36 +46,30 @@ const facilities = [
 		label: "Wi-Fi",
 		summary: "無料。接続方法は場内に掲示しています。",
 		note: "ソロ区画・オートA・オートBはエリア外です。",
-		img: null,
-		alt: "",
+		photo: false,
 		avail: true,
 	},
 	{
 		id: "ac",
 		label: "AC電源",
 		summary: "有料オプション・要予約。600Wまで。対応サイトは限られます。",
-		img: null,
-		alt: "",
-		linkHref: "#ac-power",
-		linkText: "対応サイトと使い方",
+		photo: false,
+		links: [{ href: "#ac-power", text: "対応サイトと使い方" }],
 		avail: true,
 	},
 	{
 		id: "parking",
 		label: "駐車",
 		summary: "オートサイトは区画内に1台込み。それ以外は駐車場15台分。",
-		linkHref: "/reservation-guide/#price",
-		linkText: "追加車両の料金",
+		links: [{ href: "/reservation-guide/#price", text: "追加車両の料金" }],
 		img: null,
-		alt: "",
 		avail: true,
 	},
 	{
 		id: "shower",
 		label: "シャワー",
 		summary: "ありません。車で10分ほどの近隣温泉をご利用ください。",
-		linkHref: "/map/",
-		linkText: "周辺の温泉を見る",
+		links: [{ href: "/map/?view=bath", text: "周辺の温泉を見る" }],
 		avail: false,
 	},
 ];
@@ -127,12 +123,12 @@ const scheduleNotes = [
 ];
 
 // ルール。禁止の並べ立てではなく、理由と代替を添えて柔らかく。
+//   photo: true で「準備中」の写真枠を出す（写真は別途）
 const rules = [
 	{
-		title: "チェックアウト",
+		title: "チェックアウト連絡",
 		body: "受付に寄る必要はありません。前日確認メールのいちばん下のリンク、LINE、またはHPのチェックアウトページからオンラインで手続きしてください。",
-		linkHref: "/checkout/",
-		linkText: "チェックアウトページ",
+		links: [{ href: "/checkout/", text: "チェックアウトページ" }],
 	},
 	{
 		title: "ゴミ",
@@ -141,16 +137,21 @@ const rules = [
 	{
 		title: "焚き火の灰",
 		body: "灰は指定のペール缶へ。蚊取り線香、アルミ、ゴミ、タバコは混ぜないでください。灰は畑の肥料として使っています。蓋は閉めてください。",
+		photo: true,
+		photoLabel: "灰捨て場",
 	},
 	{
 		title: "ワンちゃんと一緒に",
 		body: "どのサイトも犬連れ歓迎です。ドッグランサイト以外ではリードをお願いします。ふんの片付けは飼い主さんで。",
-		linkHref: "/sites/dogrun/",
-		linkText: "貸切ドッグランサイト",
+		photo: true,
+		photoLabel: "犬",
+		links: [{ href: "/sites/dogrun/", text: "貸切ドッグランサイト" }],
 	},
 	{
 		title: "花火",
 		body: "手持ち花火はどのサイトでも楽しめます。打ち上げ花火は音と火の粉が周りに届くため、ご遠慮ください。",
+		photo: true,
+		photoLabel: "花火",
 	},
 	{
 		title: "音と光",
@@ -163,6 +164,9 @@ const rules = [
 	{
 		title: "けがや事故",
 		body: "場内での事故・けがは基本的に自己責任です。管理人は隣接地に住んでいるので、困ったときは声をかけてください。",
+		extra:
+			"もし夜間にけがや事故、急な病気があった場合は、自己解決しようとせず、消防・救急にすぐ連絡するとともに、おいらへもご一報ください。",
+		links: [{ href: "/map/?view=emergency", text: "近くの救急・医療機関" }],
 	},
 ];
 ---
@@ -198,7 +202,7 @@ const rules = [
     <nav class="mt-6 flex flex-wrap gap-2.5 text-sm" aria-label="このページの目次">
       {[
         { href: "#facility", label: "設備" },
-        { href: "#ac-power", label: "AC電源" },
+        { href: "#ac-power", label: "AC電源について" },
         { href: "#schedule", label: "ご利用の時間割" },
         { href: "#sites",    label: "サイトの種類" },
         { href: "#rules",    label: "利用ルール" },
@@ -215,62 +219,60 @@ const rules = [
     </nav>
   </div>
 
-  {/* 設備 */}
+  {/* 設備。タイトル → 写真 → 説明 の順 */}
   <section id="facility" class="mb-16">
     <h2 class="mb-2 text-xl font-semibold text-zinc-800">設備</h2>
     <p class="mb-6 max-w-2xl text-sm leading-loose text-zinc-500">
       あるものと、ないもの。ないものは代わりの手段を書いています。
     </p>
-    <ul class="divide-y divide-zinc-200 border-y border-zinc-200">
+    <ul class="divide-y divide-zinc-200 border-y border-zinc-200 sm:grid sm:grid-cols-2 sm:gap-x-12 sm:divide-y-0">
       {facilities.map((f) => (
-        <li id={f.id} class="grid gap-4 py-6 sm:grid-cols-[7.5rem_1fr] sm:gap-6">
-          {f.avail ? (
+        <li id={f.id} class="py-6 sm:border-b sm:border-zinc-200">
+          <h3 class="flex items-center gap-2 text-base font-semibold text-zinc-800">
+            <span
+              class={`h-1.5 w-1.5 shrink-0 rounded-full ${f.avail ? "bg-[color:var(--light-accent)]" : "bg-zinc-300"}`}
+            ></span>
+            {f.label}
+          </h3>
+          {f.avail && f.photo !== false && (
             f.img ? (
               <Picture
                 src={f.img}
                 formats={["avif", "webp"]}
                 alt={f.alt}
                 loading="lazy"
-                sizes="(max-width: 640px) 100vw, 7.5rem"
-                class="aspect-[4/3] w-full object-cover sm:w-[7.5rem]"
+                sizes="(max-width: 640px) 100vw, 20rem"
+                class="mt-3 aspect-[4/3] w-full max-w-xs object-cover"
               />
             ) : (
-              <span class="flex aspect-[4/3] w-full items-center justify-center border border-dashed border-zinc-300 bg-zinc-50 sm:w-[7.5rem]">
+              <span class="mt-3 flex aspect-[4/3] w-full max-w-xs items-center justify-center border border-dashed border-zinc-300 bg-zinc-50">
                 <span class="text-[10px] tracking-[0.16em] text-zinc-400">写真 準備中</span>
               </span>
             )
-          ) : (
-            <span class="hidden sm:block" aria-hidden="true"></span>
           )}
-          <div>
-            <h3 class="flex items-center gap-2 text-base font-semibold text-zinc-800">
-              <span
-                class={`h-1.5 w-1.5 shrink-0 rounded-full ${f.avail ? "bg-[color:var(--light-accent)]" : "bg-zinc-300"}`}
-              ></span>
-              {f.label}
-            </h3>
-            <p class="mt-2 text-sm leading-loose text-zinc-600">{f.summary}</p>
-            {f.note && <p class="mt-1 text-xs leading-loose text-zinc-400">{f.note}</p>}
-            {f.linkHref && (
-              <p class="mt-2">
+          <p class="mt-3 text-sm leading-loose text-zinc-600">{f.summary}</p>
+          {f.note && <p class="mt-1 text-xs leading-loose text-zinc-400">{f.note}</p>}
+          {f.links && (
+            <p class="mt-2 flex flex-wrap gap-x-5 gap-y-1">
+              {f.links.map((l) => (
                 <a
-                  href={f.linkHref}
+                  href={l.href}
                   class="inline-flex items-center gap-1.5 text-sm text-[color:var(--light-accent)] underline underline-offset-4 transition hover:opacity-80"
                 >
-                  {f.linkText}
+                  {l.text}
                   <span aria-hidden="true">→</span>
                 </a>
-              </p>
-            )}
-          </div>
+              ))}
+            </p>
+          )}
         </li>
       ))}
     </ul>
   </section>
 
-  {/* AC電源の詳細。設備一覧からアンカーで飛ばす */}
+  {/* AC電源について。設備一覧からアンカーで飛ばす */}
   <section id="ac-power" class="mb-16">
-    <h2 class="mb-2 text-xl font-semibold text-zinc-800">AC電源</h2>
+    <h2 class="mb-2 text-xl font-semibold text-zinc-800">AC電源について</h2>
     <p class="mb-5 max-w-2xl text-sm leading-loose text-zinc-500">
       有料オプション・要予約です。予約時にオプションとして追加してください。
     </p>
@@ -286,10 +288,6 @@ const rules = [
       <div class="grid grid-cols-[8rem_1fr] gap-4 py-4 sm:grid-cols-[12rem_1fr]">
         <dt class="text-zinc-500">上記以外のサイト</dt>
         <dd class="text-zinc-700">オートA・Bなども、ご相談いただければ対応できる場合があります。事前にお問い合わせいただくか、当日受付でご相談ください。</dd>
-      </div>
-      <div class="grid grid-cols-[8rem_1fr] gap-4 py-4 sm:grid-cols-[12rem_1fr]">
-        <dt class="text-zinc-500">ディープフォレスト</dt>
-        <dd class="text-zinc-700">AC電源はありません。</dd>
       </div>
     </dl>
     <p class="mt-4 text-sm">
@@ -322,14 +320,18 @@ const rules = [
       ))}
     </dl>
 
-    {/* 補足。時間割からアンカーで飛ぶ */}
-    <div id="schedule-notes" class="mt-8 divide-y divide-zinc-100 border-t border-zinc-200">
-      {scheduleNotes.map((n) => (
-        <div id={n.id} class="py-5">
-          <h3 class="text-sm font-semibold text-zinc-800">{n.title}</h3>
-          <p class="mt-2 text-sm leading-loose text-zinc-600">{n.body}</p>
-        </div>
-      ))}
+    {/* 補足。時間割からアンカーで飛ぶ。ページに沈まないよう、見出し付きの枠で囲む */}
+    <div id="schedule-notes" class="mt-8 border-l-4 border-[color:var(--light-accent)] bg-[color:var(--forest-100)] px-6 py-6">
+      <h3 class="text-base font-semibold text-zinc-800">時間割の補足</h3>
+      <p class="mt-1 text-xs text-zinc-500">アーリーチェックイン、チェックインリミット、門限、星空タイム、消灯について</p>
+      <div class="mt-4 divide-y divide-zinc-300/70">
+        {scheduleNotes.map((n) => (
+          <div id={n.id} class="py-4">
+            <h4 class="text-sm font-semibold text-zinc-800">{n.title}</h4>
+            <p class="mt-2 text-sm leading-loose text-zinc-600">{n.body}</p>
+          </div>
+        ))}
+      </div>
     </div>
 
     {/* 時刻の正本は本ページ。体験としての一泊は /stay-light/ へ送る */}
@@ -375,7 +377,7 @@ const rules = [
     </div>
   </section>
 
-  {/* 利用ルール */}
+  {/* 利用ルール。タイトル → 写真（あれば） → 説明 */}
   <section id="rules" class="mb-16">
     <h2 class="mb-2 text-xl font-semibold text-zinc-800">利用ルール</h2>
     <p class="mb-6 max-w-2xl text-sm leading-loose text-zinc-500">
@@ -385,16 +387,26 @@ const rules = [
       {rules.map((rule) => (
         <div class="border-t border-zinc-200 pt-5">
           <h3 class="font-semibold text-zinc-800">{rule.title}</h3>
-          <p class="mt-2 text-sm leading-loose text-zinc-600">{rule.body}</p>
-          {rule.linkHref && (
-            <p class="mt-2">
-              <a
-                href={rule.linkHref}
-                class="inline-flex items-center gap-1.5 text-sm text-[color:var(--light-accent)] underline underline-offset-4 transition hover:opacity-80"
-              >
-                {rule.linkText}
-                <span aria-hidden="true">→</span>
-              </a>
+          {rule.photo && (
+            <span class="mt-3 flex aspect-[4/3] w-full max-w-xs items-center justify-center border border-dashed border-zinc-300 bg-zinc-50">
+              <span class="text-[10px] tracking-[0.16em] text-zinc-400">写真 準備中（{rule.photoLabel}）</span>
+            </span>
+          )}
+          <p class="mt-3 text-sm leading-loose text-zinc-600">{rule.body}</p>
+          {rule.extra && (
+            <p class="mt-2 text-sm leading-loose text-zinc-700">{rule.extra}</p>
+          )}
+          {rule.links && (
+            <p class="mt-2 flex flex-wrap gap-x-5 gap-y-1">
+              {rule.links.map((l) => (
+                <a
+                  href={l.href}
+                  class="inline-flex items-center gap-1.5 text-sm text-[color:var(--light-accent)] underline underline-offset-4 transition hover:opacity-80"
+                >
+                  {l.text}
+                  <span aria-hidden="true">→</span>
+                </a>
+              ))}
             </p>
           )}
         </div>
@@ -468,15 +480,20 @@ const rules = [
     </div>
   </section>
 
-  {/* FAQ との相互リンク */}
+  {/* よくある質問（FAQ）・問い合わせとの相互リンク */}
   <section class="mb-16 border-t border-zinc-200 pt-8">
     <h2 class="mb-2 text-xl font-semibold text-zinc-800">分からないことがあれば</h2>
     <p class="mb-4 max-w-2xl text-sm leading-loose text-zinc-600">
-      ここに書いていないことは、よくある質問にまとめています。予約やキャンセルの手順は予約ガイドへ。
+      ここに書いていないことは、よくある質問（FAQ）にまとめています。それでも分からなければ、問い合わせフォームからどうぞ。
+      予約やキャンセルの手順は予約ガイドへ。
     </p>
     <div class="flex flex-wrap gap-x-8 gap-y-3 text-sm">
       <a href="/faq/#facility-rules" class="inline-flex items-center gap-1.5 text-[color:var(--light-accent)] underline underline-offset-4 transition hover:opacity-80">
-        よくある質問（設備・ルール）
+        よくある質問（FAQ）設備・ルール
+        <span aria-hidden="true">→</span>
+      </a>
+      <a href="/contact/" class="inline-flex items-center gap-1.5 text-[color:var(--light-accent)] underline underline-offset-4 transition hover:opacity-80">
+        問い合わせフォーム
         <span aria-hidden="true">→</span>
       </a>
       <a href="/reservation-guide/" class="inline-flex items-center gap-1.5 text-zinc-700 underline underline-offset-4 transition hover:text-zinc-900">

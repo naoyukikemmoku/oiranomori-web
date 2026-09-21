@@ -127,7 +127,7 @@ export const siteNav: SiteNavGroup[] = [
 			{ label: "レンタル", href: "/rental/" },
 			{ label: "売店", href: "/shop/" },
 			{ label: "年間パスポート・回数券", href: "/passport/" },
-			{ label: "よくある質問", href: "/faq/" },
+			{ label: "よくある質問（FAQ）", href: "/faq/" },
 		],
 	},
 	{

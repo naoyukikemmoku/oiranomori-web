@@ -355,15 +355,17 @@ const plans: Array<{
     <div class="mx-auto max-w-6xl px-6 md:px-10">
       <dl class="grid grid-cols-2 gap-x-8 gap-y-4 sm:grid-cols-3">
         {[
-          { label: "食事", count: "14件" },
-          { label: "温泉・お風呂", count: "11件" },
-          { label: "買い物", count: "20件" },
-          { label: "観光スポット", count: "13件" },
-          { label: "救急医療", count: "1件" },
-        ].map(({ label, count }) => (
+          { label: "食事", count: "14件", href: "/map/?view=food" },
+          { label: "温泉・お風呂", count: "11件", href: "/map/?view=bath" },
+          { label: "買い物", count: "20件", href: "/map/?view=shopping" },
+          { label: "観光スポット", count: "13件", href: "/map/?view=sightseeing" },
+          { label: "救急医療", count: "1件", href: "/map/?view=emergency" },
+        ].map(({ label, count, href }) => (
           <div>
             <dt class="text-xs text-zinc-400">{label}</dt>
-            <dd class="mt-0.5 text-base font-semibold text-zinc-800">{count}</dd>
+            <dd class="mt-0.5 text-base font-semibold text-zinc-800">
+              <a href={href} class="underline decoration-zinc-300 underline-offset-4 transition hover:text-[color:var(--light-accent)] hover:decoration-[color:var(--light-accent)]">{count}</a>
+            </dd>
           </div>
         ))}
       </dl>
