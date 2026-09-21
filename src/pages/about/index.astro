@@ -1,5 +1,8 @@
 ﻿---
 import PageLayout from "../../layouts/PageLayout.astro";
+import { Picture } from "astro:assets";
+import aboutHero from "../../assets/images/about_hero.jpg";
+import aboutForest from "../../assets/images/about_forest.jpg";
 
 const companies = [
   {
@@ -68,6 +71,17 @@ const companies = [
     })} />
   </Fragment>
 
+    {/* ヒーロー */}
+  <Picture
+    src={aboutHero}
+    formats={["avif", "webp"]}
+    alt="木漏れ日の里山を手をつないで歩く親子の後ろ姿"
+    loading="eager"
+    fetchpriority="high"
+    sizes="(max-width: 768px) 100vw, 72rem"
+    class="mb-10 aspect-[16/9] w-full object-cover"
+  />
+
   {/* ページヘッダー */}
   <div class="mb-10 border-b border-zinc-200 pb-8">
     <p class="text-xs tracking-[0.26em] text-zinc-400 uppercase">About</p>
@@ -118,6 +132,14 @@ const companies = [
   <section class="mb-14">
     <p class="text-xs tracking-[0.22em] text-[#4A5D4E] uppercase">The People</p>
     <h2 class="mt-1 text-xl font-semibold text-zinc-800">運営者について</h2>
+    <Picture
+      src={aboutForest}
+      formats={["avif", "webp"]}
+      alt="木々の間から朝の光が差し込むライトフォレスト"
+      loading="lazy"
+      sizes="(max-width: 768px) 100vw, 36rem"
+      class="mb-5 aspect-[3/2] w-full max-w-2xl object-cover"
+    />
     <p class="mt-3 max-w-2xl text-sm leading-loose text-zinc-600">
       おいらの森をつくっているのは、おいら と おかみの二人です。会社の話より、もっと人間的な部分が気になる方はこちら。
     </p>

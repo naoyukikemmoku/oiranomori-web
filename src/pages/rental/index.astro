@@ -1,5 +1,8 @@
 ﻿---
 import PageLayout from "../../layouts/PageLayout.astro";
+import { Picture } from "astro:assets";
+import rentalFurniture from "../../assets/images/rental_furniture.jpg";
+import rentalWinter from "../../assets/images/rental_winter.jpg";
 
 const rentalCategories = [
   {
@@ -174,6 +177,14 @@ const returnRules: { title: string; body?: string; items?: string[] }[] = [
   {/* レンタルアイテム */}
   <section class="mb-14">
     <h2 class="mb-2 text-xl font-semibold text-zinc-800">レンタルアイテム</h2>
+    <Picture
+      src={rentalFurniture}
+      formats={["avif", "webp"]}
+      alt="ウッドデッキ上に置かれた折りたたみテーブル"
+      loading="lazy"
+      sizes="(max-width: 768px) 100vw, 28rem"
+      class="mb-5 aspect-[4/3] w-full max-w-2xl object-cover"
+    />
     <p class="mb-6 text-xs text-zinc-400">※ 価格は1泊あたり（税込）です。</p>
 
     <div class="space-y-0">
@@ -206,6 +217,14 @@ const returnRules: { title: string; body?: string; items?: string[] }[] = [
   {/* テント設営・撤収サービス */}
   <section class="mb-14">
     <h2 class="mb-2 text-xl font-semibold text-zinc-800">テント設営・撤収サービス</h2>
+    <Picture
+      src={rentalWinter}
+      formats={["avif", "webp"]}
+      alt="テント内で火が入った薪ストーブと湯沸かし用の鍋"
+      loading="lazy"
+      sizes="(max-width: 768px) 100vw, 28rem"
+      class="mb-5 aspect-[4/3] w-full max-w-2xl object-cover"
+    />
     <p class="mb-5 text-sm text-zinc-500">ご自身での設営・撤収が難しい方向けのサービスです。</p>
     <div class="overflow-x-auto border-y border-zinc-200">
       <table class="w-full min-w-[280px] text-sm">

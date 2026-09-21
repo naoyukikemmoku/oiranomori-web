@@ -1,4 +1,7 @@
 ---
+import { Picture } from "astro:assets";
+import mediaHero from "../../assets/images/media_hero.jpg";
+import mediaLocation from "../../assets/images/media_location.jpg";
 import PageLayout from "../../layouts/PageLayout.astro";
 ---
 
@@ -37,6 +40,17 @@ import PageLayout from "../../layouts/PageLayout.astro";
       ]
     })} />
   </Fragment>
+
+    {/* ヒーロー */}
+  <Picture
+    src={mediaHero}
+    formats={["avif", "webp"]}
+    alt="森の中で三脚を立てて撮影する人物"
+    loading="eager"
+    fetchpriority="high"
+    sizes="(max-width: 768px) 100vw, 72rem"
+    class="mb-10 aspect-[16/9] w-full object-cover"
+  />
 
   {/* ページヘッダー */}
   <div class="mb-14 border-b border-zinc-200 pb-10">
@@ -79,6 +93,14 @@ import PageLayout from "../../layouts/PageLayout.astro";
   <section class="mb-16">
     <p class="text-xs tracking-[0.26em] text-[#4A5D4E] uppercase">Location</p>
     <h2 class="mt-2 text-xl font-semibold text-zinc-800">ロケ地・撮影利用</h2>
+    <Picture
+      src={mediaLocation}
+      formats={["avif", "webp"]}
+      alt="木漏れ日が差し込む背の高い杉林"
+      loading="lazy"
+      sizes="(max-width: 768px) 100vw, 36rem"
+      class="mb-5 aspect-[3/2] w-full max-w-2xl object-cover"
+    />
     <p class="mt-5 max-w-2xl text-sm leading-loose text-zinc-600">
       ライトフォレスト・ディープフォレストともに、撮影ロケ地としての利用が可能です。
       広葉樹林の明るい森、樹齢80年の針葉樹林、焚き火、里山の風景。
