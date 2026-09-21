@@ -1,13 +1,38 @@
 ---
 const slides = [
-  { season: "SPRING", label: "春", caption: "新緑の芽吹き", src: "/images/seasons/spring.jpg" },
-  { season: "SUMMER", label: "夏", caption: "木陰の涼しさ", src: "/images/seasons/summer.jpg" },
-  { season: "AUTUMN", label: "秋", caption: "落葉広葉樹の紅葉", src: "/images/seasons/autumn.jpg" },
-  { season: "WINTER", label: "冬", caption: "陽だまりの暖かさ", src: "/images/seasons/winter.jpg" },
+	{
+		season: "SPRING",
+		label: "春",
+		caption: "新緑の芽吹き",
+		src: "/images/seasons/spring.jpg",
+	},
+	{
+		season: "SUMMER",
+		label: "夏",
+		caption: "木陰の涼しさ",
+		src: "/images/seasons/summer.jpg",
+	},
+	{
+		season: "AUTUMN",
+		label: "秋",
+		caption: "落葉広葉樹の紅葉",
+		src: "/images/seasons/autumn.jpg",
+	},
+	{
+		season: "WINTER",
+		label: "冬",
+		caption: "陽だまりの暖かさ",
+		src: "/images/seasons/winter.jpg",
+	},
 ];
 ---
 
 <section id="season" class="ss-wrap" aria-label="森の四季">
+  {/* セクションタイトル。他の背景写真セクションと同じく写真内に重ねる（左上）。 */}
+  <div class="ss-title">
+    <p class="ss-title__eyebrow">FOUR SEASONS</p>
+    <h2 class="ss-title__text">おいらの森の四季</h2>
+  </div>
   <div class="ss-track" id="ssTrack">
     {slides.map((s, i) => (
       <div class:list={["ss-slide", i === 0 && "is-active"]} data-index={i}>
@@ -51,6 +76,44 @@ const slides = [
     min-height: 320px;
     overflow: hidden;
     background: #1a2118;
+  }
+
+  /* セクションタイトル。写真内の左上に重ねる（他の背景写真セクションと統一）。 */
+  .ss-title {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 3;
+    padding: 1.75rem 1.5rem;
+    max-width: 90%;
+  }
+
+  @media (min-width: 768px) {
+    .ss-title {
+      padding: 2.5rem 2.5rem;
+    }
+  }
+
+  .ss-title__eyebrow {
+    font-size: 0.75rem;
+    letter-spacing: 0.32em;
+    color: #d4d4d8;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.7);
+  }
+
+  .ss-title__text {
+    margin-top: 0.5rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: #fff;
+    text-shadow: 0 1px 10px rgba(0, 0, 0, 0.75);
+  }
+
+  @media (min-width: 768px) {
+    .ss-title__text {
+      font-size: 1.875rem;
+    }
   }
 
   .ss-track {

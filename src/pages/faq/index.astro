@@ -61,9 +61,14 @@ const categories = [
       { "@type": "Question", "name": "大型車・トレーラーで利用できますか？ バリアフリーに対応していますか？", "acceptedAnswer": { "@type": "Answer", "text": "全長6m以上のお車、トレーラーでお越しの場合は、事前にご確認ください。バリアフリーには対応していません（段差・未舗装路があります）。" } },
       { "@type": "Question", "name": "電車で行けますか？", "acceptedAnswer": { "@type": "Answer", "text": "JR烏山線「鴻野山駅」が最寄りです。電車キャンパー向けに駅送迎プランがあります。" } },
       { "@type": "Question", "name": "周辺の温泉は？", "acceptedAnswer": { "@type": "Answer", "text": "車で10分以内に複数の日帰り温泉があります。" } },
-      { "@type": "Question", "name": "クマはいますか？", "acceptedAnswer": { "@type": "Answer", "text": "いません。" } },
+      { "@type": "Question", "name": "クマはいますか？", "acceptedAnswer": { "@type": "Answer", "text": "生息していません。ニホンジカもいないため、シカについて回るヤマビルもいません。野犬もいません。危険な動物の少ない里山です。" } },
+      { "@type": "Question", "name": "スズメバチは？", "acceptedAnswer": { "@type": "Answer", "text": "います。見つけ次第こちらで巣を駆除していますが、飛んでいるのを見かけたら、払ったり大きな音を立てたりせず、静かに距離を取ってください。黒い服や甘い匂いに寄る性質があります。" } },
+      { "@type": "Question", "name": "イノシシは出ますか？", "acceptedAnswer": { "@type": "Answer", "text": "山にはいますが、キャンプサイトまで出てくることはほとんどありません。" } },
+      { "@type": "Question", "name": "夜、何かがギャーギャー鳴いています。", "acceptedAnswer": { "@type": "Answer", "text": "ムササビです。夜行性で、木から木へ滑空します。危険はありません。" } },
+      { "@type": "Question", "name": "食料の管理で気をつけることは？", "acceptedAnswer": { "@type": "Answer", "text": "ノラネコがいるので、食料は夜のうちにクーラーボックスや車へしまってください。日中はカラスが食料を漁ることがあります。" } },
+      { "@type": "Question", "name": "会えたらうれしい動物は？", "acceptedAnswer": { "@type": "Answer", "text": "ニホンリスです。見かけたらラッキーだと思ってください。" } },
       { "@type": "Question", "name": "虫はいますか？", "acceptedAnswer": { "@type": "Answer", "text": "います。森ならではの昆虫に出会えるのが魅力のひとつです。昆虫採集もOKですが、持ち帰りはご自身で飼育できる範囲までにしてください。" } },
-      { "@type": "Question", "name": "蛇・スズメバチはいますか？", "acceptedAnswer": { "@type": "Answer", "text": "います。森の中では当たり前の存在です。見かけても慌てず、距離を取って行動してください。" } },
+      { "@type": "Question", "name": "蛇はいますか？", "acceptedAnswer": { "@type": "Answer", "text": "います。森の中では当たり前の存在です。見かけても慌てず、距離を取って行動してください。" } },
       { "@type": "Question", "name": "蛍は見られますか？", "acceptedAnswer": { "@type": "Answer", "text": "見られます。ライトフォレストの谷で6月頃にゲンジボタルが飛びます。毎年「ホタル観賞会」イベントも開催しています。" } },
       { "@type": "Question", "name": "管理人はいますか？", "acceptedAnswer": { "@type": "Answer", "text": "ライトフォレストにはおいら家族が敷地内に常駐しています。ディープフォレストは無人管理で、受付はライトフォレストで行います。" } },
       { "@type": "Question", "name": "雨でも営業していますか？", "acceptedAnswer": { "@type": "Answer", "text": "基本的に営業します。台風等の荒天時は事前にお知らせします。" } },
@@ -513,7 +518,44 @@ const categories = [
 
       <div class="py-6">
         <p class="font-semibold text-zinc-800">Q. クマはいますか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">いません。</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          生息していません。ニホンジカもいないため、シカについて回るヤマビルもいません。野犬もいません。危険な動物の少ない里山です。
+        </p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. スズメバチは？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          います。森では当たり前の存在です。見つけ次第こちらで巣を駆除していますが、飛んでいるのを見かけたら、払ったり大きな音を立てたりせず、静かに距離を取ってください。黒い服や甘い匂いに寄る性質があります。
+        </p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. イノシシは出ますか？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          山にはいますが、キャンプサイトまで出てくることはほとんどありません。
+        </p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. 夜、何かがギャーギャー鳴いています。</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          ムササビです。夜行性で、木から木へ滑空します。危険はありません。森に泊まっている実感がいちばん湧く声かもしれません。
+        </p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. 食料の管理で気をつけることは？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          ノラネコがいるので、食料は夜のうちにクーラーボックスや車へしまってください。日中はカラスが食料を漁ることがあります。テーブルに出したままにしないのが確実です。
+        </p>
+      </div>
+
+      <div class="py-6">
+        <p class="font-semibold text-zinc-800">Q. 会えたらうれしい動物は？</p>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          ニホンリスです。見かけたらラッキーだと思ってください。
+        </p>
       </div>
 
       <div class="py-6">
@@ -524,7 +566,7 @@ const categories = [
       </div>
 
       <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. 蛇・スズメバチは？</p>
+        <p class="font-semibold text-zinc-800">Q. 蛇はいますか？</p>
         <p class="mt-3 text-sm leading-loose text-zinc-600">
           います。森の中では当たり前の存在です。見かけても慌てず、距離を取って行動してください。
         </p>
