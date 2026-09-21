@@ -48,6 +48,10 @@ export const PROX_MEMBER_SIGNUP_URL = `${PROX_BASE}/member/input/`;
 export const PROX_MEMBER_LOGIN_URL = `${PROX_BASE}/member/login/`;
 export const PROX_BOOKING_LOOKUP_URL = `${PROX_BASE}/booking/login/`;
 
+/** 外部予約サイト。公式（PROX）が主導線で、こちらは補助。 */
+export const RAKUTEN_CAMP_URL =
+	"https://camp.travel.rakuten.co.jp/properties/836?adults=1&reservationType=stay";
+
 /** プラン個別への着地URLを組み立てる（show=plan 形式）。Deep には使わない。 */
 export function proxPlanUrl(id: number | string): string {
 	return `${PROX_BASE}/search/?plans=${id}&show=plan`;

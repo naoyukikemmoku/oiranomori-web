@@ -6,6 +6,7 @@ import {
 	PROX_MEMBER_LOGIN_URL,
 	PROX_MEMBER_SIGNUP_URL,
 	PROX_SEARCH_URL,
+	RAKUTEN_CAMP_URL,
 } from "../../config/nav";
 
 // 予約の主導線。補助導線（会員登録・ログイン・予約確認）は別定数。
@@ -105,17 +106,20 @@ const steps = [
     </p>
     <nav class="mt-6 flex flex-wrap gap-3 text-sm">
       {[
+        { href: "#change", label: "キャンセル・変更のやり方", accent: true },
         { href: "#account", label: "ログイン・予約確認" },
         { href: "#steps",  label: "予約の手順" },
         { href: "#phone",  label: "電話予約について" },
-        { href: "#change", label: "変更・キャンセル" },
         { href: "#merit",  label: "公式予約のメリット" },
         { href: "#member", label: "会員制度・ポイント" },
         { href: "#online", label: "ネット予約の特徴" },
+        { href: "#rakuten", label: "楽天トラベルキャンプ" },
       ].map((item) => (
         <a
           href={item.href}
-          class="rounded-full border border-zinc-300 px-4 py-1.5 text-zinc-600 transition hover:border-zinc-500 hover:text-zinc-800"
+          class={item.accent
+            ? "rounded-full border border-[color:var(--light-accent)] bg-[color:var(--light-accent)] px-4 py-1.5 text-white transition hover:opacity-90"
+            : "rounded-full border border-zinc-300 px-4 py-1.5 text-zinc-600 transition hover:border-zinc-500 hover:text-zinc-800"}
         >
           {item.label}
         </a>
@@ -124,8 +128,12 @@ const steps = [
   </div>
 
   {/* 会員の方・予約を確認したい方（会員/予約確認のハブ） */}
-  <section id="account" class="mb-14">
-    <h2 class="mb-5 text-xl font-semibold text-zinc-800">会員の方・予約を確認したい方</h2>
+  <section id="account" class="mb-16 scroll-mt-24 border-t border-zinc-300 pt-10">
+    <p class="text-xs tracking-[0.2em] text-zinc-400">
+      <span class="text-[color:var(--light-accent)]">01</span>
+      <span class="ml-2">ログイン・予約確認</span>
+    </p>
+    <h2 class="mt-2 mb-5 text-xl font-semibold text-zinc-800">会員の方・予約を確認したい方</h2>
     <div class="flex flex-wrap gap-3">
       <a
         href={PROX_MEMBER_SIGNUP_URL}
@@ -155,8 +163,12 @@ const steps = [
   </section>
 
   {/* 予約の基本ステップ */}
-  <section id="steps" class="mb-14">
-    <h2 class="mb-5 text-xl font-semibold text-zinc-800">予約の基本ステップ</h2>
+  <section id="steps" class="mb-16 scroll-mt-24 border-t border-zinc-300 pt-10">
+    <p class="text-xs tracking-[0.2em] text-zinc-400">
+      <span class="text-[color:var(--light-accent)]">02</span>
+      <span class="ml-2">予約の手順</span>
+    </p>
+    <h2 class="mt-2 mb-5 text-xl font-semibold text-zinc-800">予約の基本ステップ</h2>
 
     <div class="divide-y divide-zinc-100 border-y border-zinc-200">
 
@@ -195,7 +207,7 @@ const steps = [
 
     </div>
 
-    <div class="mt-6 border-l-4 border-[color:var(--forest-600)] pl-5">
+    <div class="mt-6 border-l-4 border-[color:var(--light-accent)] pl-5">
       <p class="text-sm font-semibold text-zinc-700">アーリーチェックインは無料です</p>
       <p class="mt-1 text-sm leading-loose text-zinc-600">
         サイトの空き状況によりますが、9時からご利用いただけます。繁忙期は対応できない場合があるため、<strong>前日夕方</strong>までにご確認ください。
@@ -214,8 +226,12 @@ const steps = [
   </section>
 
   {/* 電話予約 */}
-  <section id="phone" class="mb-14">
-    <h2 class="mb-5 text-xl font-semibold text-zinc-800">電話予約・当日予約について</h2>
+  <section id="phone" class="mb-16 scroll-mt-24 border-t border-zinc-300 pt-10">
+    <p class="text-xs tracking-[0.2em] text-zinc-400">
+      <span class="text-[color:var(--light-accent)]">03</span>
+      <span class="ml-2">電話予約</span>
+    </p>
+    <h2 class="mt-2 mb-5 text-xl font-semibold text-zinc-800">電話予約・当日予約について</h2>
 
     <div class="grid gap-6 sm:grid-cols-2">
       {[
@@ -237,34 +253,96 @@ const steps = [
   </section>
 
   {/* 変更・キャンセル */}
-  <section id="change" class="mb-14">
-    <h2 class="mb-5 text-xl font-semibold text-zinc-800">変更・キャンセルについて</h2>
-    <dl class="divide-y divide-zinc-100 border-y border-zinc-200 text-sm">
-      <div class="grid grid-cols-[10rem_1fr] gap-4 py-5 sm:grid-cols-[14rem_1fr]">
-        <dt class="text-zinc-500">マイページでの手続き</dt>
-        <dd class="text-zinc-700">
+  <section id="change" class="mb-16 scroll-mt-24 border-t border-zinc-300 pt-10">
+    <p class="text-xs tracking-[0.2em] text-zinc-400">
+      <span class="text-[color:var(--light-accent)]">04</span>
+      <span class="ml-2">変更・キャンセル</span>
+    </p>
+    <h2 class="mt-2 mb-5 text-xl font-semibold text-zinc-800">変更・キャンセルのやり方</h2>
+    <p class="mb-6 max-w-2xl text-sm leading-loose text-zinc-600">
+      キャンセルはご自身のオンライン手続きで完結します。24時間いつでも操作でき、お電話をいただく必要はありません。
+      入口は2つあります。どちらからでも同じ手続きができます。
+    </p>
+
+    <div class="grid gap-6 sm:grid-cols-2">
+      <div class="border-t-2 border-[color:var(--light-accent)] pt-5">
+        <p class="text-xs tracking-[0.14em] text-zinc-400">A</p>
+        <h3 class="mt-1 font-semibold text-zinc-800">予約完了メールから</h3>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          ご予約時に届く「予約完了メール」に、予約内容を確認するリンクが記載されています。
+          そこから予約を開き、キャンセルへ進みます。会員登録をしていない方はこちらが確実です。
+        </p>
+      </div>
+      <div class="border-t-2 border-[color:var(--light-accent)] pt-5">
+        <p class="text-xs tracking-[0.14em] text-zinc-400">B</p>
+        <h3 class="mt-1 font-semibold text-zinc-800">マイページから</h3>
+        <p class="mt-3 text-sm leading-loose text-zinc-600">
+          会員登録済みの方は、マイページにログインすると予約一覧が表示されます。
+          対象の予約を開き、キャンセルへ進みます。
+        </p>
+        <p class="mt-4 text-sm">
           <a
             href={PROX_BOOKING_LOOKUP_URL}
             target="_blank"
             rel="noopener noreferrer"
-            class="underline underline-offset-2 transition hover:text-zinc-900"
-          >マイページ</a>からご自身でキャンセルや予約内容の変更が可能です。
+            class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80"
+            data-cta="booking-lookup"
+          >マイページを開く ↗</a>
+        </p>
+      </div>
+    </div>
+
+    <div class="mt-8 border-l-4 border-[color:var(--light-accent)] pl-5">
+      <p class="text-sm font-semibold text-zinc-700">キャンセル料は、当日以外かかりません</p>
+      <p class="mt-2 text-sm leading-loose text-zinc-600">
+        前日までのキャンセルは無料です。当日キャンセルと無断キャンセルのみ、ご予約料金の100%を申し受けます。
+        天災・悪天候・施設トラブルなど当施設都合で中止する場合は、キャンセル料はかかりません。
+      </p>
+      <p class="mt-2 text-sm">
+        <a href="/policy/#cancel" class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80">
+          キャンセルポリシーの全文を見る →
+        </a>
+      </p>
+    </div>
+
+    <dl class="mt-8 divide-y divide-zinc-100 border-y border-zinc-200 text-sm">
+      <div class="grid grid-cols-[10rem_1fr] gap-4 py-5 sm:grid-cols-[14rem_1fr]">
+        <dt class="text-zinc-500">日程を変えたい</dt>
+        <dd class="text-zinc-700">一度キャンセルしてから、正しい日程で取り直してください。当日扱いになる前であればキャンセル料はかかりません。</dd>
+      </div>
+      <div class="grid grid-cols-[10rem_1fr] gap-4 py-5 sm:grid-cols-[14rem_1fr]">
+        <dt class="text-zinc-500">人数・車の台数を変えたい</dt>
+        <dd class="text-zinc-700">オンラインでの操作は不要です。当日、現地の受付で清算します。</dd>
+      </div>
+      <div class="grid grid-cols-[10rem_1fr] gap-4 py-5 sm:grid-cols-[14rem_1fr]">
+        <dt class="text-zinc-500">サイトを追加したい</dt>
+        <dd class="text-zinc-700">新規のご予約としてお手続きください。</dd>
+      </div>
+      <div class="grid grid-cols-[10rem_1fr] gap-4 py-5 sm:grid-cols-[14rem_1fr]">
+        <dt class="text-zinc-500">オンラインの操作期限を過ぎた</dt>
+        <dd class="text-zinc-700">
+          直前でオンライン操作ができない場合のみ、お電話またはメールでご連絡ください。
+          <a href="/contact/" class="ml-1 underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80">連絡先を見る →</a>
         </dd>
       </div>
       <div class="grid grid-cols-[10rem_1fr] gap-4 py-5 sm:grid-cols-[14rem_1fr]">
-        <dt class="text-zinc-500">直前の変更・キャンセル</dt>
-        <dd class="text-zinc-700">オンライン操作期限を過ぎた直前の変更・キャンセルについては、お電話またはメールにて直接ご連絡ください。人数の変更は現地にて承ります。</dd>
+        <dt class="text-zinc-500">楽天トラベルキャンプで予約した</dt>
+        <dd class="text-zinc-700">予約した楽天トラベルキャンプ側の画面から手続きしてください。公式のマイページには表示されません。</dd>
       </div>
     </dl>
   </section>
 
   {/* 公式予約のメリット */}
-  <section id="merit" class="mb-14">
-    <h2 class="mb-5 text-xl font-semibold text-zinc-800">公式予約のメリット</h2>
+  <section id="merit" class="mb-16 scroll-mt-24 border-t border-zinc-300 pt-10">
+    <p class="text-xs tracking-[0.2em] text-zinc-400">
+      <span class="text-[color:var(--light-accent)]">05</span>
+      <span class="ml-2">公式予約のメリット</span>
+    </p>
+    <h2 class="mt-2 mb-5 text-xl font-semibold text-zinc-800">公式予約のメリット</h2>
 
-    <div class="mb-8 bg-[color:var(--forest-600)] px-6 py-5">
-      <p class="text-lg font-semibold text-white">おいらの森の公式サイトが最安です！</p>
-      <p class="mt-2 text-sm leading-loose text-zinc-300">楽天等の外部サイトより公式直接予約がおトク。会員登録でさらにポイントが貯まります。</p>
+    <div class="mb-8 border-l-4 border-[color:var(--light-accent)] bg-[color:var(--forest-100)] px-6 py-5">
+      <p class="text-lg font-semibold text-zinc-800">公式サイトからの予約が、いちばんおトクです</p>
+      <p class="mt-2 text-sm leading-loose text-zinc-600">外部サイト経由より料金が安く、会員登録すればポイントも貯まります。</p>
     </div>
 
     <div class="grid gap-6 sm:grid-cols-2">
@@ -278,7 +356,7 @@ const steps = [
           desc: "ご予約時の利用金額に応じてポイントが貯まります。貯まったポイントは「1ポイント＝1円」として次回予約代金に充当可能です。オイラーズ活動への参加でも貯まります。",
         },
       ].map((item) => (
-        <div class="rounded-xl border border-zinc-200 bg-zinc-50 p-6">
+        <div class="border-t-2 border-[color:var(--light-accent)] pt-5">
           <h3 class="font-semibold text-zinc-800">{item.title}</h3>
           <p class="mt-3 text-sm leading-loose text-zinc-600">{item.desc}</p>
         </div>
@@ -287,11 +365,15 @@ const steps = [
   </section>
 
   {/* 会員制度 */}
-  <section id="member" class="mb-14">
-    <h2 class="mb-5 text-xl font-semibold text-zinc-800">会員制度について</h2>
+  <section id="member" class="mb-16 scroll-mt-24 border-t border-zinc-300 pt-10">
+    <p class="text-xs tracking-[0.2em] text-zinc-400">
+      <span class="text-[color:var(--light-accent)]">06</span>
+      <span class="ml-2">会員制度</span>
+    </p>
+    <h2 class="mt-2 mb-5 text-xl font-semibold text-zinc-800">会員制度について</h2>
     <p class="mb-6 text-sm text-zinc-600">泊まるほどにおトクになる仕組みです。まずは会員登録をおすすめします。</p>
 
-    <div class="mb-8 border-l-4 border-[color:var(--forest-600)] pl-5">
+    <div class="mb-8 border-l-4 border-[color:var(--light-accent)] pl-5">
       <p class="text-sm font-semibold text-zinc-700">【おすすめ】ご予約前の会員登録でお得に</p>
       <p class="mt-2 text-sm leading-loose text-zinc-600">
         会員登録をしてからご予約いただくと、宿泊実績やポイントが確実に貯まり、次回以降のご利用がお得になります。
@@ -322,8 +404,12 @@ const steps = [
   </section>
 
   {/* ネット予約の特徴 */}
-  <section id="online" class="mb-14">
-    <h2 class="mb-5 text-xl font-semibold text-zinc-800">ネット予約の便利な機能</h2>
+  <section id="online" class="mb-16 scroll-mt-24 border-t border-zinc-300 pt-10">
+    <p class="text-xs tracking-[0.2em] text-zinc-400">
+      <span class="text-[color:var(--light-accent)]">07</span>
+      <span class="ml-2">ネット予約の特徴</span>
+    </p>
+    <h2 class="mt-2 mb-5 text-xl font-semibold text-zinc-800">ネット予約の便利な機能</h2>
 
     <div class="grid gap-6 sm:grid-cols-2">
       {[
@@ -345,35 +431,45 @@ const steps = [
   </section>
 
   {/* 外部予約 */}
-  <section class="mb-14">
-    <h2 class="mb-5 text-xl font-semibold text-zinc-800">外部予約サイト（楽天トラベルキャンプ）</h2>
+  <section id="rakuten" class="mb-16 scroll-mt-24 border-t border-zinc-300 pt-10">
+    <p class="text-xs tracking-[0.2em] text-zinc-400">
+      <span class="text-[color:var(--light-accent)]">08</span>
+      <span class="ml-2">外部予約サイト</span>
+    </p>
+    <h2 class="mt-2 mb-5 text-xl font-semibold text-zinc-800">楽天トラベルキャンプから予約する</h2>
+    <p class="mb-6 max-w-2xl text-sm leading-loose text-zinc-600">
+      楽天ポイントを貯めたい方、ポイントを使って泊まりたい方は、楽天トラベルキャンプからも予約できます。
+    </p>
+
     <dl class="divide-y divide-zinc-100 border-y border-zinc-200 text-sm">
-      {[
-        {
-          label: "楽天からの予約",
-          value: "楽天トラベルキャンプ経由でのご予約も可能です。楽天ポイントを貯めることができ、ポイントを利用したご宿泊も可能です。",
-        },
-        {
-          label: "注意点",
-          value: "楽天経由の予約の場合、「おいらの森ポイント」は貯まりません。会員ランクや独自ポイントを活用してお得に宿泊したい方は、公式サイトからの予約を推奨します。",
-        },
-      ].map((item) => (
-        <div class="grid grid-cols-[10rem_1fr] gap-4 py-5 sm:grid-cols-[14rem_1fr]">
-          <dt class="text-zinc-500">{item.label}</dt>
-          <dd class="text-zinc-700">{item.value}</dd>
-        </div>
-      ))}
+      <div class="grid grid-cols-[10rem_1fr] gap-4 py-5 sm:grid-cols-[14rem_1fr]">
+        <dt class="text-zinc-500">貯まるポイント</dt>
+        <dd class="text-zinc-700">楽天ポイントが貯まり、ポイントを使った支払いもできます。</dd>
+      </div>
+      <div class="grid grid-cols-[10rem_1fr] gap-4 py-5 sm:grid-cols-[14rem_1fr]">
+        <dt class="text-zinc-500">おいらの森ポイント</dt>
+        <dd class="text-zinc-700">楽天経由の予約では貯まりません。会員ランクの宿泊実績にも加算されません。</dd>
+      </div>
+      <div class="grid grid-cols-[10rem_1fr] gap-4 py-5 sm:grid-cols-[14rem_1fr]">
+        <dt class="text-zinc-500">変更・キャンセル</dt>
+        <dd class="text-zinc-700">楽天トラベルキャンプ側の画面で手続きします。公式のマイページには表示されません。</dd>
+      </div>
     </dl>
+
+    <div class="mt-6">
+      <a
+        href={RAKUTEN_CAMP_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center justify-center rounded-full border border-zinc-400 px-7 py-2.5 text-sm text-zinc-700 transition hover:border-zinc-600"
+        data-cta="reserve-rakuten"
+      >
+        楽天トラベルキャンプで見る ↗
+      </a>
+    </div>
   </section>
 
   {/* キャンセルポリシー */}
-  <section id="cancellation" class="mb-14">
-    <h2 class="mb-5 text-xl font-semibold text-zinc-800">キャンセルポリシー</h2>
-    <p class="text-sm text-zinc-600">
-      キャンセルポリシーについては<a href="/policy/#cancel" class="underline underline-offset-2 hover:text-zinc-900 transition">利用規約</a>をご確認ください。
-    </p>
-  </section>
-
   {/* CTA */}
   <div class="mt-12 bg-[color:var(--forest-100)] px-8 py-10 text-center">
     <p class="text-sm text-zinc-500">準備が整いましたら</p>
