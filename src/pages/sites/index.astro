@@ -1,5 +1,10 @@
 ---
 import { Picture } from "astro:assets";
+import sitesGearHammock from "../../assets/images/sites_gear_hammock.jpg";
+import sitesGearLarge from "../../assets/images/sites_gear_large.jpg";
+import sitesGearMulti from "../../assets/images/sites_gear_multi.jpg";
+import sitesGearSmall from "../../assets/images/sites_gear_small.jpg";
+import sitesGearTarp from "../../assets/images/sites_gear_tarp.jpg";
 import sitesHero from "../../assets/images/sites_hero.jpg";
 import thumbDogrun from "../../assets/images/sites_thumb_dogrun.jpg";
 import thumbDuo from "../../assets/images/sites_thumb_duo.jpg";
@@ -73,6 +78,8 @@ const gearRoutes = [
 	{
 		label: "小型テントのみ",
 		body: "ソロテント1張りを中心に、荷物を小さくまとめる使い方。",
+		img: sitesGearSmall,
+		alt: "竹林を背にした区画に張った小型ドームテント",
 		size: "SS・S",
 		href: "/sites/solo/",
 		linkText: "ソロ向けを見る",
@@ -80,6 +87,8 @@ const gearRoutes = [
 	{
 		label: "テント＋タープ",
 		body: "寝る場所と、食事や焚き火の場所を分けたい使い方。",
+		img: sitesGearTarp,
+		alt: "テントの上に大きなタープを重ねて張った林間サイト",
 		size: "S・M",
 		href: "/sites/duo/",
 		linkText: "デュオ向けを見る",
@@ -87,6 +96,8 @@ const gearRoutes = [
 	{
 		label: "大型テント＋タープ",
 		body: "2ルームや大型幕に加え、区画内へ余白も残したい使い方。",
+		img: sitesGearLarge,
+		alt: "広い区画に設営した大型テントとスクリーンタープ",
 		size: "L・LL",
 		href: "/sites/family/",
 		linkText: "ファミリー向けを見る",
@@ -94,6 +105,8 @@ const gearRoutes = [
 	{
 		label: "複数のテント",
 		body: "各自のテントを並べる場合は、XLまたは隣接区画を検討します。",
+		img: sitesGearMulti,
+		alt: "夜、複数のテントとランタンが並ぶグループ利用の区画",
 		size: "XL・連結",
 		href: "/sites/group/",
 		linkText: "グループ向けを見る",
@@ -101,6 +114,8 @@ const gearRoutes = [
 	{
 		label: "ハンモック",
 		body: "木の位置と間隔が合う区画を選ぶ必要があります。",
+		img: sitesGearHammock,
+		alt: "薪ストーブの向こうにタープと焚き火が見える夕暮れのサイト",
 		size: "要確認",
 		href: "/sites/solo/#hammock",
 		linkText: "ハンモックの条件",
@@ -296,10 +311,20 @@ const sizeGuide = [
               <span class="text-lg font-semibold text-zinc-800">{g.label}</span>
               <span class="text-xs tracking-[0.14em] text-zinc-400">{g.size}</span>
             </p>
-            {/* 写真は別途選定。枠だけ先に確保する。 */}
-            <span class="mt-4 flex aspect-[4/3] w-full items-center justify-center border border-dashed border-zinc-300 bg-zinc-50">
-              <span class="text-xs tracking-[0.16em] text-zinc-400">写真 準備中</span>
-            </span>
+            {g.img ? (
+              <Picture
+                src={g.img}
+                formats={["avif", "webp"]}
+                alt={g.alt}
+                loading="lazy"
+                sizes="(max-width: 640px) 100vw, 22rem"
+                class="mt-4 aspect-[4/3] w-full object-cover"
+              />
+            ) : (
+              <span class="mt-4 flex aspect-[4/3] w-full items-center justify-center border border-dashed border-zinc-300 bg-zinc-50">
+                <span class="text-xs tracking-[0.16em] text-zinc-400">写真 準備中</span>
+              </span>
+            )}
             <p class="mt-3 text-sm leading-loose text-zinc-600">{g.body}</p>
             <p class="mt-3">
               <a

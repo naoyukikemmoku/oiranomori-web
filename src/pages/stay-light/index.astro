@@ -1,4 +1,21 @@
 ---
+import { Picture } from "astro:assets";
+import slAft1 from "../../assets/images/sl_aft_1.jpg";
+import slAft2 from "../../assets/images/sl_aft_2.jpg";
+import slAft3 from "../../assets/images/sl_aft_3.jpg";
+import slAft4 from "../../assets/images/sl_aft_4.jpg";
+import slAft5 from "../../assets/images/sl_aft_5.jpg";
+import slCheckin from "../../assets/images/sl_checkin.jpg";
+import slCheckout from "../../assets/images/sl_checkout.jpg";
+import slEve1 from "../../assets/images/sl_eve_1.jpg";
+import slEve2 from "../../assets/images/sl_eve_2.jpg";
+import slEve3 from "../../assets/images/sl_eve_3.jpg";
+import slEve4 from "../../assets/images/sl_eve_4.jpg";
+import slEve5 from "../../assets/images/sl_eve_5.jpg";
+import slMorning from "../../assets/images/sl_morning.jpg";
+import slNight from "../../assets/images/sl_night.jpg";
+import slPitch from "../../assets/images/sl_pitch.jpg";
+import slStarry from "../../assets/images/sl_starry.jpg";
 import { PROX_SEARCH_URL } from "../../config/nav";
 import PageLayout from "../../layouts/PageLayout.astro";
 
@@ -12,10 +29,13 @@ const URL = "https://oiranomori.jp/stay-light/";
 //   body: 段落（配列＝複数段落）
 //   link: 節末の補助導線（任意）
 //   photo: 写真枠の役割メモ（写真は別途選定）
-//   slides: 枚数を指定すると、その枚数のスライダー枠を出す（午後・夕方＝5枚）
+//   img/alt: 単枠の写真
+//   slides: [{src, alt}...] スライダー（午後・夕方＝5枚）
 const chapters = [
 	{
 		id: "checkin",
+		img: slCheckin,
+		alt: "新緑の木立に囲まれた木造の受付・売店",
 		time: "9:00〜17:00",
 		heading: "受付をして、森へ入る",
 		body: [
@@ -28,6 +48,8 @@ const chapters = [
 	},
 	{
 		id: "pitch",
+		img: slPitch,
+		alt: "木立の間の区画に設営したテントとタープ",
 		time: "受付後",
 		heading: "木立の中に、居場所をつくる",
 		body: [
@@ -55,7 +77,13 @@ const chapters = [
 			cta: "stay-light-to-sites-audience",
 		},
 		photo: "食事、読書、休憩など、作り込みすぎていない実際の過ごし方。",
-		slides: 5,
+		slides: [
+			{ src: slAft1, alt: "木漏れ日の下、チェアを広げて過ごす午後のサイト" },
+			{ src: slAft2, alt: "テーブルに道具を並べて過ごす林間サイトの午後" },
+			{ src: slAft3, alt: "木立の間に張ったタープの下でくつろぐ時間" },
+			{ src: slAft4, alt: "森の中でコーヒーを淹れる道具まわり" },
+			{ src: slAft5, alt: "落ち葉の地面と、設営を終えたサイトの午後" },
+		],
 	},
 	{
 		id: "evening",
@@ -68,10 +96,18 @@ const chapters = [
 		],
 		photo:
 			"日没前後の光と、夕食または焚き火。大人数の宴会に見える写真は使わない。",
-		slides: 5,
+		slides: [
+			{ src: slEve1, alt: "日が傾き、焚き火の準備を始めるサイト" },
+			{ src: slEve2, alt: "夕暮れのタープとランタンの灯り" },
+			{ src: slEve3, alt: "薪ストーブに火を入れた夕方のサイト" },
+			{ src: slEve4, alt: "焚き火を囲んで食事の支度をする夕方" },
+			{ src: slEve5, alt: "暗くなりはじめた林間と、灯りのともるテント" },
+		],
 	},
 	{
 		id: "starry",
+		img: slStarry,
+		alt: "夜、ランタンの灯りだけが残る静かなサイト",
 		time: "21:00",
 		heading: "森の夜を、みんなで静かにつくる",
 		body: [
@@ -84,6 +120,8 @@ const chapters = [
 	},
 	{
 		id: "night",
+		img: slNight,
+		alt: "タープの下に吊ったハンモックと夜の灯り",
 		time: "就寝",
 		heading: "森の暗さと音の中で眠る",
 		body: [
@@ -93,6 +131,8 @@ const chapters = [
 	},
 	{
 		id: "morning",
+		img: slMorning,
+		alt: "朝日が木々の間から差し込む森",
 		time: "翌朝",
 		heading: "鳥の声と、朝の光",
 		body: [
@@ -102,6 +142,8 @@ const chapters = [
 	},
 	{
 		id: "checkout",
+		img: slCheckout,
+		alt: "撤収を終えた区画と、朝の光の残る林間",
 		time: "翌12:00",
 		heading: "来たときの森へ戻して、帰る",
 		body: [
@@ -161,20 +203,36 @@ const chapters = [
                 class="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2"
                 aria-label={`${c.heading}の写真`}
               >
-                {Array.from({ length: c.slides }).map((_, i) => (
+                {c.slides.map((sl) => (
                   <li class="w-[78%] shrink-0 snap-start sm:w-[46%]">
-                    <span class="flex aspect-[4/3] w-full items-center justify-center border border-dashed border-zinc-300 bg-zinc-50">
-                      <span class="text-xs tracking-[0.16em] text-zinc-400">写真 準備中 {i + 1}</span>
-                    </span>
+                    <Picture
+                      src={sl.src}
+                      formats={["avif", "webp"]}
+                      alt={sl.alt}
+                      loading="lazy"
+                      sizes="(max-width: 640px) 78vw, 22rem"
+                      class="aspect-[4/3] w-full object-cover"
+                    />
                   </li>
                 ))}
               </ul>
               <p class="mt-1 text-xs text-zinc-400">横にスワイプすると続きの写真を見られます。</p>
             </div>
           ) : (
-            <span class="mt-5 flex aspect-[16/9] w-full items-center justify-center border border-dashed border-zinc-300 bg-zinc-50">
-              <span class="text-xs tracking-[0.16em] text-zinc-400">写真 準備中</span>
-            </span>
+            c.img ? (
+              <Picture
+                src={c.img}
+                formats={["avif", "webp"]}
+                alt={c.alt}
+                loading="lazy"
+                sizes="(max-width: 768px) 100vw, 44rem"
+                class="mt-5 aspect-[16/9] w-full object-cover"
+              />
+            ) : (
+              <span class="mt-5 flex aspect-[16/9] w-full items-center justify-center border border-dashed border-zinc-300 bg-zinc-50">
+                <span class="text-xs tracking-[0.16em] text-zinc-400">写真 準備中</span>
+              </span>
+            )
           )}
 
           {c.body.map((p) => (

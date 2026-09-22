@@ -2,8 +2,12 @@
 import { Image } from "astro:assets";
 import planDaycamp from "../assets/images/plan_daycamp.JPEG";
 import planDogrun from "../assets/images/plan_dogrun.JPEG";
+import planKukaku from "../assets/images/plan_kukaku.jpg";
+import planSolo from "../assets/images/plan_solo.jpg";
 import planStandard from "../assets/images/plan_standard.JPEG";
 import planTrain from "../assets/images/plan_train.JPEG";
+import planWorkation from "../assets/images/plan_workation.jpg";
+import planYaei from "../assets/images/plan_yaei.jpg";
 import CongestionMatrix from "../components/CongestionMatrix.astro";
 import OshiraseList from "../components/OshiraseList.astro";
 import SeasonSlider from "../components/SeasonSlider.astro";
@@ -40,8 +44,8 @@ const plans: Array<{
 		ci: "IN 12:00〜17:00",
 		co: "チェックアウト 翌12:00",
 		id: 5,
-		img: null,
-		alt: "",
+		img: planKukaku,
+		alt: "林間にタープとハンモックを張り、石を組んだ焚き火をする区画サイト",
 		subtitle: "車の乗り入れなし",
 	},
 	{
@@ -50,8 +54,8 @@ const plans: Array<{
 		ci: "IN 12:00〜17:00",
 		co: "チェックアウト 翌12:00",
 		id: 6,
-		img: null,
-		alt: "",
+		img: planYaei,
+		alt: "夜、タープの下のグランドシートに座る子どもと野営らしい設営",
 		subtitle: "ライトフォレスト",
 	},
 	{
@@ -81,8 +85,8 @@ const plans: Array<{
 		ci: "IN 12:00〜17:00",
 		co: "チェックアウト 翌12:00",
 		id: 16,
-		img: null,
-		alt: "",
+		img: planWorkation,
+		alt: "パラソルの下でノートパソコンを広げる平日ソロのワーケーション",
 		subtitle: "平日ソロ限定",
 	},
 	{
@@ -91,8 +95,8 @@ const plans: Array<{
 		ci: "IN 12:00〜17:00",
 		co: "チェックアウト 翌12:00",
 		id: 21,
-		img: null,
-		alt: "",
+		img: planSolo,
+		alt: "夜、焚き火の前で犬と静かに過ごすソロキャンパー",
 		subtitle: "平日ソロ限定",
 	},
 	{
