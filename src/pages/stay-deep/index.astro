@@ -1,4 +1,6 @@
 ---
+import PhotoSlider from "../../components/PhotoSlider.astro";
+import ScrollPhoto from "../../components/ScrollPhoto.astro";
 import { DEEP_RESERVE_LABEL, PROX_DEEP_RESERVE_URL } from "../../config/nav";
 import LpLayout from "../../layouts/LpLayout.astro";
 
@@ -17,7 +19,9 @@ const conditions = [
 
 // 時間軸セクション。利用条件・必要装備の正本は /deep/ と /deep-guide/。
 // 所在地・経路を特定できる情報は本ページに載せない。
-//   photo: 写真枠の役割メモ。写真未選定のため DOM は生成しない。
+//   photo : 写真枠の役割メモ。写真選定時の判断材料として残す。
+//   img/alt: 単枠の写真（未選定の間は準備中枠を出す）
+//   slides: 自動送りスライダー（到着・設営／夕方）。src 未設定の枠は準備中で出る。
 const chapters = [
 	{
 		id: "prepare",
@@ -55,6 +59,13 @@ const chapters = [
 		],
 		photo:
 			"少人数の幕と周囲の森。ライト側の設備や区画サイトに見える写真は使わない。",
+		slides: [
+			{ alt: "設営を始めたディープフォレストの野営地", label: "設営 1" },
+			{ alt: "木立の間に張った少人数の幕", label: "設営 2" },
+			{ alt: "地面の状態を確かめながら整えた寝る場所", label: "設営 3" },
+			{ alt: "設営を終えた野営地と周囲の針葉樹林", label: "設営 4" },
+			{ alt: "明るいうちに道具を並べ終えた状態", label: "設営 5" },
+		],
 	},
 	{
 		id: "evening",
@@ -65,6 +76,13 @@ const chapters = [
 			"ディープフォレストは、便利な設備を減らしたライトフォレストではありません。設備のない環境を自分で整えて過ごすための、別のフィールドです。",
 		],
 		photo: "夕方の準備と必要最小限の灯り。豪華な常設設備があるように見せない。",
+		slides: [
+			{ alt: "日が傾きはじめたディープフォレストの野営地", label: "夕方 1" },
+			{ alt: "暗くなる前に食事の支度を進める手元", label: "夕方 2" },
+			{ alt: "焚き火に火を入れた夕方の野営地", label: "夕方 3" },
+			{ alt: "手の届く場所にまとめた照明と道具", label: "夕方 4" },
+			{ alt: "暗くなりはじめた森と、少ない灯り", label: "夕方 5" },
+		],
 	},
 	{
 		id: "night",
@@ -116,6 +134,12 @@ const chapters = [
     })} />
   </Fragment>
 
+  {/* ヒーロー。写真選定後は Picture（widths 明示・loading="eager"）へ置き換える。
+      枠の段階から同じ寸法を確保し、差し替え時に CLS を起こさない。 */}
+  <div class="flex aspect-[16/9] w-full items-center justify-center border-b border-dashed border-zinc-700 bg-[color:var(--forest-700)] sm:aspect-[2.6/1]">
+    <span class="text-xs tracking-[0.16em] text-zinc-500">写真 準備中（ディープの一泊 ヒーロー）</span>
+  </div>
+
   {/* ファーストビュー */}
   <section class="bg-[color:var(--forest-700)] py-20 md:py-28">
     <div class="mx-auto max-w-6xl px-5">
@@ -164,6 +188,19 @@ const chapters = [
                     {c.link.text} →
                   </a>
                 </p>
+              )}
+
+              {/* 各セクションの写真。到着・設営／夕方は自動送りのスライダー。 */}
+              {c.slides ? (
+                <PhotoSlider
+                  class="mt-6"
+                  slides={c.slides}
+                  label={`${c.heading}の写真`}
+                  ratio="16/9"
+                  tone="dark"
+                />
+              ) : (
+                <ScrollPhoto class="mt-6" ratio="16/9" label={c.time} alt="" />
               )}
             </div>
           </div>

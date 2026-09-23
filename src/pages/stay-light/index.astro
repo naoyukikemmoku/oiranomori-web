@@ -16,6 +16,7 @@ import slMorning from "../../assets/images/sl_morning.jpg";
 import slNight from "../../assets/images/sl_night.jpg";
 import slPitch from "../../assets/images/sl_pitch.jpg";
 import slStarry from "../../assets/images/sl_starry.jpg";
+import PhotoSlider from "../../components/PhotoSlider.astro";
 import { PROX_SEARCH_URL } from "../../config/nav";
 import PageLayout from "../../layouts/PageLayout.astro";
 
@@ -30,7 +31,7 @@ const URL = "https://oiranomori.jp/stay-light/";
 //   link: 節末の補助導線（任意）
 //   photo: 写真枠の役割メモ（写真は別途選定）
 //   img/alt: 単枠の写真
-//   slides: [{src, alt}...] スライダー（午後・夕方＝5枚）
+//   slides: [{src, alt}...] 自動送りスライダー（午後・夕方＝5枚）
 const chapters = [
 	{
 		id: "checkin",
@@ -198,26 +199,12 @@ const chapters = [
           <h2 class="text-xl font-semibold text-zinc-800">{c.heading}</h2>
 
           {c.slides ? (
-            <div class="mt-5">
-              <ul
-                class="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2"
-                aria-label={`${c.heading}の写真`}
-              >
-                {c.slides.map((sl) => (
-                  <li class="w-[78%] shrink-0 snap-start sm:w-[46%]">
-                    <Picture
-                      src={sl.src}
-                      formats={["avif", "webp"]}
-                      alt={sl.alt}
-                      loading="lazy"
-                      sizes="(max-width: 640px) 78vw, 22rem"
-                      class="aspect-[4/3] w-full object-cover"
-                    />
-                  </li>
-                ))}
-              </ul>
-              <p class="mt-1 text-xs text-zinc-400">横にスワイプすると続きの写真を見られます。</p>
-            </div>
+            <PhotoSlider
+              class="mt-5"
+              slides={c.slides}
+              label={`${c.heading}の写真`}
+              ratio="16/9"
+            />
           ) : (
             c.img ? (
               <Picture
