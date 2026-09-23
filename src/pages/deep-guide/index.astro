@@ -1,6 +1,7 @@
 ﻿---
 import { Picture } from "astro:assets";
 import ScrollPhoto from "../../components/ScrollPhoto.astro";
+import deepguideGear from "../../assets/images/deepguide_gear.jpg";
 import deepguideHero from "../../assets/images/deepguide_hero.jpg";
 import deepguideLightsout from "../../assets/images/deepguide_lightsout.jpg";
 import { DEEP_RESERVE_LABEL, PROX_DEEP_RESERVE_URL } from "../../config/nav";
@@ -324,7 +325,7 @@ const facilities = [
       ))}
     </ul>
 
-    <ScrollPhoto class="mt-6" ratio="16/9" label="装備と過ごし方" alt="" />
+    <ScrollPhoto class="mt-6" ratio="16/9" src={deepguideGear} alt="夜のスギ林に、灯りのともったテントが小さく浮かぶ野営地" />
 
     <p class="mt-4 text-sm">
       <a

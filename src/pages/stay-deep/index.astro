@@ -1,13 +1,17 @@
 ---
 import { Picture } from "astro:assets";
 import sdEve1 from "../../assets/images/sd_eve_1.jpg";
+import sdEve3 from "../../assets/images/sd_eve_3.jpg";
+import sdEve4 from "../../assets/images/sd_eve_4.jpg";
 import sdEve5 from "../../assets/images/sd_eve_5.jpg";
 import sdHero from "../../assets/images/sd_hero.jpg";
 import sdMorning from "../../assets/images/sd_morning.jpg";
 import sdNight from "../../assets/images/sd_night.jpg";
+import sdPitch1 from "../../assets/images/sd_pitch_1.jpg";
 import sdPitch2 from "../../assets/images/sd_pitch_2.jpg";
 import sdPitch4 from "../../assets/images/sd_pitch_4.jpg";
 import sdPitch5 from "../../assets/images/sd_pitch_5.jpg";
+import sdPrepare from "../../assets/images/sd_prepare.jpg";
 import sdReception from "../../assets/images/sd_reception.jpg";
 import PhotoSlider from "../../components/PhotoSlider.astro";
 import ScrollPhoto from "../../components/ScrollPhoto.astro";
@@ -46,6 +50,8 @@ const chapters = [
 			text: "利用条件と必要装備を確認する",
 			cta: "stay-deep-to-deep",
 		},
+		img: sdPrepare,
+		alt: "炭やストーブ、レンタル用品が並ぶライトフォレスト売店の棚",
 		photo: "一泊分の装備が分かる荷姿。過剰なサバイバル演出は避ける。",
 	},
 	{
@@ -72,7 +78,7 @@ const chapters = [
 		photo:
 			"少人数の幕と周囲の森。ライト側の設備や区画サイトに見える写真は使わない。",
 		slides: [
-			{ label: "設営 1" },
+			{ src: sdPitch1, alt: "膝をついてテントのペグを打つ人と、張り終えた幕" },
 			{ src: sdPitch2, alt: "スギ林の斜面に設営した2張りのテントと荷物" },
 			{ label: "設営 3" },
 			{ src: sdPitch4, alt: "木立の間に張ったテントと、そばに横たわる倒木" },
@@ -94,8 +100,11 @@ const chapters = [
 				alt: "夕暮れの杉林で、煙を上げる焚き火を囲むテントまわり",
 			},
 			{ label: "夕方 2" },
-			{ label: "夕方 3" },
-			{ label: "夕方 4" },
+			{
+				src: sdEve3,
+				alt: "夕暮れの杉林で、焚き火に手をかざしながら食事の支度をする人たち",
+			},
+			{ src: sdEve4, alt: "薄暮のスギ・ヒノキ林にのびる、下草を分けた踏み跡" },
 			{ src: sdEve5, alt: "枝を組んだ焚き火にかけた鍋と、火ばさみを持つ手元" },
 		],
 	},
