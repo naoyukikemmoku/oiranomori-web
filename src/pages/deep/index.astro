@@ -9,6 +9,12 @@ import deepFaceImg from "../../assets/images/deep_face.JPEG";
 import deepHeroImg from "../../assets/images/deep_hero.jpg";
 import deepNightImg from "../../assets/images/deep_night.JPEG";
 import deepSilentImg from "../../assets/images/deep_silentforest.JPEG";
+import deepBreakConcept from "../../assets/images/deep_break_concept.jpg";
+import deepBreakExperience from "../../assets/images/deep_break_experience.jpg";
+import deepBreakFit from "../../assets/images/deep_break_fit.jpg";
+import deepBreakReserve from "../../assets/images/deep_break_reserve.jpg";
+import deepBreakSilence from "../../assets/images/deep_break_silence.jpg";
+import deepBreakStay from "../../assets/images/deep_break_stay.jpg";
 
 const experiences = [
   {
@@ -122,10 +128,8 @@ const experiences = [
   {/* Concept。背景写真構成。文字は写真に重ねる。 */}
   <section
     class="relative bg-cover bg-center py-16 md:py-24"
-    data-photo-slot="deep-concept"
+    style="background-image:url('/images/lp/deep-scene-forest.jpg');"
   >
-    {/* 写真 準備中（コンセプト背景）。選定後 style の background-image を差し替える */}
-    <div class="absolute inset-0 border border-dashed border-zinc-700 bg-[color:var(--forest-700)]"></div>
     <div class="absolute inset-0 bg-black/45"></div>
     <div class="relative z-10 mx-auto max-w-6xl px-5">
       <p class="text-xs tracking-[0.28em] text-zinc-500 uppercase">Concept</p>
@@ -150,7 +154,7 @@ const experiences = [
   </section>
 
   {/* セクション間の写真。スクロールに合わせて立ち上げる。 */}
-  <ScrollPhoto label="コンセプトと体験のあいだ" alt="" />
+  <ScrollPhoto src={deepBreakConcept} alt="樹齢80年以上のスギが密に立ち並ぶディープフォレストの林内" />
 
   {/* 4 Experiences */}
   <section id="experiences" class="bg-[color:var(--forest-700)] py-16 md:py-20">
@@ -183,7 +187,7 @@ const experiences = [
     </div>
   </section>
 
-  <ScrollPhoto label="体験と適性のあいだ" alt="" />
+  <ScrollPhoto src={deepBreakExperience} alt="杉木立を背に、枝を組んで焚き火をしている野営地" />
 
   {/* ビジュアルブレイク */}
   <div class="relative h-[300px] overflow-hidden">
@@ -277,21 +281,19 @@ const experiences = [
     </div>
   </section>
 
-  <ScrollPhoto label="適性と静けさの推移のあいだ" alt="" />
+  <ScrollPhoto src={deepBreakFit} alt="タープの下から見上げた、まっすぐ伸びるスギの樹冠" />
 
   {/* 静けさの推移カレンダー */}
   <SilenceCalendar />
 
-  <ScrollPhoto label="静けさの推移と一泊のあいだ" alt="" />
+  <ScrollPhoto src={deepBreakSilence} alt="夜、タープとハンモックのそばで焚き火だけが灯る野営地" />
 
   {/* ディープの一泊。背景写真構成。
       ライトの /stay-light/ とは別商品として、ここでのみ扱う。 */}
   <section
     class="relative bg-cover bg-center py-20 md:py-28"
-    data-photo-slot="deep-stay"
+    style="background-image:url('/images/lp/deep-scene-night.jpg');"
   >
-    {/* 写真 準備中（ディープの一泊 背景）。選定後 style の background-image を差し替える */}
-    <div class="absolute inset-0 border border-dashed border-zinc-700 bg-[color:var(--forest-600)]"></div>
     <div class="absolute inset-0 bg-black/45"></div>
     <div class="relative z-10 mx-auto max-w-6xl px-6 md:px-10">
       <p class="text-xs tracking-[0.32em] text-zinc-400">A NIGHT IN THE DEEP FOREST</p>
@@ -319,7 +321,7 @@ const experiences = [
     </div>
   </section>
 
-  <ScrollPhoto label="一泊とアーリーチェックインのあいだ" alt="" />
+  <ScrollPhoto src={deepBreakStay} alt="朝の光が差し込む、下草の生えたスギ・ヒノキの林" />
 
   {/* アーリーチェックイン */}
   <section class="bg-[color:var(--forest-700)] py-20 md:py-28">
@@ -350,7 +352,7 @@ const experiences = [
     </div>
   </section>
 
-  <ScrollPhoto label="アーリーチェックインと予約のあいだ" alt="" />
+  <ScrollPhoto src={deepBreakReserve} alt="暮れかけた空の下、杉木立に囲まれて上がる焚き火の炎" />
 
   {/* CTA */}
   <section class="bg-[color:var(--forest-700)] py-20 md:py-28">

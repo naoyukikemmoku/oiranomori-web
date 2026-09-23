@@ -1,5 +1,8 @@
 ﻿---
+import { Picture } from "astro:assets";
 import ScrollPhoto from "../../components/ScrollPhoto.astro";
+import deepguideHero from "../../assets/images/deepguide_hero.jpg";
+import deepguideLightsout from "../../assets/images/deepguide_lightsout.jpg";
 import { DEEP_RESERVE_LABEL, PROX_DEEP_RESERVE_URL } from "../../config/nav";
 import PageLayout from "../../layouts/PageLayout.astro";
 
@@ -68,9 +71,16 @@ const facilities = [
 
   {/* ヒーロー。写真選定後は Picture（full-bleed / widths 明示）へ置き換える。
       枠の段階から同じ寸法を確保し、差し替え時に CLS を起こさない。 */}
-  <span class="full-bleed mb-10 flex aspect-[16/9] w-full items-center justify-center border border-dashed border-zinc-700 bg-white/[0.02] sm:aspect-[2.6/1]">
-    <span class="text-xs tracking-[0.16em] text-zinc-500">写真 準備中（ディープフォレスト ヒーロー）</span>
-  </span>
+  <Picture
+    src={deepguideHero}
+    formats={["avif", "webp"]}
+    alt="下草の中に踏み跡がのびる、樹齢80年以上のスギ・ヒノキの林"
+    loading="eager"
+    fetchpriority="high"
+    widths={[768, 1280, 1920, 2560]}
+    sizes="100vw"
+    class="full-bleed mb-10 object-cover aspect-[16/9] sm:aspect-[2.6/1]"
+  />
 
   {/* ページ見出し */}
   <div class="mb-10 border-b border-zinc-700 pb-8">
@@ -181,7 +191,7 @@ const facilities = [
   <section class="mb-14">
     <h2 class="mb-5 text-xl font-semibold text-white">消灯</h2>
     <p class="border-y border-zinc-700 py-5 text-sm text-zinc-300">22:00 消灯</p>
-    <ScrollPhoto class="mt-6" ratio="16/9" label="消灯後の森" alt="" />
+    <ScrollPhoto class="mt-6" ratio="16/9" src={deepguideLightsout} alt="消灯後、杉の梢の上に月が浮かぶディープフォレストの夜空" />
   </section>
 
   {/* 設備・スペック */}

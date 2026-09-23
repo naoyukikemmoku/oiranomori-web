@@ -1,4 +1,14 @@
 ---
+import { Picture } from "astro:assets";
+import sdEve1 from "../../assets/images/sd_eve_1.jpg";
+import sdEve5 from "../../assets/images/sd_eve_5.jpg";
+import sdHero from "../../assets/images/sd_hero.jpg";
+import sdMorning from "../../assets/images/sd_morning.jpg";
+import sdNight from "../../assets/images/sd_night.jpg";
+import sdPitch2 from "../../assets/images/sd_pitch_2.jpg";
+import sdPitch4 from "../../assets/images/sd_pitch_4.jpg";
+import sdPitch5 from "../../assets/images/sd_pitch_5.jpg";
+import sdReception from "../../assets/images/sd_reception.jpg";
 import PhotoSlider from "../../components/PhotoSlider.astro";
 import ScrollPhoto from "../../components/ScrollPhoto.astro";
 import { DEEP_RESERVE_LABEL, PROX_DEEP_RESERVE_URL } from "../../config/nav";
@@ -46,6 +56,8 @@ const chapters = [
 			"ディープフォレストへ直接向かうことはできません。はじめにライトフォレストの受付で、年齢確認と当日の案内を受けます。場所は受付後に案内します。",
 			"受付からディープフォレストまでは、車で約7分です。案内に従って移動してください。",
 		],
+		img: sdReception,
+		alt: "木立に囲まれたライトフォレストの受付棟と薪置き場",
 		photo:
 			"受付または移動準備。所在地を特定できる地図、分岐、看板は掲載しない。",
 	},
@@ -60,11 +72,11 @@ const chapters = [
 		photo:
 			"少人数の幕と周囲の森。ライト側の設備や区画サイトに見える写真は使わない。",
 		slides: [
-			{ alt: "設営を始めたディープフォレストの野営地", label: "設営 1" },
-			{ alt: "木立の間に張った少人数の幕", label: "設営 2" },
-			{ alt: "地面の状態を確かめながら整えた寝る場所", label: "設営 3" },
-			{ alt: "設営を終えた野営地と周囲の針葉樹林", label: "設営 4" },
-			{ alt: "明るいうちに道具を並べ終えた状態", label: "設営 5" },
+			{ label: "設営 1" },
+			{ src: sdPitch2, alt: "スギ林の斜面に設営した2張りのテントと荷物" },
+			{ label: "設営 3" },
+			{ src: sdPitch4, alt: "木立の間に張ったテントと、そばに横たわる倒木" },
+			{ src: sdPitch5, alt: "幹に張ったタープの下に吊るしたハンモック" },
 		],
 	},
 	{
@@ -77,11 +89,14 @@ const chapters = [
 		],
 		photo: "夕方の準備と必要最小限の灯り。豪華な常設設備があるように見せない。",
 		slides: [
-			{ alt: "日が傾きはじめたディープフォレストの野営地", label: "夕方 1" },
-			{ alt: "暗くなる前に食事の支度を進める手元", label: "夕方 2" },
-			{ alt: "焚き火に火を入れた夕方の野営地", label: "夕方 3" },
-			{ alt: "手の届く場所にまとめた照明と道具", label: "夕方 4" },
-			{ alt: "暗くなりはじめた森と、少ない灯り", label: "夕方 5" },
+			{
+				src: sdEve1,
+				alt: "夕暮れの杉林で、煙を上げる焚き火を囲むテントまわり",
+			},
+			{ label: "夕方 2" },
+			{ label: "夕方 3" },
+			{ label: "夕方 4" },
+			{ src: sdEve5, alt: "枝を組んだ焚き火にかけた鍋と、火ばさみを持つ手元" },
 		],
 	},
 	{
@@ -92,6 +107,8 @@ const chapters = [
 			"周囲にあるのは、森の暗さと音です。風、木々、鳥や動物の気配が、昼より近く感じられます。大きな声や強い照明で夜を消さず、少人数で静かに過ごします。",
 			"用意された便利さより、自分で判断して夜を整える時間を選ぶ場所です。",
 		],
+		img: sdNight,
+		alt: "夜、タープに吊るした灯りと、その手前で燃える小さな焚き火",
 		photo:
 			"少ない灯りと暗い森。長時間露光による誤認や、危険な行為に見える写真は避ける。",
 	},
@@ -108,6 +125,8 @@ const chapters = [
 			text: "ディープフォレスト 利用案内を見る",
 			cta: "stay-deep-to-deep-guide",
 		},
+		img: sdMorning,
+		alt: "朝、タープの下から見上げた光の差し込むスギ林",
 		photo: "朝の森、撤収、荷物をまとめた状態。",
 	},
 ];
@@ -136,9 +155,16 @@ const chapters = [
 
   {/* ヒーロー。写真選定後は Picture（widths 明示・loading="eager"）へ置き換える。
       枠の段階から同じ寸法を確保し、差し替え時に CLS を起こさない。 */}
-  <div class="flex aspect-[16/9] w-full items-center justify-center border-b border-dashed border-zinc-700 bg-[color:var(--forest-700)] sm:aspect-[2.6/1]">
-    <span class="text-xs tracking-[0.16em] text-zinc-500">写真 準備中（ディープの一泊 ヒーロー）</span>
-  </div>
+  <Picture
+    src={sdHero}
+    formats={["avif", "webp"]}
+    alt="冬の雑木林に張ったドームテントとタープ、そのあいだで上がる焚き火の煙"
+    loading="eager"
+    fetchpriority="high"
+    widths={[768, 1280, 1920, 2365]}
+    sizes="100vw"
+    class="w-full object-cover aspect-[16/9] sm:aspect-[2.6/1]"
+  />
 
   {/* ファーストビュー */}
   <section class="bg-[color:var(--forest-700)] py-20 md:py-28">
@@ -200,7 +226,7 @@ const chapters = [
                   tone="dark"
                 />
               ) : (
-                <ScrollPhoto class="mt-6" ratio="16/9" label={c.time} alt="" />
+                <ScrollPhoto class="mt-6" ratio="16/9" src={c.img} alt={c.alt ?? ""} label={c.time} />
               )}
             </div>
           </div>
