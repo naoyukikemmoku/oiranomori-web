@@ -1,0 +1,329 @@
+---
+import { Picture } from "astro:assets";
+/**
+ * 自動送りの写真スライダー。/stay-light/ /stay-deep/ の時間軸セクションで使う。
+ * 未選定の枠が混ざっても壊れないよう、src なしのスライドは準備中枠として出す。
+ *
+ * 操作系：自動送り＋左右ボタン＋進捗バー。
+ * ホバー・フォーカス中と画面外では自動送りを止める。
+ * prefers-reduced-motion では自動送りしない（ボタンのみで送る）。
+ *
+ * Props
+ *   slides  : [{ src?, alt, label? }]
+ *   label   : スライダー全体の aria-label（例「午後の写真」）
+ *   ratio   : アスペクト比。既定 4/3
+ *   tone    : "dark" | "light" 準備中枠と操作系の配色
+ *   interval: 自動送りの間隔(ms)。既定 5000
+ */
+import type { ImageMetadata } from "astro";
+
+interface Slide {
+	src?: ImageMetadata;
+	alt: string;
+	label?: string;
+}
+
+interface Props {
+	slides: Slide[];
+	label: string;
+	ratio?: string;
+	tone?: "dark" | "light";
+	interval?: number;
+	class?: string;
+}
+
+const {
+	slides,
+	label,
+	ratio = "4/3",
+	tone = "light",
+	interval = 5000,
+	class: className = "",
+} = Astro.props;
+---
+
+<div
+  class:list={["ps-wrap", tone === "dark" && "ps-wrap--dark", className]}
+  data-photo-slider
+  data-interval={interval}
+  style={`--ps-ratio:${ratio};`}
+>
+  <div class="ps-viewport" role="group" aria-roledescription="carousel" aria-label={label}>
+    {slides.map((sl, i) => (
+      <div
+        class:list={["ps-slide", i === 0 && "is-active"]}
+        data-ps-slide
+        aria-hidden={i === 0 ? "false" : "true"}
+      >
+        {sl.src ? (
+          <Picture
+            src={sl.src}
+            formats={["avif", "webp"]}
+            alt={sl.alt}
+            loading="lazy"
+            decoding="async"
+            sizes="(max-width: 768px) 100vw, 44rem"
+            class="ps-img"
+          />
+        ) : (
+          <span class="ps-pending">
+            <span class="ps-pending__text">写真 準備中{sl.label ? `（${sl.label}）` : ""}</span>
+          </span>
+        )}
+      </div>
+    ))}
+
+    {slides.length > 1 && (
+      <Fragment>
+        <button type="button" class="ps-btn ps-btn--prev" data-ps-prev aria-label="前の写真">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <button type="button" class="ps-btn ps-btn--next" data-ps-next aria-label="次の写真">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <div class="ps-progress" aria-hidden="true"><span class="ps-progress__bar" data-ps-bar></span></div>
+      </Fragment>
+    )}
+  </div>
+
+  {slides.length > 1 && (
+    <p class="ps-status" aria-live="polite">
+      <span data-ps-index>1</span> / {slides.length}
+    </p>
+  )}
+</div>
+
+<style>
+  .ps-wrap {
+    position: relative;
+  }
+
+  .ps-viewport {
+    position: relative;
+    width: 100%;
+    aspect-ratio: var(--ps-ratio);
+    overflow: hidden;
+    background: #e4e4e7;
+  }
+
+  .ps-wrap--dark .ps-viewport {
+    background: #1a2118;
+  }
+
+  .ps-slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.9s ease;
+    pointer-events: none;
+  }
+
+  .ps-slide.is-active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .ps-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ps-pending {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed #d4d4d8;
+    background: #fafafa;
+  }
+
+  .ps-wrap--dark .ps-pending {
+    border-color: #3f463d;
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  .ps-pending__text {
+    font-size: 0.75rem;
+    letter-spacing: 0.16em;
+    color: #71717a;
+  }
+
+  .ps-btn {
+    position: absolute;
+    top: 50%;
+    z-index: 2;
+    transform: translateY(-50%);
+    padding: 0.85rem;
+    line-height: 0;
+    color: rgba(255, 255, 255, 0.85);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    filter: drop-shadow(0 1px 6px rgba(0, 0, 0, 0.6));
+    transition: color 0.2s;
+  }
+
+  .ps-btn:hover {
+    color: #fff;
+  }
+
+  .ps-btn--prev {
+    left: 0.25rem;
+  }
+
+  .ps-btn--next {
+    right: 0.25rem;
+  }
+
+  .ps-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+    width: 100%;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.22);
+  }
+
+  .ps-progress__bar {
+    display: block;
+    width: 0;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.75);
+  }
+
+  .ps-status {
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    color: #a1a1aa;
+  }
+
+  .ps-wrap--dark .ps-status {
+    color: #71717a;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ps-slide {
+      transition: none;
+    }
+    .ps-progress {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  function initPhotoSliders() {
+    const wraps = document.querySelectorAll<HTMLElement>(
+      "[data-photo-slider]:not([data-ps-ready])",
+    );
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    for (const wrap of wraps) {
+      wrap.dataset.psReady = "1";
+
+      const slides = Array.from(wrap.querySelectorAll<HTMLElement>("[data-ps-slide]"));
+      if (slides.length < 2) continue;
+
+      const bar = wrap.querySelector<HTMLElement>("[data-ps-bar]");
+      const indexLabel = wrap.querySelector<HTMLElement>("[data-ps-index]");
+      const interval = Number(wrap.dataset.interval) || 5000;
+
+      let current = 0;
+      let timer: ReturnType<typeof setInterval> | null = null;
+      let paused = false;
+
+      const resetProgress = () => {
+        if (!bar) return;
+        bar.style.transition = "none";
+        bar.style.width = "0%";
+        bar.getBoundingClientRect();
+        bar.style.transition = `width ${interval}ms linear`;
+        bar.style.width = "100%";
+      };
+
+      const stop = () => {
+        if (timer) clearInterval(timer);
+        timer = null;
+        if (bar) {
+          bar.style.transition = "none";
+          bar.style.width = "0%";
+        }
+      };
+
+      const goTo = (next: number) => {
+        slides[current].classList.remove("is-active");
+        slides[current].setAttribute("aria-hidden", "true");
+        current = (next + slides.length) % slides.length;
+        slides[current].classList.add("is-active");
+        slides[current].setAttribute("aria-hidden", "false");
+        if (indexLabel) indexLabel.textContent = String(current + 1);
+      };
+
+      const start = () => {
+        if (reduce || paused || timer) return;
+        timer = setInterval(() => {
+          goTo(current + 1);
+          resetProgress();
+        }, interval);
+        resetProgress();
+      };
+
+      wrap.querySelector("[data-ps-prev]")?.addEventListener("click", () => {
+        goTo(current - 1);
+        stop();
+        start();
+      });
+      wrap.querySelector("[data-ps-next]")?.addEventListener("click", () => {
+        goTo(current + 1);
+        stop();
+        start();
+      });
+
+      // ホバー・フォーカス中は自動送りを止める（読んでいる最中に切り替えない）
+      wrap.addEventListener("pointerenter", () => {
+        paused = true;
+        stop();
+      });
+      wrap.addEventListener("pointerleave", () => {
+        paused = false;
+        start();
+      });
+      wrap.addEventListener("focusin", () => {
+        paused = true;
+        stop();
+      });
+      wrap.addEventListener("focusout", () => {
+        paused = false;
+        start();
+      });
+
+      // 画面外では回さない
+      if ("IntersectionObserver" in window) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) {
+              if (e.isIntersecting) start();
+              else stop();
+            }
+          },
+          { threshold: 0.25 },
+        );
+        io.observe(wrap);
+      } else {
+        start();
+      }
+    }
+  }
+
+  initPhotoSliders();
+  document.addEventListener("astro:page-load", initPhotoSliders);
+</script>
