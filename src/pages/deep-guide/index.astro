@@ -1,6 +1,33 @@
 ﻿---
-import PageLayout from "../../layouts/PageLayout.astro";
+import ScrollPhoto from "../../components/ScrollPhoto.astro";
 import { DEEP_RESERVE_LABEL, PROX_DEEP_RESERVE_URL } from "../../config/nav";
+import PageLayout from "../../layouts/PageLayout.astro";
+
+// 利用規定・基本情報。/deep/ から移設（このページを正本とする）。
+const specs = [
+	{ label: "利用制限", value: "18歳以上のみ（入場時に年齢確認書類を提示）" },
+	{ label: "定員", value: "1〜3名（4名以上のグループ利用は不可）" },
+	{ label: "区画指定", value: "なし。事前の区画指定は行いません。" },
+	{
+		label: "チェックイン",
+		value: "12:00〜17:00（ライトフォレスト管理棟にて受付）",
+	},
+	{
+		label: "チェックアウト",
+		value: "12:00（空きがある場合、17:00まで無料延長可）",
+	},
+	{
+		label: "直火・焚き火",
+		value: "可（枯れた木の伐採、丸太の使用はご遠慮ください）",
+	},
+	{ label: "火消し壺", value: "持参必須。レンタルあり（¥500）" },
+	{ label: "ゴミ", value: "原則全て持ち帰り（灰のみ指定ペール缶可）" },
+	{ label: "発電機・スピーカー", value: "禁止" },
+	{
+		label: "場所",
+		value: "非公開。受付にて案内（ライトフォレストから車で約7分）",
+	},
+];
 
 const facilities = [
   { label: "トイレ",    value: "仮設トイレのみ（様式便座設置済み）",                                                      avail: true  },
@@ -39,6 +66,12 @@ const facilities = [
     })} />
   </Fragment>
 
+  {/* ヒーロー。写真選定後は Picture（full-bleed / widths 明示）へ置き換える。
+      枠の段階から同じ寸法を確保し、差し替え時に CLS を起こさない。 */}
+  <span class="full-bleed mb-10 flex aspect-[16/9] w-full items-center justify-center border border-dashed border-zinc-700 bg-white/[0.02] sm:aspect-[2.6/1]">
+    <span class="text-xs tracking-[0.16em] text-zinc-500">写真 準備中（ディープフォレスト ヒーロー）</span>
+  </span>
+
   {/* ページ見出し */}
   <div class="mb-10 border-b border-zinc-700 pb-8">
     <p class="text-xs tracking-[0.26em] text-zinc-500 uppercase">Deep Forest</p>
@@ -68,6 +101,7 @@ const facilities = [
 
     <nav class="mt-6 flex flex-wrap gap-3 text-sm">
       {[
+        { href: "#specs",      label: "利用規定・基本情報" },
         { href: "#checkin",    label: "チェックイン" },
         { href: "#checkout",   label: "チェックアウト" },
         { href: "#facility",   label: "設備・スペック" },
@@ -84,6 +118,29 @@ const facilities = [
       ))}
     </nav>
   </div>
+
+  {/* 利用規定・基本情報。/deep/ から移設し、このページを正本とする。 */}
+  <section id="specs" class="mb-14">
+    <h2 class="mb-5 text-xl font-semibold text-white">利用規定・基本情報</h2>
+    <dl class="divide-y divide-zinc-800 border-y border-zinc-700 text-sm">
+      {specs.map((item) => (
+        <div class="grid grid-cols-[9rem_1fr] gap-4 py-4 sm:grid-cols-[12rem_1fr]">
+          <dt class="text-zinc-500">{item.label}</dt>
+          <dd class="text-zinc-300">{item.value}</dd>
+        </div>
+      ))}
+    </dl>
+    <p class="mt-4 text-sm">
+      <a
+        href="/stay-deep/"
+        class="text-zinc-400 underline underline-offset-2 transition hover:text-zinc-200"
+        data-cta="deep-guide-to-stay-deep"
+        data-cta-target="/stay-deep/"
+      >
+        入場から撤収までの流れは「ディープフォレストで過ごす一泊」へ →
+      </a>
+    </p>
+  </section>
 
   {/* チェックイン */}
   <section id="checkin" class="mb-14">
@@ -124,6 +181,7 @@ const facilities = [
   <section class="mb-14">
     <h2 class="mb-5 text-xl font-semibold text-white">消灯</h2>
     <p class="border-y border-zinc-700 py-5 text-sm text-zinc-300">22:00 消灯</p>
+    <ScrollPhoto class="mt-6" ratio="16/9" label="消灯後の森" alt="" />
   </section>
 
   {/* 設備・スペック */}
@@ -255,6 +313,19 @@ const facilities = [
         </li>
       ))}
     </ul>
+
+    <ScrollPhoto class="mt-6" ratio="16/9" label="装備と過ごし方" alt="" />
+
+    <p class="mt-4 text-sm">
+      <a
+        href="/stay-deep/"
+        class="text-zinc-400 underline underline-offset-2 transition hover:text-zinc-200"
+        data-cta="deep-guide-to-stay-deep"
+        data-cta-target="/stay-deep/"
+      >
+        一泊の過ごし方を時間順に見る（ディープフォレストで過ごす一泊）→
+      </a>
+    </p>
   </section>
 
   {/* 場内マップ */}
@@ -305,6 +376,14 @@ const facilities = [
         class="inline-flex items-center justify-center rounded-full border border-zinc-600 px-8 py-3 text-sm text-zinc-400 transition hover:border-zinc-400 hover:text-zinc-200"
       >
         予約ガイドを見る
+      </a>
+      <a
+        href="/stay-deep/"
+        class="inline-flex items-center justify-center rounded-full border border-zinc-600 px-8 py-3 text-sm text-zinc-400 transition hover:border-zinc-400 hover:text-zinc-200"
+        data-cta="deep-guide-to-stay-deep"
+        data-cta-target="/stay-deep/"
+      >
+        ディープフォレストで過ごす一泊
       </a>
     </div>
   </div>

@@ -1,13 +1,14 @@
 ﻿---
-import LpLayout from "../../layouts/LpLayout.astro";
+import { Image } from "astro:assets";
+import ScrollPhoto from "../../components/ScrollPhoto.astro";
 import SilenceCalendar from "../../components/SilenceCalendar.astro";
 import { DEEP_RESERVE_LABEL, PROX_DEEP_RESERVE_URL } from "../../config/nav";
-import { Image } from "astro:assets";
-import deepHeroImg       from "../../assets/images/deep_hero.jpg";
-import deepSilentImg     from "../../assets/images/deep_silentforest.JPEG";
-import deepNightImg      from "../../assets/images/deep_night.JPEG";
-import deepFaceImg       from "../../assets/images/deep_face.JPEG";
-import deepAnimalImg     from "../../assets/images/deep_animal.JPEG";
+import LpLayout from "../../layouts/LpLayout.astro";
+import deepAnimalImg from "../../assets/images/deep_animal.JPEG";
+import deepFaceImg from "../../assets/images/deep_face.JPEG";
+import deepHeroImg from "../../assets/images/deep_hero.jpg";
+import deepNightImg from "../../assets/images/deep_night.JPEG";
+import deepSilentImg from "../../assets/images/deep_silentforest.JPEG";
 
 const experiences = [
   {
@@ -118,29 +119,38 @@ const experiences = [
     </span>
   </section>
 
-  {/* Concept */}
-  <section class="bg-[color:var(--forest-700)] py-16 md:py-24">
-    <div class="mx-auto max-w-6xl px-5">
+  {/* Concept。背景写真構成。文字は写真に重ねる。 */}
+  <section
+    class="relative bg-cover bg-center py-16 md:py-24"
+    data-photo-slot="deep-concept"
+  >
+    {/* 写真 準備中（コンセプト背景）。選定後 style の background-image を差し替える */}
+    <div class="absolute inset-0 border border-dashed border-zinc-700 bg-[color:var(--forest-700)]"></div>
+    <div class="absolute inset-0 bg-black/45"></div>
+    <div class="relative z-10 mx-auto max-w-6xl px-5">
       <p class="text-xs tracking-[0.28em] text-zinc-500 uppercase">Concept</p>
       <h2 class="mt-5 text-3xl font-semibold text-white md:text-4xl">
         樹齢80年以上のスギ・ヒノキが創り出す、<br />圧倒的な静寂と闇。
       </h2>
-      <p class="mt-6 max-w-2xl text-base leading-loose text-zinc-400">
+      <p class="mt-6 max-w-2xl text-base leading-loose text-zinc-300">
         ここはおいらが林業をしている森。<br />
         深い森を味わいたい人のために、その現場を開放している。
       </p>
-      <p class="mt-4 max-w-2xl text-base leading-loose text-zinc-400">
+      <p class="mt-4 max-w-2xl text-base leading-loose text-zinc-300">
         コンビニも整備された炊事場もない。あるのは深い森と、直火と、静寂だけ。<br />
         「キャンプ」ではなく「野営」を求める人のためのフィールド。
       </p>
       <p class="mt-6">
-        <a href="/media/" class="inline-flex items-center gap-2 border border-zinc-700 px-3 py-1.5 text-xs tracking-[0.14em] text-zinc-500 transition hover:border-zinc-500 hover:text-zinc-300">
+        <a href="/media/" class="inline-flex items-center gap-2 border border-zinc-500 px-3 py-1.5 text-xs tracking-[0.14em] text-zinc-300 transition hover:border-zinc-300 hover:text-white">
           BS-TBS ヒロシのぼっちキャンプ ロケ地
           <span aria-hidden="true">→</span>
         </a>
       </p>
     </div>
   </section>
+
+  {/* セクション間の写真。スクロールに合わせて立ち上げる。 */}
+  <ScrollPhoto label="コンセプトと体験のあいだ" alt="" />
 
   {/* 4 Experiences */}
   <section id="experiences" class="bg-[color:var(--forest-700)] py-16 md:py-20">
@@ -173,37 +183,7 @@ const experiences = [
     </div>
   </section>
 
-  {/* 4 Iron Rules */}
-  <section class="bg-[color:var(--forest-600)] py-16 md:py-20">
-    <div class="mx-auto max-w-6xl px-5">
-      <p class="text-xs tracking-[0.28em] text-zinc-500 uppercase">Principles</p>
-      <h2 class="mt-4 text-3xl font-semibold text-white md:text-4xl">基本の4鉄則</h2>
-      <p class="mt-4 text-sm text-zinc-500">この森を利用するすべての者が守る、精神的基盤。</p>
-
-      <dl class="mt-10 divide-y divide-zinc-700 border-t border-b border-zinc-700">
-        {[
-          "森の静寂と闇夜、自然の音を楽しむこと。",
-          "現地で使用可能なものは「落葉・落枝」のみ。",
-          "利用後は現状回復し、足跡以外の痕跡を残さないこと。",
-          "野グソ禁止。トイレ以外での排泄は厳禁。",
-        ].map((rule, i) => (
-          <div class="grid grid-cols-[2rem_1fr] gap-4 py-5 text-sm sm:grid-cols-[3rem_1fr]">
-            <dt class="text-xl font-semibold text-zinc-600">{i + 1}</dt>
-            <dd class="text-zinc-300">{rule}</dd>
-          </div>
-        ))}
-      </dl>
-
-      <p class="mt-6 text-right">
-        <a
-          href="/deep-guide/"
-          class="text-xs tracking-[0.2em] text-zinc-500 transition hover:text-zinc-300"
-        >
-          詳細な利用案内を見る →
-        </a>
-      </p>
-    </div>
-  </section>
+  <ScrollPhoto label="体験と適性のあいだ" alt="" />
 
   {/* ビジュアルブレイク */}
   <div class="relative h-[300px] overflow-hidden">
@@ -216,7 +196,8 @@ const experiences = [
     <div class="absolute inset-0 bg-black/55"></div>
   </div>
 
-  {/* Fit: 利用適性。情緒的体験と利用規定の間に置く */}
+  {/* Fit: 利用適性。「静けさの、移ろい」の手前に置く。
+      利用規定・基本情報と基本4鉄則は /deep-guide/ に集約した。 */}
   <section id="fit" class="bg-[color:var(--forest-600)] py-16 md:py-20">
     <div class="mx-auto max-w-6xl px-5">
       <p class="text-xs tracking-[0.28em] text-zinc-500 uppercase">Fit</p>
@@ -274,41 +255,14 @@ const experiences = [
           </p>
         </div>
       </div>
-    </div>
-  </section>
 
-  {/* Specs & Rules summary */}
-  <section class="bg-[color:var(--forest-700)] py-16 md:py-20">
-    <div class="mx-auto max-w-6xl px-5">
-      <p class="text-xs tracking-[0.28em] text-zinc-500 uppercase">Rules & Info</p>
-      <h2 class="mt-4 text-3xl font-semibold text-white md:text-4xl">利用規定・基本情報</h2>
-
-      <dl class="mt-10 divide-y divide-zinc-700 border-t border-b border-zinc-700">
-        {[
-          { label: "利用制限",         value: "18歳以上のみ（入場時に年齢確認書類を提示）" },
-          { label: "定員",             value: "1〜3名（4名以上のグループ利用は不可）" },
-          { label: "区画指定",         value: "なし。事前の区画指定は行いません。" },
-          { label: "チェックイン",     value: "12:00〜17:00（ライトフォレスト管理棟にて受付）" },
-          { label: "チェックアウト",   value: "12:00（空きがある場合、17:00まで無料延長可）" },
-          { label: "直火・焚き火",     value: "可（枯れた木の伐採、丸太の使用はご遠慮ください）" },
-          { label: "火消し壺",         value: "持参必須。レンタルあり（¥500）" },
-          { label: "ゴミ",             value: "原則全て持ち帰り（灰のみ指定ペール缶可）" },
-          { label: "発電機・スピーカー", value: "禁止" },
-          { label: "場所",             value: "非公開。受付にて案内（ライトフォレストから車で約7分）" },
-        ].map((item) => (
-          <div class="grid grid-cols-[9rem_1fr] gap-4 py-4 text-sm sm:grid-cols-[12rem_1fr]">
-            <dt class="text-zinc-500">{item.label}</dt>
-            <dd class="text-zinc-300">{item.value}</dd>
-          </div>
-        ))}
-      </dl>
-
-      <div class="mt-6 flex flex-wrap gap-x-8 gap-y-3">
+      {/* 規定・鉄則の正本は /deep-guide/。ここからは導線だけ張る。 */}
+      <div class="mt-10 flex flex-wrap gap-x-8 gap-y-3">
         <a
           href="/deep-guide/"
           class="text-xs tracking-[0.2em] text-zinc-500 underline transition hover:text-zinc-300"
         >
-          ディープフォレスト 利用案内（詳細）→
+          利用規定・基本情報・基本4鉄則を見る →
         </a>
         {/* 同商品の滞在像へ。ライトの /stay-light/ とは混ぜない */}
         <a
@@ -323,25 +277,38 @@ const experiences = [
     </div>
   </section>
 
-  {/* ディープの一泊（トップページから移設）。
+  <ScrollPhoto label="適性と静けさの推移のあいだ" alt="" />
+
+  {/* 静けさの推移カレンダー */}
+  <SilenceCalendar />
+
+  <ScrollPhoto label="静けさの推移と一泊のあいだ" alt="" />
+
+  {/* ディープの一泊。背景写真構成。
       ライトの /stay-light/ とは別商品として、ここでのみ扱う。 */}
-  <section class="bg-[color:var(--forest-600)] py-20 md:py-28">
-    <div class="mx-auto max-w-6xl px-6 md:px-10">
-      <p class="text-xs tracking-[0.32em] text-zinc-500">A NIGHT IN THE DEEP FOREST</p>
+  <section
+    class="relative bg-cover bg-center py-20 md:py-28"
+    data-photo-slot="deep-stay"
+  >
+    {/* 写真 準備中（ディープの一泊 背景）。選定後 style の background-image を差し替える */}
+    <div class="absolute inset-0 border border-dashed border-zinc-700 bg-[color:var(--forest-600)]"></div>
+    <div class="absolute inset-0 bg-black/45"></div>
+    <div class="relative z-10 mx-auto max-w-6xl px-6 md:px-10">
+      <p class="text-xs tracking-[0.32em] text-zinc-400">A NIGHT IN THE DEEP FOREST</p>
       <p class="mt-4 text-2xl font-semibold leading-snug text-white md:text-3xl">
         ディープフォレストで過ごす一泊
       </p>
-      <h2 class="mt-3 text-base font-medium text-zinc-400 md:text-lg">
+      <h2 class="mt-3 text-base font-medium text-zinc-200 md:text-lg">
         場所非公開、18歳以上、1〜3名限定。設備のない森で過ごす時間を、順に紹介します
       </h2>
-      <p class="mt-6 max-w-2xl text-sm leading-loose text-zinc-400 md:text-base">
+      <p class="mt-6 max-w-2xl text-sm leading-loose text-zinc-300 md:text-base">
         水道や電源、売店のない森へ、必要なものを自分で持って入る。
         日が落ちてからの時間の流れも含めて、入場から撤収までを先に知っておけます。
       </p>
       <p class="mt-8">
         <a
           href="/stay-deep/"
-          class="inline-flex items-center gap-2 text-sm tracking-[0.14em] text-zinc-200 underline underline-offset-4 transition hover:text-white"
+          class="inline-flex items-center gap-2 text-sm tracking-[0.14em] text-zinc-100 underline underline-offset-4 transition hover:text-white"
           data-cta="deep-to-stay-deep"
           data-cta-target="/stay-deep/"
         >
@@ -351,6 +318,8 @@ const experiences = [
       </p>
     </div>
   </section>
+
+  <ScrollPhoto label="一泊とアーリーチェックインのあいだ" alt="" />
 
   {/* アーリーチェックイン */}
   <section class="bg-[color:var(--forest-700)] py-20 md:py-28">
@@ -381,8 +350,7 @@ const experiences = [
     </div>
   </section>
 
-  {/* 静けさの推移カレンダー（最終CTA直前） */}
-  <SilenceCalendar />
+  <ScrollPhoto label="アーリーチェックインと予約のあいだ" alt="" />
 
   {/* CTA */}
   <section class="bg-[color:var(--forest-700)] py-20 md:py-28">
