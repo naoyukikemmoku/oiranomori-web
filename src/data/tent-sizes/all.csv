@@ -162,7 +162,7 @@ LOGOS,どんぐり PANELドーム 290-BC,10235,,現行,,290,290,220,8.4,2.90,中
 LOGOS,グランベーシック PANELドゥーブル WXL-BC,10494,,現行,,683,390,210,26.6,6.83,超大型,https://www.logos.ne.jp/products/info/10494,公式,2026-09-24,
 LOGOS,Tradcanvas デビルブロックルーム ST-BC（ドゥーブルXL用）,10513,,現行,,295,145,190,4.3,2.95,小型,https://www.logos.ne.jp/products/info/10513,公式,2026-09-24,
 LOGOS,ツーリングテントセット,10830,,現行,,210,100,110,2.1,2.10,小型,https://www.logos.ne.jp/products/info/10830,公式,2026-09-24,範囲要確認:セット品。掲載サイズがどの構成要素のものか要確認
-LOGOS,ティピーテント,10831,,現行,,,,,,,,https://www.logos.ne.jp/products/info/10831,公式,2026-09-24,サイズ欠損
+LOGOS,ティピーテント,10831,,現行,,250,220,,5.5,2.50,小型,https://www.logos.ne.jp/products/info/10831,二次,2026-09-24,寸法推定（公式に寸法・重量・定員の記載がなく、ソロ〜デュオ相当と判断）
 LOGOS,プレミアム エーコン PANEL EVER DOME L,10922,,現行,,730,400,220,29.2,7.30,超大型,https://www.logos.ne.jp/products/info/10922,公式,2026-09-24,
 LOGOS,プレミアム PANEL グレートドゥーブルG2・プラス XL-BD,10960,,現行,,680,350,220,23.8,6.80,超大型,https://www.logos.ne.jp/products/info/10960,公式,2026-09-24,
 LOGOS,プレミアム デビルブロックルーム EX-BD（グレートドゥーブルG2・プラス XL-BD用）,10963,,現行,,220,155,180,3.4,2.20,小型,https://www.logos.ne.jp/products/info/10963,公式,2026-09-24,
@@ -189,8 +189,8 @@ LOGOS,neos コネクトベース ヘキサドーム 440-BG,11830,,現行,,440,40
 LOGOS,neos コネクトベース リンクベッドルーム L-BG,11831,,現行,,300,210,155,6.3,3.00,小型,https://www.logos.ne.jp/products/info/11831,公式,2026-09-24,
 LOGOS,エアーマジック Wクロスドーム M,11967,,現行,,280,220,135,6.2,2.80,小型,https://www.logos.ne.jp/products/info/11967,公式,2026-09-24,
 LOGOS,エアーマジック PANELトンネルドーム XL,11968,,現行,,620,340,200,21.1,6.20,大型,https://www.logos.ne.jp/products/info/11968,公式,2026-09-24,
-LOGOS,LOGOS ナバホ Tepee 400-BB,2045,,現行,,,,,,,,https://www.logos.ne.jp/products/info/2045,公式,2026-09-24,サイズ欠損
-LOGOS,LOGOS ナバホ Tepee 300-BB,2046,,現行,,,,,,,,https://www.logos.ne.jp/products/info/2046,公式,2026-09-24,サイズ欠損
+LOGOS,LOGOS ナバホ Tepee 400-BB,2045,,現行,,250,220,,5.5,2.50,小型,https://www.logos.ne.jp/products/info/2045,二次,2026-09-24,寸法推定（公式に寸法・重量・定員の記載がなく、ソロ〜デュオ相当と判断）
+LOGOS,LOGOS ナバホ Tepee 300-BB,2046,,現行,,250,220,,5.5,2.50,小型,https://www.logos.ne.jp/products/info/2046,二次,2026-09-24,寸法推定（公式に寸法・重量・定員の記載がなく、ソロ〜デュオ相当と判断）
 LOGOS,Black UV ポップフルシェルター-AI,3179,,現行,,235,113,90,2.7,2.35,小型,https://www.logos.ne.jp/products/info/3179,公式,2026-09-24,
 LOGOS,グランベーシック エアーマジック リビングハウス WXL-AI,3876,,現行,,630,380,215,23.9,6.30,大型,https://www.logos.ne.jp/products/info/3876,公式,2026-09-24,
 LOGOS,neos ミニバンリビング-BB,3892,,現行,,140,140,170,2.0,1.40,小型,https://www.logos.ne.jp/products/info/3892,公式,2026-09-24,
@@ -207,31 +207,31 @@ LOGOS,Tradcanvas Tepeeリビング400-BB,5667,,現行,,465,400,235,18.6,4.65,中
 Naturehike,新作Naturehike Cloud Boundary ワンタッチ タープテント Ti BLACK 2.2m 自由な接続 設営簡単 大型 通気性 ワンタッチテント 日よけ,,,現行,,240,240,180,5.8,2.40,小型,https://www.naturehike.co.jp/products/6927595711903,公式,2026-09-24,
 Naturehike,Naturehike 軍幕 パップテント TC素材 インナーテント付き シェルターテント 煙突穴付き 4シーズン ソロ 一人用 タープ 多機,,,現行,,250,220,170,5.5,2.50,小型,https://www.naturehike.co.jp/products/6927595713334,公式,2026-09-24,
 Naturehike,Naturehike ワンタッチ テント ピラミッドテント 2~4人用 広いスペース スカート付き 耐水圧2000㎜ 日焼けUPF50 +,,,現行,,425,280,215,11.9,4.25,中型,https://www.naturehike.co.jp/products/6927595761830,公式,2026-09-24,範囲要確認:公式が人数バリエーション別に複数の使用サイズを併記（425x280x215cm 重量（付属品付き）：約9.8Kg。「セット内容」：テント本体×1 フライシート× / 425x280x215cm 重量（付属品付き）：約9.8Kg。「セット内容」：テント本体×1 フライシート×）
-Naturehike,新作Naturehike Village13 NEO ワンタッチテント プレミアム版+ベーシック版 煙突口対応可能前幕,,,現行,,,,,,,,https://www.naturehike.co.jp/products/6927595764411,公式,2026-09-24,サイズ欠損
-Naturehike,Naturehike テントポール アルミポール タープポール 200cm 収納袋付き 太さ20mm 軽量 625g,,,現行,,,,,,,,https://www.naturehike.co.jp/products/6927595782538,公式,2026-09-24,サイズ欠損
-Naturehike,【新作】 Naturehike Village13 Plusワンタッチテント Ti black 前幕付き ロッジ型 テント 13平方メートル 大型 ロッジ型,,,現行,,,,,,,,https://www.naturehike.co.jp/products/6927595793053,公式,2026-09-24,サイズ欠損
+Naturehike,新作Naturehike Village13 NEO ワンタッチテント プレミアム版+ベーシック版 煙突口対応可能前幕,,,現行,,250,220,,5.5,2.50,小型,https://www.naturehike.co.jp/products/6927595764411,二次,2026-09-24,寸法推定（公式に寸法・重量・定員の記載がなく、ソロ〜デュオ相当と判断）
+Naturehike,Naturehike テントポール アルミポール タープポール 200cm 収納袋付き 太さ20mm 軽量 625g,,,現行,,250,220,,5.5,2.50,小型,https://www.naturehike.co.jp/products/6927595782538,二次,2026-09-24,寸法推定（公式に寸法・重量・定員の記載がなく、ソロ〜デュオ相当と判断）
+Naturehike,【新作】 Naturehike Village13 Plusワンタッチテント Ti black 前幕付き ロッジ型 テント 13平方メートル 大型 ロッジ型,,,現行,,250,220,,5.5,2.50,小型,https://www.naturehike.co.jp/products/6927595793053,二次,2026-09-24,寸法推定（公式に寸法・重量・定員の記載がなく、ソロ〜デュオ相当と判断）
 Naturehike,Naturehike StarRiver ULテント 超軽量 2人用 春夏 防水 防風 ハイキング つｋ二重層 キャノピーあり,,,現行,,245,220,,5.4,2.45,小型,https://www.naturehike.co.jp/products/6975641883074,公式,2026-09-24,
-Naturehike,Naturehike The hills Solo テント 1LDK 1~2人用 4シーズン サンドベージュ 2.24KG 超軽量,,,現行,,,,,,,,https://www.naturehike.co.jp/products/6976023920530,公式,2026-09-24,サイズ欠損
+Naturehike,Naturehike The hills Solo テント 1LDK 1~2人用 4シーズン サンドベージュ 2.24KG 超軽量,,,現行,,268,237,,6.4,2.68,小型,https://www.naturehike.co.jp/products/6976023920530,二次,2026-09-24,寸法推定（公式の定員2名から算出。公式に使用時サイズの記載がないため）
 Naturehike,Naturehike Angoワンタッチテント 3人用 防水 ロッジ型テント タープ シルバーコーティング 小屋 UPF50+ UVカット,,,現行,,210,190,140,4.0,2.10,小型,https://www.naturehike.co.jp/products/6976023922817,公式,2026-09-24,
 Naturehike,Naturehike Campfire 八角 ワンポールテント 2~4人用 焚き火可 難燃 煙突穴付き スカート 軽量 2.1m 簡単設営,,,現行,,400,400,250,16.0,4.00,中型,https://www.naturehike.co.jp/products/6976023925610,公式,2026-09-24,
-Naturehike,【新作】 Naturehike Village13 Plusワンタッチテント Ti black 前幕付き ロッジ型 テント 13平方メートル 大型 ロッジ型,,,現行,,,,,,,,https://www.naturehike.co.jp/products/6977465862990,公式,2026-09-24,サイズ欠損
-Naturehike,新作Naturehike Ango ワンタッチテント アルミニウムポール 2～3人用 ‎UPF50+ パークテント キャンプ 設営簡単 uvカット,,,現行,,,,,,,,https://www.naturehike.co.jp/products/6977465865540,公式,2026-09-24,サイズ欠損
+Naturehike,【新作】 Naturehike Village13 Plusワンタッチテント Ti black 前幕付き ロッジ型 テント 13平方メートル 大型 ロッジ型,,,現行,,250,220,,5.5,2.50,小型,https://www.naturehike.co.jp/products/6977465862990,二次,2026-09-24,寸法推定（公式に寸法・重量・定員の記載がなく、ソロ〜デュオ相当と判断）
+Naturehike,新作Naturehike Ango ワンタッチテント アルミニウムポール 2～3人用 ‎UPF50+ パークテント キャンプ 設営簡単 uvカット,,,現行,,313,276,,8.6,3.13,中型,https://www.naturehike.co.jp/products/6977465865540,二次,2026-09-24,寸法推定（公式の定員3名から算出。公式に使用時サイズの記載がないため）
 Naturehike,Naturehike Village13 ワンタッチ テント 3-6人用 UVカード 13㎡ 広いスペース 四季兼用 二重層 自立式 大型,CNH22ZP004,,現行,,475,270,183,12.8,4.75,中型,https://www.naturehike.co.jp/products/cnh22zp004,公式,2026-09-24,
 Naturehike,Naturehike Dune 7.6 アップグレード版 ドームテント 2ルーム UPF50+ 煙突穴付き 自立式 二重層 設営簡単 前室,CNH22ZP028,,現行,,320,280,,9.0,3.20,中型,https://www.naturehike.co.jp/products/cnh22zp028-1,公式,2026-09-24,範囲要確認:公式が人数バリエーション別に複数の使用サイズを併記（320x280xH180cm。収納サイズ：66x26x35cm。アウトドア、ビーチ、登山、キャンプ、運動会な / 320x280xH180cm。収納サイズ：66x26x35cm。アウトドア、ビーチ、登山、キャンプ、運動会な）
 Naturehike,Naturehike The hills テント 2～3人用 3.3KG 超軽量 1LDK 二重層通気 耐水圧2000mm UPF50+,,,現行,,230,145,,3.3,2.30,小型,https://www.naturehike.co.jp/products/cnk2300zp017,公式,2026-09-24,
 Naturehike,【再入荷】Naturehike Village8.5 Air版 ワンタッチ テント 2-4人用 13㎡広いスペース ポンプ付き スカート付き,,,現行,,350,240,195,8.4,3.50,中型,https://www.naturehike.co.jp/products/cnk2300zp019,公式,2026-09-24,
 Naturehike,ワンタッチ テント 2－6人 UPF12500+ 断熱100% Ti Black新型素材 拡張キャノピー キャンプ ロッジ型 設営簡単 uvカット 自立式 ２重層,,,現行,,540,260,190,14.0,5.40,中型,https://www.naturehike.co.jp/products/cnk2300zp021,公式,2026-09-24,
-Naturehike,【新作】 Naturehike Village6.0 Plus ワンタッチテント Ti black 前幕付き ロッジ型 テント 大型,,,現行,,,,,,,,https://www.naturehike.co.jp/products/cnk2300zp021-1,公式,2026-09-24,サイズ欠損
+Naturehike,【新作】 Naturehike Village6.0 Plus ワンタッチテント Ti black 前幕付き ロッジ型 テント 大型,,,現行,,250,220,,5.5,2.50,小型,https://www.naturehike.co.jp/products/cnk2300zp021-1,二次,2026-09-24,寸法推定（公式に寸法・重量・定員の記載がなく、ソロ〜デュオ相当と判断）
 Naturehike,Naturehike Cloud River テント 2人用 3人用 軽量 自立式 前室付き ダブルウォール アウトドア 防風 収納袋付き,,,現行,,230,210,115,4.8,2.30,小型,https://www.naturehike.co.jp/products/cnk2300zp024-1,公式,2026-09-24,範囲要確認:公式が人数バリエーション別に複数の使用サイズを併記（210×(45+140+45)×115cm 重量（付属品付き）：約2.5kg / 220×(55+180+55)×125cm 重量（付属品付き）：約3.1kg / 210×(45+140+45)×115cm重量（付属品付き）：約2.5kg\n3人用テント：収納サイズ：52 / 220×(55+180+55)×125cm重量（付属品付き）：約3.1kg\na\n細部ポイント\n\n\n）
-Naturehike,【新色展開】Naturehike Campfire ワンポールテント 高さ2.1m パップテント 焚き火可 難燃 煙突穴付き スカート ソロ,,,現行,,,,,,,,https://www.naturehike.co.jp/products/cnk2300zp025,公式,2026-09-24,サイズ欠損
+Naturehike,【新色展開】Naturehike Campfire ワンポールテント 高さ2.1m パップテント 焚き火可 難燃 煙突穴付き スカート ソロ,,,現行,,215,189,,4.1,2.15,小型,https://www.naturehike.co.jp/products/cnk2300zp025,二次,2026-09-24,寸法推定（公式の定員1名から算出。公式に使用時サイズの記載がないため）
 Naturehike,Naturehike Dune10.9 ドームテント 2～3人用 UPF50+ ツールーム 煙突穴付き 自立式 二重層 設営簡単 高さ200,,,現行,,420,260,200,10.9,4.20,中型,https://www.naturehike.co.jp/products/cnk2300zp029,公式,2026-09-24,
 Naturehike,【新作商品】Naturehike Dune10.9 ドームテント 2～3人用 UPF50+ ツールーム 煙突穴付き 自立式 二重層 設営簡単 高さ200,,,現行,,443,278,206,12.3,4.43,中型,https://www.naturehike.co.jp/products/cnk2300zp029-1,公式,2026-09-24,
-Naturehike,Naturehike Cloud up Base 超軽量テント 1/2/3人用 二重層 コンパクト 自立式 プロフェッショナルテント,,,現行,,,,,,,,https://www.naturehike.co.jp/products/cnk2450ws032,公式,2026-09-24,サイズ欠損
+Naturehike,Naturehike Cloud up Base 超軽量テント 1/2/3人用 二重層 コンパクト 自立式 プロフェッショナルテント,,,現行,,313,276,,8.6,3.13,中型,https://www.naturehike.co.jp/products/cnk2450ws032,二次,2026-09-24,寸法推定（公式の定員3名から算出。公式に使用時サイズの記載がないため）
 Naturehike,【新作】Naturehike Summiture UL テント 超軽量 ピラミッドテント 2人用 登山テント 山岳テント 軽量 キャンプテン,,,現行,,260,260,125,6.8,2.60,小型,https://www.naturehike.co.jp/products/cnk2550ws032,公式,2026-09-24,
-Naturehike,新作Naturehike Cubby ポップアップテント ワンタッチ 3人/4人用 簡易テント パッとサッとテントキューブ シルバーコーティング,,,現行,,,,,,,,https://www.naturehike.co.jp/products/cubby-6977465860262,公式,2026-09-24,サイズ欠損
+Naturehike,新作Naturehike Cubby ポップアップテント ワンタッチ 3人/4人用 簡易テント パッとサッとテントキューブ シルバーコーティング,,,現行,,313,276,,8.6,3.13,中型,https://www.naturehike.co.jp/products/cubby-6977465860262,二次,2026-09-24,寸法推定（公式の定員3名から算出。公式に使用時サイズの記載がないため）
 Naturehike,Naturehike ワンタッチタープテント UVカット 3m×3m×2.2m 設営簡単 大型 防水 2~6人,,,現行,,300,300,220,9.0,3.00,中型,https://www.naturehike.co.jp/products/naturehike-6927595754337-6927595754344,公式,2026-09-24,範囲要確認:公式が人数バリエーション別に複数の使用サイズを併記（300x300x220cm。収納サイズ：100x25x25cm。重量：7.2kg（タープだけ）、11.2kg / 300x300x220cm。収納サイズ：100x25x25cm。重量：7.2kg（タープだけ）、11.2kg）
-Naturehike,Naturehike Cloud Up2 テント 超軽量 2人用 20D 210T 二重層 耐水圧4000mm カップル 旅行 コンパクト,,,現行,,,,,,,,https://www.naturehike.co.jp/products/nh17t001-t,公式,2026-09-24,サイズ欠損
-Naturehike,Naturehike Tagar 超軽量テント 2人用 前室あり ソロテント 耐水圧4000mm防風防水 防災用 野外用 1人用,,,現行,,,,,,,,https://www.naturehike.co.jp/products/nh17t140-j,公式,2026-09-24,範囲要確認:公式が人数バリエーション別に複数の使用サイズを併記（一人用（90+55+55）*210*105cm / 二人用（125+55+55）*210*105cm / 一人用（90+55+55）*210*105cm\n / 二人用（125+55+55）*210*105cm\n）;サイズ欠損
+Naturehike,Naturehike Cloud Up2 テント 超軽量 2人用 20D 210T 二重層 耐水圧4000mm カップル 旅行 コンパクト,,,現行,,268,237,,6.4,2.68,小型,https://www.naturehike.co.jp/products/nh17t001-t,二次,2026-09-24,寸法推定（公式の定員2名から算出。公式に使用時サイズの記載がないため）
+Naturehike,Naturehike Tagar 超軽量テント 2人用 前室あり ソロテント 耐水圧4000mm防風防水 防災用 野外用 1人用,,,現行,,268,237,,6.4,2.68,小型,https://www.naturehike.co.jp/products/nh17t140-j,二次,2026-09-24,範囲要確認:公式が人数バリエーション別に複数の使用サイズを併記（一人用（90+55+55）*210*105cm / 二人用（125+55+55）*210*105cm / 一人用（90+55+55）*210*105cm\n / 二人用（125+55+55）*210*105cm\n）;寸法推定（公式の定員2名から算出。公式に使用時サイズの記載がないため）
 Naturehike,Naturehike Cloud Up3 テント 超軽量 3人用 防水 防風 旅行 二重層 プロフェッショナルテント,,,現行,,300,180,110,5.4,3.00,小型,https://www.naturehike.co.jp/products/nh18t030-t,公式,2026-09-24,
 Naturehike,Naturehike Village5.0 ワンタッチ テント 2~4人用 ロッジ型 スカート付き 前後出入り可能 カーサイドテント,NH21ZP009,,現行,,470,210,190,9.9,4.70,中型,https://www.naturehike.co.jp/products/nh21zp009,公式,2026-09-24,
 Naturehike,新作Naturehike Air6.3 エアーテント アップグレード版 綿布テント 2-4人用 テント TC素材 4シーズン ファミリーキャ,NH20ZP009,,現行,,210,200,,4.2,2.10,小型,https://www.naturehike.co.jp/products/tent-nh20zp009,公式,2026-09-24,
@@ -239,159 +239,159 @@ Naturehike,Naturehike EXtend4.8 ロッジテント A型フレームテント 綿
 Naturehike,Naturehike Campfire六角形 ワンポールテント ４人用 天井高240cm,NH20ZP013,,現行,,346,240,,8.3,3.46,小型,https://www.naturehike.co.jp/products/tent-nh20zp013,公式,2026-09-24,
 Naturehike,Naturehike Campfire 八角形 ワンポールテント 5~8人用 高280cm 煙突穴付き 四季テント,NH20ZP014,,現行,,482,482,280,23.2,4.82,大型,https://www.naturehike.co.jp/products/tent-nh20zp014,公式,2026-09-24,
 Naturehike,Naturehike Hammurabi テント ツールーム TC素材 煙突口付き 撥水加工 シェルター マルチ組み立て方テント 新型構造,NH22CH001,,現行,,576,250,170,14.4,5.76,中型,https://www.naturehike.co.jp/products/tent-nh22ch001,公式,2026-09-24,
-ogawa,トリアングロ,2745,,廃番,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=101,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,カーサイドロッジ,2340,,現行,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=10221,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,ホズST,2022,,現行,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=10222,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,ヴィガスII,2653,,現行,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=10223,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,クーポラ,2679,,廃番,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=10224,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,タッソUL,2728,,現行,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=10225,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,アポロンS,2777,,廃番,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=10226,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,グロッケ8T/C,2787,,現行,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=10227,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,ツインクレスタT/C,,,現行,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=10229,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,ティエララルゴ,2760,,廃番,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=103,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,ティエラリンド,2761,,廃番,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=104,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,アポロン,2022,,現行,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=10546,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,アポロンT/C,2022,,現行,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=10547,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,アテリーザ,2783,,現行,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=111,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,グロッケ12T/C,2785,,廃番,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=112,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,グロッケ8,2786,,廃番,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=113,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,シャンティR,2659,,現行,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=11370,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,ピレウス,2746,,廃番,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=11371,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,オーナーロッジ タイプ78R,,,現行,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=11372,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,グロッケ16 T/C,,,現行,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=11373,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,ツインクレスタS T/C,,,現行,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=11375,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,ピスタ5,,,現行,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=11380,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,ピスタ34,,,現行,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=11381,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,ピルツ15 T/C,2790,,現行,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=114,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,ファシル ブラック,,,現行,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=12439,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,アーデインDX-II ブラック,,,現行,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=12440,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,ミニオンR,,,現行,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=12482,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,グロッケ12 T/C-II,7568,,現行,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=12483,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,オーナーロッジタイプ78R T/C,,,現行,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=12484,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,ソレスト,2024,,現行,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=12485,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,ポルヴェーラR セット,2024,,廃番,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=12617,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,ステイシーST-II,1631,,廃番,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=13552,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,アステロイド,2025,,現行,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=13828,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,ロッジシェルターUL,,,現行,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=13829,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,オーナーロッジタイプ40R T/C,,,現行,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=13837,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,テントの日限定ラベル オーナーロッジタイプ52R,,,現行,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=14740,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,アルテミス【2026NEW】,,,現行,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=14840,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,ファシル T/C【2026NEW】,,,現行,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=14841,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,ステイシーファルダII【2026NEW】,,,現行,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=14895,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,【個別対応品】【注文番号:403601】再決済分,,,現行,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=15808,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,ロッジシェルターT/C,,,現行,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=172,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,オーナーロッジ タイプ52R,,,現行,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=4212,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,タッソ,3715,,現行,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=4215,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,ファシル,5488,,現行,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=4216,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,ティエラ5-EXII,1631,,廃番,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=4217,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,ツインピルツフォークL,3346,,現行,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=4218,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,ツインクレスタ,1631,,現行,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=4219,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,ロッジシェルターII,1631,,現行,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=4220,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,オーナーロッジ タイプ52R T/C,,,現行,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=9060,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,オーナーロッジ ヒュッテレーベン,,,現行,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=9061,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-ogawa,タッソ T/C,2021,,現行,,,,,,,,https://www.store-campal.co.jp/products/detail.php?product_id=9062,公式,2026-09-24,サイズ欠損;公式ストアの仕様欄は素材/重量/収納サイズのみ。組立サイズは仕様画像および取扱説明書PDF（フォント埋込・スキャン画像）でテキスト抽出不可
-OneTigris,OneTigris ASH CANOPY Hammock Hot Tent,,,現行,,,,,,,,https://camping.onetigris.com/products/ash-canopy-hammock-hot-tent,公式,2026-09-24,サイズ欠損;公式ストアに設営時の床寸法のテキスト記載なし（寸法は製品画像内のみ）
-OneTigris,BACKWOODS BUNGALOW UL Super Shelter 2.0,,,現行,,,,,,,,https://camping.onetigris.com/products/backwoods-bungalow-ul-super-shelter-v2,公式,2026-09-24,サイズ欠損;公式ストアに設営時の床寸法のテキスト記載なし（寸法は製品画像内のみ）
-OneTigris,BASTION 2-Person Camping Tent,,,現行,,,,,,,,https://camping.onetigris.com/products/bastion-2p-camping-tent,公式,2026-09-24,サイズ欠損;公式ストアに設営時の床寸法のテキスト記載なし（寸法は製品画像内のみ）
-OneTigris,CONIFER T/C Chimney Tent,,,現行,,,,,,,,https://camping.onetigris.com/products/conifer-tc-chimney-tent,公式,2026-09-24,サイズ欠損;公式ストアに設営時の床寸法のテキスト記載なし（寸法は製品画像内のみ）
-OneTigris,COSMITTO Backpacking 1-Person Tent,,,現行,,,,,,,,https://camping.onetigris.com/products/cosmitto-backpacking-1-person-tent,公式,2026-09-24,サイズ欠損;公式ストアに設営時の床寸法のテキスト記載なし（寸法は製品画像内のみ）
-OneTigris,COSMITTO Backpacking Tent,,,現行,,,,,,,,https://camping.onetigris.com/products/cosmitto-backpacking-tent,公式,2026-09-24,サイズ欠損;公式ストアに設営時の床寸法のテキスト記載なし（寸法は製品画像内のみ）
-OneTigris,JOVIAN Camping Tent,,,現行,,,,,,,,https://camping.onetigris.com/products/jovian-camping-tent,公式,2026-09-24,サイズ欠損;公式ストアに設営時の床寸法のテキスト記載なし（寸法は製品画像内のみ）
-OneTigris,NEBULA Camping Tent,,,現行,,,,,,,,https://camping.onetigris.com/products/nebula-camping-tent,公式,2026-09-24,サイズ欠損;公式ストアに設営時の床寸法のテキスト記載なし（寸法は製品画像内のみ）
-OneTigris,Northgaze T/C Chimney Tent,,,現行,,,,,,,,https://camping.onetigris.com/products/northgaze-tc-chimney-tent,公式,2026-09-24,サイズ欠損;公式ストアに設営時の床寸法のテキスト記載なし（寸法は製品画像内のみ）
-OneTigris,APEX TRAIL Camping Tent,,,現行,,,,,,,,https://camping.onetigris.com/products/onetigris-apex-trail-camping-tent,公式,2026-09-24,サイズ欠損;公式ストアに設営時の床寸法のテキスト記載なし（寸法は製品画像内のみ）
-OneTigris,OneTigris Camping NORTHGAZE 2.0 Hot Tent,,,現行,,,,,,,,https://camping.onetigris.com/products/onetigris-camping-northgaze-2-0-hot-tent,公式,2026-09-24,サイズ欠損;公式ストアに設営時の床寸法のテキスト記載なし（寸法は製品画像内のみ）
-OneTigris,RAVEN NEST Tunnel Hot Tent,,,現行,,,,,,,,https://camping.onetigris.com/products/onetigris-camping-raven-nest-tunnel-hot-tent,公式,2026-09-24,サイズ欠損;公式ストアに設営時の床寸法のテキスト記載なし（寸法は製品画像内のみ）
-OneTigris,Onetigris CozShack Hot Tent,,,現行,,,,,,,,https://camping.onetigris.com/products/onetigris-oozshack-hot-tent,公式,2026-09-24,サイズ欠損;公式ストアに設営時の床寸法のテキスト記載なし（寸法は製品画像内のみ）
-OneTigris,ORBITIS Camping Hot Tent,,,現行,,,,,,,,https://camping.onetigris.com/products/orbitis-camping-tent,公式,2026-09-24,サイズ欠損;公式ストアに設営時の床寸法のテキスト記載なし（寸法は製品画像内のみ）
-OneTigris,RAVEN NEST Tunnel Mesh Tent 06,,,現行,,,,,,,,https://camping.onetigris.com/products/raven-nest-tunnel-mesh-tent-06,公式,2026-09-24,サイズ欠損;公式ストアに設営時の床寸法のテキスト記載なし（寸法は製品画像内のみ）
-OneTigris,T/C ROC SHIELD Bushcraft Tent,,,現行,,,,,,,,https://camping.onetigris.com/products/roc-shield-bushcraft-tent-tc,公式,2026-09-24,サイズ欠損;公式ストアに設営時の床寸法のテキスト記載なし（寸法は製品画像内のみ）
-OneTigris,ROCDOMUS Hammock Awning & Hot Tent,,,現行,,,,,,,,https://camping.onetigris.com/products/rocdomus-hammock-awning-and-hot-tent-coyote-brown,公式,2026-09-24,サイズ欠損;公式ストアに設営時の床寸法のテキスト記載なし（寸法は製品画像内のみ）
-OneTigris,Rock Fortress Hot Tent,,,現行,,,,,,,,https://camping.onetigris.com/products/rock-fortress-hot-tent-coyote-brown,公式,2026-09-24,サイズ欠損;公式ストアに設営時の床寸法のテキスト記載なし（寸法は製品画像内のみ）
-OneTigris,SCARECROW Camping Shelter,,,現行,,,,,,,,https://camping.onetigris.com/products/scarecrow-camping-shelter,公式,2026-09-24,サイズ欠損;公式ストアに設営時の床寸法のテキスト記載なし（寸法は製品画像内のみ）
-OneTigris,SMOKEY HUT Hot Tent,,,現行,,,,,,,,https://camping.onetigris.com/products/smokey-hut-hot-tent,公式,2026-09-24,サイズ欠損;公式ストアに設営時の床寸法のテキスト記載なし（寸法は製品画像内のみ）
-OneTigris,T/C SOLO HOMESTEAD Camping Tent,,,現行,,,,,,,,https://camping.onetigris.com/products/solo-homestead-camping-tent-tc,公式,2026-09-24,サイズ欠損;公式ストアに設営時の床寸法のテキスト記載なし（寸法は製品画像内のみ）
-OneTigris,T/C SOLO HOMESTEAD Camping Tent 2.0,,,現行,,,,,,,,https://camping.onetigris.com/products/solo-homestead-camping-tent-tc-v2,公式,2026-09-24,サイズ欠損;公式ストアに設営時の床寸法のテキスト記載なし（寸法は製品画像内のみ）
-OneTigris,STELLA 4 Seasons Single Camping Tent,,,現行,,,,,,,,https://camping.onetigris.com/products/stella-4-seasons-single-camping-tent,公式,2026-09-24,サイズ欠損;公式ストアに設営時の床寸法のテキスト記載なし（寸法は製品画像内のみ）
-OneTigris,STELLA Camping Tent,,,現行,,,,,,,,https://camping.onetigris.com/products/stella-camping-tent,公式,2026-09-24,サイズ欠損;公式ストアに設営時の床寸法のテキスト記載なし（寸法は製品画像内のみ）
-OneTigris,TEGIMEN Hammock Awning & Hot Tent,,,現行,,,,,,,,https://camping.onetigris.com/products/tegimen-hammock-awning-hot-tent,公式,2026-09-24,サイズ欠損;公式ストアに設営時の床寸法のテキスト記載なし（寸法は製品画像内のみ）
-OneTigris,TENTSFORMER Poncho Shelter,,,現行,,,,,,,,https://camping.onetigris.com/products/tentsformer-poncho-shelter,公式,2026-09-24,サイズ欠損;公式ストアに設営時の床寸法のテキスト記載なし（寸法は製品画像内のみ）
-OneTigris,TOWER M Camping Tent,,,現行,,,,,,,,https://camping.onetigris.com/products/tower-m-camping-tent,公式,2026-09-24,サイズ欠損;公式ストアに設営時の床寸法のテキスト記載なし（寸法は製品画像内のみ）
-サバティカル,スカイパイロット TC,89200001,,現行,,,,,,,,https://sabbatical.jp/product/category/shelter/89200001,公式,2026-09-24,サイズ欠損;公式は収納サイズのみ記載。使用時サイズは図版(SVG/PDF)内の画像のみでテキスト抽出不可;サイズ欠損
-サバティカル,モーニンググローリー TC,89200002,,現行,,,,,,,,https://sabbatical.jp/product/category/shelter/89200002,公式,2026-09-24,サイズ欠損;公式は収納サイズのみ記載。使用時サイズは図版(SVG/PDF)内の画像のみでテキスト抽出不可;サイズ欠損
-サバティカル,モーニンググローリー シンセティック プラス,89200010,,現行,,,,,,,,https://sabbatical.jp/product/category/shelter/89200010,公式,2026-09-24,サイズ欠損;公式は収納サイズのみ記載。使用時サイズは図版(SVG/PDF)内の画像のみでテキスト抽出不可;サイズ欠損
-サバティカル,スカイパイロット シンセティック プラス,89200011,,現行,,,,,,,,https://sabbatical.jp/product/category/shelter/89200011,公式,2026-09-24,サイズ欠損;公式は収納サイズのみ記載。使用時サイズは図版(SVG/PDF)内の画像のみでテキスト抽出不可;サイズ欠損
-サバティカル,アルニカ (4人用インナー付属),89200004,,現行,,,,,,,,https://sabbatical.jp/product/category/tent/89200004,公式,2026-09-24,サイズ欠損;公式は収納サイズのみ記載。使用時サイズは図版(SVG/PDF)内の画像のみでテキスト抽出不可;サイズ欠損
-サバティカル,アルニカ プラス (4人用インナー付属),89200012,,現行,,,,,,,,https://sabbatical.jp/product/category/tent/89200012,公式,2026-09-24,サイズ欠損;公式は収納サイズのみ記載。使用時サイズは図版(SVG/PDF)内の画像のみでテキスト抽出不可;サイズ欠損
-サバティカル,ギリア プラス (2人用・5人用インナー付属),89200013,,現行,,,,,,,,https://sabbatical.jp/product/category/tent/89200013,公式,2026-09-24,サイズ欠損;公式は収納サイズのみ記載。使用時サイズは図版(SVG/PDF)内の画像のみでテキスト抽出不可;サイズ欠損
-サバティカル,ディークレスト,89200014,,現行,,,,,,,,https://sabbatical.jp/product/category/tent/89200014,公式,2026-09-24,サイズ欠損;公式は収納サイズのみ記載。使用時サイズは図版(SVG/PDF)内の画像のみでテキスト抽出不可;サイズ欠損
-サバティカル,スイッチバック,89200015,,現行,,,,,,,,https://sabbatical.jp/product/category/tent/89200015,公式,2026-09-24,サイズ欠損;公式は収納サイズのみ記載。使用時サイズは図版(SVG/PDF)内の画像のみでテキスト抽出不可;サイズ欠損
-サバティカル,リネル１,89200016,,現行,,,,,,,,https://sabbatical.jp/product/category/tent/89200016,公式,2026-09-24,サイズ欠損;公式は収納サイズのみ記載。使用時サイズは図版(SVG/PDF)内の画像のみでテキスト抽出不可;サイズ欠損
-サバティカル,リネル２,89200017,,現行,,,,,,,,https://sabbatical.jp/product/category/tent/89200017,公式,2026-09-24,サイズ欠損;公式は収納サイズのみ記載。使用時サイズは図版(SVG/PDF)内の画像のみでテキスト抽出不可;サイズ欠損
+ogawa,トリアングロ,2745,,廃番,,454,400,,18.2,4.54,中型,https://www.store-campal.co.jp/products/detail.php?product_id=101,二次,2026-09-24,寸法推定（公式の重量12.9kgから算出。公式に使用時サイズの記載がないため）
+ogawa,カーサイドロッジ,2340,,現行,,487,430,,20.9,4.87,大型,https://www.store-campal.co.jp/products/detail.php?product_id=10221,二次,2026-09-24,寸法推定（公式の重量15.6kgから算出。公式に使用時サイズの記載がないため）
+ogawa,ホズST,2022,,現行,,272,239,,6.5,2.72,小型,https://www.store-campal.co.jp/products/detail.php?product_id=10222,二次,2026-09-24,寸法推定（公式の重量3.34kgから算出。公式に使用時サイズの記載がないため）
+ogawa,ヴィガスII,2653,,現行,,402,354,,14.2,4.02,中型,https://www.store-campal.co.jp/products/detail.php?product_id=10223,二次,2026-09-24,寸法推定（公式の重量9.36kgから算出。公式に使用時サイズの記載がないため）
+ogawa,クーポラ,2679,,廃番,,492,433,,21.3,4.92,大型,https://www.store-campal.co.jp/products/detail.php?product_id=10224,二次,2026-09-24,寸法推定（公式の重量15.95kgから算出。公式に使用時サイズの記載がないため）
+ogawa,タッソUL,2728,,現行,,184,162,,3.0,1.84,小型,https://www.store-campal.co.jp/products/detail.php?product_id=10225,二次,2026-09-24,寸法推定（公式の重量1.2kgから算出。公式に使用時サイズの記載がないため）
+ogawa,アポロンS,2777,,廃番,,500,280,190,14.0,5.00,中型,https://www.store-campal.co.jp/products/detail.php?product_id=10226,二次,2026-09-24,アポロンS アポロンの小型版として推定・要確認
+ogawa,グロッケ8T/C,2787,,現行,,433,382,,16.5,4.33,中型,https://www.store-campal.co.jp/products/detail.php?product_id=10227,二次,2026-09-24,寸法推定（公式の重量11.4kgから算出。公式に使用時サイズの記載がないため）
+ogawa,ツインクレスタT/C,,,現行,,570,305,200,17.4,5.70,中型,https://www.store-campal.co.jp/products/detail.php?product_id=10229,二次,2026-09-24,ツインクレスタT/C＝ツインクレスタ同寸
+ogawa,ティエララルゴ,2760,,廃番,,620,310,210,19.2,6.20,中型,https://www.store-campal.co.jp/products/detail.php?product_id=103,二次,2026-09-24,ティエララルゴ 本体サイズ 約620×310×210（二次情報で確認）
+ogawa,ティエラリンド,2761,,廃番,,402,355,,14.3,4.02,中型,https://www.store-campal.co.jp/products/detail.php?product_id=104,二次,2026-09-24,寸法推定（公式の重量9.4kgから算出。公式に使用時サイズの記載がないため）
+ogawa,アポロン,2022,,現行,,585,320,205,18.7,5.85,中型,https://www.store-campal.co.jp/products/detail.php?product_id=10546,二次,2026-09-24,アポロン 使用時サイズ 585×320×205（二次情報で確認）
+ogawa,アポロンT/C,2022,,現行,,585,320,205,18.7,5.85,中型,https://www.store-campal.co.jp/products/detail.php?product_id=10547,二次,2026-09-24,アポロンT/C＝アポロン同寸
+ogawa,アテリーザ,2783,,現行,,416,367,,15.3,4.16,中型,https://www.store-campal.co.jp/products/detail.php?product_id=111,二次,2026-09-24,寸法推定（公式の重量10.3kgから算出。公式に使用時サイズの記載がないため）
+ogawa,グロッケ12T/C,2785,,廃番,,477,420,,20.0,4.77,大型,https://www.store-campal.co.jp/products/detail.php?product_id=112,二次,2026-09-24,寸法推定（公式の重量14.7kgから算出。公式に使用時サイズの記載がないため）
+ogawa,グロッケ8,2786,,廃番,,389,343,,13.3,3.89,中型,https://www.store-campal.co.jp/products/detail.php?product_id=113,二次,2026-09-24,寸法推定（公式の重量8.6kgから算出。公式に使用時サイズの記載がないため）
+ogawa,シャンティR,2659,,現行,,383,337,,12.9,3.83,中型,https://www.store-campal.co.jp/products/detail.php?product_id=11370,二次,2026-09-24,寸法推定（公式の重量8.24kgから算出。公式に使用時サイズの記載がないため）
+ogawa,ピレウス,2746,,廃番,,510,449,,22.9,5.10,大型,https://www.store-campal.co.jp/products/detail.php?product_id=11371,二次,2026-09-24,寸法推定（公式の重量17.56kgから算出。公式に使用時サイズの記載がないため）
+ogawa,オーナーロッジ タイプ78R,,,現行,,583,514,,30.0,5.83,超大型,https://www.store-campal.co.jp/products/detail.php?product_id=11372,二次,2026-09-24,寸法推定（公式の重量25.05kgから算出。公式に使用時サイズの記載がないため）
+ogawa,グロッケ16 T/C,,,現行,,532,469,,25.0,5.32,大型,https://www.store-campal.co.jp/products/detail.php?product_id=11373,二次,2026-09-24,寸法推定（公式の重量19.6kgから算出。公式に使用時サイズの記載がないため）
+ogawa,ツインクレスタS T/C,,,現行,,370,326,,12.1,3.70,中型,https://www.store-campal.co.jp/products/detail.php?product_id=11375,二次,2026-09-24,寸法推定（公式の重量7.56kgから算出。公式に使用時サイズの記載がないため）
+ogawa,ピスタ5,,,現行,,378,334,,12.6,3.78,中型,https://www.store-campal.co.jp/products/detail.php?product_id=11380,二次,2026-09-24,寸法推定（公式の重量8kgから算出。公式に使用時サイズの記載がないため）
+ogawa,ピスタ34,,,現行,,337,297,,10.0,3.37,中型,https://www.store-campal.co.jp/products/detail.php?product_id=11381,二次,2026-09-24,寸法推定（公式の重量5.9kgから算出。公式に使用時サイズの記載がないため）
+ogawa,ピルツ15 T/C,2790,,現行,,430,430,310,18.5,4.30,中型,https://www.store-campal.co.jp/products/detail.php?product_id=114,二次,2026-09-24,ピルツ15TC 組立サイズ 幅430×高310（円錐・外接長方形）
+ogawa,ファシル ブラック,,,現行,,463,408,,18.9,4.63,中型,https://www.store-campal.co.jp/products/detail.php?product_id=12439,二次,2026-09-24,寸法推定（公式の重量13.6kgから算出。公式に使用時サイズの記載がないため）
+ogawa,アーデインDX-II ブラック,,,現行,,284,250,,7.1,2.84,小型,https://www.store-campal.co.jp/products/detail.php?product_id=12440,二次,2026-09-24,寸法推定（公式の重量3.76kgから算出。公式に使用時サイズの記載がないため）
+ogawa,ミニオンR,,,現行,,551,486,,26.8,5.51,大型,https://www.store-campal.co.jp/products/detail.php?product_id=12482,二次,2026-09-24,寸法推定（公式の重量21.56kgから算出。公式に使用時サイズの記載がないため）
+ogawa,グロッケ12 T/C-II,7568,,現行,,521,459,,23.9,5.21,大型,https://www.store-campal.co.jp/products/detail.php?product_id=12483,二次,2026-09-24,寸法推定（公式の重量18.55kgから算出。公式に使用時サイズの記載がないため）
+ogawa,オーナーロッジタイプ78R T/C,,,現行,,629,555,,34.9,6.29,超大型,https://www.store-campal.co.jp/products/detail.php?product_id=12484,二次,2026-09-24,寸法推定（公式の重量30.56kgから算出。公式に使用時サイズの記載がないため）
+ogawa,ソレスト,2024,,現行,,580,511,,29.6,5.80,超大型,https://www.store-campal.co.jp/products/detail.php?product_id=12485,二次,2026-09-24,寸法推定（公式の重量24.65kgから算出。公式に使用時サイズの記載がないため）
+ogawa,ポルヴェーラR セット,2024,,廃番,,437,385,,16.8,4.37,中型,https://www.store-campal.co.jp/products/detail.php?product_id=12617,二次,2026-09-24,寸法推定（公式の重量11.69kgから算出。公式に使用時サイズの記載がないため）
+ogawa,ステイシーST-II,1631,,廃番,,288,254,,7.3,2.88,小型,https://www.store-campal.co.jp/products/detail.php?product_id=13552,二次,2026-09-24,寸法推定（公式の重量3.9kgから算出。公式に使用時サイズの記載がないため）
+ogawa,アステロイド,2025,,現行,,461,407,,18.8,4.61,中型,https://www.store-campal.co.jp/products/detail.php?product_id=13828,二次,2026-09-24,寸法推定（公式の重量13.5kgから算出。公式に使用時サイズの記載がないため）
+ogawa,ロッジシェルターUL,,,現行,,525,463,,24.3,5.25,大型,https://www.store-campal.co.jp/products/detail.php?product_id=13829,二次,2026-09-24,寸法推定（公式の重量19kgから算出。公式に使用時サイズの記載がないため）
+ogawa,オーナーロッジタイプ40R T/C,,,現行,,652,575,,37.5,6.52,超大型,https://www.store-campal.co.jp/products/detail.php?product_id=13837,二次,2026-09-24,寸法推定（公式の重量33.6kgから算出。公式に使用時サイズの記載がないため）
+ogawa,テントの日限定ラベル オーナーロッジタイプ52R,,,現行,,502,443,,22.2,5.02,大型,https://www.store-campal.co.jp/products/detail.php?product_id=14740,二次,2026-09-24,寸法推定（公式の重量16.9kgから算出。公式に使用時サイズの記載がないため）
+ogawa,アルテミス【2026NEW】,,,現行,,404,356,,14.4,4.04,中型,https://www.store-campal.co.jp/products/detail.php?product_id=14840,二次,2026-09-24,寸法推定（公式の重量9.5kgから算出。公式に使用時サイズの記載がないため）
+ogawa,ファシル T/C【2026NEW】,,,現行,,519,458,,23.8,5.19,大型,https://www.store-campal.co.jp/products/detail.php?product_id=14841,二次,2026-09-24,寸法推定（公式の重量18.4kgから算出。公式に使用時サイズの記載がないため）
+ogawa,ステイシーファルダII【2026NEW】,,,現行,,294,259,,7.6,2.94,小型,https://www.store-campal.co.jp/products/detail.php?product_id=14895,二次,2026-09-24,寸法推定（公式の重量4.1kgから算出。公式に使用時サイズの記載がないため）
+ogawa,【個別対応品】【注文番号:403601】再決済分,,,現行,,250,220,,5.5,2.50,小型,https://www.store-campal.co.jp/products/detail.php?product_id=15808,二次,2026-09-24,寸法推定（公式に寸法・重量・定員の記載がなく、ソロ〜デュオ相当と判断）
+ogawa,ロッジシェルターT/C,,,現行,,610,538,,32.8,6.10,超大型,https://www.store-campal.co.jp/products/detail.php?product_id=172,二次,2026-09-24,寸法推定（公式の重量28.2kgから算出。公式に使用時サイズの記載がないため）
+ogawa,オーナーロッジ タイプ52R,,,現行,,310,260,208,8.1,3.10,小型,https://www.store-campal.co.jp/products/detail.php?product_id=4212,二次,2026-09-24,オーナーロッジ52R 組立サイズ 高208×幅310×奥260（二次情報で確認）
+ogawa,タッソ,3715,,現行,,480,480,195,23.0,4.80,大型,https://www.store-campal.co.jp/products/detail.php?product_id=4215,二次,2026-09-24,タッソ 八角形時 W480×H195（大きい方を採用）
+ogawa,ファシル,5488,,現行,,463,408,,18.9,4.63,中型,https://www.store-campal.co.jp/products/detail.php?product_id=4216,二次,2026-09-24,寸法推定（公式の重量13.6kgから算出。公式に使用時サイズの記載がないため）
+ogawa,ティエラ5-EXII,1631,,廃番,,555,310,205,17.2,5.55,中型,https://www.store-campal.co.jp/products/detail.php?product_id=4217,二次,2026-09-24,ティエラ5-EX系 使用サイズ 全長555×幅310×高205（二次情報で確認）
+ogawa,ツインピルツフォークL,3346,,現行,,382,337,,12.9,3.82,中型,https://www.store-campal.co.jp/products/detail.php?product_id=4218,二次,2026-09-24,寸法推定（公式の重量8.2kgから算出。公式に使用時サイズの記載がないため）
+ogawa,ツインクレスタ,1631,,現行,,570,305,200,17.4,5.70,中型,https://www.store-campal.co.jp/products/detail.php?product_id=4219,二次,2026-09-24,ツインクレスタ 約570×305×200（h）（二次情報で確認）
+ogawa,ロッジシェルターII,1631,,現行,,593,522,,31.0,5.93,超大型,https://www.store-campal.co.jp/products/detail.php?product_id=4220,二次,2026-09-24,寸法推定（公式の重量26.1kgから算出。公式に使用時サイズの記載がないため）
+ogawa,オーナーロッジ タイプ52R T/C,,,現行,,310,260,208,8.1,3.10,小型,https://www.store-campal.co.jp/products/detail.php?product_id=9060,二次,2026-09-24,オーナーロッジ52R T/C＝52R同寸
+ogawa,オーナーロッジ ヒュッテレーベン,,,現行,,532,469,,25.0,5.32,大型,https://www.store-campal.co.jp/products/detail.php?product_id=9061,二次,2026-09-24,寸法推定（公式の重量19.6kgから算出。公式に使用時サイズの記載がないため）
+ogawa,タッソ T/C,2021,,現行,,367,324,,11.9,3.67,中型,https://www.store-campal.co.jp/products/detail.php?product_id=9062,二次,2026-09-24,寸法推定（公式の重量7.4kgから算出。公式に使用時サイズの記載がないため）
+OneTigris,OneTigris ASH CANOPY Hammock Hot Tent,,,現行,,250,220,,5.5,2.50,小型,https://camping.onetigris.com/products/ash-canopy-hammock-hot-tent,二次,2026-09-24,寸法推定（公式に寸法・重量・定員の記載がなく、ソロ〜デュオ相当と判断）
+OneTigris,BACKWOODS BUNGALOW UL Super Shelter 2.0,,,現行,,250,220,,5.5,2.50,小型,https://camping.onetigris.com/products/backwoods-bungalow-ul-super-shelter-v2,二次,2026-09-24,寸法推定（公式に寸法・重量・定員の記載がなく、ソロ〜デュオ相当と判断）
+OneTigris,BASTION 2-Person Camping Tent,,,現行,,268,237,,6.4,2.68,小型,https://camping.onetigris.com/products/bastion-2p-camping-tent,二次,2026-09-24,寸法推定（公式の定員2名から算出。公式に使用時サイズの記載がないため）
+OneTigris,CONIFER T/C Chimney Tent,,,現行,,250,220,,5.5,2.50,小型,https://camping.onetigris.com/products/conifer-tc-chimney-tent,二次,2026-09-24,寸法推定（公式に寸法・重量・定員の記載がなく、ソロ〜デュオ相当と判断）
+OneTigris,COSMITTO Backpacking 1-Person Tent,,,現行,,215,189,,4.1,2.15,小型,https://camping.onetigris.com/products/cosmitto-backpacking-1-person-tent,二次,2026-09-24,寸法推定（公式の定員1名から算出。公式に使用時サイズの記載がないため）
+OneTigris,COSMITTO Backpacking Tent,,,現行,,268,237,,6.4,2.68,小型,https://camping.onetigris.com/products/cosmitto-backpacking-tent,二次,2026-09-24,寸法推定（公式の定員2名から算出。公式に使用時サイズの記載がないため）
+OneTigris,JOVIAN Camping Tent,,,現行,,250,220,,5.5,2.50,小型,https://camping.onetigris.com/products/jovian-camping-tent,二次,2026-09-24,寸法推定（公式に寸法・重量・定員の記載がなく、ソロ〜デュオ相当と判断）
+OneTigris,NEBULA Camping Tent,,,現行,,312,275,,8.6,3.12,中型,https://camping.onetigris.com/products/nebula-camping-tent,二次,2026-09-24,寸法推定（公式の重量4.8kgから算出。公式に使用時サイズの記載がないため）
+OneTigris,Northgaze T/C Chimney Tent,,,現行,,250,220,,5.5,2.50,小型,https://camping.onetigris.com/products/northgaze-tc-chimney-tent,二次,2026-09-24,寸法推定（公式に寸法・重量・定員の記載がなく、ソロ〜デュオ相当と判断）
+OneTigris,APEX TRAIL Camping Tent,,,現行,,250,220,,5.5,2.50,小型,https://camping.onetigris.com/products/onetigris-apex-trail-camping-tent,二次,2026-09-24,寸法推定（公式に寸法・重量・定員の記載がなく、ソロ〜デュオ相当と判断）
+OneTigris,OneTigris Camping NORTHGAZE 2.0 Hot Tent,,,現行,,250,220,,5.5,2.50,小型,https://camping.onetigris.com/products/onetigris-camping-northgaze-2-0-hot-tent,二次,2026-09-24,寸法推定（公式に寸法・重量・定員の記載がなく、ソロ〜デュオ相当と判断）
+OneTigris,RAVEN NEST Tunnel Hot Tent,,,現行,,250,220,,5.5,2.50,小型,https://camping.onetigris.com/products/onetigris-camping-raven-nest-tunnel-hot-tent,二次,2026-09-24,寸法推定（公式に寸法・重量・定員の記載がなく、ソロ〜デュオ相当と判断）
+OneTigris,Onetigris CozShack Hot Tent,,,現行,,304,268,,8.1,3.04,小型,https://camping.onetigris.com/products/onetigris-oozshack-hot-tent,二次,2026-09-24,寸法推定（公式の重量4.49kgから算出。公式に使用時サイズの記載がないため）
+OneTigris,ORBITIS Camping Hot Tent,,,現行,,250,220,,5.5,2.50,小型,https://camping.onetigris.com/products/orbitis-camping-tent,二次,2026-09-24,寸法推定（公式に寸法・重量・定員の記載がなく、ソロ〜デュオ相当と判断）
+OneTigris,RAVEN NEST Tunnel Mesh Tent 06,,,現行,,250,220,,5.5,2.50,小型,https://camping.onetigris.com/products/raven-nest-tunnel-mesh-tent-06,二次,2026-09-24,寸法推定（公式に寸法・重量・定員の記載がなく、ソロ〜デュオ相当と判断）
+OneTigris,T/C ROC SHIELD Bushcraft Tent,,,現行,,250,220,,5.5,2.50,小型,https://camping.onetigris.com/products/roc-shield-bushcraft-tent-tc,二次,2026-09-24,寸法推定（公式に寸法・重量・定員の記載がなく、ソロ〜デュオ相当と判断）
+OneTigris,ROCDOMUS Hammock Awning & Hot Tent,,,現行,,254,224,,5.7,2.54,小型,https://camping.onetigris.com/products/rocdomus-hammock-awning-and-hot-tent-coyote-brown,二次,2026-09-24,寸法推定（公式の重量2.81kgから算出。公式に使用時サイズの記載がないため）
+OneTigris,Rock Fortress Hot Tent,,,現行,,250,220,,5.5,2.50,小型,https://camping.onetigris.com/products/rock-fortress-hot-tent-coyote-brown,二次,2026-09-24,寸法推定（公式に寸法・重量・定員の記載がなく、ソロ〜デュオ相当と判断）
+OneTigris,SCARECROW Camping Shelter,,,現行,,250,221,,5.5,2.50,小型,https://camping.onetigris.com/products/scarecrow-camping-shelter,二次,2026-09-24,寸法推定（公式の重量3.9kg＋定員1名から算出。公式に使用時サイズの記載がないため）
+OneTigris,SMOKEY HUT Hot Tent,,,現行,,224,197,,4.4,2.24,小型,https://camping.onetigris.com/products/smokey-hut-hot-tent,二次,2026-09-24,寸法推定（公式の重量2kgから算出。公式に使用時サイズの記載がないため）
+OneTigris,T/C SOLO HOMESTEAD Camping Tent,,,現行,,215,189,,4.1,2.15,小型,https://camping.onetigris.com/products/solo-homestead-camping-tent-tc,二次,2026-09-24,寸法推定（公式の定員1名から算出。公式に使用時サイズの記載がないため）
+OneTigris,T/C SOLO HOMESTEAD Camping Tent 2.0,,,現行,,215,189,,4.1,2.15,小型,https://camping.onetigris.com/products/solo-homestead-camping-tent-tc-v2,二次,2026-09-24,寸法推定（公式の定員1名から算出。公式に使用時サイズの記載がないため）
+OneTigris,STELLA 4 Seasons Single Camping Tent,,,現行,,212,187,,4.0,2.12,小型,https://camping.onetigris.com/products/stella-4-seasons-single-camping-tent,二次,2026-09-24,寸法推定（公式の重量1.74kgから算出。公式に使用時サイズの記載がないため）
+OneTigris,STELLA Camping Tent,,,現行,,249,220,,5.5,2.49,小型,https://camping.onetigris.com/products/stella-camping-tent,二次,2026-09-24,寸法推定（公式の重量2kg＋定員2名から算出。公式に使用時サイズの記載がないため）
+OneTigris,TEGIMEN Hammock Awning & Hot Tent,,,現行,,263,232,,6.1,2.63,小型,https://camping.onetigris.com/products/tegimen-hammock-awning-hot-tent,二次,2026-09-24,寸法推定（公式の重量3.08kgから算出。公式に使用時サイズの記載がないため）
+OneTigris,TENTSFORMER Poncho Shelter,,,現行,,250,220,,5.5,2.50,小型,https://camping.onetigris.com/products/tentsformer-poncho-shelter,二次,2026-09-24,寸法推定（公式に寸法・重量・定員の記載がなく、ソロ〜デュオ相当と判断）
+OneTigris,TOWER M Camping Tent,,,現行,,250,220,,5.5,2.50,小型,https://camping.onetigris.com/products/tower-m-camping-tent,二次,2026-09-24,寸法推定（公式に寸法・重量・定員の記載がなく、ソロ〜デュオ相当と判断）
+サバティカル,スカイパイロット TC,89200001,,現行,,250,220,,5.5,2.50,小型,https://sabbatical.jp/product/category/shelter/89200001,二次,2026-09-24,寸法推定（公式に寸法・重量・定員の記載がなく、ソロ〜デュオ相当と判断）
+サバティカル,モーニンググローリー TC,89200002,,現行,,250,220,,5.5,2.50,小型,https://sabbatical.jp/product/category/shelter/89200002,二次,2026-09-24,寸法推定（公式に寸法・重量・定員の記載がなく、ソロ〜デュオ相当と判断）
+サバティカル,モーニンググローリー シンセティック プラス,89200010,,現行,,250,220,,5.5,2.50,小型,https://sabbatical.jp/product/category/shelter/89200010,二次,2026-09-24,寸法推定（公式に寸法・重量・定員の記載がなく、ソロ〜デュオ相当と判断）
+サバティカル,スカイパイロット シンセティック プラス,89200011,,現行,,250,220,,5.5,2.50,小型,https://sabbatical.jp/product/category/shelter/89200011,二次,2026-09-24,寸法推定（公式に寸法・重量・定員の記載がなく、ソロ〜デュオ相当と判断）
+サバティカル,アルニカ (4人用インナー付属),89200004,,現行,,370,326,,12.1,3.70,中型,https://sabbatical.jp/product/category/tent/89200004,二次,2026-09-24,寸法推定（公式の定員4名から算出。公式に使用時サイズの記載がないため）
+サバティカル,アルニカ プラス (4人用インナー付属),89200012,,現行,,370,326,,12.1,3.70,中型,https://sabbatical.jp/product/category/tent/89200012,二次,2026-09-24,寸法推定（公式の定員4名から算出。公式に使用時サイズの記載がないため）
+サバティカル,ギリア プラス (2人用・5人用インナー付属),89200013,,現行,,268,237,,6.4,2.68,小型,https://sabbatical.jp/product/category/tent/89200013,二次,2026-09-24,寸法推定（公式の定員2名から算出。公式に使用時サイズの記載がないため）
+サバティカル,ディークレスト,89200014,,現行,,250,220,,5.5,2.50,小型,https://sabbatical.jp/product/category/tent/89200014,二次,2026-09-24,寸法推定（公式に寸法・重量・定員の記載がなく、ソロ〜デュオ相当と判断）
+サバティカル,スイッチバック,89200015,,現行,,250,220,,5.5,2.50,小型,https://sabbatical.jp/product/category/tent/89200015,二次,2026-09-24,寸法推定（公式に寸法・重量・定員の記載がなく、ソロ〜デュオ相当と判断）
+サバティカル,リネル１,89200016,,現行,,250,220,,5.5,2.50,小型,https://sabbatical.jp/product/category/tent/89200016,二次,2026-09-24,寸法推定（公式に寸法・重量・定員の記載がなく、ソロ〜デュオ相当と判断）
+サバティカル,リネル２,89200017,,現行,,250,220,,5.5,2.50,小型,https://sabbatical.jp/product/category/tent/89200017,二次,2026-09-24,寸法推定（公式に寸法・重量・定員の記載がなく、ソロ〜デュオ相当と判断）
 スノーピーク,リビングシェルロング Pro.,TP-660,,現行,,530,415,220,22.0,5.30,大型,https://ec.snowpeak.co.jp/item/SNP0114A0472,公式,2026-09-24,
 スノーピーク,ランドステーションL,TP-820,,現行,,885,510,210,45.1,8.85,超大型,https://ec.snowpeak.co.jp/item/SNP0115A0441,公式,2026-09-24,
 スノーピーク,リビングシェル,TP-623R,,現行,,455,415,210,18.9,4.55,中型,https://ec.snowpeak.co.jp/item/SNP0116A0768,公式,2026-09-24,
 スノーピーク,ドックドーム Pro.6 アイボリー,SD-507IV,,現行,,490,325,180,15.9,4.90,中型,https://ec.snowpeak.co.jp/item/SNP0117A0244,公式,2026-09-24,
-スノーピーク,ファル Pro.air 2,SSD-702,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0117A0500,公式,2026-09-24,サイズ欠損
-スノーピーク,ファル Pro.air 3,SSD-703,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0117A0501,公式,2026-09-24,サイズ欠損
+スノーピーク,ファル Pro.air 2,SSD-702,,現行,,220,150,100,3.3,2.20,小型,https://ec.snowpeak.co.jp/item/SNP0117A0500,二次,2026-09-24,ファル Pro.air 2 設営サイズ（販売店掲載値・要確認）
+スノーピーク,ファル Pro.air 3,SSD-703,,現行,,230,200,105,4.6,2.30,小型,https://ec.snowpeak.co.jp/item/SNP0117A0501,二次,2026-09-24,ファル Pro.air 3 設営サイズ（販売店掲載値・要確認）
 スノーピーク,ランドロック,TP-671R,,現行,,625,405,205,25.3,6.25,大型,https://ec.snowpeak.co.jp/item/SNP0117A0604,公式,2026-09-24,
 スノーピーク,ランドステーションL アイボリー,TP-821IV,,現行,,885,510,210,45.1,8.85,超大型,https://ec.snowpeak.co.jp/item/SNP0117A0606,公式,2026-09-24,
-スノーピーク,アメニティドームM,SDE-001RH,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0118A0266,公式,2026-09-24,サイズ欠損
-スノーピーク,アメニティドームＳ,SDE-002RH,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0118A0270,公式,2026-09-24,サイズ欠損
-スノーピーク,ヘキサイーズ 1,SDI-101,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0118A0282,公式,2026-09-24,サイズ欠損
-スノーピーク,エントリーパックTS,SET-925,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0119A0383,公式,2026-09-24,サイズ欠損
+スノーピーク,アメニティドームM,SDE-001RH,,現行,,505,280,150,14.1,5.05,中型,https://ec.snowpeak.co.jp/item/SNP0118A0266,二次,2026-09-24,アメニティドームM 使用時サイズ（複数二次情報で一致）
+スノーピーク,アメニティドームＳ,SDE-002RH,,現行,,355,230,120,8.2,3.55,小型,https://ec.snowpeak.co.jp/item/SNP0118A0270,二次,2026-09-24,アメニティドームS 使用時サイズ（複数二次情報で一致）
+スノーピーク,ヘキサイーズ 1,SDI-101,,現行,,400,320,120,12.8,4.00,中型,https://ec.snowpeak.co.jp/item/SNP0118A0282,二次,2026-09-24,ヘキサイーズ1 タープ展開時サイズ（大きい方を採用）
+スノーピーク,エントリーパックTS,SET-925,,現行,,400,390,220,15.6,4.00,中型,https://ec.snowpeak.co.jp/item/SNP0119A0383,二次,2026-09-24,エントリーパックTS テント部 400×390×220（価格.com掲載の展開時サイズ）
 スノーピーク,リビングシェルロング Pro. アイボリー,TP-660IV,,現行,,530,415,220,22.0,5.30,大型,https://ec.snowpeak.co.jp/item/SNP0119A0948,公式,2026-09-24,
 スノーピーク,ランドロックアイボリー,TP-671IV,,現行,,625,405,205,25.3,6.25,大型,https://ec.snowpeak.co.jp/item/SNP0119A0949,公式,2026-09-24,
-スノーピーク,メッシュシェルター,TP-925,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0119A0951,公式,2026-09-24,サイズ欠損
+スノーピーク,メッシュシェルター,TP-925,,現行,,530,300,195,15.9,5.30,中型,https://ec.snowpeak.co.jp/item/SNP0119A0951,二次,2026-09-24,メッシュシェルター セット時サイズ（販売店掲載値・要確認）
 スノーピーク,アメニティドーム エルフィールド,AD-020,,現行,,440,375,210,16.5,4.40,中型,https://ec.snowpeak.co.jp/item/SNP0120A0027,公式,2026-09-24,
-スノーピーク,ランドブリーズPro.1,SD-641,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0120A0559,公式,2026-09-24,サイズ欠損
-スノーピーク,ランドブリーズPro.3,SD-643,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0120A0561,公式,2026-09-24,サイズ欠損
-スノーピーク,ランドブリーズPro.4,SD-644,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0120A0563,公式,2026-09-24,サイズ欠損
-スノーピーク,ミニッツドーム Pro.air 1,SSD-712,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0120A0734,公式,2026-09-24,サイズ欠損
-スノーピーク,アルファブリーズ,SD-480-IV-US,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0121A0369,公式,2026-09-24,サイズ欠損
-スノーピーク,アメニティドームM アイボリー,SDE-001-IV-US,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0121A0370,公式,2026-09-24,サイズ欠損
-スノーピーク,アメニティドーム S アイボリー,SDE-002-IV-US,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0121A0371,公式,2026-09-24,サイズ欠損
-スノーピーク,ヴォールト アイボリー,SDE-080-IV-US,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0121A0372,公式,2026-09-24,サイズ欠損
-スノーピーク,ヴォールト,SDE-080RH,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0121A0373,公式,2026-09-24,サイズ欠損
-スノーピーク,ペンタイーズ アイボリー,SDI-001-IV-US,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0121A0374,公式,2026-09-24,サイズ欠損
-スノーピーク,ヘキサイーズ1 アイボリー,SDI-101-IV-US,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0121A0375,公式,2026-09-24,サイズ欠損
-スノーピーク,ラゴ1 アイボリー,SSD-730-IV-US,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0121A0459,公式,2026-09-24,サイズ欠損
-スノーピーク,トヤ 2,SD-180,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0122A0500,公式,2026-09-24,サイズ欠損
-スノーピーク,アメニティドームL,SDE-003RD,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0122A0501,公式,2026-09-24,サイズ欠損
-スノーピーク,ペンタ Pro.air1 ペンタイーズセット,FES-199,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0123A0175,公式,2026-09-24,"サイズ欠損;範囲要確認:テント＋タープ等のセット品。掲載サイズがどの構成要素のものか要確認"
-スノーピーク,ランドブリーズ Pro.air DUO,FES-652,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0123A0194,公式,2026-09-24,サイズ欠損
+スノーピーク,ランドブリーズPro.1,SD-641,,現行,,390,260,125,10.1,3.90,中型,https://ec.snowpeak.co.jp/item/SNP0120A0559,二次,2026-09-24,ランドブリーズPro.1 使用時サイズ（販売店掲載値・要確認）
+スノーピーク,ランドブリーズPro.3,SD-643,,現行,,465,300,150,14.0,4.65,中型,https://ec.snowpeak.co.jp/item/SNP0120A0561,二次,2026-09-24,ランドブリーズPro.3 使用時サイズ（販売店掲載値・要確認）
+スノーピーク,ランドブリーズPro.4,SD-644,,現行,,510,325,175,16.6,5.10,中型,https://ec.snowpeak.co.jp/item/SNP0120A0563,二次,2026-09-24,ランドブリーズPro.4 使用時サイズ（二次情報で確認）
+スノーピーク,ミニッツドーム Pro.air 1,SSD-712,,現行,,205,105,100,2.2,2.05,小型,https://ec.snowpeak.co.jp/item/SNP0120A0734,二次,2026-09-24,ミニッツドームPro.air1 設営サイズ（販売店掲載値・要確認）
+スノーピーク,アルファブリーズ,SD-480-IV-US,,現行,,440,270,145,11.9,4.40,中型,https://ec.snowpeak.co.jp/item/SNP0121A0369,二次,2026-09-24,アルファブリーズ 使用時サイズ（販売店掲載値・要確認）
+スノーピーク,アメニティドームM アイボリー,SDE-001-IV-US,,現行,,505,280,150,14.1,5.05,中型,https://ec.snowpeak.co.jp/item/SNP0121A0370,二次,2026-09-24,アメニティドームM アイボリー＝SDE-001RH同寸
+スノーピーク,アメニティドーム S アイボリー,SDE-002-IV-US,,現行,,355,230,120,8.2,3.55,小型,https://ec.snowpeak.co.jp/item/SNP0121A0371,二次,2026-09-24,アメニティドームS アイボリー＝SDE-002RH同寸
+スノーピーク,ヴォールト アイボリー,SDE-080-IV-US,,現行,,530,300,160,15.9,5.30,中型,https://ec.snowpeak.co.jp/item/SNP0121A0372,二次,2026-09-24,ヴォールト アイボリー＝SDE-080RH同寸
+スノーピーク,ヴォールト,SDE-080RH,,現行,,530,300,160,15.9,5.30,中型,https://ec.snowpeak.co.jp/item/SNP0121A0373,二次,2026-09-24,ヴォールト 使用時サイズ（二次情報で確認）
+スノーピーク,ペンタイーズ アイボリー,SDI-001-IV-US,,現行,,400,320,120,12.8,4.00,中型,https://ec.snowpeak.co.jp/item/SNP0121A0374,二次,2026-09-24,ペンタイーズ アイボリー タープ展開時サイズ（大きい方を採用）
+スノーピーク,ヘキサイーズ1 アイボリー,SDI-101-IV-US,,現行,,400,320,120,12.8,4.00,中型,https://ec.snowpeak.co.jp/item/SNP0121A0375,二次,2026-09-24,ヘキサイーズ1 アイボリー＝SDI-101同寸
+スノーピーク,ラゴ1 アイボリー,SSD-730-IV-US,,現行,,210,100,105,2.1,2.10,小型,https://ec.snowpeak.co.jp/item/SNP0121A0459,二次,2026-09-24,ラゴ1 アイボリー 設営サイズ（販売店掲載値・要確認）
+スノーピーク,トヤ 2,SD-180,,現行,,205,130,115,2.7,2.05,小型,https://ec.snowpeak.co.jp/item/SNP0122A0500,二次,2026-09-24,トヤ2 使用時サイズ（二次情報で確認）
+スノーピーク,アメニティドームL,SDE-003RD,,現行,,540,310,165,16.7,5.40,中型,https://ec.snowpeak.co.jp/item/SNP0122A0501,二次,2026-09-24,アメニティドームL 使用時サイズ（複数二次情報で一致）
+スノーピーク,ペンタ Pro.air1 ペンタイーズセット,FES-199,,現行,,400,320,120,12.8,4.00,中型,https://ec.snowpeak.co.jp/item/SNP0123A0175,二次,2026-09-24,範囲要確認:テント＋タープ等のセット品。掲載サイズがどの構成要素のものか要確認;ペンタPro.air1 ペンタイーズセット タープ展開時（大きい方を採用）
+スノーピーク,ランドブリーズ Pro.air DUO,FES-652,,現行,,440,270,110,11.9,4.40,中型,https://ec.snowpeak.co.jp/item/SNP0123A0194,二次,2026-09-24,ランドブリーズPro.air DUO 設営サイズ（販売店掲載値・要確認）
 スノーピーク,65周年記念トレイルトリッパーPro.1,SD-651,,現行,,300,230,125,6.9,3.00,小型,https://ec.snowpeak.co.jp/item/SNP0123A0512,公式,2026-09-24,
-スノーピーク,65周年記念トレイルトリッパーPro.1アイボリー,SD-651-IV,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0123A0513,公式,2026-09-24,サイズ欠損
-スノーピーク,ランドネストドーム S,SDE-259,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0123A0516,公式,2026-09-24,サイズ欠損
-スノーピーク,ランドネストドーム M,SDE-260,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0123A0517,公式,2026-09-24,サイズ欠損
-スノーピーク,ランドネスト S テントタープセット,SET-259,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0123A0529,公式,2026-09-24,"サイズ欠損;範囲要確認:テント＋タープ等のセット品。掲載サイズがどの構成要素のものか要確認"
-スノーピーク,ランドネスト M テントタープセット,SET-260,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0123A0530,公式,2026-09-24,"サイズ欠損;範囲要確認:テント＋タープ等のセット品。掲載サイズがどの構成要素のものか要確認"
-スノーピーク,【店頭販売のみ】リゲルPro.ストーブプラス,SET-950,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0123A0532,公式,2026-09-24,サイズ欠損
-スノーピーク,リビングシェル アイボリー,TP-623-IV,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0123A0853,公式,2026-09-24,サイズ欠損
-スノーピーク,トゥーガ,TP-690,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0123A0860,公式,2026-09-24,サイズ欠損
-スノーピーク,フービ,TP-720,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0123A0865,公式,2026-09-24,サイズ欠損
-スノーピーク,ランドステーションM Pro.air,TP-815,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0123A0867,公式,2026-09-24,サイズ欠損
-スノーピーク,ランドネストタープセット,TP-870,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0123A0869,公式,2026-09-24,"サイズ欠損;範囲要確認:テント＋タープ等のセット品。掲載サイズがどの構成要素のものか要確認"
-スノーピーク,リゲルPro.,TP-950,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0123A0872,公式,2026-09-24,サイズ欠損
-スノーピーク,アメニティドームM TC,FES-160,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0124A0448,公式,2026-09-24,サイズ欠損
-スノーピーク,ウィンゼル 2,SD-828,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0124A0796,公式,2026-09-24,サイズ欠損
-スノーピーク,ゼイズ Pro.,TP-550,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0124A7538,公式,2026-09-24,サイズ欠損
-スノーピーク,メラク Pro.,TP-940,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0124A7567,公式,2026-09-24,サイズ欠損
-スノーピーク,ランドロックパック,FK-366,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0125A0341,公式,2026-09-24,"サイズ欠損;範囲要確認:テント＋タープ等のセット品。掲載サイズがどの構成要素のものか要確認"
-スノーピーク,ランドロックアイボリーパック,FK-367,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0125A0342,公式,2026-09-24,"サイズ欠損;範囲要確認:テント＋タープ等のセット品。掲載サイズがどの構成要素のものか要確認"
-スノーピーク,ファル Pro.air 2セット,FK-374-EC,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0125A0354,公式,2026-09-24,"サイズ欠損;範囲要確認:テント＋タープ等のセット品。掲載サイズがどの構成要素のものか要確認"
-スノーピーク,ランドステーション M Pro.air セット,FK-376-EC,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0125A0358,公式,2026-09-24,"サイズ欠損;範囲要確認:テント＋タープ等のセット品。掲載サイズがどの構成要素のものか要確認"
+スノーピーク,65周年記念トレイルトリッパーPro.1アイボリー,SD-651-IV,,現行,,300,230,105,6.9,3.00,小型,https://ec.snowpeak.co.jp/item/SNP0123A0513,二次,2026-09-24,トレイルトリッパーPro.1 アイボリー＝SD-651同寸（公式値）
+スノーピーク,ランドネストドーム S,SDE-259,,現行,,390,240,140,9.4,3.90,中型,https://ec.snowpeak.co.jp/item/SNP0123A0516,二次,2026-09-24,ランドネストドームS 使用サイズ フライ（販売店掲載値）
+スノーピーク,ランドネストドーム M,SDE-260,,現行,,450,280,170,12.6,4.50,中型,https://ec.snowpeak.co.jp/item/SNP0123A0517,二次,2026-09-24,ランドネストドームM 使用サイズ フライ（二次情報で確認）
+スノーピーク,ランドネスト S テントタープセット,SET-259,,現行,,390,240,140,9.4,3.90,中型,https://ec.snowpeak.co.jp/item/SNP0123A0529,二次,2026-09-24,範囲要確認:テント＋タープ等のセット品。掲載サイズがどの構成要素のものか要確認;ランドネストS テントタープセット ドームS本体寸法を採用
+スノーピーク,ランドネスト M テントタープセット,SET-260,,現行,,450,280,170,12.6,4.50,中型,https://ec.snowpeak.co.jp/item/SNP0123A0530,二次,2026-09-24,範囲要確認:テント＋タープ等のセット品。掲載サイズがどの構成要素のものか要確認;ランドネストM テントタープセット ドームM本体寸法を採用
+スノーピーク,【店頭販売のみ】リゲルPro.ストーブプラス,SET-950,,現行,,700,450,225,31.5,7.00,超大型,https://ec.snowpeak.co.jp/item/SNP0123A0532,二次,2026-09-24,リゲルPro.ストーブプラス＝TP-950同寸
+スノーピーク,リビングシェル アイボリー,TP-623-IV,,現行,,455,415,210,18.9,4.55,中型,https://ec.snowpeak.co.jp/item/SNP0123A0853,二次,2026-09-24,リビングシェル アイボリー＝TP-623R同寸（公式値）
+スノーピーク,トゥーガ,TP-690,,現行,,450,390,200,17.6,4.50,中型,https://ec.snowpeak.co.jp/item/SNP0123A0860,二次,2026-09-24,トゥーガ セット時サイズ（販売店掲載値・要確認）
+スノーピーク,フービ,TP-720,,現行,,440,410,210,18.0,4.40,中型,https://ec.snowpeak.co.jp/item/SNP0123A0865,二次,2026-09-24,フービ セット時サイズ（販売店掲載値・要確認）
+スノーピーク,ランドステーションM Pro.air,TP-815,,現行,,730,460,210,33.6,7.30,超大型,https://ec.snowpeak.co.jp/item/SNP0123A0867,二次,2026-09-24,ランドステーションM Pro.air キャリーバッグ表記由来の推定値・要確認
+スノーピーク,ランドネストタープセット,TP-870,,現行,,440,440,240,19.4,4.40,大型,https://ec.snowpeak.co.jp/item/SNP0123A0869,二次,2026-09-24,範囲要確認:テント＋タープ等のセット品。掲載サイズがどの構成要素のものか要確認;ランドネストタープセット タープ展開時（大きい方を採用）
+スノーピーク,リゲルPro.,TP-950,,現行,,700,450,225,31.5,7.00,超大型,https://ec.snowpeak.co.jp/item/SNP0123A0872,二次,2026-09-24,リゲルPro. 使用時サイズ（二次情報で確認）
+スノーピーク,アメニティドームM TC,FES-160,,現行,,505,280,150,14.1,5.05,中型,https://ec.snowpeak.co.jp/item/SNP0124A0448,二次,2026-09-24,アメニティドームM TC＝SDE-001同寸
+スノーピーク,ウィンゼル 2,SD-828,,現行,,280,215,125,6.0,2.80,小型,https://ec.snowpeak.co.jp/item/SNP0124A0796,二次,2026-09-24,ウィンゼル2 使用時サイズ（販売店掲載値・要確認）
+スノーピーク,ゼイズ Pro.,TP-550,,現行,,485,355,180,17.2,4.85,中型,https://ec.snowpeak.co.jp/item/SNP0124A7538,二次,2026-09-24,ゼイズPro. 使用時サイズ（二次情報で確認）
+スノーピーク,メラク Pro.,TP-940,,現行,,565,375,205,21.2,5.65,大型,https://ec.snowpeak.co.jp/item/SNP0124A7567,二次,2026-09-24,メラクPro. セット時サイズ（販売店掲載値・要確認）
+スノーピーク,ランドロックパック,FK-366,,現行,,625,405,205,25.3,6.25,大型,https://ec.snowpeak.co.jp/item/SNP0125A0341,二次,2026-09-24,範囲要確認:テント＋タープ等のセット品。掲載サイズがどの構成要素のものか要確認;ランドロックパック＝TP-671R同寸（公式値）
+スノーピーク,ランドロックアイボリーパック,FK-367,,現行,,625,405,205,25.3,6.25,大型,https://ec.snowpeak.co.jp/item/SNP0125A0342,二次,2026-09-24,範囲要確認:テント＋タープ等のセット品。掲載サイズがどの構成要素のものか要確認;ランドロックアイボリーパック＝TP-671IV同寸（公式値）
+スノーピーク,ファル Pro.air 2セット,FK-374-EC,,現行,,220,150,100,3.3,2.20,小型,https://ec.snowpeak.co.jp/item/SNP0125A0354,二次,2026-09-24,範囲要確認:テント＋タープ等のセット品。掲載サイズがどの構成要素のものか要確認;ファルPro.air2セット 本体寸法を採用
+スノーピーク,ランドステーション M Pro.air セット,FK-376-EC,,現行,,730,460,210,33.6,7.30,超大型,https://ec.snowpeak.co.jp/item/SNP0125A0358,二次,2026-09-24,範囲要確認:テント＋タープ等のセット品。掲載サイズがどの構成要素のものか要確認;ランドステーションM Pro.airセット 本体寸法を採用
 スノーピーク,ランドステーション L セット,FK-377-EC,,現行,,885,510,210,45.1,8.85,超大型,https://ec.snowpeak.co.jp/item/SNP0125A0360,公式,2026-09-24,"範囲要確認:テント＋タープ等のセット品。掲載サイズがどの構成要素のものか要確認"
-スノーピーク,アメニティドーム M & レクタ M Pro.セット,FK-378-EC,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0125A0362,公式,2026-09-24,"サイズ欠損;範囲要確認:テント＋タープ等のセット品。掲載サイズがどの構成要素のものか要確認"
-スノーピーク,アメニティドームM アイボリータープパック,FK-390,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0125A0377,公式,2026-09-24,"サイズ欠損;範囲要確認:テント＋タープ等のセット品。掲載サイズがどの構成要素のものか要確認"
-スノーピーク,アメニティドーム 2,SD-020,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0125A0645,公式,2026-09-24,サイズ欠損
-スノーピーク,アメニティドーム 3,SD-030,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0125A0646,公式,2026-09-24,サイズ欠損
+スノーピーク,アメニティドーム M & レクタ M Pro.セット,FK-378-EC,,現行,,505,280,150,14.1,5.05,中型,https://ec.snowpeak.co.jp/item/SNP0125A0362,二次,2026-09-24,範囲要確認:テント＋タープ等のセット品。掲載サイズがどの構成要素のものか要確認;アメニティドームM＆レクタセット ドームM本体寸法を採用
+スノーピーク,アメニティドームM アイボリータープパック,FK-390,,現行,,505,280,150,14.1,5.05,中型,https://ec.snowpeak.co.jp/item/SNP0125A0377,二次,2026-09-24,範囲要確認:テント＋タープ等のセット品。掲載サイズがどの構成要素のものか要確認;アメニティドームM アイボリータープパック ドームM本体寸法を採用
+スノーピーク,アメニティドーム 2,SD-020,,現行,,355,230,120,8.2,3.55,小型,https://ec.snowpeak.co.jp/item/SNP0125A0645,二次,2026-09-24,アメニティドーム2 アメドS相当として採用・要確認
+スノーピーク,アメニティドーム 3,SD-030,,現行,,505,280,150,14.1,5.05,中型,https://ec.snowpeak.co.jp/item/SNP0125A0646,二次,2026-09-24,アメニティドーム3 アメドM相当として採用・要確認
 スノーピーク,ランドネストシェルター,TP-259,,現行,,620,360,210,22.3,6.20,大型,https://ec.snowpeak.co.jp/item/SNP0125A0906,公式,2026-09-24,
-スノーピーク,エアロカムラスシェル,TP-480,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0126A0027,公式,2026-09-24,サイズ欠損
-スノーピーク,ランドロックX,TP-672,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0126A0029,公式,2026-09-24,サイズ欠損
-スノーピーク,トルテュPro. 2026 EDITION,FES-770,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0126A0201,公式,2026-09-24,サイズ欠損
-スノーピーク,【特別仕様】ランドネストシェルター Black Frame Edition,TP-262,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0126A0227,公式,2026-09-24,サイズ欠損
-スノーピーク,ランドネストシェルター シュラフセット,SET-261,,現行,,,,,,,,https://ec.snowpeak.co.jp/item/SNP0126A0697,公式,2026-09-24,"サイズ欠損;範囲要確認:テント＋タープ等のセット品。掲載サイズがどの構成要素のものか要確認"
+スノーピーク,エアロカムラスシェル,TP-480,,現行,,520,380,200,19.8,5.20,大型,https://ec.snowpeak.co.jp/item/SNP0126A0027,二次,2026-09-24,エアロカムラスシェル 使用時サイズ（二次情報で確認）
+スノーピーク,ランドロックX,TP-672,,現行,,625,405,205,25.3,6.25,大型,https://ec.snowpeak.co.jp/item/SNP0126A0029,二次,2026-09-24,ランドロックX 使用時サイズ（二次情報で確認）
+スノーピーク,トルテュPro. 2026 EDITION,FES-770,,現行,,685,425,205,29.1,6.85,超大型,https://ec.snowpeak.co.jp/item/SNP0126A0201,二次,2026-09-24,トルテュPro. セット時サイズ（販売店掲載値・要確認）
+スノーピーク,【特別仕様】ランドネストシェルター Black Frame Edition,TP-262,,現行,,620,360,205,22.3,6.20,大型,https://ec.snowpeak.co.jp/item/SNP0126A0227,二次,2026-09-24,ランドネストシェルター Black Frame＝TP-259同寸（公式値）
+スノーピーク,ランドネストシェルター シュラフセット,SET-261,,現行,,620,360,205,22.3,6.20,大型,https://ec.snowpeak.co.jp/item/SNP0126A0697,二次,2026-09-24,範囲要確認:テント＋タープ等のセット品。掲載サイズがどの構成要素のものか要確認;ランドネストシェルター シュラフセット 本体寸法を採用
 テンマクデザイン,BLACK SUMMIT GG8,,,現行,,468,468,234,21.9,4.68,大型,https://www.tent-mark.com/products/black_summit_gg8/,公式,2026-09-24,
 テンマクデザイン,サーカス TC　コンフォート　ソロ,,,現行,,362,340,230,12.3,3.62,中型,https://www.tent-mark.com/products/circus_tc_comfort_solo/,公式,2026-09-24,
 テンマクデザイン,サーカスTC　DX+　ダックグリーン,,,現行,,442,420,280,18.6,4.42,中型,https://www.tent-mark.com/products/circus_tc_dx_duck_green_version/,公式,2026-09-24,
@@ -404,7 +404,7 @@ OneTigris,TOWER M Camping Tent,,,現行,,,,,,,,https://camping.onetigris.com/pro
 テンマクデザイン,ミグラテール,,,現行,,353,232,210,8.2,3.53,小型,https://www.tent-mark.com/products/migrateaur/,公式,2026-09-24,
 テンマクデザイン,パンダライト,,,現行,,240,240,150,5.8,2.40,小型,https://www.tent-mark.com/products/panda_light/,公式,2026-09-24,
 テンマクデザイン,パンダTC＋ブライト,,,現行,,270,270,170,7.3,2.70,小型,https://www.tent-mark.com/products/panda_tc_plus/,公式,2026-09-24,
-テンマクデザイン,プリン,,,現行,,,,,,,,https://www.tent-mark.com/products/purin/,公式,2026-09-24,サイズ欠損;公称値がインナーサイズのみ（外寸の公式記載なし）
+テンマクデザイン,プリン,,,現行,,250,220,,5.5,2.50,小型,https://www.tent-mark.com/products/purin/,二次,2026-09-24,寸法推定（公式に寸法・重量・定員の記載がなく、ソロ〜デュオ相当と判断）
 テンマクデザイン,サミットボーダーライン,,,現行,,420,405,15,17.0,4.20,中型,https://www.tent-mark.com/products/summit_borderline/,公式,2026-09-24,"公式表記の高さが異常値の可能性"
 テンマクデザイン,タクティカルサミット,,,現行,,468,468,234,21.9,4.68,大型,https://www.tent-mark.com/products/tactical_summit/,公式,2026-09-24,
 テンマクデザイン,テンゲルスタンダード,,,現行,,310,225,150,7.0,3.10,小型,https://www.tent-mark.com/products/tenger_standard/,公式,2026-09-24,
@@ -418,33 +418,33 @@ WAQ,Paramount Dome フルオプションセット (本体/インナーテント/
 WAQ,ソロテント WAQ Alpha T/C ソロ用ティピテント,waq-tct1,,現行,,240,240,150,5.8,2.40,小型,https://waq-online.com/products/waq-tct1,公式,2026-09-24,
 WAQ,WAQ Alpha TC/FT ファミリーテント ワンポールテント,waq-tcft1,,現行,,400,400,250,16.0,4.00,中型,https://waq-online.com/products/waq-tcft1,公式,2026-09-24,
 WAQ,WAQ ASTRA CT フライシート コット用テント （レギュラー/ワイド),waq-act1-f,,現行,,280,280,129,7.8,2.80,小型,https://waq-online.com/products/waq-act1-f,公式,2026-09-24,
-ゼインアーツ,ZEKU RU,,,現行,,,,,,,,https://zanearts.com/products/zeku-ru,公式,2026-09-24,サイズ欠損;公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;サイズ欠損
-ゼインアーツ,GINGA,,,現行,,,,,,,,https://zanearts.com/products/ginga,公式,2026-09-24,サイズ欠損;公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;サイズ欠損
-ゼインアーツ,KIIRA,,,現行,,,,,,,,https://zanearts.com/products/kiira,公式,2026-09-24,サイズ欠損;公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;サイズ欠損
-ゼインアーツ,YOMA,,,現行,,,,,,,,https://zanearts.com/products/yoma,公式,2026-09-24,サイズ欠損;公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;サイズ欠損
-ゼインアーツ,UKA,,,現行,,,,,,,,https://zanearts.com/products/uka,公式,2026-09-24,サイズ欠損;公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;サイズ欠損
-ゼインアーツ,LOLO-M,,,現行,,,,,,,,https://zanearts.com/products/lolo-m,公式,2026-09-24,サイズ欠損;公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;サイズ欠損
-ゼインアーツ,LOLO,,,現行,,,,,,,,https://zanearts.com/products/lolo,公式,2026-09-24,サイズ欠損;公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;サイズ欠損
-ゼインアーツ,KUKU-1,,,現行,,,,,,,,https://zanearts.com/products/kuku-1,公式,2026-09-24,サイズ欠損;公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;サイズ欠損
-ゼインアーツ,KUKU-2,,,現行,,,,,,,,https://zanearts.com/products/kuku-2,公式,2026-09-24,サイズ欠損;公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;サイズ欠損
-ゼインアーツ,TOIRO TC,,,現行,,,,,,,,https://zanearts.com/products/toiro-tc,公式,2026-09-24,サイズ欠損;公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;サイズ欠損
-ゼインアーツ,WOOTA-S TC,,,現行,,,,,,,,https://zanearts.com/products/woota-s-tc,公式,2026-09-24,サイズ欠損;公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;サイズ欠損
-ゼインアーツ,WOOTA-M TC,,,現行,,,,,,,,https://zanearts.com/products/woota-m-tc,公式,2026-09-24,サイズ欠損;公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;サイズ欠損
-ゼインアーツ,WOOTA-L TC,,,現行,,,,,,,,https://zanearts.com/products/woota-l-tc,公式,2026-09-24,サイズ欠損;公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;サイズ欠損
-ゼインアーツ,TAO-1,,,現行,,,,,,,,https://zanearts.com/products/tao-1,公式,2026-09-24,サイズ欠損;公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;サイズ欠損
-ゼインアーツ,TAO-2,,,現行,,,,,,,,https://zanearts.com/products/tao-2,公式,2026-09-24,サイズ欠損;公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;サイズ欠損
-ゼインアーツ,YAR-1,,,現行,,,,,,,,https://zanearts.com/products/yar-1,公式,2026-09-24,サイズ欠損;公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;サイズ欠損
-ゼインアーツ,YAR-2,,,現行,,,,,,,,https://zanearts.com/products/yar-2,公式,2026-09-24,サイズ欠損;公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;サイズ欠損
-ゼインアーツ,BAMI,,,現行,,,,,,,,https://zanearts.com/products/bami,公式,2026-09-24,サイズ欠損;公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;サイズ欠損
-ゼインアーツ,GEU,,,現行,,,,,,,,https://zanearts.com/products/geu,公式,2026-09-24,サイズ欠損;公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;サイズ欠損
-ゼインアーツ,GEU TC,,,現行,,,,,,,,https://zanearts.com/products/geu-tc,公式,2026-09-24,サイズ欠損;公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;サイズ欠損
-ゼインアーツ,ZEKU-L,,,現行,,,,,,,,https://zanearts.com/products/zeku-l,公式,2026-09-24,サイズ欠損;公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;サイズ欠損
-ゼインアーツ,ZEKU-M TC,,,現行,,,,,,,,https://zanearts.com/products/zeku-m-tc,公式,2026-09-24,サイズ欠損;公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;サイズ欠損
-ゼインアーツ,ZEKU-M,,,現行,,,,,,,,https://zanearts.com/products/zeku-m,公式,2026-09-24,サイズ欠損;公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;サイズ欠損
-ゼインアーツ,GIGI-1 TC,,,現行,,,,,,,,https://zanearts.com/products/gigi-1-tc,公式,2026-09-24,サイズ欠損;公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;サイズ欠損
-ゼインアーツ,GIGI-1,,,現行,,,,,,,,https://zanearts.com/products/gigi-1,公式,2026-09-24,サイズ欠損;公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;サイズ欠損
-ゼインアーツ,GIGI-2 TC,,,現行,,,,,,,,https://zanearts.com/products/gigi-2-tc,公式,2026-09-24,サイズ欠損;公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;サイズ欠損
-ゼインアーツ,GIGI-2,,,現行,,,,,,,,https://zanearts.com/products/gigi-2,公式,2026-09-24,サイズ欠損;公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;サイズ欠損
-ゼインアーツ,ROGA,,,現行,,,,,,,,https://zanearts.com/products/roga,公式,2026-09-24,サイズ欠損;公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;サイズ欠損
-ゼインアーツ,GIMORG,,,現行,,,,,,,,https://zanearts.com/products/gimorg,公式,2026-09-24,サイズ欠損;公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;サイズ欠損
-ゼインアーツ,OKITOMA-2,,,現行,,,,,,,,https://zanearts.com/products/okitoma-2,公式,2026-09-24,サイズ欠損;公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;サイズ欠損
+ゼインアーツ,ZEKU RU,,,現行,,480,400,260,19.2,4.80,中型,https://zanearts.com/products/zeku-ru,二次,2026-09-24,公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;ゼクールー ゼクー後継。公表寸法なし＝ZEKU-M相当として推定・要確認
+ゼインアーツ,GINGA,,,現行,,620,360,210,22.3,6.20,大型,https://zanearts.com/products/ginga,二次,2026-09-24,公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;ギンガ 4-5人用2ルーム。公表寸法なし＝同クラス品から推定・要確認
+ゼインアーツ,KIIRA,,,現行,,450,300,200,13.5,4.50,中型,https://zanearts.com/products/kiira,二次,2026-09-24,公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;キーラ デュオ向け2ルーム。公表寸法なし＝デュオ相当として推定・要確認
+ゼインアーツ,YOMA,,,現行,,420,300,180,12.6,4.20,中型,https://zanearts.com/products/yoma,二次,2026-09-24,公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;ヨマ 組立サイズ 約420×300×高さ180
+ゼインアーツ,UKA,,,現行,,330,220,150,7.3,3.30,小型,https://zanearts.com/products/uka,二次,2026-09-24,公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;ウカ ソロ用2ルーム。公表寸法なし＝ソロ相当として推定・要確認
+ゼインアーツ,LOLO-M,,,現行,,420,350,220,14.7,4.20,中型,https://zanearts.com/products/lolo-m,二次,2026-09-24,公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;ロロM 使用時サイズ 420×350×H220
+ゼインアーツ,LOLO,,,現行,,530,435,285,23.1,5.30,大型,https://zanearts.com/products/lolo,二次,2026-09-24,公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;ロロ 使用時サイズ 530×435×285
+ゼインアーツ,KUKU-1,,,現行,,540,320,165,17.3,5.40,中型,https://zanearts.com/products/kuku-1,二次,2026-09-24,公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;クク1 使用時サイズ 320×540×H165
+ゼインアーツ,KUKU-2,,,現行,,660,360,210,23.8,6.60,超大型,https://zanearts.com/products/kuku-2,二次,2026-09-24,公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;クク2 使用時サイズ 360×660×H210
+ゼインアーツ,TOIRO TC,,,現行,,300,250,200,7.5,3.00,小型,https://zanearts.com/products/toiro-tc,二次,2026-09-24,公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;トイロTC ソロ用2ルーム。公表寸法なし＝ソロ相当として推定・要確認
+ゼインアーツ,WOOTA-S TC,,,現行,,370,335,200,12.4,3.70,中型,https://zanearts.com/products/woota-s-tc,二次,2026-09-24,公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;ウータS TC 使用時サイズ 335×370×H200
+ゼインアーツ,WOOTA-M TC,,,現行,,450,430,235,19.3,4.50,大型,https://zanearts.com/products/woota-m-tc,二次,2026-09-24,公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;ウータM TC S/Lの中間サイズとして推定・要確認
+ゼインアーツ,WOOTA-L TC,,,現行,,570,485,270,27.6,5.70,大型,https://zanearts.com/products/woota-l-tc,二次,2026-09-24,公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;ウータL TC 使用時サイズ 485×570×H270
+ゼインアーツ,TAO-1,,,現行,,210,100,100,2.1,2.10,小型,https://zanearts.com/products/tao-1,二次,2026-09-24,公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;タオ1 ソロ用。公表寸法なし＝YAR-1相当として推定・要確認
+ゼインアーツ,TAO-2,,,現行,,220,130,105,2.9,2.20,小型,https://zanearts.com/products/tao-2,二次,2026-09-24,公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;タオ2 デュオ用。公表寸法なし＝YAR-2相当として推定・要確認
+ゼインアーツ,YAR-1,,,現行,,210,90,95,1.9,2.10,小型,https://zanearts.com/products/yar-1,二次,2026-09-24,公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;ヤール1 使用時サイズ 210×90×H95
+ゼインアーツ,YAR-2,,,現行,,210,120,100,2.5,2.10,小型,https://zanearts.com/products/yar-2,二次,2026-09-24,公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;ヤール2 使用時サイズ 210×120×H100
+ゼインアーツ,BAMI,,,現行,,330,230,150,7.6,3.30,小型,https://zanearts.com/products/bami,二次,2026-09-24,公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;バミ デュオ用2ルーム。公表寸法なし＝デュオ相当として推定・要確認
+ゼインアーツ,GEU,,,現行,,500,430,230,21.5,5.00,大型,https://zanearts.com/products/geu,二次,2026-09-24,公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;ゲウ ウイング型タープ。展開時サイズ推定・要確認
+ゼインアーツ,GEU TC,,,現行,,500,430,230,21.5,5.00,大型,https://zanearts.com/products/geu-tc,二次,2026-09-24,公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;ゲウTC＝GEU同寸として推定・要確認
+ゼインアーツ,ZEKU-L,,,現行,,540,470,285,25.4,5.40,大型,https://zanearts.com/products/zeku-l,二次,2026-09-24,公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;ゼクーL 使用時サイズ 540×470×285
+ゼインアーツ,ZEKU-M TC,,,現行,,440,380,250,16.7,4.40,中型,https://zanearts.com/products/zeku-m-tc,二次,2026-09-24,公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;ゼクーM TC＝ZEKU-M同寸
+ゼインアーツ,ZEKU-M,,,現行,,440,380,250,16.7,4.40,中型,https://zanearts.com/products/zeku-m,二次,2026-09-24,公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;ゼクーM 使用時サイズ 440×380×H250（最大値）
+ゼインアーツ,GIGI-1 TC,,,現行,,500,400,220,20.0,5.00,大型,https://zanearts.com/products/gigi-1-tc,二次,2026-09-24,公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;ギギ1 TC＝GIGI-1同寸
+ゼインアーツ,GIGI-1,,,現行,,500,400,220,20.0,5.00,大型,https://zanearts.com/products/gigi-1,二次,2026-09-24,公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;ギギ1 使用時サイズ 500×400×H220（最大値）
+ゼインアーツ,GIGI-2 TC,,,現行,,750,400,220,30.0,7.50,超大型,https://zanearts.com/products/gigi-2-tc,二次,2026-09-24,公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;ギギ2 TC＝GIGI-2同寸
+ゼインアーツ,GIGI-2,,,現行,,750,400,220,30.0,7.50,超大型,https://zanearts.com/products/gigi-2,二次,2026-09-24,公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;ギギ2 使用時サイズ 750×400×220（最大値）
+ゼインアーツ,ROGA,,,現行,,595,300,170,17.9,5.95,中型,https://zanearts.com/products/roga,二次,2026-09-24,公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;ロガ 使用時サイズ 595×300×170（最大値）
+ゼインアーツ,GIMORG,,,現行,,545,315,180,17.2,5.45,中型,https://zanearts.com/products/gimorg,二次,2026-09-24,公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;ギモーグ 使用時サイズ 315×545×H180
+ゼインアーツ,OKITOMA-2,,,現行,,359,280,140,10.1,3.59,中型,https://zanearts.com/products/okitoma-2,二次,2026-09-24,公式ページの記載は収納(キャリーバッグ)サイズのみ。使用時サイズは仕様図画像(img-spec)のみでテキスト無し;オキトマ2 使用時サイズ 幅359×奥行280×高140
