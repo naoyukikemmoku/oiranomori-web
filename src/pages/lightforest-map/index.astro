@@ -6,9 +6,19 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 // properties（sites_geojson.php 契約）: site_id(=site_no) / site_name / area /
 //   site_type(=stock_type) / width / depth / area_sqm / usable_area_sqm /
 //   site_category / sizeclass / parking_space / carside_tarp / drainage /
-//   popularity / peg_type / module（＋App側で notes 追加予定）。
+//   popularity / peg_type / notes / module。
 // popup の各属性は「値がある時だけ表示」（QGISから投入され次第 自動表示）。
 const GEOJSON_URL = "https://oiranomori.com/app/camp/api/sites_geojson.php";
+
+// 設備（受付・トイレ・流し・コンセント等）。App の p035 で区画(sites)から
+// 切り離して facilities テーブルに集約した＝sites には設備が入っていない。
+// properties（facilities_geojson.php 契約）: facility_id / name /
+//   facility_type(reception|parking|toilet|sink|power|gate|other) /
+//   description / photo_path / module。
+// description・photo_path は写真ポップアップ用。p035 時点では全行 null で、
+// 値が入り次第 popup に出る（区画 popup と同じ「値がある時だけ表示」の作法）。
+const FACILITIES_URL =
+	"https://oiranomori.com/app/camp/api/facilities_geojson.php";
 
 // ベースタイル（最下層）。未供給のため地理院標準タイルを使用。
 const TILE_URL = ""; // 例: "https://example.com/ortho/{z}/{x}/{y}.png"
@@ -210,6 +220,19 @@ const DEFAULT_ZOOM = 17;
   flex-direction: column;
   gap: 4px;
 }
+/* 設備popup の写真（photo_path が入ったら出る）と、同じ場所の設備の区切り */
+.lf-pop-photo {
+  display: block;
+  width: 100%;
+  max-width: 220px;
+  height: auto;
+  margin-top: 8px;
+  border-radius: 6px;
+}
+.lf-pop-sep {
+  margin: 10px 0;
+  border-top: 1px solid #dcdcd4;
+}
 .lf-pop-row {
   display: flex;
   align-items: baseline;
@@ -233,10 +256,12 @@ const DEFAULT_ZOOM = 17;
   align-items: center;
   justify-content: center;
 }
-/* トイレアイコン（〇なし・アイコンのみ。白縁シャドウで背景上でも視認） */
-.lf-toilet-icon {
+/* 設備アイコン（〇なし・アイコンのみ。白縁シャドウで背景上でも視認）。
+   同じ場所にある設備（流しとコンセント）は1マーカーに並べる */
+.lf-facility-icon {
   font-size: 22px;
   line-height: 1;
+  white-space: nowrap;
   filter: drop-shadow(0 0 1px #fff) drop-shadow(0 0 2px #fff) drop-shadow(0 1px 2px rgba(0,0,0,0.4));
 }
 
@@ -296,7 +321,7 @@ const DEFAULT_ZOOM = 17;
   crossorigin=""
 ></script>
 
-<script is:inline define:vars={{ GEOJSON_URL, TILE_URL, FALLBACK_TILE_URL, LIGHTFIELD, SITE_COLORS, DEFAULT_CENTER, DEFAULT_ZOOM }}>
+<script is:inline define:vars={{ GEOJSON_URL, FACILITIES_URL, TILE_URL, FALLBACK_TILE_URL, LIGHTFIELD, SITE_COLORS, DEFAULT_CENTER, DEFAULT_ZOOM }}>
   document.addEventListener("DOMContentLoaded", function () {
     var skeletonEl = document.getElementById("lfmap-skeleton");
     var errorEl    = document.getElementById("lfmap-error");
@@ -489,22 +514,30 @@ const DEFAULT_ZOOM = 17;
       });
     }
 
-    // ③ トイレアイコン（site_type==="トイレ"）。〇なし・アイコンのみ。
-    function toiletIcon() {
+    // ③ 設備アイコン（facilities）。〇なし・アイコンのみ。
+    // 同じ場所の設備は icons に複数渡して横に並べる（流しとコンセントが同座標）
+    var FACILITY_ICONS = {
+      reception: "🏠",
+      parking: "🅿️",
+      toilet: "🚻",
+      sink: "🚰",
+      power: "🔌",
+      gate: "🚪",
+      other: "📍",
+    };
+    var FACILITY_ICON_PX = 26;
+
+    function facilityIcon(icons) {
       // 背景タイル上でも視認できるよう白縁のドロップシャドウを付与
-      var html = '<span class="lf-toilet-icon">🚻</span>';
+      var html = '<span class="lf-facility-icon">' + icons.join("") + "</span>";
+      var w = FACILITY_ICON_PX * icons.length;
       return L.divIcon({
         className: "lf-marker",
         html: html,
-        iconSize: [26, 26],
-        iconAnchor: [13, 13],
-        popupAnchor: [0, -13],
+        iconSize: [w, FACILITY_ICON_PX],
+        iconAnchor: [w / 2, FACILITY_ICON_PX / 2],
+        popupAnchor: [0, -FACILITY_ICON_PX / 2],
       });
-    }
-
-    // site_type がサイト点でない（設備）かどうか
-    function isToilet(p) {
-      return (p && p.site_type === "トイレ");
     }
 
     function escapeHtml(s) {
@@ -534,11 +567,6 @@ const DEFAULT_ZOOM = 17;
     function popupHtml(p) {
       p = p || {};
 
-      // トイレ等の設備は簡素なpopup（名前のみ）
-      if (isToilet(p)) {
-        return '<span class="lf-pop-name">' + escapeHtml(p.site_name || "トイレ") + "</span>";
-      }
-
       // タイトル: site_category & sizeclass（両方ある時は連結。片方でも可。無ければ site_name）
       var titleParts = [];
       if (hasVal(p.site_category)) titleParts.push(escapeHtml(p.site_category));
@@ -563,6 +591,27 @@ const DEFAULT_ZOOM = 17;
       return '<span class="lf-pop-name">' + title + "</span>" + sub + rowsHtml;
     }
 
+    // ⑤ 設備popup：同じ場所の設備をまとめて1つに。
+    // 写真(photo_path)・説明(description) は値が入り次第 自動で出る（p035 時点は null）。
+    function facilityPopupHtml(items) {
+      return items
+        .map(function (p) {
+          var html = '<span class="lf-pop-name">' + escapeHtml(p.name || "設備") + "</span>";
+          if (hasVal(p.photo_path)) {
+            html +=
+              '<img class="lf-pop-photo" src="' + escapeHtml(p.photo_path) +
+              '" alt="' + escapeHtml(p.name || "") + '" loading="lazy">';
+          }
+          if (hasVal(p.description)) {
+            html += '<div class="lf-pop-rows"><div class="lf-pop-row">'
+              + '<span class="lf-pop-v">' + escapeHtml(p.description) + "</span>"
+              + "</div></div>";
+          }
+          return html;
+        })
+        .join('<div class="lf-pop-sep"></div>');
+    }
+
     // CORS: API は origin https://oiranomori.jp 限定許可。localhost 開発では弾かれ得る。
     // キャッシュ: API側 Cache-Control: public, max-age=300。多重fetchしない（1回のみ）。
     fetch(GEOJSON_URL)
@@ -575,10 +624,6 @@ const DEFAULT_ZOOM = 17;
           // L.geoJSON は GeoJSON の [lng, lat] を自動で [lat, lng] に変換する
           pointToLayer: function (feature, latlng) {
             var p = (feature && feature.properties) || {};
-            // ③ トイレはトイレアイコン
-            if (isToilet(p)) {
-              return L.marker(latlng, { icon: toiletIcon(), title: p.site_name || "トイレ" });
-            }
             // ①② site_category 色 + site_id テキストマーカー
             var color = colorFor(p.site_category);
             return L.marker(latlng, {
@@ -601,5 +646,51 @@ const DEFAULT_ZOOM = 17;
         } catch (e) { /* noop */ }
       })
       .catch(function () { showError(); });
+
+    // 設備（facilities）。区画とは別 API なので独立して読む。
+    // 取得に失敗しても区画の地図は出したいので、ここでは showError を呼ばない。
+    // fitBounds は区画側だけで決める（設備は場内に収まるので広がらない）。
+    fetch(FACILITIES_URL)
+      .then(function (r) {
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return r.json();
+      })
+      .then(function (geojson) {
+        var features = (geojson && geojson.features) || [];
+
+        // 同じ場所の設備（流しとコンセントは同座標）はマーカーが重なるので、
+        // 座標でまとめて1マーカーにアイコンを並べ、popup も連結する
+        var groups = {};
+        features.forEach(function (f) {
+          var g = f && f.geometry;
+          if (!g || g.type !== "Point" || !g.coordinates) return;
+          var p = f.properties || {};
+          var lng = g.coordinates[0];
+          var lat = g.coordinates[1];
+          var key = lat.toFixed(6) + "," + lng.toFixed(6);
+          if (!groups[key]) groups[key] = { lat: lat, lng: lng, items: [] };
+          groups[key].items.push(p);
+        });
+
+        Object.keys(groups).forEach(function (key) {
+          var grp = groups[key];
+          var icons = [];
+          grp.items.forEach(function (p) {
+            var ic = FACILITY_ICONS[p.facility_type] || FACILITY_ICONS.other;
+            if (icons.indexOf(ic) === -1) icons.push(ic);
+          });
+          var title = grp.items
+            .map(function (p) { return p.name || ""; })
+            .filter(function (n) { return n !== ""; })
+            .join(" / ");
+          L.marker([grp.lat, grp.lng], { icon: facilityIcon(icons), title: title })
+            .bindPopup(facilityPopupHtml(grp.items), {
+              className: "lf-popup",
+              closeButton: true,
+            })
+            .addTo(map);
+        });
+      })
+      .catch(function () { /* 設備が出なくても区画の地図は使える */ });
   });
 </script>
