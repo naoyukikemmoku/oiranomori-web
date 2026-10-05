@@ -1,11 +1,16 @@
 ﻿---
 import LpLayout from "../../layouts/LpLayout.astro";
+
+// Google Maps の経路URL（api=1）。スマホでは Google マップアプリ、未導入なら既定のブラウザ地図で開く。
+// 目的地は JSON-LD の geo と同じ座標。出発地は省略＝現在地。
+const ROUTE_URL =
+	"https://www.google.com/maps/dir/?api=1&destination=36.639896,140.068402&travelmode=driving";
 ---
 
 <LpLayout
   title="宇都宮から車で約40分・アクセス | 里山パークおいらの森"
   description="おいらの森への行き方のご案内。宇都宮市街から車で約40分。JR烏山線でのルートや、入り口の急坂などカーナビの注意点も事前に確認できます。"
-  lastUpdated="2026年5月"
+  lastUpdated="2026年10月"
 >
   <Fragment slot="head">
     <script is:inline type="application/ld+json" set:html={JSON.stringify({
@@ -37,8 +42,20 @@ import LpLayout from "../../layouts/LpLayout.astro";
       <p class="text-xs tracking-[0.32em] text-zinc-400 uppercase">Access</p>
       <h1 class="mt-4 text-3xl font-semibold text-zinc-800 md:text-5xl">アクセス</h1>
       <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-600">
-        おいらが開拓したので、まだカーナビに「おいらの森」は登録されていません。このページの案内に沿って来てください。
+        最新のカーナビなら「おいらの森」で出てきます。古いカーナビには登録されていないので、このページの案内に沿って来てください。
       </p>
+      <a
+        href={ROUTE_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="mt-8 inline-flex items-center gap-2 border-b border-[color:var(--forest-700)] pb-1 text-base font-medium text-[color:var(--forest-700)] transition hover:opacity-70"
+      >
+        地図でルートを開く
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-4 w-4">
+          <path d="M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+          <path d="M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+      </a>
     </div>
   </div>
 
@@ -205,10 +222,10 @@ import LpLayout from "../../layouts/LpLayout.astro";
         <div class="border border-zinc-300 bg-white p-7">
           <div class="mb-4 flex items-start gap-4">
             <span class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-zinc-100 text-sm text-zinc-600">!</span>
-            <h3 class="text-lg font-semibold text-zinc-800">カーナビ・住所検索では正しく案内されません</h3>
+            <h3 class="text-lg font-semibold text-zinc-800">古いカーナビ・住所検索では正しく案内されません</h3>
           </div>
           <p class="text-sm leading-loose text-zinc-600">
-            車据え付け型のカーナビや住所検索では<strong class="text-zinc-800">全く別の場所に案内されます</strong>。
+            地図データが古いカーナビや住所検索では<strong class="text-zinc-800">別の場所に案内されます</strong>。最新のカーナビなら「おいらの森」で出てきます。
           </p>
           <div class="mt-5 bg-zinc-50 p-4">
             <p class="mb-2 text-xs tracking-[0.16em] text-zinc-400">正しい方法</p>
