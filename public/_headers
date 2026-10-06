@@ -1,0 +1,5 @@
+# Cloudflare Pages の _headers フォーマット（docs/spec.md §8）
+
+# 版の札：古い値がキャッシュで返らないようにする
+/build.json
+  Cache-Control: no-store
