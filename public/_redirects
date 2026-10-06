@@ -153,3 +153,9 @@
 /xo_event-sitemap.xml                     /sitemap-index.xml                                      301
 /page-sitemap.xml                         /sitemap-index.xml                                      301
 /post-sitemap.xml                         /sitemap-index.xml                                      301
+
+
+# ---------- 11. 杭QR → App 案内ページ（一時転送） ----------
+# 杭に印刷する QR は https://oiranomori.jp/s/{code} 固定。転送先は App 側の置き場所に追従させる。
+# 302 にする: 301 はブラウザに記憶され、将来の転送先変更が効かなくなるため。
+/s/*                                      https://oiranomori.com/app/s/:splat                     302
