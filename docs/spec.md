@@ -450,6 +450,15 @@ description?: string
 | `sitemap.xml` | `@astrojs/sitemap` | ビルド時自動生成 |
 | `robots.txt` | `astro-robots-txt` | ビルド時自動生成（デフォルト全許可） |
 
+### 版の札（/build.json）
+
+ビルドのたびに `src/pages/build.json.ts` が `/build.json` を1回だけ静的に書き出す。中身は `{"commit":"<コミットのハッシュ>","built_at":"<ビルド時刻 ISO8601>"}`。
+
+- `commit`：Cloudflare Pages のビルド環境変数 `CF_PAGES_COMMIT_SHA`。取れない環境（ローカル）では `"local"`
+- `built_at`：ビルド時刻（UTC）。git push のビルドでも microCMS の更新で走るビルド（同じコミット）でも必ず変わる
+- キャッシュさせない：`public/_headers` で `/build.json` に `Cache-Control: no-store`
+- 使い手：OirasApp が1時間おきに見て、前回と違えば HP の本文を読み直す（LINE ボットの材料。仕様の正本は OirasApp 側 `docs/spec_camp.md` §6-8）。サイトマップには載らない
+
 ### ビルド除外パス（サイトマップ非掲載）
 
 `astro.config.mjs` の `sitemap.filter` に定義。

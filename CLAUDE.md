@@ -1,6 +1,6 @@
 # 里山パークおいらの森 HP — Claude Code 向け開発ガイド（運用フェーズ）
 
-> **Version: 1.4**（変更履歴は本ファイル末尾「変更履歴」章を参照）
+> **Version: 1.7**（変更履歴は本ファイル末尾「変更履歴」章を参照）
 
 ---
 
@@ -315,3 +315,4 @@ Codeから計測データを取得する手段はない。施策評価が必要�
 | 1.4 | 2026-06-25 | §3/§11 を forest-daily の VPS公開API化（microCMS除去・クライアントfetch移行）に同期。実ソース `forestDaily.ts` を正として訂正（データ源=OirasApp read API、取得=client-fetch、videoUrl削除、フォールバックheroのみ）。 |
 | 1.5 | 2026-06-26 | `spec-2026-05.md` を `spec.md` にリネーム。spec.md §13「/sites/（区画紹介）アーキテクチャ」を新設（3層モデル＝客層SEO入口/サイズ区分=予約単位/個別区画=動的、確定2テーブル）。keyword-map.md を /sites/ レイヤー新設に伴い改訂（柱5・別格・カニバリ項の落とし先を /sites/ へ移管）。 |
 | 1.6 | 2026-10-06 | spec §7 に「杭QR 転送（/s/*）」を追記（`/s/{code}` → `https://oiranomori.com/app/s/{code}` へ 302。301 にしない理由も明記）。 |
+| 1.7 | 2026-10-06 | spec §8 に「版の札（/build.json）」を追記（ビルドごとに commit・built_at を静的出力、`public/_headers` で no-store、OirasApp が本文の読み直しに使う）。 |
