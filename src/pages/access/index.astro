@@ -143,6 +143,10 @@ const ROUTE_URL =
             <span class="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-zinc-200 text-xs font-bold text-zinc-600">i</span>
             <span>バスと同様に整理券を取り、着駅の改札で精算します。</span>
           </li>
+          <li class="flex items-start gap-3">
+            <span class="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-zinc-200 text-xs font-bold text-zinc-600">!</span>
+            <span><strong class="text-zinc-800">路線メンテナンスのため運休する場合があり、代替輸送はありません。</strong> お越しの際は運行状況をご確認ください。</span>
+          </li>
         </ul>
       </div>
 
@@ -152,8 +156,8 @@ const ROUTE_URL =
           {
             method: "送迎（電車プラン専用）",
             station: "烏山線【鴻野山駅】下車",
-            detail: "対応時刻：8:37・15:02\n混雑時ワンオペのため時刻厳守。\n事前に「電車プラン」で車両オプション「送迎」を選択して予約のこと。",
-            note: "",
+            detail: "鴻野山駅に次の時刻に着く列車に対応します。\n8:38\n11:01（混雑時不可）\n13:01（混雑時不可）\n15:02\n15:51\n混雑時ワンオペのため時刻厳守。",
+            note: "送迎をご希望の場合は、必ず「電車プラン」でお申し込みください。車両オプションで「送迎」を選択して予約してください。",
           },
           {
             method: "タクシー",
