@@ -71,9 +71,8 @@ import PageLayout from "../../layouts/PageLayout.astro";
     <h2 class="mb-5 text-xl font-semibold text-zinc-800">キャンセルについて</h2>
     <dl class="divide-y divide-zinc-100 border-y border-zinc-200 text-sm">
       {[
-        { label: "当日キャンセル", value: "ご予約料金の100%をキャンセル料として申し受けます。" },
-        { label: "無断キャンセル", value: "連絡なく当日入場されない場合も同様に100%を申し受けます。" },
-        { label: "それ以外", value: "無料です。" },
+        { label: "キャンセル（当日を含む）", value: "無料です。" },
+        { label: "無断キャンセル", value: "連絡なく来場されない場合、ご予約料金の100%をキャンセル料として申し受けます。" },
         { label: "当施設都合による中止", value: "天災・悪天候・施設トラブル等による中止の場合、キャンセル料は発生しません。" },
       ].map((item) => (
         <div class="grid grid-cols-[10rem_1fr] gap-4 py-5 sm:grid-cols-[14rem_1fr]">
@@ -153,7 +152,7 @@ import PageLayout from "../../layouts/PageLayout.astro";
         <p class="mb-3 font-semibold text-zinc-800">第2条（予約・キャンセル）</p>
         <p class="text-zinc-600">
           予約は当施設指定の予約システムを通じて行うものとします。
-          当日キャンセルおよび無断キャンセルの場合、ご予約料金の100%をキャンセル料として申し受けるものとします。
+          キャンセル料は、当日のキャンセルを含め発生しないものとします。ただし、連絡なく来場されない無断キャンセルの場合、ご予約料金の100%をキャンセル料として申し受けるものとします。
           天災・悪天候その他当施設の都合による中止の場合、キャンセル料は発生しないものとします。
         </p>
       </div>
