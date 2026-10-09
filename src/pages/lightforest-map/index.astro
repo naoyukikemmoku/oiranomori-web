@@ -373,7 +373,10 @@ const DEFAULT_ZOOM = 17;
 
     // ── 現在地（GPS）表示 ──────────────────────────────
     // 携帯のGPSで自位置を青ドット＋精度円で表示。watchで移動に追従。
+    // 現在地が場内（背景の範囲を 15% 広げた範囲）の外なら、地図を動かさず点も出さずに
+    // 「現在マップの表示範囲外にいます」と出して止める（遠くへ飛んで戻れなくなるため・2026-10-09）。
     (function () {
+      var locRange = lightfieldBounds.pad(0.15);
       var locDot = null;       // 現在地マーカー（divIcon）
       var locCircle = null;    // 精度円
       var watching = false;
@@ -429,11 +432,7 @@ const DEFAULT_ZOOM = 17;
           if (!navigator.geolocation) { this._showErr("非対応ブラウザ"); return; }
           if (watching) {
             // 2度押しで追従停止＋表示クリア
-            map.stopLocate();
-            watching = false;
-            if (locDot) { map.removeLayer(locDot); locDot = null; }
-            if (locCircle) { map.removeLayer(locCircle); locCircle = null; }
-            this._icon.innerHTML = SVG_NORMAL;
+            this._stopWatch();
             return;
           }
           this._icon.innerHTML = SVG_LOADING;
@@ -442,7 +441,19 @@ const DEFAULT_ZOOM = 17;
           // watch:true で移動に追従。enableHighAccuracy で携帯GPSを使う。
           map.locate({ watch: true, enableHighAccuracy: true, maximumAge: 5000, timeout: 15000 });
         },
+        _stopWatch: function () {
+          map.stopLocate();
+          watching = false;
+          if (locDot) { map.removeLayer(locDot); locDot = null; }
+          if (locCircle) { map.removeLayer(locCircle); locCircle = null; }
+          this._icon.innerHTML = SVG_NORMAL;
+        },
         _onFound: function (e) {
+          if (!locRange.contains(e.latlng)) {
+            this._stopWatch();
+            this._showErr("現在マップの表示範囲外にいます");
+            return;
+          }
           this._icon.innerHTML = SVG_ACTIVE;
           var dot = L.divIcon({
             className: "lf-loc-dot",
