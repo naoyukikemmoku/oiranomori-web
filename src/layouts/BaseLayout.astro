@@ -111,7 +111,7 @@ const breadcrumbJson = pathSegments.length > 0 ? JSON.stringify({
     <slot name="head" />
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-74NDHG8YJ7"></script>
-    <script>
+    <script is:inline>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
@@ -130,6 +130,7 @@ const breadcrumbJson = pathSegments.length > 0 ? JSON.stringify({
       //  - イベント委譲。data-cta を持つ要素のクリックを1か所で拾う
       //  - 予約CTA: data-cta="reserve" + data-cta-field="light|deep"
       //  - 内部遷移: data-cta="sites-audience" 等
+      //  - 設置場所: data-cta-place="menu|footer|calendar" 等（未指定は "content"）
       //  gtag 未読込（ブロッカー等）でも黙って何もしない。
       // ══════════════════════════════════════════════════════════
       document.addEventListener("click", function (e) {
@@ -140,6 +141,7 @@ const breadcrumbJson = pathSegments.length > 0 ? JSON.stringify({
           cta: name,
           field: el.getAttribute("data-cta-field") || "",
           target: el.getAttribute("data-cta-target") || el.getAttribute("href") || "",
+          place: el.getAttribute("data-cta-place") || "content",
           page_path: location.pathname,
         });
       });
