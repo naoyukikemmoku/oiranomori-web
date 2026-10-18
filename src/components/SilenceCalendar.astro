@@ -52,6 +52,7 @@ import { RESERVE_FALLBACK_URL } from "../lib/availability";
         <li class="flex items-center gap-2"><span class="inline-block h-3 w-3 rounded-sm" style="background:#4f6149"></span>ほぼ人に会わない</li>
         <li class="flex items-center gap-2"><span class="inline-block h-3 w-3 rounded-sm" style="background:#7a8a64"></span>人の存在を感じる</li>
         <li class="flex items-center gap-2"><span class="inline-block h-3 w-3 rounded-sm" style="background:#b3c08e"></span>満</li>
+        <li class="flex items-center gap-2"><span class="inline-block h-3 w-3 rounded-sm" style="background:repeating-linear-gradient(135deg,#6b7066 0 3px,#3b413b 3px 6px)"></span>休み</li>
       </ul>
     </div>
   </div>
@@ -77,6 +78,9 @@ import { RESERVE_FALLBACK_URL } from "../lib/availability";
     };
     // フォールバック色（未知 label）。
     const FALLBACK_BG = "#2d3a30";
+    // 売り止め（休み）の日。静けさの濃淡と混ざらないよう斜線で出す（静かな日としては扱わない）。
+    const CLOSED_LABEL = "休み";
+    const CLOSED_BG = "repeating-linear-gradient(135deg,#6b7066 0 3px,#3b413b 3px 6px)";
 
     // ── 状態の中間データ構造（拡張用）──────────────────────────
     // 日付ごとに「混雑label」と、将来重ねる別軸フラグ（山作業日など）を分離して持つ。
@@ -89,6 +93,7 @@ import { RESERVE_FALLBACK_URL } from "../lib/availability";
 
     // 状態 → セグメント装飾のマッピング（混雑色のみ。将来マーカーをここに追加）。
     const styleFor = (st: DayState): { bg: string } => {
+      if (st.label === CLOSED_LABEL) return { bg: CLOSED_BG };
       return STYLE[st.label] ?? { bg: FALLBACK_BG };
     };
 
@@ -135,7 +140,8 @@ import { RESERVE_FALLBACK_URL } from "../lib/availability";
       for (const d of days) {
         const ym = d.date.slice(0, 7);
         if (!groups.has(ym)) groups.set(ym, []);
-        groups.get(ym)?.push({ iso: d.date, label: d.label });
+        // 休みの日は混雑 label（誰もいない 等）より優先＝「静かな日」に数えない。
+        groups.get(ym)?.push({ iso: d.date, label: d.closed ? CLOSED_LABEL : d.label });
       }
 
       const blocks: string[] = [];

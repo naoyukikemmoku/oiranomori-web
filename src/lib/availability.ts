@@ -18,13 +18,15 @@ export type AvailabilityDay = {
 	date: string; // YYYY-MM-DD
 	remain: number;
 	label: string;
+	// 売り止め（休み）の日。true なら remain・label より優先して「休み」と出す（App の stop_sells・proX を含む行）。
+	closed?: boolean;
 };
 
 // サイズ別の残数内訳（label なし）。auto={XL,LL,L,M,S} / kukaku={SS,kukakuC,k11}。
 // deep/dogrun には存在しないため optional。後方互換のためキーは固定せず Record で受ける。
 export type AvailabilitySize = {
 	capacity: number;
-	days: { date: string; remain: number }[];
+	days: { date: string; remain: number; closed?: boolean }[];
 };
 
 export type AvailabilityArea = {

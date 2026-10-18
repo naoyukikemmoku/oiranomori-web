@@ -70,6 +70,7 @@ import { RESERVE_FALLBACK_URL } from "../lib/availability";
         <li class="flex items-center gap-1.5"><span class="inline-flex h-5 w-5 items-center justify-center rounded-full text-sm leading-none" style="background:#e6d9ad;color:#3a2a14">◇</span>やや混雑</li>
         <li class="flex items-center gap-1.5"><span class="inline-flex h-5 w-5 items-center justify-center rounded-full text-sm leading-none" style="background:#d8a86b;color:#3a2a14">△</span>混雑</li>
         <li class="flex items-center gap-1.5"><span class="inline-flex h-5 w-5 items-center justify-center rounded-full text-sm leading-none" style="background:#b56b5a;color:#fff">×</span>満</li>
+        <li class="flex items-center gap-1.5"><span class="inline-flex h-5 w-5 items-center justify-center rounded-full text-[11px] leading-none" style="background:#8f948b;color:#fff">休</span>休み</li>
       </ul>
 
       <p class="mt-5 text-xs leading-loose text-zinc-500">
@@ -113,6 +114,10 @@ import { RESERVE_FALLBACK_URL } from "../lib/availability";
       予約なし: { bg: "#dfe4d8", fg: "#3a4233" },
       空き: { bg: "#c9d4c2", fg: "#28331f" },
     };
+
+    // 売り止め（休み）の日。満（×）と見分けるため、暖色の外の灰色に「休」。
+    const CLOSED_STYLE = { bg: "#8f948b", fg: "#fff" };
+    const CLOSED_SYMBOL = "休";
 
     // ラベル → 記号。エリアサマリ行のセルに表示（背景色は STYLE を維持）。
     const SYMBOL: Record<string, string> = {
@@ -196,6 +201,10 @@ import { RESERVE_FALLBACK_URL } from "../lib/availability";
             if (!cell) {
               return '<td class="px-1 py-1"><span class="block h-9 rounded-md bg-[#e3e7df]"></span></td>';
             }
+            if (cell.closed) {
+              const title = `${row.label} ${fmtDate(iso)}：休み`;
+              return `<td class="px-1 py-1"><span class="flex h-9 flex-col items-center justify-center rounded-md text-sm leading-tight" style="background:${CLOSED_STYLE.bg};color:${CLOSED_STYLE.fg}" title="${title}"><span aria-hidden="true" class="font-medium">${CLOSED_SYMBOL}</span><span class="sr-only">休み</span></span></td>`;
+            }
             const s = STYLE[cell.label] ?? { bg: "#dfe4d8", fg: "#3a4233" };
             const sym = SYMBOL[cell.label] ?? "-";
             const title = `${row.label} ${fmtDate(iso)}：${cell.label}（残り${cell.remain}）`;
@@ -217,6 +226,10 @@ import { RESERVE_FALLBACK_URL } from "../lib/availability";
                 const d = sByDate.get(iso);
                 if (!d) {
                   return '<td class="px-1 py-0.5"><span class="block h-6 rounded bg-[#e3e7df]"></span></td>';
+                }
+                if (d.closed) {
+                  const title = `${sz.label} ${fmtDate(iso)}：休み`;
+                  return `<td class="px-1 py-0.5"><span class="flex h-6 items-center justify-center rounded text-[11px] leading-none" style="background:${CLOSED_STYLE.bg};color:${CLOSED_STYLE.fg}" title="${title}"><span aria-hidden="true">${CLOSED_SYMBOL}</span><span class="sr-only">${sz.label} 休み</span></span></td>`;
                 }
                 const ss = sizeStyle(d.remain);
                 const title = `${sz.label} ${fmtDate(iso)}：残り${d.remain}`;
