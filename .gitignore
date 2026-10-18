@@ -30,3 +30,4 @@ desktop.ini
 # Wrangler / Cloudflare
 .wrangler/
 .claude-drafts/
+.claude/worktrees/
