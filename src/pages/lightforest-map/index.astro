@@ -134,6 +134,9 @@ const DEFAULT_ZOOM = 17;
   overflow: hidden;
   background: #d1d5db;
   min-height: 0;
+  /* Leaflet の pane/control は z-index 400〜1000 を持つ。ここで重なり順の文脈を閉じないと
+     ハンバーガーメニュー（z-[65]）やヘッダーより手前に地図が出る。 */
+  isolation: isolate;
 }
 #lfmap { position: absolute; inset: 0; }
 
