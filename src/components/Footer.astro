@@ -1,5 +1,5 @@
 ﻿---
-import { siteNav } from "../config/nav";
+import { PROX_SEARCH_URL, siteNav } from "../config/nav";
 
 const { lastUpdated } = Astro.props;
 // フッターは siteNav の全項目を描画（menu フラグは無視）。
@@ -31,7 +31,7 @@ const footerGroups = siteNav;
             {group.items.map((item) => (
               <li>
                 {item.active !== false ? (
-                  <a href={item.href} class="footer-link" target={item.external ? "_blank" : undefined} rel={item.external ? "noopener noreferrer" : undefined}>
+                  <a href={item.href} class="footer-link" target={item.external ? "_blank" : undefined} rel={item.external ? "noopener noreferrer" : undefined} data-cta={item.href === PROX_SEARCH_URL ? "reserve" : undefined} data-cta-place={item.href === PROX_SEARCH_URL ? "footer" : undefined}>
                     {item.label}
                   </a>
                 ) : (

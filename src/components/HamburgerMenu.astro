@@ -1,5 +1,5 @@
 ﻿---
-import { siteNav } from "../config/nav";
+import { PROX_SEARCH_URL, siteNav } from "../config/nav";
 
 // ハンバーガーは siteNav を menu フィルタで絞る（menu:false はフッターのみ）。
 // フィルタ後に項目0件のグループは描画しない（防御）。
@@ -48,6 +48,8 @@ const menuGroups = siteNav
                 href={item.href}
                 target={item.external ? "_blank" : undefined}
                 rel={item.external ? "noopener noreferrer" : undefined}
+                data-cta={item.href === PROX_SEARCH_URL ? "reserve" : undefined}
+                data-cta-place={item.href === PROX_SEARCH_URL ? "menu" : undefined}
               >
                 {item.label}
                 {item.external && <span class="text-xs opacity-50">↗</span>}

@@ -100,6 +100,8 @@ const webPageSchema = {
             href="https://www.489pro-x.com/ja/s/oiranomori/search/"
             target="_blank"
             rel="noopener noreferrer"
+            data-cta="reserve"
+            data-cta-place="content"
             class="inline-flex items-center gap-2 bg-[color:var(--light-accent)] px-6 py-2.5 text-xs font-semibold tracking-[0.12em] text-white transition hover:opacity-90"
           >
             予約する
@@ -472,6 +474,8 @@ const webPageSchema = {
       reserve.href = "https://www.489pro-x.com/ja/s/oiranomori/search/";
       reserve.target = "_blank";
       reserve.rel = "noopener noreferrer";
+      reserve.dataset.cta = "reserve";
+      reserve.dataset.ctaPlace = "content";
       reserve.appendChild(document.createTextNode("予約する"));
       reserve.insertAdjacentHTML("beforeend", svgArrowRight());
       wrap.appendChild(reserve);
