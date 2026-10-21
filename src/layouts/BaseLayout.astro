@@ -132,7 +132,20 @@ const breadcrumbJson = pathSegments.length > 0 ? JSON.stringify({
       //  - 内部遷移: data-cta="sites-audience" 等
       //  - 設置場所: data-cta-place="menu|footer|calendar" 等（未指定は "content"）
       //  gtag 未読込（ブロッカー等）でも黙って何もしない。
+      //  target からは GA4 のドメイン連携のパラメータ（_gl / _ga / _ga_* / _gac_*）を除く。
+      //  リンカーが mousedown で href に _gl（毎回違う値）を足すため、click 時の href に混ざる。
       // ══════════════════════════════════════════════════════════
+      function stripLinkerParams(v) {
+        var q = v.indexOf("?");
+        if (q < 0) return v;
+        var h = v.indexOf("#", q);
+        var hash = h < 0 ? "" : v.slice(h);
+        var kept = v.slice(q + 1, h < 0 ? v.length : h).split("&").filter(function (p) {
+          var k = p.split("=")[0];
+          return p !== "" && k !== "_gl" && k !== "_ga" && k.indexOf("_ga_") !== 0 && k.indexOf("_gac_") !== 0;
+        });
+        return v.slice(0, q) + (kept.length ? "?" + kept.join("&") : "") + hash;
+      }
       document.addEventListener("click", function (e) {
         var el = e.target instanceof Element ? e.target.closest("[data-cta]") : null;
         if (!el || typeof window.gtag !== "function") return;
@@ -140,7 +153,7 @@ const breadcrumbJson = pathSegments.length > 0 ? JSON.stringify({
         window.gtag("event", name === "reserve" ? "reserve_cta_click" : "internal_cta_click", {
           cta: name,
           field: el.getAttribute("data-cta-field") || "",
-          target: el.getAttribute("data-cta-target") || el.getAttribute("href") || "",
+          target: stripLinkerParams(el.getAttribute("data-cta-target") || el.getAttribute("href") || ""),
           place: el.getAttribute("data-cta-place") || "content",
           page_path: location.pathname,
         });
