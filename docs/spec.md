@@ -135,6 +135,21 @@ Google Maps は WMO 天気コード（0〜99）を SVG アイコンにマッピ�
 
 GA4 タグは `src/layouts/BaseLayout.astro` に直書き。全ページに適用される。
 
+#### CTAクリック計測（GA4）
+
+data-cta 属性を持つ要素（現状はすべてリンク）のクリックで、GA4にイベントを送る。
+- data-cta="reserve"（予約先へのリンク）：reserve_cta_click
+- それ以外の data-cta：internal_cta_click
+
+送信項目：
+- cta：data-cta の値
+- place：押された場所。data-cta-place の値（menu / footer / calendar / content）。無い場合は content
+- field：data-cta-field の値（light / deep）。行き先がどちらかに限られるリンクだけに付く。無い場合は空
+- target：data-cta-target の値。無い場合はリンク先（href）
+- page_path：押されたページのパス
+
+GA4側では cta・place・field・target をカスタムディメンションに登録済み。reserve_cta_click と、ProXの予約完了画面（/oiranomori/completed/）の表示から作った booking_complete をキーイベントにしている。
+
 ### 環境変数一覧
 
 | 変数名 | 用途 | 使用箇所 |
