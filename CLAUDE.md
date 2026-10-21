@@ -1,6 +1,6 @@
 # 里山パークおいらの森 HP — Claude Code 向け開発ガイド（運用フェーズ）
 
-> **Version: 1.10**（変更履歴は本ファイル末尾「変更履歴」章を参照）
+> **Version: 1.11**（変更履歴は本ファイル末尾「変更履歴」章を参照）
 
 ---
 
@@ -96,6 +96,10 @@
 - **スタイリング**: Tailwind CSS のみ(daisyUI不使用)
 - **CMS**: microCMS（使用中エンドポイント: `oshirase` のみ）
   - ※forest-daily は microCMS から OirasApp 公開read API（クライアントfetch）へ移行済み。詳細は §11。microcms.ts 本体は oshirase が継続使用するため残置。
+  - お知らせ（oshirase）の投稿は、2026-07 以降 OirasApp のお知らせ管理画面から行う。OirasApp が microCMS に書き込み、microCMS の Webhook で HP が再ビルドされる。microCMS の管理画面は通常使わない。
+  - HP はお知らせをビルド時に取得する（トップの最新3件、/news/ 以下）。取得に失敗したらビルドを失敗させる（2026-09-18 ec6af9e、意図した動き）。
+  - そのため、.env（MICROCMS の設定）が無い環境ではビルドが止まる。worktree で作業してビルドが要るときは、.env を置くようナオに依頼する。.env を読んだりコピーしたりしない。
+  - microCMS を「使っていない」と判断して撤去・変更しない。
 - **ホスティング**: Cloudflare Pages
 - **バージョン管理**: GitHub(リポジトリ名:`oiranomori-web`)
 
@@ -321,3 +325,4 @@ Codeから計測データを取得する手段はない。施策評価が必要�
 | 1.8 | 2026-10-18 | spec §12.1 #9 congestion.php に `closed`（売り止めの日＝「休み」・CongestionMatrix は「休」・SilenceCalendar は静かな日に数えない）を追記。 |
 | 1.9 | 2026-10-21 | spec §2「計測」に「CTAクリック計測（GA4）」を新設（reserve_cta_click / internal_cta_click と送信項目 cta・place・field・target・page_path）。place の値に `sticky`（画面下に固定の「予約する」）を追加。 |
 | 1.10 | 2026-10-21 | §0 編集禁則に、正本改訂に伴う記録（変更履歴の行・冒頭の版番号）は指示書に無くても同じ docs commit で整合させる旨を追記。冒頭の版番号を変更履歴の最新に合わせた。 |
+| 1.11 | 2026-10-22 | §3 CMS に、お知らせ（oshirase）は OirasApp 管理画面→microCMS→Webhook 再ビルドで運用中である旨、ビルド時取得・取得失敗でビルド失敗（ec6af9e）、.env 不在の worktree ではビルドが止まるためナオに配置を依頼する旨、microCMS を未使用と判断して撤去・変更しない旨を追記。 |
