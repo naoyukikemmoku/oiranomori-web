@@ -6,9 +6,10 @@ import dogrunStay from "../../../assets/images/sites_dogrun_stay.jpg";
 import { proxPlanUrl } from "../../../config/nav";
 import PageLayout from "../../../layouts/PageLayout.astro";
 
-const TITLE = "貸切ドッグラン付きキャンプ｜里山パークおいらの森（栃木）";
+const TITLE =
+	"貸切ドッグランサイト｜400㎡・1日1組、愛犬とノーリードでキャンプ｜里山パークおいらの森（栃木）";
 const DESC =
-	"囲いの中、リードなしで遊べる貸切ドッグランサイト。愛犬と泊まる栃木・那須烏山のキャンプ場。ペット可。";
+	"栃木県那須烏山市・里山パークおいらの森の貸切ドッグランサイト。柵で囲まれた約400㎡のドッグランの中でキャンプでき、車もそのまま入れます。1日1組限定。ライトフォレストは全サイト犬連れOKで、犬の頭数・大きさの制限はなく料金もかかりません。";
 const URL = "https://oiranomori.jp/sites/dogrun/";
 
 const sizeGuide = [
@@ -66,7 +67,25 @@ const experiences = [
   <div class="mb-10 border-b border-zinc-200 pb-8">
     <p class="text-xs tracking-[0.26em] text-zinc-400 uppercase">Dog Run</p>
     <h1 class="mt-3 text-3xl font-semibold text-zinc-800 md:text-4xl">犬と、過ごす</h1>
-    <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-500">
+    <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-700">
+      ライトフォレストは全サイト犬連れOK。犬の頭数・大きさ・犬種の制限はなく、料金もかかりません。
+    </p>
+    <p class="mt-2 max-w-2xl text-sm leading-loose text-zinc-700">
+      貸切ドッグランサイトは、柵で囲まれた約400㎡のドッグランの中にテントを張れる区画です。1日1組限定で、車もそのまま中に入れます。
+    </p>
+    <div class="mt-6 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-6">
+      <a href={proxPlanUrl(7)}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center justify-center rounded-full bg-[color:var(--forest-600)] px-7 py-3 text-sm text-white shadow-sm transition hover:bg-[color:var(--forest-700)]"
+       data-cta="reserve" data-cta-field="light">
+        空き状況・予約はこちら ↗
+      </a>
+      <a href="/sites/" class="text-sm text-zinc-500 underline underline-offset-2 transition hover:text-zinc-800" data-cta="dogrun-to-sites">
+        貸切でなくても大丈夫。通常のサイトを選ぶ
+      </a>
+    </div>
+    <p class="mt-6 max-w-2xl text-sm leading-loose text-zinc-500">
       柵に囲まれた約400㎡を貸し切り。リードを外して走らせて、夜は同じテントで眠る。
       愛犬との一日を、まるごと森の中で。
     </p>
@@ -142,6 +161,10 @@ const experiences = [
     </p>
     <dl class="divide-y divide-zinc-200 border-y border-zinc-200">
       {[
+        { label: "犬の頭数", value: "制限なし。" },
+        { label: "大きさ・犬種", value: "制限なし。" },
+        { label: "犬の料金", value: "無料。" },
+        { label: "リード", value: "ドッグランサイト以外ではリードをお願いします。" },
         { label: "組数", value: "1日1組。場内にドッグランサイトは1区画のみです。" },
         { label: "広さ", value: "約400㎡（柵内）。" },
         { label: "柵", value: "区画は柵で囲まれています。柵内はノーリードで過ごせます。" },
