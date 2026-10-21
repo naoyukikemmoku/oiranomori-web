@@ -43,6 +43,9 @@ export const PROX_DEEP_RESERVE_URL = `${PROX_BASE}/search/?nights=1&r_num=1&num=
 /** ディープフォレストの予約CTA文言（全ページ統一）。 */
 export const DEEP_RESERVE_LABEL = "ディープフォレストの空きを確認する";
 
+/** ディープのページ。固定の「予約する」（ReserveCTA）の行き先を PROX_DEEP_RESERVE_URL にする。 */
+export const DEEP_PAGE_PATHS = ["/deep/", "/deep-guide/", "/stay-deep/"];
+
 /** 会員・予約確認まわり（補助導線）。予約の主導線は PROX_SEARCH_URL。 */
 export const PROX_MEMBER_SIGNUP_URL = `${PROX_BASE}/member/input/`;
 export const PROX_MEMBER_LOGIN_URL = `${PROX_BASE}/member/login/`;

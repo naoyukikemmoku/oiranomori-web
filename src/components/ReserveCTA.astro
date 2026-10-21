@@ -1,9 +1,15 @@
 ---
-import { reserveCta } from "../config/nav";
+import { DEEP_PAGE_PATHS, PROX_DEEP_RESERVE_URL, reserveCta } from "../config/nav";
+
+// ディープのページではディープ専用の予約先へ。それ以外は全体検索（search/）で、
+// 行き先がライトに限られないため data-cta-field は付けない。
+const path = Astro.url.pathname.replace(/\/?$/, "/");
+const isDeep = DEEP_PAGE_PATHS.includes(path);
+const href = isDeep ? PROX_DEEP_RESERVE_URL : reserveCta.href;
 ---
 
 <div class="fixed bottom-4 left-1/2 z-40 -translate-x-1/2">
-  <a class="reserve-cta" href={reserveCta.href} target="_blank" rel="noopener noreferrer" data-cta="reserve" data-cta-field="light">
+  <a class="reserve-cta" href={href} target="_blank" rel="noopener noreferrer" data-cta="reserve" data-cta-place="sticky" data-cta-field={isDeep ? "deep" : undefined}>
     <span>{reserveCta.label}</span>
     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path d="M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>

@@ -7,7 +7,8 @@
 //   2. Deep 予約CTAが plans=9 / show=room を含む確定URLであること
 //   3. 必須クエリパラメータが全て揃っていること
 //   4. show=plan（汎用 proxPlanUrl 形式）が Deep のCTAに混入していないこと
-//   5. /deep/ と /deep-guide/ の予約CTA文言が統一されていること
+//   5. /deep/ と /deep-guide/ と /stay-deep/ の予約CTA文言が統一されていること
+//   6. 固定の「予約する」（data-cta-place="sticky"）も Deep 予約CTA（2〜4 の検査対象）であること
 
 import fs from "node:fs";
 import path from "node:path";
@@ -54,7 +55,7 @@ if (!deepUrlMatch) {
 // HTML 属性内では & が &amp; へエスケープされるため、比較前に戻す。
 const decodeAmp = (s) => s.replaceAll("&amp;", "&");
 
-for (const page of ["/deep/", "/deep-guide/"]) {
+for (const page of ["/deep/", "/deep-guide/", "/stay-deep/"]) {
 	const file = path.join(DIST, page.slice(1), "index.html");
 	if (!fs.existsSync(file)) {
 		errors.push(`${page}: ビルド出力がない（先に npm run build）`);
@@ -69,6 +70,14 @@ for (const page of ["/deep/", "/deep-guide/"]) {
 	if (ctas.length === 0) {
 		errors.push(`${page}: Deep予約CTA（data-cta-field="deep"）が見つからない`);
 		continue;
+	}
+
+	// --- 6. 固定の「予約する」（data-cta-place="sticky"）も Deep 予約CTAであること ---
+	const sticky = (html.match(/<a\b[^>]*data-cta-place="sticky"[^>]*>/) || [])[0];
+	if (!sticky) {
+		errors.push(`${page}: 固定の予約ボタン（data-cta-place="sticky"）が見つからない`);
+	} else if (!ctas.includes(sticky)) {
+		errors.push(`${page}: 固定の予約ボタンに data-cta-field="deep" がない`);
 	}
 
 	for (const tag of ctas) {
