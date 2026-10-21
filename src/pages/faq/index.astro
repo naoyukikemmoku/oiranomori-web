@@ -45,7 +45,7 @@ const categories = [
       { "@type": "Question", "name": "花火はできますか？", "acceptedAnswer": { "@type": "Answer", "text": "打ち上げ花火は両フィールドとも禁止です。手持ち花火はできます。" } },
       { "@type": "Question", "name": "ライトフォレストの禁止事項は？", "acceptedAnswer": { "@type": "Answer", "text": "スピーカー・アイドリング・打ち上げ花火・発電機・21時以降の談笑・楽器の演奏・深夜早朝のバトニングは禁止です。" } },
       { "@type": "Question", "name": "ゴミは捨てられますか？", "acceptedAnswer": { "@type": "Answer", "text": "灰以外はすべてお持ち帰りください。灰は指定のペール缶（ライトフォレスト薪小屋の黒ペール缶）に蓋をして入れてください。" } },
-      { "@type": "Question", "name": "ペットは連れて来られますか？", "acceptedAnswer": { "@type": "Answer", "text": "ライトフォレストのドッグランサイトはノーリードOK、その他のサイトはリード必須です。ふんの処理・管理は飼い主の責任でお願いします。ディープフォレストもペット可です（運用はライトフォレストと同じ・リード必須）。" } },
+      { "@type": "Question", "name": "ペットは連れて来られますか？", "acceptedAnswer": { "@type": "Answer", "text": "ライトフォレストは全サイト犬連れで利用できます。犬の頭数・大きさ・犬種の制限はなく、料金はかかりません。ライトフォレストのドッグランサイトはノーリードOK、その他のサイトはリード必須です。ふんの処理・管理は飼い主の責任でお願いします。ディープフォレストもペット可です（運用はライトフォレストと同じ・リード必須）。" } },
       { "@type": "Question", "name": "ライトフォレストはどんなフィールドですか？", "acceptedAnswer": { "@type": "Answer", "text": "コナラ・クヌギの明るい落葉広葉樹林に囲まれたキャンプサイト。管理人家族が敷地内に常駐しており、初心者・女性・ファミリーも安心です。敷地18,000坪・収容約120人。栃木県那須烏山市にあります。" } },
       { "@type": "Question", "name": "ライトフォレストにはどんなサイトがありますか？", "acceptedAnswer": { "@type": "Answer", "text": "オートサイト（車乗り入れ可）、区画サイト（近隣駐車場）、ソロ区画、ドッグランサイト、区画外（お好きな場所でキャンプ）があります。" } },
       { "@type": "Question", "name": "ディープフォレストはどんなフィールドですか？", "acceptedAnswer": { "@type": "Answer", "text": "樹齢80年のスギ・ヒノキの針葉樹林、敷地14,000坪。野営・ブッシュクラフト・静寂を求める上級者向けフィールドです。ライトフォレストから車で約7分。" } },
@@ -226,7 +226,7 @@ const categories = [
           <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400"></span><span><strong class="text-zinc-800">カップル・2〜3人</strong> → ライトフォレストのオート M・Sサイズ</span></li>
           <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400"></span><span><strong class="text-zinc-800">ソロで静かに過ごしたい</strong> → ライトフォレストのSSサイズ（ソロ区画）</span></li>
           <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400"></span><span><strong class="text-zinc-800">ソロで直火・野営感</strong> → ライトフォレストのソロ区画3〜11番（直火OK）または区画C</span></li>
-          <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400"></span><span><strong class="text-zinc-800">愛犬と一緒に</strong> → ドッグランサイト（貸切1組限定・ノーリードOK）</span></li>
+          <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400"></span><span><strong class="text-zinc-800">愛犬と一緒に</strong> → ライトフォレストは全サイト犬連れOK。柵の中でノーリードにしたいなら<a href="/sites/dogrun/" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">貸切ドッグランサイト</a>（1日1組限定）</span></li>
           <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400"></span><span><strong class="text-zinc-800">車を持たない</strong> → 電車キャンパー歓迎プラン（送迎無料）</span></li>
           <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400"></span><span><strong class="text-zinc-800">ブッシュクラフト・上級者・静寂重視</strong> → ディープフォレスト（18歳以上限定）</span></li>
         </ul>
@@ -347,7 +347,7 @@ const categories = [
       <div class="py-6">
         <p class="font-semibold text-zinc-800">Q. ペットは連れて来られますか？</p>
         <p class="mt-3 text-sm leading-loose text-zinc-600">
-          ライトフォレストのドッグランサイトはノーリードOK、その他のサイトはリード必須です。ふんの処理・管理は飼い主の責任でお願いします。ディープフォレストもペット可です（運用はライトフォレストと同じ・リード必須）。
+          ライトフォレストは全サイト犬連れで利用できます。犬の頭数・大きさ・犬種の制限はなく、料金はかかりません。ライトフォレストのドッグランサイトはノーリードOK、その他のサイトはリード必須です。ふんの処理・管理は飼い主の責任でお願いします。ディープフォレストもペット可です（運用はライトフォレストと同じ・リード必須）。
         </p>
       </div>
 
