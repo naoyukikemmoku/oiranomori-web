@@ -317,3 +317,4 @@ Codeから計測データを取得する手段はない。施策評価が必要�
 | 1.6 | 2026-10-06 | spec §7 に「杭QR 転送（/s/*）」を追記（`/s/{code}` → `https://oiranomori.com/app/s/{code}` へ 302。301 にしない理由も明記）。 |
 | 1.7 | 2026-10-06 | spec §8 に「版の札（/build.json）」を追記（ビルドごとに commit・built_at を静的出力、`public/_headers` で no-store、OirasApp が本文の読み直しに使う）。 |
 | 1.8 | 2026-10-18 | spec §12.1 #9 congestion.php に `closed`（売り止めの日＝「休み」・CongestionMatrix は「休」・SilenceCalendar は静かな日に数えない）を追記。 |
+| 1.9 | 2026-10-21 | spec §2「計測」に「CTAクリック計測（GA4）」を新設（reserve_cta_click / internal_cta_click と送信項目 cta・place・field・target・page_path）。place の値に `sticky`（画面下に固定の「予約する」）を追加。 |

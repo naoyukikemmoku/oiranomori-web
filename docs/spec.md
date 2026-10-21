@@ -143,7 +143,7 @@ data-cta 属性を持つ要素（現状はすべてリンク）のクリック�
 
 送信項目：
 - cta：data-cta の値
-- place：押された場所。data-cta-place の値（menu / footer / calendar / content）。無い場合は content
+- place：押された場所。data-cta-place の値（menu / footer / calendar / sticky / content）。無い場合は content
 - field：data-cta-field の値（light / deep）。行き先がどちらかに限られるリンクだけに付く。無い場合は空
 - target：data-cta-target の値。無い場合はリンク先（href）
 - page_path：押されたページのパス
