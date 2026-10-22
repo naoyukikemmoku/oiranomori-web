@@ -1240,7 +1240,9 @@ const DESCRIPTION =
     const WXMAP_IMG_BASE = "https://www.jma.go.jp/bosai/weather_map/data/png/";
     const WXMAP_PAST_BASE =
       "https://www.data.jma.go.jp/yoho/data/wxchart/quick/";
-    const TC_API    = "https://www.jma.go.jp/bosai/typhoon/data/targetTc.json";
+    // 台風：App が気象庁の台風情報をまとめた文（気象庁の発表のまま）。ok=false は「取れなかった」（台風が無いという意味ではない）
+    const TC_API    = "https://oiranomori.com/app/weather/api/public/typhoon.php";
+    const TC_JMA_URL = "https://www.jma.go.jp/bosai/map.html#contents=typhoon";
     const PAST_DAYS_MAX = 90;
     // 衛星: latest から2時間超で鮮度警告
     const SAT_STALE_MS  = 2 * 60 * 60 * 1000;
@@ -1528,32 +1530,43 @@ const DESCRIPTION =
       const bodyEl   = document.getElementById("typhoon-body")!;
       const statusEl = document.getElementById("typhoon-status")!;
 
-      try {
-        const data: unknown[] = await fetch(TC_API).then((r) => r.json());
-
-        if (!Array.isArray(data) || data.length === 0) {
-          statusEl.textContent = "現在、台風の情報はありません。";
-          return;
-        }
-
-        const count = data.length;
-        statusEl.textContent = "";
-
-        const p = document.createElement("p");
-        p.className = "text-sm text-zinc-600 mb-3";
-        p.textContent = `現在、台風が ${count} 件発生しています。`;
-        bodyEl.appendChild(p);
-
+      const addJmaLink = () => {
         const link = document.createElement("a");
-        link.href      = "https://www.jma.go.jp/bosai/map.html#contents=typhoon";
+        link.href      = TC_JMA_URL;
         link.target    = "_blank";
         link.rel       = "noopener";
         link.className = "text-xs tracking-[0.14em] text-zinc-500 underline hover:text-zinc-700";
         link.textContent = "詳しくは気象庁の台風情報へ";
         bodyEl.appendChild(link);
+      };
+
+      try {
+        const data: { ok?: boolean; typhoons?: { text?: string }[] } =
+          await fetch(TC_API).then((r) => r.json());
+
+        if (!data || data.ok !== true || !Array.isArray(data.typhoons)) {
+          statusEl.textContent = "台風情報を取得できませんでした。";
+          addJmaLink();
+          return;
+        }
+        if (data.typhoons.length === 0) {
+          statusEl.textContent = "現在、台風の情報はありません。";
+          return;
+        }
+
+        statusEl.textContent = "";
+        for (const t of data.typhoons) {
+          if (!t.text) continue;
+          const p = document.createElement("p");
+          p.className = "text-sm leading-relaxed text-zinc-700 mb-3";
+          p.textContent = t.text;
+          bodyEl.appendChild(p);
+        }
+        addJmaLink();
 
       } catch {
         statusEl.textContent = "台風情報を取得できませんでした。";
+        addJmaLink();
       }
     }
 
