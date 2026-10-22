@@ -4,7 +4,6 @@ import dogrunDog from "../../../assets/images/sites_dogrun_dog.jpg";
 import dogrunHero from "../../../assets/images/sites_dogrun_hero.jpg";
 import dogrunStay from "../../../assets/images/sites_dogrun_stay.jpg";
 import { proxPlanUrl } from "../../../config/nav";
-import { PLAN_PRICES } from "../../../data/planPrices";
 import PageLayout from "../../../layouts/PageLayout.astro";
 
 const TITLE =
@@ -14,16 +13,20 @@ const DESC =
 const URL = "https://oiranomori.jp/sites/dogrun/";
 const OG_IMAGE = new globalThis.URL(dogrunHero.src, Astro.site).href;
 
-const conditions = [
-	{ label: "組数", value: "1日1組限定" },
-	{ label: "広さ", value: "約400㎡" },
-	{ label: "車", value: "柵の中に乗り入れ可" },
-	{ label: "AC電源", value: "あり（有料オプション・要予約、600Wまで）" },
+const details = [
+	{ label: "広さ", value: "約400㎡・柵で囲まれたドッグラン" },
+	{ label: "利用", value: "1日1組限定の貸切（場内に1区画のみ）" },
+	{ label: "設営場所", value: "柵内に2か所整備。地形によりレイアウトはある程度限られます" },
+	{ label: "車", value: "ドッグラン内に乗り入れ可能" },
+	{ label: "電源", value: "AC電源あり。有料・要予約、600Wまで" },
 	{ label: "犬の頭数・大きさ・犬種", value: "制限なし" },
 	{ label: "犬の料金", value: "無料" },
-	{ label: "リード", value: "柵の中はノーリードOK。ドッグランサイト以外ではリードをお願いします" },
-	{ label: "飼い主の責任", value: "ふんの処理・管理は飼い主が行ってください。" },
 ];
+
+const reserveClass =
+	"inline-flex items-center justify-center rounded-full bg-[color:var(--forest-600)] px-7 py-3 text-sm text-white shadow-sm transition hover:bg-[color:var(--forest-700)]";
+const linkClass =
+	"text-sm text-zinc-600 underline underline-offset-2 transition hover:text-zinc-800";
 ---
 
 <PageLayout title={TITLE} description={DESC} ogImage={OG_IMAGE}>
@@ -46,7 +49,7 @@ const conditions = [
   <Picture
     src={dogrunHero}
     formats={["avif", "webp"]}
-    alt="柵に囲まれた草地のドッグランサイトと夕暮れの空"
+    alt="柵に囲まれたドッグランサイトと夕暮れの空"
     loading="eager"
     fetchpriority="high"
     sizes="(max-width: 768px) 100vw, 72rem"
@@ -56,22 +59,16 @@ const conditions = [
   {/* ページ見出し */}
   <div class="mb-14 border-b border-zinc-200 pb-8">
     <p class="text-xs tracking-[0.26em] text-zinc-400 uppercase">Dog Run</p>
-    <h1 class="mt-3 text-3xl font-semibold text-zinc-800 md:text-4xl">犬と、過ごす</h1>
+    <h1 class="mt-3 text-3xl font-semibold leading-snug text-zinc-800 md:text-4xl">ドッグランの中で、愛犬とキャンプ</h1>
     <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-700">
-      柵に囲まれた約400㎡を貸し切り。リードを外して走らせて、夜は同じテントで眠る。<br />
-      愛犬との一日を、まるごと森の中で。
+      約400㎡のドッグランを貸し切って、その中でキャンプができます。柵内にはテントを張れる場所を2か所整備してあり、愛犬はノーリードで過ごせます。1日1組限定の、犬連れのためのサイトです。
     </p>
-    <p class="mt-6 text-lg tracking-wide text-zinc-800">{PLAN_PRICES[7]}</p>
-    <div class="mt-4 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-6">
-      <a href={proxPlanUrl(7)}
-        target="_blank"
-        rel="noopener noreferrer"
-        class="inline-flex items-center justify-center rounded-full bg-[color:var(--forest-600)] px-7 py-3 text-sm text-white shadow-sm transition hover:bg-[color:var(--forest-700)]"
-       data-cta="reserve" data-cta-field="light">
-        空き状況・予約はこちら ↗
-      </a>
-      <a href="/sites/" class="text-sm text-zinc-500 underline underline-offset-2 transition hover:text-zinc-800" data-cta="dogrun-to-sites">
-        貸切でなくても大丈夫。通常のサイトを選ぶ
+    <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-700">
+      栃木県那須烏山市の里山パークおいらの森で、愛犬と一緒に一泊してみませんか。
+    </p>
+    <div class="mt-6">
+      <a href={proxPlanUrl(7)} target="_blank" rel="noopener noreferrer" class={reserveClass} data-cta="reserve" data-cta-field="light">
+        空き状況・料金を見る ↗
       </a>
     </div>
   </div>
@@ -80,7 +77,7 @@ const conditions = [
       実装までは DOM を生成しない（空セクションの余白を残さないため）。 */}
 
   <section class="mb-14">
-    <h2 class="mb-5 text-xl font-semibold text-zinc-800">囲いの中で、リードを外す</h2>
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">遊ぶ場所も、泊まる場所も一緒</h2>
     <Picture
       src={dogrunDog}
       formats={["avif", "webp"]}
@@ -89,87 +86,75 @@ const conditions = [
       sizes="(max-width: 768px) 100vw, 36rem"
       class="mb-5 aspect-[3/2] w-full max-w-2xl object-cover"
     />
-    <p class="max-w-2xl text-sm leading-loose text-zinc-600">
-      柵の中に車ごと入ったら、あとはリードを外すだけ。<br />
-      どの子もうれしそうに、森の中を駆け回ります。<br />
-      その姿を見て、また来ようと思ってくださる方が多いようです。
-    </p>
+    <div class="max-w-2xl space-y-4 text-sm leading-loose text-zinc-600">
+      <p>犬を遊ばせたらキャンプサイトへ戻る。ここでは、その移動がありません。ドッグランの中にテントを張るので、遊んだ後も、そのままそばで過ごせます。</p>
+      <p>走り回ったり、においを嗅いで歩いたり、テントのそばで昼寝をしたり。飼い主さんが食事や休憩をしている間も、愛犬の様子を見ながら一緒に過ごせる場所です。</p>
+      <p>ほかの利用者の犬と共用するドッグランではなく、滞在中は自分たちだけで使えます。遊ぶ時間を決めずに、キャンプの一日の中でドッグランを使ってください。</p>
+      <p>どの子もうれしそうに駆け回ります。その姿を見て、また来ようと思ってくださる方が多いようです。</p>
+    </div>
   </section>
 
   <section class="mb-14">
-    <h2 class="mb-5 text-xl font-semibold text-zinc-800">広さは、約400㎡を貸し切り</h2>
-    <p class="max-w-2xl text-sm leading-loose text-zinc-600">
-      大型犬でも、思いきり走れる広さです。<br />
-      そのぶん、小さな子だと姿を見失いそうで心配、という声もいただきます。<br />
-      目の届く範囲で過ごしたいときは、ほかの区画でリードを付けて、すぐそばに置いておくのもおすすめです。
-    </p>
-  </section>
-
-  <section class="mb-14">
-    <h2 class="mb-5 text-xl font-semibold text-zinc-800">雨の日は、どろんこです</h2>
-    <p class="max-w-2xl text-sm leading-loose text-zinc-600">
-      地面は芝生ではなく、森の土です。雨の日や雨上がりは、足もお腹も泥だらけになります。<br />
-      それでも犬たちは、おかまいなしに走り回ります。タオルは多めにどうぞ。
-    </p>
-  </section>
-
-  <section class="mb-14">
-    <h2 class="mb-5 text-xl font-semibold text-zinc-800">愛犬と、同じテントで</h2>
     <Picture
       src={dogrunStay}
       formats={["avif", "webp"]}
       alt="ハンモックのそばで焚き火を眺める犬"
       loading="lazy"
       sizes="(max-width: 768px) 100vw, 36rem"
-      class="mb-5 aspect-[3/2] w-full max-w-2xl object-cover"
+      class="mb-8 aspect-[3/2] w-full max-w-2xl object-cover"
     />
-    <p class="max-w-2xl text-sm leading-loose text-zinc-600">
-      焚き火のそばで足元に伏せて、夜は同じテントで眠る。<br />
-      朝、ケージから出すと、また走り出します。
-    </p>
-  </section>
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">ドッグランサイトについて</h2>
+    <div class="max-w-2xl space-y-4 text-sm leading-loose text-zinc-600">
+      <p>約400㎡は、設営場所や駐車スペースを含めたドッグラン全体の広さです。地形に合わせてテントを張れる場所を2か所整備しています。場内のどこにでもテントを張れるわけではないため、テントやタープの配置は、整備された場所に合わせたレイアウトになります。</p>
+      <p>広いので、大型犬でも思いきり走れます。そのぶん、小さな子だと姿を見失いそうで心配、という声もいただきます。目の届く範囲で過ごしたいときは、ほかの区画でリードを付けて、すぐそばに置いておくのもおすすめです。</p>
+      <p>車はドッグランの中まで乗り入れできます。キャンプ道具に加えて、愛犬の食事や寝床など、荷物が多くなる犬連れキャンプでも、車のそばで積み下ろしができます。</p>
+      <p>地面は芝生ではなく、森の土です。雨の日や雨上がりは、足もお腹も泥だらけになります。それでも犬たちは、おかまいなしに走り回ります。タオルは多めにどうぞ。</p>
+    </div>
 
-  <section class="mb-14">
-    <h2 class="mb-5 text-xl font-semibold text-zinc-800">ほかの区画でも、犬と泊まれます</h2>
-    <p class="max-w-2xl text-sm leading-loose text-zinc-600">
-      ライトフォレストは、全サイト犬連れOKです。<br />
-      犬の頭数・大きさ・犬種に制限はなく、料金もかかりません。<br />
-      ドッグランサイト以外では、リードをお願いします。
-    </p>
-    <p class="mt-4 text-sm">
-      <a href="/sites/" class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80">
-        サイトを選ぶ →
-      </a>
-    </p>
-  </section>
+    <div class="mt-8 overflow-x-auto border-y border-zinc-200">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="border-b border-zinc-200">
+            <th scope="col" class="px-4 py-3 text-left font-medium text-zinc-500">項目</th>
+            <th scope="col" class="px-4 py-3 text-left font-medium text-zinc-500">内容</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-zinc-100">
+          {details.map((d) => (
+            <tr>
+              <th scope="row" class="px-4 py-3 text-left align-top font-medium text-zinc-700 sm:w-56">{d.label}</th>
+              <td class="px-4 py-3 leading-loose text-zinc-600">{d.value}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
 
-  {/* 利用条件 */}
-  <section class="mb-14">
-    <h2 class="mb-5 text-xl font-semibold text-zinc-800">利用条件</h2>
-    <dl class="divide-y divide-zinc-200 border-y border-zinc-200">
-      {conditions.map((r) => (
-        <div class="grid gap-1 py-4 sm:grid-cols-[12rem_1fr] sm:gap-6">
-          <dt class="text-sm font-medium text-zinc-700">{r.label}</dt>
-          <dd class="text-sm leading-loose text-zinc-600">{r.value}</dd>
-        </div>
-      ))}
-    </dl>
+    <p class="mt-6 max-w-2xl text-sm leading-loose text-zinc-600">
+      柵の中でも愛犬から目を離さず、出入口の開閉時には飛び出しに気をつけてください。通路や炊事場など、ドッグランの外ではリードをお願いします。ふんの片付けは飼い主さんでお願いします。
+    </p>
+    <ul class="mt-5 space-y-2">
+      <li><a href="/lightforest-map/" class={linkClass}>場内マップを見る →</a></li>
+      <li><a href="/light-guide/" class={linkClass}>設備・利用案内を見る →</a></li>
+    </ul>
   </section>
 
   {/* 予約導線 */}
   <section class="mb-14">
-    <h2 class="mb-2 text-xl font-semibold text-zinc-800">予約する</h2>
-    <p class="mb-5 text-sm leading-loose text-zinc-500">
-      料金・空き状況は予約システムでご確認ください。
-    </p>
-    <p class="mb-4 text-lg tracking-wide text-zinc-800">{PLAN_PRICES[7]}</p>
-    <a href={proxPlanUrl(7)}
-      target="_blank"
-      rel="noopener noreferrer"
-      class="inline-flex items-center justify-center rounded-full bg-[color:var(--forest-600)] px-7 py-3 text-sm text-white shadow-sm transition hover:bg-[color:var(--forest-700)]"
-     data-cta="reserve" data-cta-field="light">
-      空き状況・予約はこちら ↗
-    </a>
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">ご予約</h2>
+    <div class="max-w-2xl space-y-4 text-sm leading-loose text-zinc-600">
+      <p>ご希望の日付・人数で、ドッグランサイトの空き状況と料金をご確認ください。</p>
+      <p>ほかのキャンプサイトも犬連れで利用できます。リードを着けて過ごす場合は、そちらもお選びいただけます。</p>
+    </div>
+    <div class="mt-6">
+      <a href={proxPlanUrl(7)} target="_blank" rel="noopener noreferrer" class={reserveClass} data-cta="reserve" data-cta-field="light">
+        ドッグランサイトの空き状況・料金を見る ↗
+      </a>
+    </div>
+    <ul class="mt-5 space-y-2">
+      <li><a href="/sites/" class={linkClass} data-cta="dogrun-to-sites">ほかのサイトを見る →</a></li>
+      <li><a href="/access/" class={linkClass}>アクセス →</a></li>
+    </ul>
   </section>
 
   {/* 関連内部リンク */}
@@ -191,9 +176,6 @@ const conditions = [
       <li>
         <a href="/access/" class="text-zinc-600 underline underline-offset-2 transition hover:text-zinc-800">アクセス</a>
         <span class="ml-2 text-zinc-400">— 行き方・駐車場</span>
-      </li>
-      <li>
-        <a href="/sites/" class="text-zinc-600 underline underline-offset-2 transition hover:text-zinc-800">全サイズの実寸・設営例を見る</a>
       </li>
     </ul>
   </section>
