@@ -12,6 +12,7 @@ import CongestionMatrix from "../components/CongestionMatrix.astro";
 import OshiraseList from "../components/OshiraseList.astro";
 import SeasonSlider from "../components/SeasonSlider.astro";
 import { PROX_SEARCH_URL, proxPlanUrl } from "../config/nav";
+import { PLAN_PRICES } from "../data/planPrices";
 import LpLayout from "../layouts/LpLayout.astro";
 import { getOshirase } from "../lib/oshirase";
 
@@ -31,7 +32,7 @@ const plans: Array<{
 }> = [
 	{
 		name: "スタンダード・\nオートサイト",
-		price: "¥3,300/サイト〜",
+		price: PLAN_PRICES[4],
 		ci: "IN 12:00〜17:00",
 		co: "チェックアウト 翌12:00",
 		id: 4,
@@ -40,7 +41,7 @@ const plans: Array<{
 	},
 	{
 		name: "区画サイト",
-		price: "¥3,300/サイト〜",
+		price: PLAN_PRICES[5],
 		ci: "IN 12:00〜17:00",
 		co: "チェックアウト 翌12:00",
 		id: 5,
@@ -50,7 +51,7 @@ const plans: Array<{
 	},
 	{
 		name: "野営っぽく\nキャンプ",
-		price: "¥3,300/サイト〜",
+		price: PLAN_PRICES[6],
 		ci: "IN 12:00〜17:00",
 		co: "チェックアウト 翌12:00",
 		id: 6,
@@ -60,7 +61,7 @@ const plans: Array<{
 	},
 	{
 		name: "貸切\nドッグランサイト",
-		price: "¥4,400/サイト〜",
+		price: PLAN_PRICES[7],
 		ci: "IN 12:00〜17:00",
 		co: "チェックアウト 翌12:00",
 		id: 7,
@@ -71,7 +72,7 @@ const plans: Array<{
 	},
 	{
 		name: "日帰り\nデイキャンプ",
-		price: "¥2,200/サイト〜",
+		price: PLAN_PRICES[14],
 		ci: "IN 9:00",
 		co: "アウト 18:00",
 		id: 14,
@@ -81,7 +82,7 @@ const plans: Array<{
 	},
 	{
 		name: "ワーケーション",
-		price: "平日ソロ限定",
+		price: PLAN_PRICES[16],
 		ci: "IN 12:00〜17:00",
 		co: "チェックアウト 翌12:00",
 		id: 16,
@@ -91,7 +92,7 @@ const plans: Array<{
 	},
 	{
 		name: "ソロ割り\nオートサイト",
-		price: "平日ソロ限定",
+		price: PLAN_PRICES[21],
 		ci: "IN 12:00〜17:00",
 		co: "チェックアウト 翌12:00",
 		id: 21,
@@ -101,7 +102,7 @@ const plans: Array<{
 	},
 	{
 		name: "電車キャンパー\n歓迎",
-		price: "¥3,300/サイト〜",
+		price: PLAN_PRICES[23],
 		ci: "IN 12:00〜17:00",
 		co: "チェックアウト 翌12:00",
 		id: 23,
