@@ -1227,13 +1227,15 @@ const DESCRIPTION =
       const btn = getEl("btn-refresh") as HTMLButtonElement | null;
       if (btn) { btn.textContent = "更新中…"; btn.disabled = true; }
 
-      const [curR, fcR, wnR, lcR, advR, tyR] = await Promise.allSettled([
+      // 台風は他の更新を待たせないよう別に取る（遅くても警報などの描画を止めない）
+      fetchJson(API.typhoon).then(renderTyphoonLine, () => renderTyphoonLine(null));
+
+      const [curR, fcR, wnR, lcR, advR] = await Promise.allSettled([
         fetchJson(API.current),
         fetchJson(API.forecast),
         fetchJson(API.warning),
         fetchLivecam(API.livecam),
         fetchJson(API.advisory),
-        fetchJson(API.typhoon),
       ]);
 
       const current  = curR.status === "fulfilled" ? curR.value : null;
@@ -1241,11 +1243,9 @@ const DESCRIPTION =
       const warning  = wnR.status === "fulfilled" ? wnR.value : null;
       const livecam  = lcR.status === "fulfilled" ? lcR.value : null;
       const advisory = advR.status === "fulfilled" ? advR.value : null;
-      const typhoon  = tyR.status === "fulfilled" ? tyR.value : null;
 
       renderA1(forecast, advisory);
       renderA3(warning);
-      renderTyphoonLine(typhoon);
       renderA4(current);
       renderLivecam(livecam); // 取得失敗時は null → プレースホルダ
       // A5 は現在の選択 range で再取得（HTTPキャッシュに委任）
