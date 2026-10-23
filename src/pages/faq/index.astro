@@ -1,18 +1,629 @@
 ﻿---
 import PageLayout from "../../layouts/PageLayout.astro";
 
-const categories = [
-  { id: "reservation",    label: "予約・キャンセル" },
-  { id: "checkin",        label: "チェックイン・アウト" },
-  { id: "site-selection", label: "サイト選び・初めての方" },
-  { id: "facility-rules", label: "設備・ルール" },
-  { id: "light-forest",   label: "ライトフォレスト" },
-  { id: "deep-forest",    label: "ディープフォレスト" },
-  { id: "shop",           label: "薪・レンタル・売店" },
-  { id: "access",         label: "アクセス・周辺" },
-  { id: "nature",         label: "自然・生き物" },
-  { id: "others",         label: "その他" },
+type FaqItem = {
+	id: string;
+	q: string;
+	/** 構造化データの name。Q の文だけでは何のことか分からないとき（「設備は？」など）に。 */
+	ldName?: string;
+	/** 構造化データの text。箇条書き・改行で区切った連絡先など、本文から作ると読みにくいときだけ。 */
+	ldText?: string;
+	/** 答えの HTML（静的に出力する。リンクだけの段落 class="mt-2 text-sm" は構造化データに入れない）。 */
+	body: string;
+};
+type FaqCategory = { id: string; label: string; heading: string; note?: string; items: FaqItem[] };
+
+// カテゴリと Q の並びは「お客さんが先に知りたい順」。全 Q は静的 HTML に出し、
+// タブの切り替えは CSS（JS が data-faq-tabs を付けたときだけ他のカテゴリを隠す）。
+const categories: FaqCategory[] = [
+	{
+		id: "reservation",
+		label: "予約・キャンセル",
+		heading: "予約・キャンセル・支払い",
+		items: [
+			{
+				id: "book",
+				q: "予約はどこからできますか？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  当HPの予約ボタン、または楽天トラベルキャンプからご予約いただけます。会員登録（無料）をすると、次回以降の入力省略・複数プラン同時予約・ポイント付与などの特典があります。
+</p>
+<p class="mt-2 text-sm">
+  <a href="/reservation-guide/" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">詳しくは予約ガイドへ →</a>
+</p>`,
+			},
+			{
+				id: "payment",
+				q: "支払い方法は？ キャッシュレス決済は使えますか？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  お支払いは現地のみです（事前のオンライン決済はありません）。クレジットカード、電子マネー（交通系IC・iD・QUICPay）、QRコード決済（PayPay・楽天ペイ・au PAY・d払い・メルペイ 等）、現金に対応しています。
+</p>
+<p class="mt-2 text-sm">
+  <a href="/policy/" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">対応ブランドの詳細（特定商取引法表記）→</a>
+</p>`,
+			},
+			{
+				id: "same-day",
+				q: "当日予約はできますか？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  サイトに空きがあれば、お電話のみで当日受付いたします。ただし料金は当日料金となり、HP表示の料金とは異なります。事前のご予約をおすすめします。
+</p>
+<p class="mt-2 text-sm text-zinc-600">
+  TEL: <a href="tel:05036471047" class="underline underline-offset-2 transition hover:text-zinc-900">050-3647-1047</a>
+</p>`,
+			},
+			{
+				id: "cancel",
+				q: "キャンセルしたい。",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  ご自身のオンライン手続きで完結します。入口は2つあり、<strong class="text-zinc-800">予約完了メールに記載のリンク</strong>から、または会員の方は<strong class="text-zinc-800">マイページ</strong>から手続きできます。お電話をいただく必要はありません。
+</p>
+<p class="mt-3 text-sm leading-loose text-zinc-600">
+  キャンセル料は<strong class="text-zinc-800">当日のキャンセルも無料</strong>です。連絡なく来場されない無断キャンセルのみ、ご予約料金の100%を申し受けます。楽天トラベルキャンプで予約した場合は、楽天側の画面で手続きしてください。
+</p>
+<p class="mt-2 text-sm">
+  <a href="/reservation-guide/#change" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">キャンセルのやり方を見る →</a>
+</p>`,
+			},
+			{
+				id: "change",
+				q: "予約の内容を変更したい。",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  人数・車の台数はオンライン操作不要で、当日現地で清算します。サイトの追加は新規予約としてお手続きください。日程の変更は、予約完了メールに記載のリンク、または会員の方はマイページからできます。サイト数を減らす場合は、一度キャンセルしてから取り直してください。
+</p>
+<p class="mt-2 text-sm">
+  <a href="/reservation-guide/#change" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">詳しくは予約ガイドへ →</a>
+</p>`,
+			},
+			{
+				id: "wrong-date",
+				q: "予約日を間違えた。",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  気づいた時点で、予約完了メールに記載のリンク、または会員の方はマイページから、正しい日程に変更してください。オンラインの操作期限を過ぎていて手続きできない場合のみ、お電話かメールでご連絡ください。
+</p>
+<p class="mt-2 text-sm">
+  <a href="/reservation-guide/#change" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">キャンセルのやり方を見る →</a>
+</p>`,
+			},
+			{
+				id: "group",
+				q: "団体・撮影・貸し切りは可能ですか？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  「団体・貸し切り・撮影会プラン」があります。ご予約ページからどうぞ。
+</p>`,
+			},
+		],
+	},
+	{
+		id: "checkin",
+		label: "チェックイン・アウト",
+		heading: "チェックイン・チェックアウト",
+		items: [
+			{
+				id: "times",
+				q: "チェックイン・チェックアウトの時間は？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  チェックイン 12:00〜17:00 / チェックアウト 12:00 です。17時以降のチェックイン・合流・夜間の出入りはできません。
+</p>`,
+			},
+			{
+				id: "early-checkin",
+				q: "アーリーチェックインはできますか？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  エリアに余裕がある場合に限り、9:00から無料でアーリーチェックインが可能です。前日までに<a href="/contact/" class="underline underline-offset-2 transition hover:text-zinc-900">お問い合わせフォーム</a>またはお電話よりご連絡ください。
+</p>`,
+			},
+			{
+				id: "going-out",
+				q: "チェックイン後の外出はできますか？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  6:00〜18:00まで自由に出入りいただけます。<strong class="text-zinc-800">門限18:00</strong>以降は車の移動ができません。お風呂や買い物は早めにお願いします。
+</p>`,
+			},
+			{
+				id: "early-checkout",
+				q: "早朝にチェックアウトしたい。",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  6:00前のチェックアウトはできません（ディープフォレストは7:00前不可）。事前にご相談ください。
+</p>`,
+			},
+			{
+				id: "daycamp-extend",
+				q: "デイキャンプで延長利用したい。",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  空きがあれば宿泊からの延長は日帰り料金で18:00まで可能です。18時以降は宿泊料金、翌6:00まで出入り不可となります。
+</p>`,
+			},
+		],
+	},
+	{
+		id: "site-selection",
+		label: "初めての方・サイト選び",
+		heading: "初めての方・サイト選び",
+		items: [
+			{
+				id: "first-time",
+				q: "キャンプが初めてですが大丈夫ですか？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  大丈夫です。ライトフォレストはおいら家族が敷地内に常駐しており、初心者・女性・ファミリーも安心してご利用いただけます。売店で薪・焚き火台・斧などのレンタル・販売もあります（食材のみご持参ください）。まずはオートサイト（車横付け可）がおすすめです。
+</p>`,
+			},
+			{
+				id: "which-site",
+				q: "どのサイトを選んだらよいかわからない。",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">ざっくりの目安は以下の通りです。</p>
+<ul class="mt-3 space-y-2 text-sm leading-loose text-zinc-600">
+  <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400"></span><span><strong class="text-zinc-800">ファミリー・グループ（4人以上・車あり）</strong> → ライトフォレストのオートサイト L・LL・XL</span></li>
+  <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400"></span><span><strong class="text-zinc-800">カップル・2〜3人</strong> → ライトフォレストのオート M・Sサイズ</span></li>
+  <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400"></span><span><strong class="text-zinc-800">ソロで静かに過ごしたい</strong> → ライトフォレストのSSサイズ（ソロ区画）</span></li>
+  <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400"></span><span><strong class="text-zinc-800">ソロで直火・野営感</strong> → ライトフォレストのソロ区画3〜11番（直火OK）または区画C</span></li>
+  <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400"></span><span><strong class="text-zinc-800">愛犬と一緒に</strong> → ライトフォレストは全サイト犬連れOK。柵の中でノーリードにしたいなら<a href="/sites/dogrun/" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">貸切ドッグランサイト</a>（1日1組限定）</span></li>
+  <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400"></span><span><strong class="text-zinc-800">車を持たない</strong> → 電車キャンパー歓迎プラン（送迎無料）</span></li>
+  <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400"></span><span><strong class="text-zinc-800">ブッシュクラフト・上級者・静寂重視</strong> → ディープフォレスト（18歳以上限定）</span></li>
+</ul>
+<p class="mt-3 text-sm text-zinc-600">迷う場合はお電話でご相談ください。</p>
+<p class="mt-2 text-sm">
+  <a href="/light-guide/" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">ライトフォレスト利用案内</a>
+  <span class="mx-1 text-zinc-400">／</span>
+  <a href="/deep-guide/" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">ディープフォレスト利用案内</a>
+</p>`,
+			},
+			{
+				id: "no-gear",
+				q: "手ぶらキャンプはできますか？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">可能です（食材のみご持参ください）。</p>`,
+			},
+			{
+				id: "staff",
+				q: "管理人はいますか？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  ライトフォレストにはおいら家族が敷地内に常駐しています。ディープフォレストは無人管理で、受付はライトフォレストで行います。
+</p>`,
+			},
+		],
+	},
+	{
+		id: "light-forest",
+		label: "ライトフォレスト",
+		heading: "ライトフォレスト",
+		items: [
+			{
+				id: "light-field",
+				q: "ライトフォレストはどんなフィールドですか？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  コナラ・クヌギの明るい落葉広葉樹林に囲まれたキャンプサイト。管理人家族が敷地内に常駐しており、初心者・女性・ファミリーも安心です。敷地18,000坪・収容約120人。栃木県那須烏山市にあります。
+</p>
+<p class="mt-2 text-sm">
+  <a href="/light-guide/" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">ライトフォレスト利用案内 →</a>
+</p>`,
+			},
+			{
+				id: "light-sites",
+				q: "どんなサイトがありますか？",
+				ldName: "ライトフォレストにはどんなサイトがありますか？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  オートサイト（車乗り入れ可）、区画サイト（近隣駐車場）、ソロ区画、ドッグランサイト、区画外（お好きな場所でキャンプ）があります。
+</p>`,
+			},
+			{
+				id: "light-fire",
+				q: "直火はできますか？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  直火エリアで可能です。区画サイトC・ソロ区画3〜11番が直火エリア、オートサイトは焚き火台使用となります。
+</p>`,
+			},
+		],
+	},
+	{
+		id: "deep-forest",
+		label: "ディープフォレスト",
+		heading: "ディープフォレスト",
+		items: [
+			{
+				id: "deep-field",
+				q: "ディープフォレストはどんなフィールドですか？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  樹齢80年のスギ・ヒノキの針葉樹林、敷地14,000坪（東京ドームほぼ同サイズ）。野営・ブッシュクラフト・静寂を求める上級者向けフィールドです。ライトフォレストから車で約7分。
+</p>
+<p class="mt-2 text-sm">
+  <a href="/deep-guide/" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">ディープフォレスト利用案内 →</a>
+</p>`,
+			},
+			{
+				id: "deep-who",
+				q: "誰でも利用できますか？",
+				ldName: "ディープフォレストは誰でも利用できますか？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  <strong class="text-zinc-800">18歳以上限定</strong>です。1グループ3名まで（4名以上のグループ利用は不可）。入場時に年齢確認書類（免許証・パスポート等）のご提示が必要です。未成年の方はいかなる理由でも入場できません。
+</p>`,
+			},
+			{
+				id: "deep-facilities",
+				q: "設備は？",
+				ldName: "ディープフォレストの設備は？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  <strong class="text-zinc-800">仮設トイレのみ。水道・電源・売店はありません</strong>。自己完結型のフィールドです。飲料水・必要物資はライトフォレストで調達してください。
+</p>`,
+			},
+			{
+				id: "deep-location",
+				q: "場所はどこですか？",
+				ldName: "ディープフォレストの場所はどこですか？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  場所は非公開です。ライトフォレスト管理棟で受付・案内を受けた後、現地へ移動していただきます。
+</p>`,
+			},
+			{
+				id: "deep-fire",
+				q: "直火はできますか？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  直火エリアで可能です。ただし火消し壺の持参が必須（受付で500円レンタルあり）、立木の枯れ枝・積んである丸太の使用は厳禁です。
+</p>`,
+			},
+		],
+	},
+	{
+		id: "facilities",
+		label: "設備・売店",
+		heading: "設備・売店",
+		note: `<p class="mb-5 text-sm leading-loose text-zinc-500">
+  設備とルールの全体は<a href="/light-guide/" class="underline underline-offset-4 text-[color:var(--light-accent)] transition hover:opacity-80">ライトフォレスト 利用案内</a>にまとめています。
+</p>`,
+		items: [
+			{
+				id: "toilet",
+				q: "トイレは？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  ライトフォレストは水洗・洋式の新築トイレ（男女各2室）があります。ディープフォレスト内にはトイレがないため、ライトフォレスト管理棟の水洗トイレをご利用ください。
+</p>`,
+			},
+			{
+				id: "shower",
+				q: "シャワーはありますか？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  <strong class="text-zinc-800">ありません</strong>。車で10分以内の範囲に日帰り温泉が複数あるため、そちらをご利用ください。
+</p>
+<p class="mt-2 text-sm">
+  <a href="/map/?view=bath" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">周辺案内へ →</a>
+</p>`,
+			},
+			{
+				id: "water",
+				q: "水道・流しはありますか？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  ライトフォレストに2か所（うち給湯器付き1か所）あります。すべて水道水（飲用可）です。<br />
+  洗剤・油・残飯は流さないでください。ディープフォレストに水道・流しはありません。
+</p>`,
+			},
+			{
+				id: "power",
+				q: "AC電源は使えますか？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  AC電源は有料オプション・要予約でご利用いただけます。消費電力600Wまで（ブレーカーが落ちた場合はセルフ復旧）。
+</p>
+<p class="mt-2 text-sm leading-loose text-zinc-600">
+  対応サイト：オート1・2・3・4・17・20・32・33・34・35・36番／オートE／ドッグランサイト
+</p>
+<p class="mt-2 text-sm leading-loose text-zinc-600">
+  上記以外のサイト（オートA・Bなど）も、ご相談いただければ対応できる場合があります。<br />
+  事前にお問い合わせいただくか、当日ご相談ください。
+</p>
+<p class="mt-2 text-sm leading-loose text-zinc-600">
+  ディープフォレストにAC電源はありません。
+</p>`,
+			},
+			{
+				id: "wifi",
+				q: "Wi-Fi・携帯電波は？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  ライトフォレストでは無料Wi-Fiが利用可能です（ソロ区画・オートA・Bはエリア外）。
+</p>
+<p class="mt-2 text-sm leading-loose text-zinc-600">
+  携帯電波は、ライトフォレストではドコモ・au・ソフトバンクとも問題なく入ります（楽天モバイルはやや弱め）。<br />
+  ディープフォレストは、広場周辺でauは問題なし、ドコモ・ソフトバンクはやや弱め。山の上のテンバは3社とも入ります。楽天モバイルはディープフォレスト全域で圏外です。
+</p>`,
+			},
+			{
+				id: "shop-hours",
+				q: "売店の営業時間は？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">9:00〜17:30（季節延長営業あり）。</p>`,
+			},
+			{
+				id: "shop-items",
+				q: "何が買えますか？",
+				ldName: "売店では何が買えますか？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  生ビール・缶ビール・ソフトドリンク・薪・炭・焚き火台・斧・ログスプリッターなど。食材の販売はありません。
+</p>`,
+			},
+			{
+				id: "firewood",
+				q: "薪は買えますか？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  はい。おいらが自家生産した薪を割安で販売しています。
+</p>
+<p class="mt-2 text-sm">
+  <a href="/firewood/" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">おいらの薪 →</a>
+</p>`,
+			},
+		],
+	},
+	{
+		id: "rules",
+		label: "場内のルール",
+		heading: "場内のルール",
+		items: [
+			{
+				id: "pets",
+				q: "ペットは連れて来られますか？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  ライトフォレストは全サイト犬連れで利用できます。犬の頭数・大きさ・犬種の制限はなく、料金はかかりません。ライトフォレストのドッグランサイトはノーリードOK、その他のサイトはリード必須です。ふんの処理・管理は飼い主の責任でお願いします。ディープフォレストもペット可です（運用はライトフォレストと同じ・リード必須）。
+</p>`,
+			},
+			{
+				id: "bbq",
+				q: "BBQはできますか？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  できます。ライトフォレストは全サイトで焚き火台使用可。直火は直火エリアで可能です。食材はお持ち込みください。
+</p>`,
+			},
+			{
+				id: "fireworks",
+				q: "花火はできますか？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  <strong class="text-zinc-800">打ち上げ花火は両フィールドとも禁止</strong>です。手持ち花火はできます。
+</p>`,
+			},
+			{
+				id: "trash",
+				q: "ゴミは捨てられますか？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  灰以外はすべてお持ち帰りください。灰は指定のペール缶（ライトフォレスト薪小屋の黒ペール缶）に蓋をして入れてください。
+</p>`,
+			},
+			{
+				id: "light-rules",
+				q: "ライトフォレストの禁止事項は？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  スピーカー・アイドリング・打ち上げ花火・発電機・21時以降の談笑・楽器の演奏・深夜早朝のバトニングは禁止です。
+</p>`,
+			},
+			{
+				id: "generator",
+				q: "発電機は使えますか？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  <strong class="text-zinc-800">両フィールドとも使用禁止</strong>です。
+</p>`,
+			},
+		],
+	},
+	{
+		id: "access",
+		label: "アクセス",
+		heading: "アクセス・周辺",
+		items: [
+			{
+				id: "location",
+				q: "場所はどこですか？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  栃木県那須烏山市、東京から車で約2時間です。
+</p>
+<p class="mt-2 text-sm">
+  <a href="/access/" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">アクセスページ →</a>
+</p>`,
+			},
+			{
+				id: "car-navi",
+				q: "おいらの森がカーナビに出てこない。",
+				ldText: "ライトフォレストは「栃木県那須烏山市福岡1047」でご検索ください。ディープフォレストは場所非公開のため、ライトフォレストで受付後に現地案内します。それでも到達できない場合はお電話ください。",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">以下の住所でご検索ください。</p>
+<ul class="mt-3 space-y-2 text-sm leading-loose text-zinc-600">
+  <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400"></span><span><strong class="text-zinc-800">ライトフォレスト</strong>：栃木県那須烏山市福岡1047</span></li>
+  <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400"></span><span><strong class="text-zinc-800">ディープフォレスト</strong>：場所非公開のため、ライトフォレストで受付後に現地案内</span></li>
+</ul>
+<p class="mt-3 text-sm text-zinc-600">それでも到達できない場合はお電話ください。</p>`,
+			},
+			{
+				id: "train",
+				q: "電車で行けますか？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  JR烏山線「鴻野山駅」が最寄りです。電車キャンパー向けに駅送迎があります。送迎をご希望の場合は、必ず「電車プラン」でお申し込みください。対応時刻は<a href="/access/#train" class="underline underline-offset-2 transition hover:text-zinc-900">アクセスページ</a>をご覧ください。
+</p>
+<p class="mt-2 text-sm leading-loose text-zinc-600">
+  烏山線は路線メンテナンスのため運休する場合があり、代替輸送はありません。お越しの際は運行状況をご確認ください。
+</p>`,
+			},
+			{
+				id: "large-vehicle",
+				q: "大型車・トレーラーで利用できますか？ バリアフリーに対応していますか？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  全長6m以上のお車、トレーラーでお越しの場合は、事前にご確認ください。<br />
+  バリアフリーには対応していません（段差・未舗装路があります）。
+</p>`,
+			},
+			{
+				id: "studless",
+				q: "スタッドレスタイヤは必要ですか？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  ふだんは必要ありません。栃木県は冬も空気が乾いていて、雪が降らなければ道路が凍ることはありません。おいらもノーマルタイヤです。
+</p>`,
+			},
+			{
+				id: "onsen",
+				q: "周辺の温泉は？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">車で10分以内に複数の日帰り温泉があります。</p>
+<p class="mt-2 text-sm">
+  <a href="/map/?view=bath" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">周辺案内 →</a>
+</p>`,
+			},
+		],
+	},
+	{
+		id: "season",
+		label: "天気・季節・営業日",
+		heading: "天気・季節・営業日",
+		items: [
+			{
+				id: "rain",
+				q: "雨でも営業していますか？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  基本的に営業します。台風等の荒天時は事前にお知らせします。
+</p>`,
+			},
+			{
+				id: "snow",
+				q: "冬は雪が積もりますか？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  「那須」とつくので雪が多いと思われがちですが、目安は「東京で積もったら、ここも積もる」くらいです。2024〜25年の冬は8cm、2025〜26年の冬は10cmほど積もりましたが、どちらもお昼には溶けました。
+</p>`,
+			},
+			{
+				id: "snow-day",
+				q: "雪の日も営業していますか？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  いつもどおり営業しています。電車プランの駅送迎も、電車が動いていればお迎えにあがります。キャンセルの決まりも変わりません。
+</p>`,
+			},
+			{
+				id: "closed-days",
+				q: "臨時休業はありますか？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  基本は年中無休ですが、ご予約がない日は臨時休業とする場合があります。<br />
+  当日のご来場をお考えの場合は、事前にお電話ください。<br />
+  当日のご予約はお電話で承ります。
+</p>`,
+			},
+		],
+	},
+	{
+		id: "nature",
+		label: "自然・生き物",
+		heading: "自然・生き物",
+		items: [
+			{
+				id: "bear",
+				q: "熊（クマ）は出ますか？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  生息していません。ニホンジカもいないため、シカについて回るヤマビルもいません。野犬もいません。危険な動物の少ない里山です。
+</p>`,
+			},
+			{
+				id: "hornet",
+				q: "スズメバチは？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  います。森では当たり前の存在です。見つけ次第こちらで巣を駆除していますが、飛んでいるのを見かけたら、払ったり大きな音を立てたりせず、静かに距離を取ってください。黒い服や甘い匂いに寄る性質があります。
+</p>`,
+			},
+			{
+				id: "snake",
+				q: "蛇はいますか？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  います。森の中では当たり前の存在です。見かけても慌てず、距離を取って行動してください。
+</p>`,
+			},
+			{
+				id: "boar",
+				q: "イノシシは出ますか？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  山にはいますが、キャンプサイトまで出てくることはほとんどありません。
+</p>`,
+			},
+			{
+				id: "insects",
+				q: "虫はいますか？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  います。森ならではの昆虫に出会えるのが魅力のひとつです。昆虫採集もOKですが、持ち帰りはご自身で飼育できる範囲までにしてください。
+</p>`,
+			},
+			{
+				id: "food",
+				q: "食料の管理で気をつけることは？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  ノラネコがいるので、食料は夜のうちにクーラーボックスや車へしまってください。日中はカラスが食料を漁ることがあります。テーブルに出したままにしないのが確実です。
+</p>`,
+			},
+			{
+				id: "flying-squirrel",
+				q: "夜、何かがギャーギャー鳴いています。",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  ムササビです。夜行性で、木から木へ滑空します。危険はありません。森に泊まっている実感がいちばん湧く声かもしれません。
+</p>`,
+			},
+			{
+				id: "squirrel",
+				q: "会えたらうれしい動物は？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  ニホンリスです。見かけたらラッキーだと思ってください。
+</p>`,
+			},
+			{
+				id: "firefly",
+				q: "蛍は見られますか？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  見られます。ライトフォレストの谷で<strong class="text-zinc-800">6月頃</strong>にゲンジボタルが飛びます。毎年「ホタル観賞会」イベントも開催しています。
+</p>`,
+			},
+		],
+	},
+	{
+		id: "others",
+		label: "忘れ物・問い合わせ",
+		heading: "忘れ物・問い合わせ",
+		items: [
+			{
+				id: "lost-item",
+				q: "キャンプ場に忘れ物をしてしまいました。どうすればいいですか？",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  <a href="/contact/" class="underline underline-offset-2 transition hover:text-zinc-900">お問い合わせフォーム</a>またはお電話でご連絡ください。
+  場内で見つかった忘れ物は<strong class="text-zinc-800">3ヶ月間保管</strong>しています。
+  ご宿泊日・サイト名・お忘れ物の内容をお知らせいただければ保管状況をお調べします。
+</p>
+<p class="mt-2 text-sm leading-loose text-zinc-600">
+  返送をご希望の場合は<strong class="text-zinc-800">着払い</strong>でお送りします。
+  3ヶ月を過ぎたものは処分しますので、お早めにご連絡ください。
+</p>
+<p class="mt-2 text-sm leading-loose text-zinc-600">
+  ※こちらから個別にご連絡することはありません（プライバシー配慮のため）。<br />
+  ※食品・飲料など衛生上問題があるものは当日中に処分します。
+</p>`,
+			},
+			{
+				id: "contact",
+				q: "問い合わせ先は？",
+				ldText: "TEL: 050-3647-1047 / Mail: oira@oiranomori.jp / お問い合わせフォーム: https://oiranomori.jp/contact/",
+				body: `<p class="mt-3 text-sm leading-loose text-zinc-600">
+  TEL: <a href="tel:05036471047" class="underline underline-offset-2 transition hover:text-zinc-900">050-3647-1047</a><br />
+  Mail: <a href="mailto:oira@oiranomori.jp" class="underline underline-offset-2 transition hover:text-zinc-900">oira@oiranomori.jp</a>
+</p>
+<p class="mt-2 text-sm">
+  <a href="/contact/" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">お問い合わせフォーム →</a>
+</p>`,
+			},
+		],
+	},
 ];
+
+// 旧カテゴリのアンカー（他ページ・外部からの /faq/#〜）を新しいカテゴリへ
+const aliases: Record<string, string> = { "facility-rules": "facilities", shop: "facilities" };
+
+// 構造化データの text：本文からタグを外す（リンクだけの段落は除く）
+const toText = (html: string) =>
+	html
+		.replace(/<p class="mt-2 text-sm">[\s\S]*?<\/p>/g, "")
+		.replace(/<br\s*\/?>/g, "")
+		.replace(/<[^>]+>/g, "")
+		.replace(/\s*\n\s*/g, "")
+		.replace(/&amp;/g, "&")
+		.trim();
+
+// 「直火」を構造化データに入れない（CLAUDE.md §2 直火の扱い・SEO 構造タグの絶対ライン）
+const ldItems = categories
+	.flatMap((c) => c.items)
+	.filter((it) => !/直火/.test(it.q + it.body))
+	.map((it) => ({
+		"@type": "Question",
+		name: it.ldName ?? it.q,
+		acceptedAnswer: { "@type": "Answer", text: it.ldText ?? toText(it.body) },
+	}));
 ---
 
 <PageLayout
@@ -23,63 +634,7 @@ const categories = [
   <script is:inline type="application/ld+json" slot="head" set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    "mainEntity": [
-      { "@type": "Question", "name": "予約はどこからできますか？", "acceptedAnswer": { "@type": "Answer", "text": "当HPの予約ボタン、または楽天トラベルキャンプからご予約いただけます。会員登録（無料）をすると、次回以降の入力省略・複数プラン同時予約・ポイント付与などの特典があります。" } },
-      { "@type": "Question", "name": "当日予約はできますか？", "acceptedAnswer": { "@type": "Answer", "text": "サイトに空きがあれば、お電話のみで当日受付いたします。ただし料金は当日料金となり、HP表示の料金とは異なります。事前のご予約をおすすめします。TEL: 050-3647-1047" } },
-      { "@type": "Question", "name": "予約の内容を変更したい。", "acceptedAnswer": { "@type": "Answer", "text": "人数・車の台数はオンライン操作不要で、当日現地で清算します。サイトの追加は新規予約としてお手続きください。日程の変更は、予約完了メールに記載のリンク、または会員の方はマイページからできます。サイト数を減らす場合は、一度キャンセルしてから取り直してください。" } },
-      { "@type": "Question", "name": "キャンセルしたい。", "acceptedAnswer": { "@type": "Answer", "text": "ご自身のオンライン手続きで完結します。予約完了メールに記載のリンクから、または会員の方はマイページから手続きできます。キャンセル料は当日のキャンセルも無料です。連絡なく来場されない無断キャンセルのみ、ご予約料金の100%を申し受けます。楽天トラベルキャンプで予約した場合は、楽天側の画面で手続きしてください。" } },
-      { "@type": "Question", "name": "予約日を間違えた。", "acceptedAnswer": { "@type": "Answer", "text": "気づいた時点で、予約完了メールに記載のリンク、または会員の方はマイページから、正しい日程に変更してください。オンラインの操作期限を過ぎていて手続きできない場合のみ、お電話かメールでご連絡ください。" } },
-      { "@type": "Question", "name": "支払い方法は？ キャッシュレス決済は使えますか？", "acceptedAnswer": { "@type": "Answer", "text": "お支払いは現地のみです（事前のオンライン決済はありません）。クレジットカード、電子マネー（交通系IC・iD・QUICPay）、QRコード決済（PayPay・楽天ペイ・au PAY・d払い・メルペイ 等）、現金に対応しています。" } },
-      { "@type": "Question", "name": "チェックイン・チェックアウトの時間は？", "acceptedAnswer": { "@type": "Answer", "text": "チェックイン 12:00〜17:00 / チェックアウト 12:00 です。17時以降のチェックイン・合流・夜間の出入りはできません。" } },
-      { "@type": "Question", "name": "アーリーチェックインはできますか？", "acceptedAnswer": { "@type": "Answer", "text": "エリアに余裕がある場合に限り、9:00から無料でアーリーチェックインが可能です。前日までにお問い合わせフォームまたはお電話よりご連絡ください。" } },
-      { "@type": "Question", "name": "早朝にチェックアウトしたい。", "acceptedAnswer": { "@type": "Answer", "text": "6:00前のチェックアウトはできません（ディープフォレストは7:00前不可）。事前にご相談ください。" } },
-      { "@type": "Question", "name": "チェックイン後の外出はできますか？", "acceptedAnswer": { "@type": "Answer", "text": "6:00〜18:00まで自由に出入りいただけます。門限18:00以降は車の移動ができません。お風呂や買い物は早めにお願いします。" } },
-      { "@type": "Question", "name": "デイキャンプで延長利用したい。", "acceptedAnswer": { "@type": "Answer", "text": "空きがあれば宿泊からの延長は日帰り料金で18:00まで可能です。18時以降は宿泊料金、翌6:00まで出入り不可となります。" } },
-      { "@type": "Question", "name": "キャンプが初めてですが大丈夫ですか？", "acceptedAnswer": { "@type": "Answer", "text": "大丈夫です。ライトフォレストはおいら家族が敷地内に常駐しており、初心者・女性・ファミリーも安心してご利用いただけます。売店で薪・焚き火台・斧などのレンタル・販売もあります。まずはオートサイト（車横付け可）がおすすめです。" } },
-      { "@type": "Question", "name": "シャワーはありますか？", "acceptedAnswer": { "@type": "Answer", "text": "ありません。車で10分以内の範囲に日帰り温泉が複数あるため、そちらをご利用ください。" } },
-      { "@type": "Question", "name": "トイレは？", "acceptedAnswer": { "@type": "Answer", "text": "ライトフォレストは水洗・洋式の新築トイレ（男女各2室）があります。ディープフォレスト内にはトイレがないため、ライトフォレスト管理棟の水洗トイレをご利用ください。" } },
-      { "@type": "Question", "name": "水道・流しはありますか？", "acceptedAnswer": { "@type": "Answer", "text": "ライトフォレストに2か所（うち給湯器付き1か所）あります。すべて水道水（飲用可）です。洗剤・油・残飯は流さないでください。ディープフォレストに水道・流しはありません。" } },
-      { "@type": "Question", "name": "Wi-Fi・携帯電波は？", "acceptedAnswer": { "@type": "Answer", "text": "ライトフォレストでは無料Wi-Fiが利用可能です（ソロ区画・オートA・Bはエリア外）。携帯電波は、ライトフォレストではドコモ・au・ソフトバンクとも問題なく入ります（楽天モバイルはやや弱め）。ディープフォレストは、広場周辺でauは問題なし、ドコモ・ソフトバンクはやや弱め。山の上のテンバは3社とも入ります。楽天モバイルはディープフォレスト全域で圏外です。" } },
-      { "@type": "Question", "name": "AC電源は使えますか？", "acceptedAnswer": { "@type": "Answer", "text": "AC電源は有料オプション・要予約でご利用いただけます。消費電力600Wまで（ブレーカーが落ちた場合はセルフ復旧）。対応サイト：オート1・2・3・4・17・20・32・33・34・35・36番／オートE／ドッグランサイト。上記以外のサイト（オートA・Bなど）も、ご相談いただければ対応できる場合があります。事前にお問い合わせいただくか、当日ご相談ください。ディープフォレストにAC電源はありません。" } },
-      { "@type": "Question", "name": "発電機は使えますか？", "acceptedAnswer": { "@type": "Answer", "text": "両フィールドとも使用禁止です。" } },
-      { "@type": "Question", "name": "花火はできますか？", "acceptedAnswer": { "@type": "Answer", "text": "打ち上げ花火は両フィールドとも禁止です。手持ち花火はできます。" } },
-      { "@type": "Question", "name": "ライトフォレストの禁止事項は？", "acceptedAnswer": { "@type": "Answer", "text": "スピーカー・アイドリング・打ち上げ花火・発電機・21時以降の談笑・楽器の演奏・深夜早朝のバトニングは禁止です。" } },
-      { "@type": "Question", "name": "ゴミは捨てられますか？", "acceptedAnswer": { "@type": "Answer", "text": "灰以外はすべてお持ち帰りください。灰は指定のペール缶（ライトフォレスト薪小屋の黒ペール缶）に蓋をして入れてください。" } },
-      { "@type": "Question", "name": "ペットは連れて来られますか？", "acceptedAnswer": { "@type": "Answer", "text": "ライトフォレストは全サイト犬連れで利用できます。犬の頭数・大きさ・犬種の制限はなく、料金はかかりません。ライトフォレストのドッグランサイトはノーリードOK、その他のサイトはリード必須です。ふんの処理・管理は飼い主の責任でお願いします。ディープフォレストもペット可です（運用はライトフォレストと同じ・リード必須）。" } },
-      { "@type": "Question", "name": "ライトフォレストはどんなフィールドですか？", "acceptedAnswer": { "@type": "Answer", "text": "コナラ・クヌギの明るい落葉広葉樹林に囲まれたキャンプサイト。管理人家族が敷地内に常駐しており、初心者・女性・ファミリーも安心です。敷地18,000坪・収容約120人。栃木県那須烏山市にあります。" } },
-      { "@type": "Question", "name": "ライトフォレストにはどんなサイトがありますか？", "acceptedAnswer": { "@type": "Answer", "text": "オートサイト（車乗り入れ可）、区画サイト（近隣駐車場）、ソロ区画、ドッグランサイト、区画外（お好きな場所でキャンプ）があります。" } },
-      { "@type": "Question", "name": "ディープフォレストはどんなフィールドですか？", "acceptedAnswer": { "@type": "Answer", "text": "樹齢80年のスギ・ヒノキの針葉樹林、敷地14,000坪。野営・ブッシュクラフト・静寂を求める上級者向けフィールドです。ライトフォレストから車で約7分。" } },
-      { "@type": "Question", "name": "ディープフォレストは誰でも利用できますか？", "acceptedAnswer": { "@type": "Answer", "text": "18歳以上限定です。1グループ3名まで（4名以上のグループ利用は不可）。入場時に年齢確認書類（免許証・パスポート等）のご提示が必要です。未成年の方はいかなる理由でも入場できません。" } },
-      { "@type": "Question", "name": "ディープフォレストの設備は？", "acceptedAnswer": { "@type": "Answer", "text": "仮設トイレのみ。水道・電源・売店はありません。自己完結型のフィールドです。飲料水・必要物資はライトフォレストで調達してください。" } },
-      { "@type": "Question", "name": "ディープフォレストの場所はどこですか？", "acceptedAnswer": { "@type": "Answer", "text": "場所は非公開です。ライトフォレスト管理棟で受付・案内を受けた後、現地へ移動していただきます。" } },
-      { "@type": "Question", "name": "売店の営業時間は？", "acceptedAnswer": { "@type": "Answer", "text": "9:00〜17:30（季節延長営業あり）。" } },
-      { "@type": "Question", "name": "薪は買えますか？", "acceptedAnswer": { "@type": "Answer", "text": "はい。おいらが自家生産した薪を割安で販売しています。" } },
-      { "@type": "Question", "name": "売店では何が買えますか？", "acceptedAnswer": { "@type": "Answer", "text": "生ビール・缶ビール・ソフトドリンク・薪・炭・焚き火台・斧・ログスプリッターなど。食材の販売はありません。" } },
-      { "@type": "Question", "name": "手ぶらキャンプはできますか？", "acceptedAnswer": { "@type": "Answer", "text": "可能です（食材のみご持参ください）。" } },
-      { "@type": "Question", "name": "場所はどこですか？", "acceptedAnswer": { "@type": "Answer", "text": "栃木県那須烏山市、東京から車で約2時間です。" } },
-      { "@type": "Question", "name": "おいらの森がカーナビに出てこない。", "acceptedAnswer": { "@type": "Answer", "text": "ライトフォレストは「栃木県那須烏山市福岡1047」でご検索ください。ディープフォレストは場所非公開のため、ライトフォレストで受付後に現地案内します。それでも到達できない場合はお電話ください。" } },
-      { "@type": "Question", "name": "大型車・トレーラーで利用できますか？ バリアフリーに対応していますか？", "acceptedAnswer": { "@type": "Answer", "text": "全長6m以上のお車、トレーラーでお越しの場合は、事前にご確認ください。バリアフリーには対応していません（段差・未舗装路があります）。" } },
-      { "@type": "Question", "name": "電車で行けますか？", "acceptedAnswer": { "@type": "Answer", "text": "JR烏山線「鴻野山駅」が最寄りです。電車キャンパー向けに駅送迎があります。送迎をご希望の場合は、必ず「電車プラン」でお申し込みください。烏山線は路線メンテナンスのため運休する場合があり、代替輸送はありません。お越しの際は運行状況をご確認ください。送迎の対応時刻はアクセスページをご覧ください: https://oiranomori.jp/access/#train" } },
-      { "@type": "Question", "name": "周辺の温泉は？", "acceptedAnswer": { "@type": "Answer", "text": "車で10分以内に複数の日帰り温泉があります。" } },
-      { "@type": "Question", "name": "熊（クマ）は出ますか？", "acceptedAnswer": { "@type": "Answer", "text": "生息していません。ニホンジカもいないため、シカについて回るヤマビルもいません。野犬もいません。危険な動物の少ない里山です。" } },
-      { "@type": "Question", "name": "スズメバチは？", "acceptedAnswer": { "@type": "Answer", "text": "います。見つけ次第こちらで巣を駆除していますが、飛んでいるのを見かけたら、払ったり大きな音を立てたりせず、静かに距離を取ってください。黒い服や甘い匂いに寄る性質があります。" } },
-      { "@type": "Question", "name": "イノシシは出ますか？", "acceptedAnswer": { "@type": "Answer", "text": "山にはいますが、キャンプサイトまで出てくることはほとんどありません。" } },
-      { "@type": "Question", "name": "夜、何かがギャーギャー鳴いています。", "acceptedAnswer": { "@type": "Answer", "text": "ムササビです。夜行性で、木から木へ滑空します。危険はありません。" } },
-      { "@type": "Question", "name": "食料の管理で気をつけることは？", "acceptedAnswer": { "@type": "Answer", "text": "ノラネコがいるので、食料は夜のうちにクーラーボックスや車へしまってください。日中はカラスが食料を漁ることがあります。" } },
-      { "@type": "Question", "name": "会えたらうれしい動物は？", "acceptedAnswer": { "@type": "Answer", "text": "ニホンリスです。見かけたらラッキーだと思ってください。" } },
-      { "@type": "Question", "name": "虫はいますか？", "acceptedAnswer": { "@type": "Answer", "text": "います。森ならではの昆虫に出会えるのが魅力のひとつです。昆虫採集もOKですが、持ち帰りはご自身で飼育できる範囲までにしてください。" } },
-      { "@type": "Question", "name": "蛇はいますか？", "acceptedAnswer": { "@type": "Answer", "text": "います。森の中では当たり前の存在です。見かけても慌てず、距離を取って行動してください。" } },
-      { "@type": "Question", "name": "蛍は見られますか？", "acceptedAnswer": { "@type": "Answer", "text": "見られます。ライトフォレストの谷で6月頃にゲンジボタルが飛びます。毎年「ホタル観賞会」イベントも開催しています。" } },
-      { "@type": "Question", "name": "管理人はいますか？", "acceptedAnswer": { "@type": "Answer", "text": "ライトフォレストにはおいら家族が敷地内に常駐しています。ディープフォレストは無人管理で、受付はライトフォレストで行います。" } },
-      { "@type": "Question", "name": "雨でも営業していますか？", "acceptedAnswer": { "@type": "Answer", "text": "基本的に営業します。台風等の荒天時は事前にお知らせします。" } },
-      { "@type": "Question", "name": "冬は雪が積もりますか？", "acceptedAnswer": { "@type": "Answer", "text": "「那須」とつくので雪が多いと思われがちですが、目安は「東京で積もったら、ここも積もる」くらいです。2024〜25年の冬は8cm、2025〜26年の冬は10cmほど積もりましたが、どちらもお昼には溶けました。" } },
-      { "@type": "Question", "name": "スタッドレスタイヤは必要ですか？", "acceptedAnswer": { "@type": "Answer", "text": "ふだんは必要ありません。栃木県は冬も空気が乾いていて、雪が降らなければ道路が凍ることはありません。おいらもノーマルタイヤです。" } },
-      { "@type": "Question", "name": "雪の日も営業していますか？", "acceptedAnswer": { "@type": "Answer", "text": "いつもどおり営業しています。電車プランの駅送迎も、電車が動いていればお迎えにあがります。キャンセルの決まりも変わりません。" } },
-      { "@type": "Question", "name": "臨時休業はありますか？", "acceptedAnswer": { "@type": "Answer", "text": "基本は年中無休ですが、ご予約がない日は臨時休業とする場合があります。当日のご来場をお考えの場合は、事前にお電話ください。当日のご予約はお電話で承ります。" } },
-      { "@type": "Question", "name": "団体・撮影・貸し切りは可能ですか？", "acceptedAnswer": { "@type": "Answer", "text": "「団体・貸し切り・撮影会プラン」があります。ご予約ページからどうぞ。" } },
-      { "@type": "Question", "name": "忘れ物をしてしまいました。どうすればいいですか？", "acceptedAnswer": { "@type": "Answer", "text": "お問い合わせフォームまたはお電話でご連絡ください。場内で見つかった忘れ物は3ヶ月間保管しています。ご宿泊日とサイト名、お忘れ物の内容を教えていただければ、保管状況をお調べします。返送をご希望の場合は、着払いでお送りします。3ヶ月を過ぎたものは処分しますので、お早めにご連絡ください。なお、こちらから個別にご連絡することはありません（プライバシー配慮のため）。食品・飲料など衛生上の問題があるものは、当日中に処分します。" } },
-      { "@type": "Question", "name": "問い合わせ先は？", "acceptedAnswer": { "@type": "Answer", "text": "TEL: 050-3647-1047 / Mail: oira@oiranomori.jp / お問い合わせフォーム: https://oiranomori.jp/contact/" } }
-    ]
+    "mainEntity": ldItems,
   })} />
 
   {/* ページヘッダー */}
@@ -90,597 +645,39 @@ const categories = [
       ご利用前に寄せられることの多いご質問をまとめました。
       より詳しい内容は各ページへのリンクをご確認ください。
     </p>
-    <nav class="mt-6 flex flex-wrap gap-3 text-sm" aria-label="カテゴリ目次">
-      {categories.map((cat) => (
-        <a
-          href={`#${cat.id}`}
-          class="rounded-full border border-zinc-300 px-4 py-1.5 text-zinc-600 transition hover:border-zinc-500 hover:text-zinc-800"
-        >
-          {cat.label}
-        </a>
-      ))}
-    </nav>
   </div>
 
-  {/* 予約・キャンセル */}
-  <section id="reservation" class="mb-14 scroll-mt-20">
-    <h2 class="mb-5 text-xl font-semibold text-zinc-800">予約・キャンセル</h2>
-    <div class="divide-y divide-zinc-100 border-y border-zinc-200">
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. 予約はどこからできますか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          当HPの予約ボタン、または楽天トラベルキャンプからご予約いただけます。会員登録（無料）をすると、次回以降の入力省略・複数プラン同時予約・ポイント付与などの特典があります。
-        </p>
-        <p class="mt-2 text-sm">
-          <a href="/reservation-guide/" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">詳しくは予約ガイドへ →</a>
-        </p>
+  <div class="faq-root" data-faq-root data-aliases={JSON.stringify(aliases)}>
+    {/* カテゴリのタブ（スクロールしても上に残る）。JS が無いときはページ内のリンクとして働く */}
+    <nav class="faq-tabs sticky top-0 z-40 -mx-4 mb-8 border-b border-zinc-200 bg-white/95 backdrop-blur sm:mx-0" aria-label="カテゴリ">
+      <div class="flex overflow-x-auto px-4 sm:px-0">
+        {categories.map((cat) => (
+          <a
+            href={`#${cat.id}`}
+            class="faq-tab whitespace-nowrap border-b-2 border-transparent px-3 py-3 text-sm text-zinc-500 transition hover:text-zinc-800"
+            data-faq-tab={cat.id}
+          >
+            {cat.label}
+          </a>
+        ))}
       </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. 当日予約はできますか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          サイトに空きがあれば、お電話のみで当日受付いたします。ただし料金は当日料金となり、HP表示の料金とは異なります。事前のご予約をおすすめします。
-        </p>
-        <p class="mt-2 text-sm text-zinc-600">
-          TEL: <a href="tel:05036471047" class="underline underline-offset-2 transition hover:text-zinc-900">050-3647-1047</a>
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. 予約の内容を変更したい。</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          人数・車の台数はオンライン操作不要で、当日現地で清算します。サイトの追加は新規予約としてお手続きください。日程の変更は、予約完了メールに記載のリンク、または会員の方はマイページからできます。サイト数を減らす場合は、一度キャンセルしてから取り直してください。
-        </p>
-        <p class="mt-2 text-sm">
-          <a href="/reservation-guide/#change" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">詳しくは予約ガイドへ →</a>
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. キャンセルしたい。</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          ご自身のオンライン手続きで完結します。入口は2つあり、<strong class="text-zinc-800">予約完了メールに記載のリンク</strong>から、または会員の方は<strong class="text-zinc-800">マイページ</strong>から手続きできます。お電話をいただく必要はありません。
-        </p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          キャンセル料は<strong class="text-zinc-800">当日のキャンセルも無料</strong>です。連絡なく来場されない無断キャンセルのみ、ご予約料金の100%を申し受けます。楽天トラベルキャンプで予約した場合は、楽天側の画面で手続きしてください。
-        </p>
-        <p class="mt-2 text-sm">
-          <a href="/reservation-guide/#change" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">キャンセルのやり方を見る →</a>
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. 予約日を間違えた。</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          気づいた時点で、予約完了メールに記載のリンク、または会員の方はマイページから、正しい日程に変更してください。オンラインの操作期限を過ぎていて手続きできない場合のみ、お電話かメールでご連絡ください。
-        </p>
-        <p class="mt-2 text-sm">
-          <a href="/reservation-guide/#change" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">キャンセルのやり方を見る →</a>
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. 支払い方法は？ キャッシュレス決済は使えますか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          お支払いは現地のみです（事前のオンライン決済はありません）。クレジットカード、電子マネー（交通系IC・iD・QUICPay）、QRコード決済（PayPay・楽天ペイ・au PAY・d払い・メルペイ 等）、現金に対応しています。
-        </p>
-        <p class="mt-2 text-sm">
-          <a href="/policy/" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">対応ブランドの詳細（特定商取引法表記）→</a>
-        </p>
-      </div>
-
-    </div>
-  </section>
-
-  {/* チェックイン・アウト */}
-  <section id="checkin" class="mb-14 scroll-mt-20">
-    <h2 class="mb-5 text-xl font-semibold text-zinc-800">チェックイン・チェックアウト</h2>
-    <div class="divide-y divide-zinc-100 border-y border-zinc-200">
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. チェックイン・チェックアウトの時間は？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          チェックイン 12:00〜17:00 / チェックアウト 12:00 です。17時以降のチェックイン・合流・夜間の出入りはできません。
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. アーリーチェックインはできますか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          エリアに余裕がある場合に限り、9:00から無料でアーリーチェックインが可能です。前日までに<a href="/contact/" class="underline underline-offset-2 transition hover:text-zinc-900">お問い合わせフォーム</a>またはお電話よりご連絡ください。
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. 早朝にチェックアウトしたい。</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          6:00前のチェックアウトはできません（ディープフォレストは7:00前不可）。事前にご相談ください。
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. チェックイン後の外出はできますか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          6:00〜18:00まで自由に出入りいただけます。<strong class="text-zinc-800">門限18:00</strong>以降は車の移動ができません。お風呂や買い物は早めにお願いします。
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. デイキャンプで延長利用したい。</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          空きがあれば宿泊からの延長は日帰り料金で18:00まで可能です。18時以降は宿泊料金、翌6:00まで出入り不可となります。
-        </p>
-      </div>
-
-    </div>
-  </section>
-
-  {/* サイト選び・初めての方 */}
-  <section id="site-selection" class="mb-14 scroll-mt-20">
-    <h2 class="mb-5 text-xl font-semibold text-zinc-800">サイト選び・初めての方</h2>
-    <div class="divide-y divide-zinc-100 border-y border-zinc-200">
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. どのサイトを選んだらよいかわからない。</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">ざっくりの目安は以下の通りです。</p>
-        <ul class="mt-3 space-y-2 text-sm leading-loose text-zinc-600">
-          <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400"></span><span><strong class="text-zinc-800">ファミリー・グループ（4人以上・車あり）</strong> → ライトフォレストのオートサイト L・LL・XL</span></li>
-          <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400"></span><span><strong class="text-zinc-800">カップル・2〜3人</strong> → ライトフォレストのオート M・Sサイズ</span></li>
-          <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400"></span><span><strong class="text-zinc-800">ソロで静かに過ごしたい</strong> → ライトフォレストのSSサイズ（ソロ区画）</span></li>
-          <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400"></span><span><strong class="text-zinc-800">ソロで直火・野営感</strong> → ライトフォレストのソロ区画3〜11番（直火OK）または区画C</span></li>
-          <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400"></span><span><strong class="text-zinc-800">愛犬と一緒に</strong> → ライトフォレストは全サイト犬連れOK。柵の中でノーリードにしたいなら<a href="/sites/dogrun/" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">貸切ドッグランサイト</a>（1日1組限定）</span></li>
-          <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400"></span><span><strong class="text-zinc-800">車を持たない</strong> → 電車キャンパー歓迎プラン（送迎無料）</span></li>
-          <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400"></span><span><strong class="text-zinc-800">ブッシュクラフト・上級者・静寂重視</strong> → ディープフォレスト（18歳以上限定）</span></li>
-        </ul>
-        <p class="mt-3 text-sm text-zinc-600">迷う場合はお電話でご相談ください。</p>
-        <p class="mt-2 text-sm">
-          <a href="/light-guide/" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">ライトフォレスト利用案内</a>
-          <span class="mx-1 text-zinc-400">／</span>
-          <a href="/deep-guide/" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">ディープフォレスト利用案内</a>
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. キャンプが初めてですが大丈夫ですか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          大丈夫です。ライトフォレストはおいら家族が敷地内に常駐しており、初心者・女性・ファミリーも安心してご利用いただけます。売店で薪・焚き火台・斧などのレンタル・販売もあります（食材のみご持参ください）。まずはオートサイト（車横付け可）がおすすめです。
-        </p>
-      </div>
-
-    </div>
-  </section>
-
-  {/* 設備・ルール */}
-  <section id="facility-rules" class="mb-14 scroll-mt-20">
-    <h2 class="mb-5 text-xl font-semibold text-zinc-800">設備・ルール</h2>
-    <p class="mb-5 text-sm leading-loose text-zinc-500">
-      設備とルールの全体は<a href="/light-guide/" class="underline underline-offset-4 text-[color:var(--light-accent)] transition hover:opacity-80">ライトフォレスト 利用案内</a>にまとめています。
-    </p>
-    <div class="divide-y divide-zinc-100 border-y border-zinc-200">
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. シャワーはありますか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          <strong class="text-zinc-800">ありません</strong>。車で10分以内の範囲に日帰り温泉が複数あるため、そちらをご利用ください。
-        </p>
-        <p class="mt-2 text-sm">
-          <a href="/map/?view=bath" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">周辺案内へ →</a>
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. トイレは？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          ライトフォレストは水洗・洋式の新築トイレ（男女各2室）があります。ディープフォレスト内にはトイレがないため、ライトフォレスト管理棟の水洗トイレをご利用ください。
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. 水道・流しはありますか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          ライトフォレストに2か所（うち給湯器付き1か所）あります。すべて水道水（飲用可）です。<br />
-          洗剤・油・残飯は流さないでください。ディープフォレストに水道・流しはありません。
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. Wi-Fi・携帯電波は？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          ライトフォレストでは無料Wi-Fiが利用可能です（ソロ区画・オートA・Bはエリア外）。
-        </p>
-        <p class="mt-2 text-sm leading-loose text-zinc-600">
-          携帯電波は、ライトフォレストではドコモ・au・ソフトバンクとも問題なく入ります（楽天モバイルはやや弱め）。<br />
-          ディープフォレストは、広場周辺でauは問題なし、ドコモ・ソフトバンクはやや弱め。山の上のテンバは3社とも入ります。楽天モバイルはディープフォレスト全域で圏外です。
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. AC電源は使えますか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          AC電源は有料オプション・要予約でご利用いただけます。消費電力600Wまで（ブレーカーが落ちた場合はセルフ復旧）。
-        </p>
-        <p class="mt-2 text-sm leading-loose text-zinc-600">
-          対応サイト：オート1・2・3・4・17・20・32・33・34・35・36番／オートE／ドッグランサイト
-        </p>
-        <p class="mt-2 text-sm leading-loose text-zinc-600">
-          上記以外のサイト（オートA・Bなど）も、ご相談いただければ対応できる場合があります。<br />
-          事前にお問い合わせいただくか、当日ご相談ください。
-        </p>
-        <p class="mt-2 text-sm leading-loose text-zinc-600">
-          ディープフォレストにAC電源はありません。
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. 発電機は使えますか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          <strong class="text-zinc-800">両フィールドとも使用禁止</strong>です。
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. 花火はできますか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          <strong class="text-zinc-800">打ち上げ花火は両フィールドとも禁止</strong>です。手持ち花火はできます。
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. ライトフォレストの禁止事項は？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          スピーカー・アイドリング・打ち上げ花火・発電機・21時以降の談笑・楽器の演奏・深夜早朝のバトニングは禁止です。
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. BBQはできますか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          できます。ライトフォレストは全サイトで焚き火台使用可。直火は直火エリアで可能です。食材はお持ち込みください。
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. ゴミは捨てられますか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          灰以外はすべてお持ち帰りください。灰は指定のペール缶（ライトフォレスト薪小屋の黒ペール缶）に蓋をして入れてください。
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. ペットは連れて来られますか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          ライトフォレストは全サイト犬連れで利用できます。犬の頭数・大きさ・犬種の制限はなく、料金はかかりません。ライトフォレストのドッグランサイトはノーリードOK、その他のサイトはリード必須です。ふんの処理・管理は飼い主の責任でお願いします。ディープフォレストもペット可です（運用はライトフォレストと同じ・リード必須）。
-        </p>
-      </div>
-
-    </div>
-  </section>
-
-  {/* ライトフォレスト */}
-  <section id="light-forest" class="mb-14 scroll-mt-20">
-    <h2 class="mb-5 text-xl font-semibold text-zinc-800">ライトフォレスト</h2>
-    <div class="divide-y divide-zinc-100 border-y border-zinc-200">
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. ライトフォレストはどんなフィールドですか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          コナラ・クヌギの明るい落葉広葉樹林に囲まれたキャンプサイト。管理人家族が敷地内に常駐しており、初心者・女性・ファミリーも安心です。敷地18,000坪・収容約120人。栃木県那須烏山市にあります。
-        </p>
-        <p class="mt-2 text-sm">
-          <a href="/light-guide/" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">ライトフォレスト利用案内 →</a>
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. どんなサイトがありますか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          オートサイト（車乗り入れ可）、区画サイト（近隣駐車場）、ソロ区画、ドッグランサイト、区画外（お好きな場所でキャンプ）があります。
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. 直火はできますか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          直火エリアで可能です。区画サイトC・ソロ区画3〜11番が直火エリア、オートサイトは焚き火台使用となります。
-        </p>
-      </div>
-
-    </div>
-  </section>
-
-  {/* ディープフォレスト */}
-  <section id="deep-forest" class="mb-14 scroll-mt-20">
-    <h2 class="mb-5 text-xl font-semibold text-zinc-800">ディープフォレスト</h2>
-    <div class="divide-y divide-zinc-100 border-y border-zinc-200">
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. ディープフォレストはどんなフィールドですか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          樹齢80年のスギ・ヒノキの針葉樹林、敷地14,000坪（東京ドームほぼ同サイズ）。野営・ブッシュクラフト・静寂を求める上級者向けフィールドです。ライトフォレストから車で約7分。
-        </p>
-        <p class="mt-2 text-sm">
-          <a href="/deep-guide/" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">ディープフォレスト利用案内 →</a>
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. 誰でも利用できますか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          <strong class="text-zinc-800">18歳以上限定</strong>です。1グループ3名まで（4名以上のグループ利用は不可）。入場時に年齢確認書類（免許証・パスポート等）のご提示が必要です。未成年の方はいかなる理由でも入場できません。
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. 直火はできますか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          直火エリアで可能です。ただし火消し壺の持参が必須（受付で500円レンタルあり）、立木の枯れ枝・積んである丸太の使用は厳禁です。
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. 設備は？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          <strong class="text-zinc-800">仮設トイレのみ。水道・電源・売店はありません</strong>。自己完結型のフィールドです。飲料水・必要物資はライトフォレストで調達してください。
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. 場所はどこですか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          場所は非公開です。ライトフォレスト管理棟で受付・案内を受けた後、現地へ移動していただきます。
-        </p>
-      </div>
-
-    </div>
-  </section>
-
-  {/* 薪・レンタル・売店 */}
-  <section id="shop" class="mb-14 scroll-mt-20">
-    <h2 class="mb-5 text-xl font-semibold text-zinc-800">薪・レンタル・売店</h2>
-    <div class="divide-y divide-zinc-100 border-y border-zinc-200">
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. 売店の営業時間は？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">9:00〜17:30（季節延長営業あり）。</p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. 薪は買えますか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          はい。おいらが自家生産した薪を割安で販売しています。
-        </p>
-        <p class="mt-2 text-sm">
-          <a href="/firewood/" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">おいらの薪 →</a>
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. 何が買えますか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          生ビール・缶ビール・ソフトドリンク・薪・炭・焚き火台・斧・ログスプリッターなど。食材の販売はありません。
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. 手ぶらキャンプはできますか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">可能です（食材のみご持参ください）。</p>
-      </div>
-
-    </div>
-  </section>
-
-  {/* アクセス・周辺 */}
-  <section id="access" class="mb-14 scroll-mt-20">
-    <h2 class="mb-5 text-xl font-semibold text-zinc-800">アクセス・周辺</h2>
-    <div class="divide-y divide-zinc-100 border-y border-zinc-200">
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. 場所はどこですか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          栃木県那須烏山市、東京から車で約2時間です。
-        </p>
-        <p class="mt-2 text-sm">
-          <a href="/access/" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">アクセスページ →</a>
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. おいらの森がカーナビに出てこない。</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">以下の住所でご検索ください。</p>
-        <ul class="mt-3 space-y-2 text-sm leading-loose text-zinc-600">
-          <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400"></span><span><strong class="text-zinc-800">ライトフォレスト</strong>：栃木県那須烏山市福岡1047</span></li>
-          <li class="flex items-start gap-2"><span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400"></span><span><strong class="text-zinc-800">ディープフォレスト</strong>：場所非公開のため、ライトフォレストで受付後に現地案内</span></li>
-        </ul>
-        <p class="mt-3 text-sm text-zinc-600">それでも到達できない場合はお電話ください。</p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. 大型車・トレーラーで利用できますか？ バリアフリーに対応していますか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          全長6m以上のお車、トレーラーでお越しの場合は、事前にご確認ください。<br />
-          バリアフリーには対応していません（段差・未舗装路があります）。
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. 電車で行けますか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          JR烏山線「鴻野山駅」が最寄りです。電車キャンパー向けに駅送迎があります。送迎をご希望の場合は、必ず「電車プラン」でお申し込みください。対応時刻は<a href="/access/#train" class="underline underline-offset-2 transition hover:text-zinc-900">アクセスページ</a>をご覧ください。
-        </p>
-        <p class="mt-2 text-sm leading-loose text-zinc-600">
-          烏山線は路線メンテナンスのため運休する場合があり、代替輸送はありません。お越しの際は運行状況をご確認ください。
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. 周辺の温泉は？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">車で10分以内に複数の日帰り温泉があります。</p>
-        <p class="mt-2 text-sm">
-          <a href="/map/?view=bath" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">周辺案内 →</a>
-        </p>
-      </div>
-
-    </div>
-  </section>
-
-  {/* 自然・生き物 */}
-  <section id="nature" class="mb-14 scroll-mt-20">
-    <h2 class="mb-5 text-xl font-semibold text-zinc-800">自然・生き物</h2>
-    <div class="divide-y divide-zinc-100 border-y border-zinc-200">
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. 熊（クマ）は出ますか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          生息していません。ニホンジカもいないため、シカについて回るヤマビルもいません。野犬もいません。危険な動物の少ない里山です。
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. スズメバチは？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          います。森では当たり前の存在です。見つけ次第こちらで巣を駆除していますが、飛んでいるのを見かけたら、払ったり大きな音を立てたりせず、静かに距離を取ってください。黒い服や甘い匂いに寄る性質があります。
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. イノシシは出ますか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          山にはいますが、キャンプサイトまで出てくることはほとんどありません。
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. 夜、何かがギャーギャー鳴いています。</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          ムササビです。夜行性で、木から木へ滑空します。危険はありません。森に泊まっている実感がいちばん湧く声かもしれません。
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. 食料の管理で気をつけることは？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          ノラネコがいるので、食料は夜のうちにクーラーボックスや車へしまってください。日中はカラスが食料を漁ることがあります。テーブルに出したままにしないのが確実です。
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. 会えたらうれしい動物は？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          ニホンリスです。見かけたらラッキーだと思ってください。
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. 虫はいますか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          います。森ならではの昆虫に出会えるのが魅力のひとつです。昆虫採集もOKですが、持ち帰りはご自身で飼育できる範囲までにしてください。
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. 蛇はいますか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          います。森の中では当たり前の存在です。見かけても慌てず、距離を取って行動してください。
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. 蛍は見られますか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          見られます。ライトフォレストの谷で<strong class="text-zinc-800">6月頃</strong>にゲンジボタルが飛びます。毎年「ホタル観賞会」イベントも開催しています。
-        </p>
-      </div>
-
-    </div>
-  </section>
-
-  {/* その他 */}
-  <section id="others" class="mb-14 scroll-mt-20">
-    <h2 class="mb-5 text-xl font-semibold text-zinc-800">その他</h2>
-    <div class="divide-y divide-zinc-100 border-y border-zinc-200">
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. 管理人はいますか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          ライトフォレストにはおいら家族が敷地内に常駐しています。ディープフォレストは無人管理で、受付はライトフォレストで行います。
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. 雨でも営業していますか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          基本的に営業します。台風等の荒天時は事前にお知らせします。
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. 冬は雪が積もりますか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          「那須」とつくので雪が多いと思われがちですが、目安は「東京で積もったら、ここも積もる」くらいです。2024〜25年の冬は8cm、2025〜26年の冬は10cmほど積もりましたが、どちらもお昼には溶けました。
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. スタッドレスタイヤは必要ですか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          ふだんは必要ありません。栃木県は冬も空気が乾いていて、雪が降らなければ道路が凍ることはありません。おいらもノーマルタイヤです。
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. 雪の日も営業していますか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          いつもどおり営業しています。電車プランの駅送迎も、電車が動いていればお迎えにあがります。キャンセルの決まりも変わりません。
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. 臨時休業はありますか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          基本は年中無休ですが、ご予約がない日は臨時休業とする場合があります。<br />
-          当日のご来場をお考えの場合は、事前にお電話ください。<br />
-          当日のご予約はお電話で承ります。
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. 団体・撮影・貸し切りは可能ですか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          「団体・貸し切り・撮影会プラン」があります。ご予約ページからどうぞ。
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. キャンプ場に忘れ物をしてしまいました。どうすればいいですか？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          <a href="/contact/" class="underline underline-offset-2 transition hover:text-zinc-900">お問い合わせフォーム</a>またはお電話でご連絡ください。
-          場内で見つかった忘れ物は<strong class="text-zinc-800">3ヶ月間保管</strong>しています。
-          ご宿泊日・サイト名・お忘れ物の内容をお知らせいただければ保管状況をお調べします。
-        </p>
-        <p class="mt-2 text-sm leading-loose text-zinc-600">
-          返送をご希望の場合は<strong class="text-zinc-800">着払い</strong>でお送りします。
-          3ヶ月を過ぎたものは処分しますので、お早めにご連絡ください。
-        </p>
-        <p class="mt-2 text-sm leading-loose text-zinc-600">
-          ※こちらから個別にご連絡することはありません（プライバシー配慮のため）。<br />
-          ※食品・飲料など衛生上問題があるものは当日中に処分します。
-        </p>
-      </div>
-
-      <div class="py-6">
-        <p class="font-semibold text-zinc-800">Q. 問い合わせ先は？</p>
-        <p class="mt-3 text-sm leading-loose text-zinc-600">
-          TEL: <a href="tel:05036471047" class="underline underline-offset-2 transition hover:text-zinc-900">050-3647-1047</a><br />
-          Mail: <a href="mailto:oira@oiranomori.jp" class="underline underline-offset-2 transition hover:text-zinc-900">oira@oiranomori.jp</a>
-        </p>
-        <p class="mt-2 text-sm">
-          <a href="/contact/" class="underline underline-offset-2 text-zinc-600 transition hover:text-zinc-900">お問い合わせフォーム →</a>
-        </p>
-      </div>
-
-    </div>
-  </section>
+    </nav>
+
+    {categories.map((cat) => (
+      <section id={cat.id} class="faq-panel mb-14 scroll-mt-16" data-faq-panel={cat.id}>
+        <h2 class="mb-5 text-xl font-semibold text-zinc-800">{cat.heading}</h2>
+        {cat.note && <Fragment set:html={cat.note} />}
+        <div class="divide-y divide-zinc-100 border-y border-zinc-200">
+          {cat.items.map((it) => (
+            <div id={it.id} class="scroll-mt-16 py-6">
+              <p class="font-semibold text-zinc-800">Q. {it.q}</p>
+              <Fragment set:html={it.body} />
+            </div>
+          ))}
+        </div>
+      </section>
+    ))}
+  </div>
 
   {/* CTA */}
   <div class="mt-12 bg-[color:var(--forest-100)] px-8 py-10 text-center">
@@ -705,4 +702,97 @@ const categories = [
     </div>
   </div>
 
+<style is:global>
+  /* JS が動いているときだけ、選んだカテゴリ以外を隠す（静的 HTML には全 Q を出したまま） */
+  [data-faq-root][data-faq-tabs] .faq-panel:not(.is-active) {
+    display: none;
+  }
+  .faq-tab.is-active {
+    border-color: var(--light-accent);
+    color: #27272a;
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    var root = document.querySelector("[data-faq-root]");
+    if (!root) return;
+    var aliases = JSON.parse(root.getAttribute("data-aliases") || "{}");
+    var panels = Array.prototype.slice.call(root.querySelectorAll("[data-faq-panel]"));
+    var tabs = Array.prototype.slice.call(root.querySelectorAll("[data-faq-tab]"));
+    var nav = root.querySelector(".faq-tabs");
+
+    function show(catId) {
+      panels.forEach(function (p) { p.classList.toggle("is-active", p.getAttribute("data-faq-panel") === catId); });
+      tabs.forEach(function (t) {
+        var on = t.getAttribute("data-faq-tab") === catId;
+        t.classList.toggle("is-active", on);
+        if (on) {
+          t.setAttribute("aria-current", "true");
+          // タブの列だけ横に動かす（ページの縦は動かさない）
+          var bar = t.parentElement;
+          bar.scrollLeft = t.offsetLeft - (bar.clientWidth - t.offsetWidth) / 2;
+        }
+        else t.removeAttribute("aria-current");
+      });
+    }
+
+    // #〜 から、開くカテゴリと移る先を決める（カテゴリの id・旧カテゴリの id・Q の id）
+    function resolve(hash) {
+      var id = decodeURIComponent((hash || "").replace(/^#/, ""));
+      if (!id) return null;
+      if (aliases[id]) id = aliases[id];
+      var el = document.getElementById(id);
+      if (!el || !root.contains(el)) return null;
+      var panel = el.closest("[data-faq-panel]");
+      if (!panel) return null;
+      return { cat: panel.getAttribute("data-faq-panel"), target: panel === el ? null : el };
+    }
+
+    // 固定のヘッダーは、下へスクロールすると隠れ、上へ戻すと出る（Header.astro）。
+    // 出ている間はタブをヘッダーの下に付ける（重なってタブが隠れないように）。
+    var header = document.getElementById("site-header");
+    function headerShown() { return !!header && !header.classList.contains("is-hidden"); }
+    function syncTop() { if (nav) nav.style.top = headerShown() ? header.offsetHeight + "px" : "0px"; }
+    if (header && nav) {
+      nav.style.transition = "top 0.3s";
+      syncTop();
+      new MutationObserver(syncTop).observe(header, { attributes: true, attributeFilter: ["class"] });
+    }
+
+    // el の上端を、タブ（とヘッダーが出るならヘッダー）の下に合わせる。カテゴリ自体なら、タブを上端に。
+    function scrollToEl(el, isPanel) {
+      var top = el.getBoundingClientRect().top + window.scrollY;
+      var navH = nav ? nav.offsetHeight : 0;
+      var y = isPanel ? top : top - navH - 8;
+      // 上へ戻るとき・上の方（160px 以内）ではヘッダーが出る
+      var headerH = header && (y < window.scrollY || y <= 160) ? header.offsetHeight : 0;
+      window.scrollTo({ top: Math.max(0, y - headerH) });
+    }
+
+    function apply(hash, fromLoad) {
+      var r = resolve(hash);
+      if (!r) { if (fromLoad) show(panels[0].getAttribute("data-faq-panel")); return; }
+      show(r.cat);
+      // 開いた直後に移る（隠れていた要素は表示後でないと位置が取れない）
+      requestAnimationFrame(function () { scrollToEl(r.target || root, !r.target); });
+    }
+
+    root.setAttribute("data-faq-tabs", "");
+    apply(location.hash, true);
+
+    tabs.forEach(function (t) {
+      t.addEventListener("click", function (e) {
+        e.preventDefault();
+        var catId = t.getAttribute("data-faq-tab");
+        show(catId);
+        history.replaceState(null, "", "#" + catId);
+        // タブが上に貼り付いているとき（下へ読み進めた後）だけ、新しいカテゴリの頭へ戻す
+        if (nav && nav.getBoundingClientRect().top > (parseFloat(nav.style.top) || 0) + 1) return;
+        scrollToEl(root, true);
+      });
+    });
+    window.addEventListener("hashchange", function () { apply(location.hash, false); });
+  })();
+</script>
 </PageLayout>
