@@ -6,33 +6,28 @@ import duoSize from "../../../assets/images/sites_duo_size.jpg";
 import { PROX_SEARCH_URL } from "../../../config/nav";
 import PageLayout from "../../../layouts/PageLayout.astro";
 
-const TITLE = "デュオ・カップルキャンプ｜里山パークおいらの森";
+const TITLE =
+	"デュオ・カップルキャンプ｜ふたりで焚き火とお酒を楽しむ林間サイト｜里山パークおいらの森（栃木）";
 const DESC =
-	"広すぎず狭すぎない、ふたり向けのサイト。焚き火を挟んで向き合う夜を。栃木・那須烏山のキャンプ場。";
+	"カップル、夫婦、気心知れた友人同士の2人キャンプに。焚き火を囲んでお酒を飲み、森の中でのんびり過ごす。テント1つならS、2つならM。栃木県那須烏山市のキャンプ場。";
 const URL = "https://oiranomori.jp/sites/duo/";
+const OG_IMAGE = new globalThis.URL(duoHero.src, Astro.site).href;
 
 const sizeGuide = [
-	{ size: "S", area: "20〜39㎡", guide: "1〜2人：小型テント1張り＋タープ。" },
+	{ size: "S", area: "20〜39㎡", guide: "小型テント1張り＋タープ。カップル・夫婦に" },
 	{
 		size: "M",
 		area: "40〜59㎡",
-		guide: "2〜4人：中型テント1張り＋タープ。ゆったり過ごすふたりに。",
+		guide:
+			"中型テント1張り＋タープ。または、タープの場所にもう1つテントを張ってテント2つ。それぞれ自分のテントを持ってくる友人同士に",
 	},
 ];
 
-const experiences = [
-	{
-		h: "ふたつの椅子と、ひとつの焚き火",
-		body: "大きすぎない区画だから、距離が近い。火を挟んで、話すでもなく、ただ過ごす。",
-	},
-	{
-		h: "設営は軽く、時間は長く",
-		body: "小さく張って、あとはのんびり。広さを持て余さない。代わりに、手早く整えて、長く座っていられます。",
-	},
-];
+const reserveClass =
+	"inline-flex items-center justify-center rounded-full bg-[color:var(--forest-600)] px-7 py-3 text-sm text-white shadow-sm transition hover:bg-[color:var(--forest-700)]";
 ---
 
-<PageLayout title={TITLE} description={DESC}>
+<PageLayout title={TITLE} description={DESC} ogImage={OG_IMAGE}>
   <Fragment slot="head">
     <script is:inline type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
@@ -60,18 +55,48 @@ const experiences = [
   />
 
   {/* ページ見出し */}
-  <div class="mb-10 border-b border-zinc-200 pb-8">
+  <div class="mb-14 border-b border-zinc-200 pb-8">
     <p class="text-xs tracking-[0.26em] text-zinc-400 uppercase">Duo</p>
-    <h1 class="mt-3 text-3xl font-semibold text-zinc-800 md:text-4xl">ふたりに、ちょうどいい</h1>
-    <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-500">
-      カップルでも、夫婦でも、気の合う相棒とでも。
-      近すぎず遠すぎない区画で、火を挟んで過ごすふたりの夜を。
+    <h1 class="mt-3 text-3xl font-semibold leading-snug text-zinc-800 md:text-4xl">気心知れたふたりの、焚き火キャンプ</h1>
+    <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-700">
+      カップルでも、夫婦でも、気心知れた友人同士でも。<br />
+      ふたりで来るなら、焚き火とお酒と、森の時間をゆっくり楽しんでください。
     </p>
+    <div class="mt-6">
+      {/* 該当プランID未確定のため全体検索（search/）へ着地。ID確定後に proxPlanUrl(id) 形式へ差し替える */}
+      <a href={PROX_SEARCH_URL} target="_blank" rel="noopener noreferrer" class={reserveClass} data-cta="reserve" data-cta-field="light">
+        空き状況・料金を見る ↗
+      </a>
+    </div>
   </div>
 
-  {/* あなたの人数なら、このサイズ */}
+  {/* 将来: サイズ別の空き状況＋個別区画一覧を client-fetch で描画する予定地点。
+      実装までは DOM を生成しない（空セクションの余白を残さないため）。 */}
+
   <section class="mb-14">
-    <h2 class="mb-2 text-xl font-semibold text-zinc-800">あなたなら、このサイズ</h2>
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">早めに着いて、のんびり</h2>
+    <p class="max-w-2xl text-sm leading-loose text-zinc-600">
+      早い時間に着いて、ささっと設営。手分けしても、ふたりで一緒に張ってもいい。<br />
+      お昼を食べたら、あとは急ぐことはありません。
+    </p>
+  </section>
+
+  <section class="mb-14">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">それぞれの時間も、ありです</h2>
+    <div class="max-w-2xl space-y-4 text-sm leading-loose text-zinc-600">
+      <p>
+        ずっと一緒に何かをしなくても大丈夫。<br />
+        ひとりが焚き火の面倒を見て、もうひとりは本を読む。そんな過ごし方もよく見かけます。
+      </p>
+      <p>
+        木陰の昼寝は、なかなかの寝心地です。<br />
+        ただ、「連れが寝ちゃってつまらない」という声も聞いたことがあるので、ほどほどに。
+      </p>
+    </div>
+  </section>
+
+  <section class="mb-14">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">焚き火と、お酒と</h2>
     <Picture
       src={duoSize}
       formats={["avif", "webp"]}
@@ -80,47 +105,53 @@ const experiences = [
       sizes="(max-width: 768px) 100vw, 36rem"
       class="mb-5 aspect-[3/2] w-full max-w-2xl object-cover"
     />
-    <p class="mb-5 text-sm text-zinc-500">2人に合うのは S・M。コンパクトならS、ゆったりならM。</p>
+    <p class="max-w-2xl text-sm leading-loose text-zinc-600">
+      並んで火を眺めるのも、向かい合って火を挟むのもいい。<br />
+      ほとんどのふたりが、焚き火のそばでお酒を楽しんでいます。
+    </p>
+  </section>
+
+  <section class="mb-14">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">携帯は、ポッケに</h2>
+    <div class="max-w-2xl space-y-4 text-sm leading-loose text-zinc-600">
+      <p>
+        オートサイトの多くではWi-Fiが使えるので、動画もSNSも、通信量を気にせず使えます。（使えない区画は<a href="/light-guide/#wifi" class="underline underline-offset-2 transition hover:text-zinc-800">利用案内</a>でご確認ください）<br />
+        でも、いじりすぎると、隣の機嫌が悪くなるかもしれません。<br />
+        せっかくなら携帯はポッケにしまって、ふたりでとことん喋り尽くしてみてください。
+      </p>
+      <p>
+        長く連れ添った夫婦だと、何も喋らずに火を見ていることもあります。<br />
+        喋らなくても、同じ時間を楽しんでいる。それもまた、ふたりのキャンプです。
+      </p>
+    </div>
+  </section>
+
+  <section class="mb-14">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">ふたりに合うサイズ</h2>
     <div class="overflow-x-auto border-y border-zinc-200">
-      <table class="w-full min-w-[480px] text-sm">
+      <table class="w-full text-sm">
         <thead>
-          <tr class="border-b border-zinc-200 bg-zinc-50">
-            <th class="px-4 py-3 text-left font-medium text-zinc-600">サイズ</th>
-            <th class="px-4 py-3 text-left font-medium text-zinc-600">有効面積</th>
-            <th class="px-4 py-3 text-left font-medium text-zinc-600">目安</th>
+          <tr class="border-b border-zinc-200">
+            <th scope="col" class="whitespace-nowrap px-4 py-3 text-left font-medium text-zinc-500">サイズ</th>
+            <th scope="col" class="whitespace-nowrap px-4 py-3 text-left font-medium text-zinc-500">有効面積</th>
+            <th scope="col" class="whitespace-nowrap px-4 py-3 text-left font-medium text-zinc-500">目安</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-zinc-100">
           {sizeGuide.map((s) => (
-            <tr class="transition hover:bg-zinc-50">
-              <td class="px-4 py-3 font-medium text-zinc-700">{s.size}</td>
-              <td class="px-4 py-3 text-zinc-600">{s.area}</td>
-              <td class="px-4 py-3 text-zinc-600">{s.guide}</td>
+            <tr>
+              <th scope="row" class="whitespace-nowrap px-4 py-3 text-left align-top font-medium text-zinc-700">{s.size}</th>
+              <td class="whitespace-nowrap px-4 py-3 align-top text-zinc-600">{s.area}</td>
+              <td class="px-4 py-3 leading-loose text-zinc-600">{s.guide}</td>
             </tr>
           ))}
         </tbody>
       </table>
     </div>
-    <p class="mt-4 text-sm">
-      <a href="/sites/" class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80">
-        全サイズの実寸・設営例を見る →
-      </a>
+    <p class="mt-5 max-w-2xl text-sm leading-loose text-zinc-600">
+      テントを2つ張って、タープも張りたい、ゆとりも欲しいなら、Lも候補になります。
+      <a href="/sites/#size" class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80">サイズ別の広さを見る →</a>
     </p>
-  </section>
-
-  {/* 将来: サイズ別の空き状況＋個別区画一覧を client-fetch で描画する予定地点。
-      実装までは DOM を生成しない（空セクションの余白を残さないため）。 */}
-
-  {/* 体験 */}
-  <section class="mb-14">
-    <div class="grid gap-8 sm:grid-cols-2">
-      {experiences.map((e) => (
-        <div class="border-t border-zinc-200 pt-5">
-          <h2 class="text-lg font-semibold text-zinc-800">{e.h}</h2>
-          <p class="mt-3 text-sm leading-loose text-zinc-600">{e.body}</p>
-        </div>
-      ))}
-    </div>
   </section>
 
   {/* Deep への条件付き案内（成人2名は適合しうる） */}
