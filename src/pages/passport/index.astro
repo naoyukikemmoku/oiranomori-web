@@ -108,7 +108,8 @@ const repeatPrices = [
             "パスポートは紙のチケットを発行しない",
             "購入時の「電子領収証」が証明書となる",
             "予約システムにログインすると、自分の会員ランクと割引適用後の料金が自動表示される",
-            "購入日が利用開始日。有効期限前の事前更新は不可",
+            "購入日が利用開始日",
+            "有効期限の前でも更新でき、有効期限が1年延びる",
           ],
         },
       ].map((block) => (
@@ -243,9 +244,9 @@ const repeatPrices = [
           positive: false,
         },
         {
-          title: "更新は期限切れ後に購入",
-          desc: "購入日が利用開始日となるため、有効期限前の事前更新は不可。期限切れ後に改めて購入してください。",
-          positive: false,
+          title: "有効期限の前でも更新できる",
+          desc: "有効期限の前に更新すると、有効期限が1年延びます。",
+          positive: true,
         },
       ].map((item) => (
         <div class={`rounded-2xl border p-5 ${item.positive ? "border-[color:var(--forest-100)] bg-[color:var(--forest-100)]/40" : "border-zinc-200 bg-zinc-50"}`}>
