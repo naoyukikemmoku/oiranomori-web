@@ -1,5 +1,6 @@
 ---
 import { Picture } from "astro:assets";
+import lightguideField from "../../assets/images/lightguide_field.jpg";
 import bepalArticle from "../../assets/images/media_bepal_article.jpg";
 import camplifeArticle from "../../assets/images/media_camplife_article.jpg";
 import camplifeCampbean from "../../assets/images/media_camplife_campbean.jpg";
@@ -12,9 +13,37 @@ import tochinavi1 from "../../assets/images/media_tochinavi_1.jpg";
 import tochinavi2 from "../../assets/images/media_tochinavi_2.jpg";
 import PageLayout from "../../layouts/PageLayout.astro";
 
-const TITLE = "メディア掲載・ロケ地 | 里山パークおいらの森";
+const TITLE = "メディア掲載・ロケ地｜里山パークおいらの森（栃木県那須烏山市）";
 const DESC =
-	"BS-TBS「ヒロシのぼっちキャンプ」、パソコン音楽クラブ「SIGN feat. 藤井隆」MVのロケ地。散歩の達人・CampLife・BE-PALなどの掲載実績と、撮影利用のご案内。";
+	"栃木県那須烏山市の里山キャンプ場。明るい広葉樹林と、樹齢80年以上のスギ・ヒノキの森で、映画・ドラマ・CM・MV・番組・スチールの撮影を受け入れています。夜間撮影・焚き火の演出にも対応。東京から約2時間。テレビ・MV・雑誌の掲載実績も紹介しています。";
+
+const conditions = [
+	{ label: "撮影の種類", value: "映画・ドラマ・CM・MV・テレビ番組・スチール" },
+	{ label: "営業日の撮影", value: "可。ほかのお客様がいる日は、場内ルールの範囲での撮影になります" },
+	{ label: "貸切", value: "可" },
+	{ label: "夜間撮影", value: "貸切時のみ" },
+	{ label: "焚き火の演出", value: "可" },
+	{ label: "ドローン", value: "要相談" },
+	{ label: "受け入れない時期", value: "GWなどの繁忙期" },
+	{ label: "申込期限", value: "状況によります" },
+	{ label: "料金", value: "応相談" },
+];
+
+const facilities = [
+	{ label: "車両", value: "ロケバス・機材車の乗り入れ可（ディープフォレストは入り口まで）" },
+	{ label: "駐車台数", value: "10台以上" },
+	{ label: "電源", value: "あり" },
+	{ label: "控室", value: "あり" },
+	{ label: "トイレ", value: "水洗（シャワーはありません）" },
+	{ label: "アクセス", value: "東京駅から約2時間／宇都宮駅から約40分" },
+];
+
+const steps = [
+	"お問い合わせ（フォーム・電話・メール）",
+	"ロケハン（無料・管理人が立ち会います）",
+	"お見積り",
+	"撮影",
+];
 
 const linkClass =
 	"inline-flex items-center gap-2 border-b border-[#4A5D4E] pb-0.5 text-[#4A5D4E] transition hover:border-[#2d3a30] hover:text-[#2d3a30]";
@@ -158,10 +187,51 @@ const pamphlets = [
     <p class="text-xs tracking-[0.26em] text-zinc-400 uppercase">Media / Location</p>
     <h1 class="mt-3 text-3xl font-semibold text-zinc-800 md:text-4xl">メディア掲載・ロケ地</h1>
     <p class="mt-5 max-w-2xl text-base leading-loose text-zinc-600">
-      おいらの森は、テレビ番組やミュージックビデオのロケ地、雑誌の取材先として使われてきました。
-      取材・撮影のご相談はお気軽に。
+      映画・ドラマ・CM・MV・テレビ番組・スチールの撮影を受け入れています。<br />
+      東京から車で約2時間、栃木県那須烏山市の里山にある、森のキャンプ場です。<br />
+      ロケハンには管理人が立ち会います。
     </p>
   </div>
+
+  {/* 撮れる景色（FAQ からのリンク先） */}
+  <section id="location" class="mb-16 scroll-mt-24">
+    <h2 class="text-xl font-semibold text-zinc-800">撮れる景色</h2>
+
+    <div class="mt-8 space-y-12">
+      <div>
+        <h3 class="text-lg font-semibold text-zinc-800">ライトフォレスト｜明るい広葉樹の森</h3>
+        <Picture
+          src={lightguideField}
+          formats={["avif", "webp"]}
+          alt="明るい広葉樹の林間に、テントと車が並ぶオートサイト"
+          loading="lazy"
+          sizes="(max-width: 768px) 100vw, 42rem"
+          class="mt-4 aspect-[16/9] w-full max-w-2xl object-cover"
+        />
+        <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-600">
+          下草まで手の入った林間に、オートサイトと区画サイトが並ぶフィールドです。季節ごとに色が変わる森で、キャンプ場らしいアウトドアのシーンが撮れます。
+        </p>
+      </div>
+
+      <div>
+        <h3 class="text-lg font-semibold text-zinc-800">ディープフォレスト｜樹齢80年以上のスギ・ヒノキの森</h3>
+        <Picture
+          src={mediaLocation}
+          formats={["avif", "webp"]}
+          alt="木漏れ日が差し込む、背の高いスギ・ヒノキの林"
+          loading="lazy"
+          sizes="(max-width: 768px) 100vw, 42rem"
+          class="mt-4 aspect-[3/2] w-full max-w-2xl object-cover"
+        />
+        <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-600">
+          針葉樹が密に立つ林業の森です。冬でも緑のまま撮れます。整えた施設はほとんどなく、人工物の少ない森の絵になります。全面で直火ができるので、焚き火のシーンも撮れます。夜は街灯のない闇です。
+        </p>
+        <p class="mt-3 max-w-2xl text-sm leading-loose text-zinc-500">
+          ※ディープフォレストの所在地は、ロケハンの日程が決まった方にお伝えします。
+        </p>
+      </div>
+    </div>
+  </section>
 
   {/* MEDIA */}
   <section class="mb-16">
@@ -267,27 +337,61 @@ const pamphlets = [
     </div>
   </section>
 
-  {/* LOCATION */}
+  {/* 受け入れ条件 */}
   <section class="mb-16">
-    <p class="text-xs tracking-[0.26em] text-[#4A5D4E] uppercase">Location</p>
-    <h2 class="mt-2 text-xl font-semibold text-zinc-800">ロケ地・撮影利用</h2>
-    <Picture
-      src={mediaLocation}
-      formats={["avif", "webp"]}
-      alt="木漏れ日が差し込む背の高い杉林"
-      loading="lazy"
-      sizes="(max-width: 768px) 100vw, 36rem"
-      class="mb-5 aspect-[3/2] w-full max-w-2xl object-cover"
-    />
+    <h2 class="text-xl font-semibold text-zinc-800">受け入れ条件</h2>
+    <dl class="mt-6 max-w-2xl divide-y divide-zinc-200 border-y border-zinc-200">
+      {conditions.map((r) => (
+        <div class="grid gap-1 py-4 sm:grid-cols-[10rem_1fr] sm:gap-6">
+          <dt class="text-sm font-medium text-zinc-700">{r.label}</dt>
+          <dd class="text-sm leading-loose text-zinc-600">{r.value}</dd>
+        </div>
+      ))}
+    </dl>
+  </section>
+
+  {/* 設備・アクセス */}
+  <section class="mb-16">
+    <h2 class="text-xl font-semibold text-zinc-800">設備・アクセス</h2>
+    <dl class="mt-6 max-w-2xl divide-y divide-zinc-200 border-y border-zinc-200">
+      {facilities.map((r) => (
+        <div class="grid gap-1 py-4 sm:grid-cols-[10rem_1fr] sm:gap-6">
+          <dt class="text-sm font-medium text-zinc-700">{r.label}</dt>
+          <dd class="text-sm leading-loose text-zinc-600">{r.value}</dd>
+        </div>
+      ))}
+      <div class="grid gap-1 py-4 sm:grid-cols-[10rem_1fr] sm:gap-6">
+        <dt class="text-sm font-medium text-zinc-700">周辺</dt>
+        <dd class="text-sm leading-loose text-zinc-600">
+          温泉・スーパー・食事処は車で10分ほど
+          <a href="/map/" class="ml-2 underline underline-offset-2 text-[#4A5D4E] transition hover:text-[#2d3a30]">周辺案内 →</a>
+        </dd>
+      </div>
+    </dl>
+  </section>
+
+  {/* 撮影までの流れ */}
+  <section class="mb-16">
+    <h2 class="text-xl font-semibold text-zinc-800">撮影までの流れ</h2>
+    <ol class="mt-6 max-w-2xl space-y-3 text-sm leading-loose text-zinc-600">
+      {steps.map((s, i) => (
+        <li class="flex gap-4">
+          <span class="font-medium text-[#4A5D4E]">{i + 1}.</span>
+          <span>{s}</span>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  {/* お問い合わせの際に */}
+  <section class="mb-16">
+    <h2 class="text-xl font-semibold text-zinc-800">お問い合わせの際にお知らせください</h2>
     <p class="mt-5 max-w-2xl text-sm leading-loose text-zinc-600">
-      ライトフォレスト・ディープフォレストともに、撮影ロケ地としての利用が可能です。
-      広葉樹林の明るい森、樹齢80年の針葉樹林、焚き火、里山の風景。
-      詳細・条件はお問い合わせください。
-      料金はシーズン、曜日、利用エリアの範囲によって変動しますので、ご相談ください。
+      作品の種類、撮影希望日（予備日があれば予備日も）、人数、車両の台数と種類、撮影の内容（夜間・焚き火・ドローンの有無）、貸切の希望の有無。
     </p>
     <p class="mt-6 text-sm">
       <a href="/contact/" class={linkClass}>
-        撮影利用のお問い合わせ →
+        撮影のお問い合わせ →
       </a>
     </p>
   </section>
