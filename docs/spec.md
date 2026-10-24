@@ -288,7 +288,7 @@ LP・全幅レイアウト用。BaseLayout をラップし、以下を追加す�
 | URL | レイアウト | 内容 |
 |---|---|---|
 | `/access/` | LpLayout | アクセス |
-| `/faq/` | PageLayout | よくある質問 |
+| `/faq/` | PageLayout | よくある質問（「団体・撮影・貸し切りは可能ですか？」は、撮影・ロケを `/media/#location`、団体貸し切りを `/sites/group/#charter` へ案内） |
 | `/reservation-guide/` | PageLayout | 予約ガイド |
 | `/policy/` | PageLayout | ご利用のルール（利用規約・プライバシーポリシー・キャンセルポリシー・特定商取引法に基づく表示） |
 | `/contact/` | BaseLayout（直接使用） | お問い合わせフォーム |
@@ -304,7 +304,7 @@ LP・全幅レイアウト用。BaseLayout をラップし、以下を追加す�
 | `/residents/` | BaseLayout（直接使用） | 森の住人（おいら・おかみの紹介） |
 | `/oiras/` | LpLayout | OIRAS（ボランティア・活動参加者向け） |
 | `/now/` | BaseLayout（直接使用） | 森のいま |
-| `/media/` | PageLayout | メディア掲載・ロケ地（団体貸し切りは `/sites/group/` へ移設） |
+| `/media/` | PageLayout | メディア掲載・ロケ地。ロケ地・撮影利用（撮れる景色 `#location`・受け入れ条件・設備・アクセス・撮影までの流れ・問い合わせ時に伝える項目）とメディア掲載実績。団体貸し切りの案内は `/sites/group/#charter` へ移設 |
 
 ### お知らせ系
 
