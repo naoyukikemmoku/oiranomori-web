@@ -791,6 +791,8 @@ const ldItems = categories
     if (header && bar) {
       syncTop();
       new MutationObserver(syncTop).observe(header, { attributes: true, attributeFilter: ["class"] });
+      // ヘッダーは画面幅で1段／2段に変わる（高さが変わる）
+      window.addEventListener("resize", syncTop);
     }
 
     function setOpen(open) {
