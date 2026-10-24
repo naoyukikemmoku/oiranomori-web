@@ -48,7 +48,7 @@ const experiences = [
 ];
 ---
 
-<PageLayout title={TITLE} description={DESC}>
+<PageLayout title={TITLE} description={DESC} lastUpdated="2026年10月">
   <Fragment slot="head">
     <script is:inline type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
@@ -181,11 +181,22 @@ const experiences = [
   <section id="charter" class="mb-14">
     <h2 class="mb-2 text-xl font-semibold text-zinc-800">フィールドごと貸し切る</h2>
     <p class="mb-5 text-sm leading-loose text-zinc-500">
-      通常のグループ利用とは別枠です。最大150名。
+      企業研修・合宿・スクール・地域イベントなど、団体での貸し切りに対応しています。
     </p>
-    <p class="text-sm leading-loose text-zinc-600">
-      区画ではなくライトフォレストごと貸し切ります。人数・日程によって調整できるため、
-      まずはご相談ください。
+    <dl class="divide-y divide-zinc-200 border-y border-zinc-200">
+      {[
+        { label: "直火エリア貸切", value: "10組15名程度" },
+        { label: "オートサイト貸切", value: "30組100名程度" },
+        { label: "ライトフォレスト完全貸切", value: "50組150名程度" },
+      ].map((r) => (
+        <div class="grid gap-1 py-4 sm:grid-cols-[14rem_1fr] sm:gap-6">
+          <dt class="text-sm font-medium text-zinc-700">{r.label}</dt>
+          <dd class="text-sm leading-loose text-zinc-600">{r.value}</dd>
+        </div>
+      ))}
+    </dl>
+    <p class="mt-5 text-sm leading-loose text-zinc-600">
+      料金はシーズンや曜日、貸し切りの範囲によって変わります。柔軟に対応しますので、お気軽にご相談ください。
     </p>
     <p class="mt-4 text-sm">
       <a href="/contact/" class="underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80">
