@@ -147,7 +147,7 @@ export const siteNav: SiteNavGroup[] = [
 				href: "https://note.com/oiranomori/m/m820d8cac57a3",
 				external: true,
 			},
-			{ label: "メディア・ロケ地・貸し切り", href: "/media/" },
+			{ label: "メディア・ロケ地", href: "/media/" },
 			{ label: "運営会社・関連組織", href: "/about/" },
 			{ label: "利用規約", href: "/policy/#terms", menu: false },
 			{ label: "プライバシーポリシー", href: "/policy/#privacy", menu: false },
