@@ -804,6 +804,18 @@ const ldItems = categories
     // バーの高さ（開いた一覧は含めない）
     function barH() { return bar ? bar.offsetHeight : 0; }
 
+    // FAQ の範囲を過ぎて（バーが上へ流れて）いったら、開いた一覧を閉じる
+    var ticking = false;
+    window.addEventListener("scroll", function () {
+      if (ticking || !toggle || toggle.getAttribute("aria-expanded") !== "true") return;
+      ticking = true;
+      requestAnimationFrame(function () {
+        ticking = false;
+        var top = parseFloat(bar.style.top) || 0;
+        if (root.getBoundingClientRect().bottom <= top + barH() + 40) setOpen(false);
+      });
+    }, { passive: true });
+
     // el の上端を、バー（とヘッダーが出るならヘッダー）の下に合わせる。
     // カテゴリ自体なら、バーを上端に（バーと見出しが続けて見える）。
     function scrollToEl(el, isPanel) {
