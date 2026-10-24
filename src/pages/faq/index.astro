@@ -648,14 +648,27 @@ const ldItems = categories
   </div>
 
   <div class="faq-root" data-faq-root data-aliases={JSON.stringify(aliases)}>
-    {/* カテゴリの一覧（折り返して全部見せる）。JS が無いときはページ内のリンクとして働く */}
-    <nav class="faq-cats mb-8 border-b border-zinc-200 pb-3" aria-label="カテゴリ" data-faq-cats>
-      <ul class="flex flex-wrap gap-x-1 gap-y-0.5">
+    {/* カテゴリのバー（見出しの下に出て、スクロールしても上に残る。JS が動くときだけ使う）。
+        右の余白はスマホの縦タブ（FloatingNav）の逃げ（PageLayout の main と同じ） */}
+    <nav class="faq-bar sticky top-0 z-40 -ml-4 -mr-9 mb-8 border-b border-zinc-200 bg-white/95 pl-4 pr-9 backdrop-blur sm:mx-0 sm:px-0" aria-label="カテゴリ" data-faq-bar>
+      <button
+        type="button"
+        class="flex w-full items-center gap-2 py-2.5 text-left text-sm text-zinc-800"
+        aria-expanded="false"
+        aria-controls="faq-bar-list"
+        data-faq-bar-toggle
+      >
+        <span class="text-xs tracking-[0.2em] text-zinc-400">FAQ</span>
+        <span data-faq-bar-label>{categories[0].label}</span>
+        <span class="faq-bar-caret text-xs text-zinc-500" aria-hidden="true">▼</span>
+        <span class="sr-only">カテゴリを選ぶ</span>
+      </button>
+      <ul id="faq-bar-list" class="absolute inset-x-0 top-full border-b border-zinc-200 bg-white/95 pb-3 pl-4 pr-9 backdrop-blur sm:px-0" hidden data-faq-bar-list>
         {categories.map((cat) => (
           <li>
             <a
               href={`#${cat.id}`}
-              class="faq-tab inline-block whitespace-nowrap border-b-2 border-transparent px-2 py-2 text-sm text-zinc-500 transition hover:text-zinc-800"
+              class="faq-tab block border-l-2 border-transparent py-2 pl-3 text-sm text-zinc-500 transition hover:text-zinc-800"
               data-faq-tab={cat.id}
             >
               {cat.label}
@@ -664,37 +677,6 @@ const ldItems = categories
         ))}
       </ul>
     </nav>
-
-    {/* 上の一覧が画面外に出たら出す細い固定バー（JS が動くときだけ使う） */}
-    <div class="faq-bar fixed inset-x-0 top-0 z-[55] border-b border-zinc-200 bg-white/95 backdrop-blur" data-faq-bar aria-hidden="true">
-      <div class="mx-auto max-w-6xl px-4">
-        <button
-          type="button"
-          class="flex w-full items-center gap-2 py-2.5 text-left text-sm text-zinc-800"
-          aria-expanded="false"
-          aria-controls="faq-bar-list"
-          data-faq-bar-toggle
-        >
-          <span class="text-xs tracking-[0.2em] text-zinc-400">FAQ</span>
-          <span data-faq-bar-label>{categories[0].label}</span>
-          <span class="faq-bar-caret text-xs text-zinc-500" aria-hidden="true">▼</span>
-          <span class="sr-only">カテゴリを選ぶ</span>
-        </button>
-        <ul id="faq-bar-list" class="pb-3" hidden data-faq-bar-list>
-          {categories.map((cat) => (
-            <li>
-              <a
-                href={`#${cat.id}`}
-                class="faq-tab block border-l-2 border-transparent py-2 pl-3 text-sm text-zinc-500 transition hover:text-zinc-800"
-                data-faq-tab={cat.id}
-              >
-                {cat.label}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
 
     {categories.map((cat) => (
       <section id={cat.id} class="faq-panel mb-14 scroll-mt-16" data-faq-panel={cat.id}>
@@ -740,23 +722,16 @@ const ldItems = categories
   [data-faq-root][data-faq-tabs] .faq-panel:not(.is-active) {
     display: none;
   }
-  .faq-cats .faq-tab.is-active {
-    border-bottom-color: var(--light-accent);
-    color: #27272a;
+  /* JS が無いときはバーを出さない（全 Q を順に読める） */
+  [data-faq-root]:not([data-faq-tabs]) .faq-bar {
+    display: none;
+  }
+  .faq-bar {
+    transition: top 0.3s;
   }
   .faq-bar .faq-tab.is-active {
     border-left-color: var(--light-accent);
     color: #27272a;
-  }
-  /* 固定バー：ふだんは画面の上に隠しておく（JS が無いときも出さない） */
-  .faq-bar {
-    visibility: hidden;
-    transform: translateY(-100%);
-    transition: transform 0.3s, top 0.3s, visibility 0.3s;
-  }
-  .faq-bar.is-shown {
-    visibility: visible;
-    transform: none;
   }
   .faq-bar-caret {
     display: inline-block;
@@ -778,7 +753,6 @@ const ldItems = categories
     var aliases = JSON.parse(root.getAttribute("data-aliases") || "{}");
     var panels = Array.prototype.slice.call(root.querySelectorAll("[data-faq-panel]"));
     var tabs = Array.prototype.slice.call(root.querySelectorAll("[data-faq-tab]"));
-    var cats = root.querySelector("[data-faq-cats]");
     var bar = root.querySelector("[data-faq-bar]");
     var toggle = bar && bar.querySelector("[data-faq-bar-toggle]");
     var list = bar && bar.querySelector("[data-faq-bar-list]");
@@ -810,10 +784,14 @@ const ldItems = categories
     }
 
     // 固定のヘッダーは、下へスクロールすると隠れ、上へ戻すと出る（Header.astro）。
-    // 出ている間は固定バーをヘッダーの下に付ける（重なってバーが隠れないように）。
+    // 出ている間はバーをヘッダーの下に付ける（重なってバーが隠れないように）。
     var header = document.getElementById("site-header");
     function headerShown() { return !!header && !header.classList.contains("is-hidden"); }
-    function headerBottom() { return headerShown() ? header.offsetHeight : 0; }
+    function syncTop() { if (bar) bar.style.top = headerShown() ? header.offsetHeight + "px" : "0px"; }
+    if (header && bar) {
+      syncTop();
+      new MutationObserver(syncTop).observe(header, { attributes: true, attributeFilter: ["class"] });
+    }
 
     function setOpen(open) {
       if (!toggle || !list) return;
@@ -821,35 +799,11 @@ const ldItems = categories
       list.hidden = !open;
     }
 
-    // 上の一覧が画面外に出ている間だけ、固定バーを出す（FAQ の範囲を過ぎたら引っ込める）
-    function syncBar() {
-      if (!bar || !cats) return;
-      var top = headerBottom();
-      bar.style.top = top + "px";
-      var passed = cats.getBoundingClientRect().bottom < top;
-      var within = root.getBoundingClientRect().bottom > top + barH() + 40;
-      var on = passed && within;
-      if (!on) setOpen(false);
-      bar.classList.toggle("is-shown", on);
-      bar.setAttribute("aria-hidden", on ? "false" : "true");
-      if (on) bar.removeAttribute("inert");
-      else bar.setAttribute("inert", "");
-    }
-    var ticking = false;
-    function onScroll() {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(function () { ticking = false; syncBar(); });
-    }
-    if (header) new MutationObserver(syncBar).observe(header, { attributes: true, attributeFilter: ["class"] });
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+    // バーの高さ（開いた一覧は含めない）
+    function barH() { return bar ? bar.offsetHeight : 0; }
 
-    // 固定バーの高さ（隠れている間も transform だけなので測れる。開いた一覧は含めない）
-    function barH() { return toggle ? toggle.offsetHeight + 1 : 0; }
-
-    // el の上端を、固定バー（とヘッダーが出るならヘッダー）の下に合わせる。
-    // カテゴリ自体なら、上の一覧の頭を上端に（一覧と見出しが続けて見える）。
+    // el の上端を、バー（とヘッダーが出るならヘッダー）の下に合わせる。
+    // カテゴリ自体なら、バーを上端に（バーと見出しが続けて見える）。
     function scrollToEl(el, isPanel) {
       var top = el.getBoundingClientRect().top + window.scrollY;
       var y = isPanel ? top : top - barH() - 8;
@@ -863,12 +817,11 @@ const ldItems = categories
       if (!r) { if (fromLoad) show(panels[0].getAttribute("data-faq-panel")); return; }
       show(r.cat);
       // 開いた直後に移る（隠れていた要素は表示後でないと位置が取れない）
-      requestAnimationFrame(function () { scrollToEl(r.target || root, !r.target); syncBar(); });
+      requestAnimationFrame(function () { scrollToEl(r.target || root, !r.target); });
     }
 
     root.setAttribute("data-faq-tabs", "");
     apply(location.hash, true);
-    syncBar();
 
     tabs.forEach(function (t) {
       t.addEventListener("click", function (e) {
@@ -877,11 +830,10 @@ const ldItems = categories
         show(catId);
         history.replaceState(null, "", "#" + catId);
         setOpen(false);
-        // 固定バーから選んだとき（下へ読み進めた後）だけ、上の一覧と新しいカテゴリの頭へ戻す
-        if (!bar || !bar.contains(t)) return;
+        if (toggle) toggle.focus({ preventScroll: true });
+        // バーが上に貼り付いているとき（下へ読み進めた後）だけ、バーと新しいカテゴリの頭へ戻す
+        if (!bar || bar.getBoundingClientRect().top > (parseFloat(bar.style.top) || 0) + 1) return;
         scrollToEl(root, true);
-        var first = root.querySelector('[data-faq-cats] [data-faq-tab="' + catId + '"]');
-        if (first) first.focus({ preventScroll: true });
       });
     });
 
