@@ -51,6 +51,9 @@ export const PROX_MEMBER_SIGNUP_URL = `${PROX_BASE}/member/input/`;
 export const PROX_MEMBER_LOGIN_URL = `${PROX_BASE}/member/login/`;
 export const PROX_BOOKING_LOOKUP_URL = `${PROX_BASE}/booking/login/`;
 
+/** おいらの森の会員ページ（OirasApp）。ヘッダー・メニュー・フッターの会員の入口。同じタブで開く。 */
+export const APP_MEMBER_URL = "https://oiranomori.com/app/member/";
+
 /** 外部予約サイト。公式（PROX）が主導線で、こちらは補助。 */
 export const RAKUTEN_CAMP_URL =
 	"https://camp.travel.rakuten.co.jp/properties/836?adults=1&reservationType=stay";
@@ -98,18 +101,8 @@ export const siteNav: SiteNavGroup[] = [
 				external: true,
 				menu: false,
 			},
-			{
-				label: "会員ログイン",
-				href: "https://www.489pro-x.com/ja/s/oiranomori/member/login/",
-				external: true,
-				menu: false,
-			},
-			{
-				label: "新規会員登録",
-				href: "https://www.489pro-x.com/ja/s/oiranomori/member/input/",
-				external: true,
-				menu: false,
-			},
+			// 会員の入口は App の会員ページ（中にログインと proX の新規登録への導線がある）。同じタブで開く
+			{ label: "会員ページ", href: APP_MEMBER_URL },
 			{ label: "チェックアウトの連絡", href: "/checkout/" },
 			{ label: "キャンセルポリシー", href: "/policy/#cancel", menu: false },
 		],

@@ -1,5 +1,5 @@
 ---
-import { topSwitch } from "../config/nav";
+import { APP_MEMBER_URL, topSwitch } from "../config/nav";
 import HamburgerMenu from "./HamburgerMenu.astro";
 
 const pathname = Astro.url.pathname;
@@ -29,7 +29,9 @@ const isActive = (href: string) =>
       ))}
     </nav>
 
-    <div class="flex items-center gap-2 shrink-0">
+    <div class="flex items-center gap-1.5 shrink-0 sm:gap-2">
+      {/* 天気と同じ見た目。.header-weather は天気の script が先頭の1つを隠すので、別のクラスにする */}
+      <a href={APP_MEMBER_URL} class="header-member inline-flex">会員ページ</a>
       <a href="/now/" class="header-weather inline-flex" aria-label="現在の天気">
         <span id="header-weather-icon" aria-hidden="true">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
