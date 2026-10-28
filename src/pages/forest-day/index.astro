@@ -1,6 +1,8 @@
 ---
+import FloatingNav from "../../components/FloatingNav.astro";
+import Header from "../../components/Header.astro";
 import { proxPlanUrl } from "../../config/nav";
-import PageLayout from "../../layouts/PageLayout.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
 
 const TITLE =
 	"何もしない贅沢を森の中で。｜日帰りの森林浴・ひとりでぼーっとできる森｜里山パークおいらの森";
@@ -19,8 +21,10 @@ const linkClass =
 {/* 森で過ごす発想に出会ってもらう入口の読み物ページ。
     設備・料金・予約は冒頭に並べず、最後の「森へ行ってみる」にまとめる。
     写真枠〔写真1〜5〕は位置だけ決めてあり、写真は未配置（空枠・ダミーは描画しない）。
-    配置するときは src/assets/ の写真を astro:assets の <Picture> で入れる。 */}
-<PageLayout title={TITLE} description={DESC} lastUpdated="2026年10月">
+    配置するときは src/assets/ の写真を astro:assets の <Picture> で入れる。
+    画面下に固定の「予約する」（ReserveCTA）を出さないため、PageLayout を使わず
+    BaseLayout＋Header＋FloatingNav を直接組む。<main> の余白は PageLayout と同じ。 */}
+<BaseLayout title={TITLE} description={DESC} lastUpdated="2026年10月">
   <Fragment slot="head">
     <script is:inline type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
@@ -35,103 +39,109 @@ const linkClass =
       }
     })} />
   </Fragment>
+  <Header />
+  <FloatingNav />
 
-  <article class="max-w-2xl pb-6">
-    {/* ファーストビュー */}
-    <header class="pt-6 md:pt-12">
-      <h1 class="text-3xl font-semibold leading-snug text-zinc-800 md:text-4xl">何もしない贅沢を森の中で。</h1>
-      <div class="mt-8 space-y-2 text-lg leading-relaxed text-zinc-700 md:mt-10 md:text-xl">
-        <p>一人の時間、取れていますか？</p>
-        <p>週末は疲れておうちで引きこもっていませんか？</p>
-        <p>少し日常から離れたいと思っていませんか？</p>
-      </div>
-    </header>
+  {/* 右余白は縦タブ（FloatingNav）の逃げ。スマホで本文が隠れないようにする。 */}
+  <main class="mx-auto max-w-6xl px-4 pr-9 pb-10 pt-[calc(var(--header-offset)+1.25rem)] sm:pr-4">
+    <article class="max-w-2xl pb-6">
+      {/* ファーストビュー */}
+      <header class="pt-6 md:pt-12">
+        <h1 class="text-3xl font-semibold leading-snug text-zinc-800 md:text-4xl">何もしない贅沢を森の中で。</h1>
+        <div class="mt-8 space-y-2 text-lg leading-relaxed text-zinc-700 md:mt-10 md:text-xl">
+          <p>一人の時間、取れていますか？</p>
+          <p>週末は疲れておうちで引きこもっていませんか？</p>
+          <p>少し日常から離れたいと思っていませんか？</p>
+        </div>
+      </header>
 
-    {/* 〔写真1：ファーストビュー。木漏れ日と木々の奥行きが見える広葉樹の森。人物・テント・施設は写さない〕
-        配置時は loading="eager" fetchpriority="high" にする */}
+      {/* 〔写真1：ファーストビュー。木漏れ日と木々の奥行きが見える広葉樹の森。人物・テント・施設は写さない〕
+          配置時は loading="eager" fetchpriority="high" にする */}
 
-    <p class="mt-10 text-[15px] leading-loose text-zinc-700 md:mt-12 md:text-base">来たときより、いい顔で帰っていく人を、何人も見送ってきました。</p>
+      <p class="mt-10 text-[15px] leading-loose text-zinc-700 md:mt-12 md:text-base">来たときより、いい顔で帰っていく人を、何人も見送ってきました。</p>
 
-    <section class="mt-16 md:mt-24">
-      <h2 class={h2Class}>休日なのに、休んだ気がしない</h2>
-      <p class={bodyClass}>
-        平日は仕事に育児、休みの日は溜まった掃除洗濯、やなんだか予定がある。返す連絡があって、片づける用事があって、休みの日でさえ、何かをしていないと落ち着かず、何かをしなければいけない気がしてくる。<br />
-        なにかに困っている。というわけではないけれど、一人でゆっくり過ごす時間が、なかなかない。<br />
-        そんな毎日を送っている人も、多いと思います。
-      </p>
-      <p class={bodyClass}>森で一日過ごしてみませんか。</p>
+      <section class="mt-16 md:mt-24">
+        <h2 class={h2Class}>休日なのに、休んだ気がしない</h2>
+        <p class={bodyClass}>
+          平日は仕事に育児、休みの日は溜まった掃除洗濯、やなんだか予定がある。返す連絡があって、片づける用事があって、休みの日でさえ、何かをしていないと落ち着かず、何かをしなければいけない気がしてくる。<br />
+          なにかに困っている。というわけではないけれど、一人でゆっくり過ごす時間が、なかなかない。<br />
+          そんな毎日を送っている人も、多いと思います。
+        </p>
+        <p class={bodyClass}>森で一日過ごしてみませんか。</p>
 
-      {/* 〔写真2：木に掛けたハンモック、または木陰に置いた椅子一脚。人が入っていてもいいが顔は写さない〕 */}
-    </section>
+        {/* 〔写真2：木に掛けたハンモック、または木陰に置いた椅子一脚。人が入っていてもいいが顔は写さない〕 */}
+      </section>
 
-    <section class="mt-16 md:mt-24">
-      <h2 class={h2Class}>なにをするか決めなくていい</h2>
-      <p class={bodyClass}>おいらの森は、ちょうどいい森です。</p>
-      <p class={bodyClass}>背の高い木々が空に向かって伸び、その枝葉のあいだから柔らかな光が差し込んできます。木漏れ日は風に揺れ、地面に落ちる光と影の模様をゆっくりと変えていきます。</p>
-      <p class={bodyClass}>耳を澄ませば、あちこちから鳥の声。風が通り抜けると、頭の上で葉がざわざわと鳴り、少し遅れて森の奥からも同じ音が聞こえてきます。足元には落ち葉や小枝が重なり、歩けばかさかさと音がします。</p>
-      <p class={bodyClass}>木々に囲まれているのに、思いのほか圧迫感はありません。日なたは暖かく、木陰に入れば少しひんやりする。季節によって光の角度も、風の匂いも、鳥の声も変わります。</p>
-      <p class={bodyClass}>椅子に腰を下ろして、ぼんやりと木々を眺めているだけでも、次々と小さな変化に気づきます。</p>
-      <p class={bodyClass}>静かだけれど、何も聞こえないわけではない。何もしていないようで、退屈するとも限らない。</p>
-      <p class={bodyClass}>森林浴という言葉がありますが、難しいことは何もなくて、森の中でこうして過ごすことなんだと思います。</p>
-      <p class={bodyClass}>
-        過ごし方は、人それぞれです。気に入った木にハンモックを掛けて昼寝をする人もいれば、本を持って奥のほうへ歩いていく人も、ただ座ってコーヒーを飲んでいる人もいます。眠くなったら、少し目を閉じればいい。<br />
-        何時に何をするという決まりは、ありません。
-      </p>
+      <section class="mt-16 md:mt-24">
+        <h2 class={h2Class}>なにをするか決めなくていい</h2>
+        <p class={bodyClass}>おいらの森は、ちょうどいい森です。</p>
+        <p class={bodyClass}>背の高い木々が空に向かって伸び、その枝葉のあいだから柔らかな光が差し込んできます。木漏れ日は風に揺れ、地面に落ちる光と影の模様をゆっくりと変えていきます。</p>
+        <p class={bodyClass}>耳を澄ませば、あちこちから鳥の声。風が通り抜けると、頭の上で葉がざわざわと鳴り、少し遅れて森の奥からも同じ音が聞こえてきます。足元には落ち葉や小枝が重なり、歩けばかさかさと音がします。</p>
+        <p class={bodyClass}>木々に囲まれているのに、思いのほか圧迫感はありません。日なたは暖かく、木陰に入れば少しひんやりする。季節によって光の角度も、風の匂いも、鳥の声も変わります。</p>
+        <p class={bodyClass}>椅子に腰を下ろして、ぼんやりと木々を眺めているだけでも、次々と小さな変化に気づきます。</p>
+        <p class={bodyClass}>静かだけれど、何も聞こえないわけではない。何もしていないようで、退屈するとも限らない。</p>
+        <p class={bodyClass}>森林浴という言葉がありますが、難しいことは何もなくて、森の中でこうして過ごすことなんだと思います。</p>
+        <p class={bodyClass}>
+          過ごし方は、人それぞれです。気に入った木にハンモックを掛けて昼寝をする人もいれば、本を持って奥のほうへ歩いていく人も、ただ座ってコーヒーを飲んでいる人もいます。眠くなったら、少し目を閉じればいい。<br />
+          何時に何をするという決まりは、ありません。
+        </p>
 
-      {/* 〔写真3：焚き火の炎のアップ。薪がはぜている瞬間か、熾火〕 */}
+        {/* 〔写真3：焚き火の炎のアップ。薪がはぜている瞬間か、熾火〕 */}
 
-      <p class={bodyClass}>
-        森で過ごす時間のなかで、多くの人の癒しになっているのは、焚き火だと思います。<br />
-        火をつけると、まず白い煙が立ち、炎が立ち上がって、しばらくすると落ち着いてきます。薪がはぜる音がして、ときどき火の粉が跳ね、燃えきった薪は赤い熾火になります。火に向けた顔や手のひらが温かくて、煙のにおいが少し服に残ります。<br />
-        火を見ていると、いつの間にか時間が過ぎています。考えごとをしていても、何も考えていなくても、どっちでもいいんです。
-      </p>
+        <p class={bodyClass}>
+          森で過ごす時間のなかで、多くの人の癒しになっているのは、焚き火だと思います。<br />
+          火をつけると、まず白い煙が立ち、炎が立ち上がって、しばらくすると落ち着いてきます。薪がはぜる音がして、ときどき火の粉が跳ね、燃えきった薪は赤い熾火になります。火に向けた顔や手のひらが温かくて、煙のにおいが少し服に残ります。<br />
+          火を見ていると、いつの間にか時間が過ぎています。考えごとをしていても、何も考えていなくても、どっちでもいいんです。
+        </p>
 
-      {/* 〔写真4：夕方、低い光で木の影が長く伸びている森。帰り支度の気配があってもいい〕 */}
-    </section>
+        {/* 〔写真4：夕方、低い光で木の影が長く伸びている森。帰り支度の気配があってもいい〕 */}
+      </section>
 
-    <section class="mt-16 md:mt-24">
-      <h2 class={h2Class}>帰るときの顔が、少し違う</h2>
-      <p class={bodyClass}>
-        森に着いたばかりの人は、少し疲れていたり、初めての場所に来た緊張で、かたい顔をしていることがあります。<br />
-        おいらから声をかけることは、あまりありません。何をして過ごしていても、それはその人の時間なので。
-      </p>
-      <p class={bodyClass}>日が傾いて、空気が少し冷えてきたころ、帰り支度をする人がいます。その人が、わざわざおいらのところまで声をかけに来てくれる。「お世話になりました」って。世話らしいことは、何もしていないのに。</p>
-      <p class={bodyClass}>森で何があったのかは、わかりません。ただ、来たときとは違う、すっきりした笑顔で帰っていく。そんな姿を、何度も見てきました。</p>
-    </section>
+      <section class="mt-16 md:mt-24">
+        <h2 class={h2Class}>帰るときの顔が、少し違う</h2>
+        <p class={bodyClass}>
+          森に着いたばかりの人は、少し疲れていたり、初めての場所に来た緊張で、かたい顔をしていることがあります。<br />
+          おいらから声をかけることは、あまりありません。何をして過ごしていても、それはその人の時間なので。
+        </p>
+        <p class={bodyClass}>日が傾いて、空気が少し冷えてきたころ、帰り支度をする人がいます。その人が、わざわざおいらのところまで声をかけに来てくれる。「お世話になりました」って。世話らしいことは、何もしていないのに。</p>
+        <p class={bodyClass}>森で何があったのかは、わかりません。ただ、来たときとは違う、すっきりした笑顔で帰っていく。そんな姿を、何度も見てきました。</p>
+      </section>
 
-    <section class="mt-16 md:mt-24">
-      <h2 class={h2Class}>一日だけでも、森へ</h2>
-      <p class={bodyClass}>朝から夕方まで、一日森で過ごす。それで十分です。キャンプ場だからといって、最初からテントを張ったり、泊まったりする必要はありません。</p>
-      <p class={bodyClass}>一人で来てもいいし、アウトドアにくわしくなくても大丈夫です。ここは秘境ではありません。受付もトイレもあるし、ほかのお客さんもいます。おいらも家族と森の隣に住んでいます。必要な道具はレンタルもできます。</p>
-      <p class={bodyClass}>車がなくても、JR烏山線の鴻野山駅から送迎するプランがあります。</p>
+      <section class="mt-16 md:mt-24">
+        <h2 class={h2Class}>一日だけでも、森へ</h2>
+        <p class={bodyClass}>朝から夕方まで、一日森で過ごす。それで十分です。キャンプ場だからといって、最初からテントを張ったり、泊まったりする必要はありません。</p>
+        <p class={bodyClass}>一人で来てもいいし、アウトドアにくわしくなくても大丈夫です。ここは秘境ではありません。受付もトイレもあるし、ほかのお客さんもいます。おいらも家族と森の隣に住んでいます。必要な道具はレンタルもできます。</p>
+        <p class={bodyClass}>車がなくても、JR烏山線の鴻野山駅から送迎するプランがあります。</p>
 
-      {/* 〔写真5：引きの一枚。木々の向こうに受付棟やほかのテントが小さく見える〕 */}
+        {/* 〔写真5：引きの一枚。木々の向こうに受付棟やほかのテントが小さく見える〕 */}
 
-      <p class="mt-6 text-[15px] md:text-base"><a href="/rental/" class={linkClass}>レンタル品を見る →</a></p>
-    </section>
+        <p class="mt-6 text-[15px] md:text-base"><a href="/rental/" class={linkClass}>レンタル品を見る →</a></p>
+      </section>
 
-    {/* 料金と予約導線はこの節にだけ置く */}
-    <section class="mt-16 md:mt-24">
-      <h2 class={h2Class}>森へ行ってみる</h2>
-      <p class={bodyClass}>栃木県那須烏山市の里山にある、里山パークおいらの森です。</p>
-      <p class={bodyClass}>日帰りデイキャンプは9:00〜18:00、おひとり様1,650円から。まずは一日、森で過ごしてみませんか。</p>
-      <p class={bodyClass}>また来たくなったら、次は泊まってみてもいい。車の中で眠るところからでもいいと思います。一人で夜を越す勇気がついて、テントでキャンプしてみたくなったら、また来てください。</p>
-      <p class={bodyClass}>森で一晩過ごせたという経験は、いつか停電や災害があったときにも、ちょっとした自信になると思います。</p>
+      {/* 料金と予約導線はこの節にだけ置く */}
+      <section class="mt-16 md:mt-24">
+        <h2 class={h2Class}>森へ行ってみる</h2>
+        <p class={bodyClass}>栃木県那須烏山市の里山にある、里山パークおいらの森です。</p>
+        <p class={bodyClass}>日帰りデイキャンプは9:00〜18:00、おひとり様1,650円から。まずは一日、森で過ごしてみませんか。</p>
+        <p class={bodyClass}>また来たくなったら、次は泊まってみてもいい。車の中で眠るところからでもいいと思います。一人で夜を越す勇気がついて、テントでキャンプしてみたくなったら、また来てください。</p>
+        <p class={bodyClass}>森で一晩過ごせたという経験は、いつか停電や災害があったときにも、ちょっとした自信になると思います。</p>
 
-      <p class="mt-8 text-[15px] md:text-base"><a href="/stay-light/" class={linkClass}>泊まりのプランを見る →</a></p>
+        <p class="mt-8 text-[15px] md:text-base"><a href="/stay-light/" class={linkClass}>泊まりのプランを見る →</a></p>
 
-      {/* data-track は GA4 イベント送信用の目印（送信処理は未実装） */}
-      <p class="mt-4 text-[15px] md:text-base">
-        <a
-          href={proxPlanUrl(14)}
-          target="_blank"
-          rel="noopener noreferrer"
-          class={linkClass}
-          data-track="forest-day-daycamp"
-        >日帰りデイキャンプを予約する ↗</a>
-      </p>
+        {/* 計測は BaseLayout の data-cta 委譲（spec §2）で reserve_cta_click を送る */}
+        <p class="mt-4 text-[15px] md:text-base">
+          <a
+            href={proxPlanUrl(14)}
+            target="_blank"
+            rel="noopener noreferrer"
+            class={linkClass}
+            data-cta="reserve"
+            data-cta-field="light"
+          >日帰りデイキャンプを予約する ↗</a>
+        </p>
 
-      <p class="mt-12 text-[15px] leading-loose text-zinc-700 md:mt-16 md:text-base">いつか時間ができたときに、思い出してもらえたらうれしいです。</p>
-    </section>
-  </article>
-</PageLayout>
+        <p class="mt-12 text-[15px] leading-loose text-zinc-700 md:mt-16 md:text-base">いつか時間ができたときに、思い出してもらえたらうれしいです。</p>
+      </section>
+    </article>
+  </main>
+</BaseLayout>
