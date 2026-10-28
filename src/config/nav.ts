@@ -142,6 +142,7 @@ export const siteNav: SiteNavGroup[] = [
 		items: [
 			{ label: "森の住人", href: "/residents/" },
 			{ label: "オイラーズ", href: "/oiras/" },
+			{ label: "何もしない贅沢", href: "/by-the-fire/" },
 			{
 				label: "The 森 Chronicles",
 				href: "https://note.com/oiranomori/m/m820d8cac57a3",
