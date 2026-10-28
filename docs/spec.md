@@ -231,7 +231,7 @@ LP・全幅レイアウト用。BaseLayout をラップし、以下を追加す�
 | 予約・会員 | 予約する（外部）、予約ガイド、ご予約確認（外部）、会員ページ（App・同じタブ）、チェックアウトの連絡、キャンセルポリシー |
 | おいらの森でキャンプする | ライトフォレスト 利用案内、ディープフォレスト 利用案内、場内マップ（ライト）、おいらの薪、レンタル、売店、年間パスポート・回数券、よくある質問 |
 | おいらの森 | アクセス、周辺案内、森のいま、お知らせ、お問い合わせ |
-| おいらと森と | 森の住人、オイラーズ、The 森 Chronicles（外部: note.com）、メディア・ロケ地、運営会社・関連組織、利用規約、プライバシーポリシー |
+| おいらと森と | 森の住人、オイラーズ、何もしない贅沢（/forest-day/）、The 森 Chronicles（外部: note.com）、メディア・ロケ地、運営会社・関連組織、利用規約、プライバシーポリシー |
 
 ---
 
@@ -305,6 +305,7 @@ LP・全幅レイアウト用。BaseLayout をラップし、以下を追加す�
 | `/oiras/` | LpLayout | OIRAS（ボランティア・活動参加者向け） |
 | `/now/` | BaseLayout（直接使用） | 森のいま |
 | `/media/` | PageLayout | メディア掲載・ロケ地。ロケ地・撮影利用（撮れる景色 `#location`・受け入れ条件・設備・アクセス・撮影までの流れ・問い合わせ時に伝える項目）とメディア掲載実績。団体貸し切りの案内は `/sites/group/#charter` へ移設 |
+| `/forest-day/` | BaseLayout（直接使用） | 何もしない贅沢を森の中で。日帰りで森で過ごす時間を伝える読み物。料金と予約導線は最後の節「森へ行ってみる」だけに置き、画面下に固定の「予約する」（ReserveCTA）を出さないため PageLayout を使わず Header・FloatingNav を直接組む |
 
 ### お知らせ系
 
@@ -400,6 +401,7 @@ description?: string
 | `/deep/` | `TouristAttraction`, `Campground` |
 | `/deep-guide/` | `WebPage`, `WebSite` |
 | `/faq/` | `FAQPage`, `Question`, `Answer` |
+| `/forest-day/` | `WebPage`, `WebSite` |
 | `/firewood/` | `ItemList`, `ListItem`, `Product`, `Offer`, `Organization` |
 | `/light-guide/` | `WebPage`, `WebSite` |
 | `/map/` | `TouristAttraction`, `Place`, `GeoCoordinates`, `PostalAddress`, `AdministrativeArea` |
