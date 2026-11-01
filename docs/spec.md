@@ -228,7 +228,7 @@ LP・全幅レイアウト用。BaseLayout をラップし、以下を追加す�
 
 | グループ | 主な項目 |
 |---|---|
-| 予約・会員 | 予約する（外部）、予約ガイド、ご予約確認（外部）、会員ページ（App・同じタブ）、チェックアウトの連絡、キャンセルポリシー |
+| 予約・会員 | 予約する（外部）、予約ガイド、ご予約確認（外部）、会員ページ（App・同じタブ）、ここキャン地（`/s/portal`）、キャンセルポリシー |
 | おいらの森でキャンプする | ライトフォレスト 利用案内、ディープフォレスト 利用案内、場内マップ（ライト）、おいらの薪、レンタル、売店、年間パスポート・回数券、よくある質問 |
 | おいらの森 | アクセス、周辺案内、森のいま、お知らせ、お問い合わせ |
 | おいらと森と | 森の住人、オイラーズ、何もしない贅沢（/forest-day/）、The 森 Chronicles（外部: note.com）、メディア・ロケ地、運営会社・関連組織、利用規約、プライバシーポリシー |
@@ -293,8 +293,6 @@ LP・全幅レイアウト用。BaseLayout をラップし、以下を追加す�
 | `/policy/` | PageLayout | ご利用のルール（利用規約・プライバシーポリシー・キャンセルポリシー・特定商取引法に基づく表示） |
 | `/contact/` | BaseLayout（直接使用） | お問い合わせフォーム |
 | `/contact/thanks/` | BaseLayout（直接使用） | お問い合わせ完了（noindex） |
-| `/checkout/` | BaseLayout（直接使用） | チェックアウト連絡フォーム（noindex） |
-| `/checkout/thanks/` | BaseLayout（直接使用） | チェックアウト連絡完了（noindex） |
 
 ### コンテンツ・関係者系
 
@@ -431,7 +429,8 @@ description?: string
 | 旧トップ・廃ページ | `/home01/`, `/home-1-2/` | `/` |
 | 廃ページ | `/testpage/` | 410 |
 | /guide/ 系 | `/guide/lightforest-field/` 等 | 各対応ページ |
-| /oiranomori/ 系 | チェックアウト・お問い合わせ | `/checkout/`, `/contact/` |
+| /oiranomori/ 系 | チェックアウト・お問い合わせ | `/s/portal`（ここキャン地）, `/contact/` |
+| 旧チェックアウトフォーム | `/checkout/`, `/checkout/thanks/`（末尾スラッシュ有無とも。フォームは撤去） | `/s/portal`（ここキャン地） |
 | /activities/ 系 | oiras, passport, solo-camp 等 | 各対応ページまたは外部 |
 | /information/ 系 | surroundings-maps, staff 等 | 各対応ページ |
 | /properties/ 系 | 場内施設・旧タクソノミー | `/map/`, `/deep/` 等 |
@@ -480,8 +479,7 @@ description?: string
 
 `astro.config.mjs` の `sitemap.filter` に定義。
 
-- `/checkout/` を含むすべてのパス
-- `/thanks/` を含むすべてのパス（`/contact/thanks/` と `/checkout/thanks/` の両方をカバー）
+- `/thanks/` を含むすべてのパス（`/contact/thanks/`）
 
 ---
 
@@ -623,7 +621,6 @@ HP（oiranomori.jp）は、OirasApp 本体（**別リポ・別ホスティング
 | 8 | `https://oiranomori.com/app/weather/api/public/satellite.php?hours=72` | GET | クライアント fetch（A6 衛星タブ初期化時） | `src/pages/now/index.astro`（SAT_API） | `ok` / `frames[]`（`datetime`・`url`）/ `latest` | `/now/` A6「衛星」タブ（コマ送り画像） |
 | 9 | `https://oiranomori.com/app/camp/api/congestion.php?from=YYYY-MM-DD&days=N` | GET | クライアント fetch（コンポーネント可視時）。`from` 省略=当日JST／`days` 省略=120（1〜366クランプ）。CORS は本番で oiranomori.jp 許可済み（GET/OPTIONS, max-age=300） | `src/lib/availability.ts`（`buildCongestionUrl`）→ `src/components/CongestionMatrix.astro` / `src/components/SilenceCalendar.astro` | `ok` / `range{from,days}` / `areas`（`auto`/`kukaku`/`deep`/`dogrun` 各 `capacity`・`days[]{date,remain,label,closed}`・`sizes?`〔`days[]{date,remain,closed}`〕。`closed`＝売り止めの日（OirasApp の stop_sells・proX を含む行）で、remain・label より優先して「休み」と出す。SilenceCalendar は休みの日を静かな日に数えない） | トップ AVAILABILITY 節（CongestionMatrix）・`/deep/` Silence（SilenceCalendar） |
 | 10 | `https://oiranomori.com/app/weather/icons/{icon_key}.svg` | GET（画像/SVG） | クライアント実行時に `icon_key` から URL 組み立て（自前天気アイコン） | `src/lib/weatherIcon.ts`（`iconUrl`） | （SVG 画像アセット。`currentColor` 単色・viewBox 0 0 128 128） | ヘッダー・`/now/` の各天気アイコン |
-| 11 | `https://form.oiranomori.com/app/checkout/submit.php` | POST（HTML form） | フォーム送信時（ユーザー操作） | `src/pages/checkout/index.astro` | （リクエスト＝チェックアウト連絡フォーム入力値。レスポンス仕様は**不明**＝OirasApp 側参照） | `/checkout/` フォーム送信先 |
 | 12 | `https://form.oiranomori.com/app/contact/submit.php` | POST（HTML form） | フォーム送信時（ユーザー操作） | `src/pages/contact/index.astro` | （リクエスト＝お問い合わせフォーム入力値。レスポンス仕様は**不明**＝OirasApp 側参照） | `/contact/` フォーム送信先 |
 
 ### 12.2 補足・前提
@@ -633,7 +630,7 @@ HP（oiranomori.jp）は、OirasApp 本体（**別リポ・別ホスティング
 - **環境変数**：OirasApp 連携は**いずれも環境変数を使わない**（公開 API・URL ハードコード・APIキー不要）。HP 側で関連する `.env` 変数はない。
 - **ホスト**：API・アイコンは `oiranomori.com/app/`、フォーム送信は `form.oiranomori.com/app/`（サブドメイン）。いずれも OirasApp 本体（別リポ・別ホスティング）。
 - **§2 補助 API（Open-Meteo / Google Maps）・§5 microCMS とは別系統**。本節はそれらを再掲しない。
-- **「不明」項目**（後日 OirasApp 側スキーマで補完）：#6 timeseries の詳細レスポンスフィールド、#11/#12 フォーム submit のレスポンス仕様。これらは HP 側コードからは確定できない。
+- **「不明」項目**（後日 OirasApp 側スキーマで補完）：#6 timeseries の詳細レスポンスフィールド、#12 フォーム submit のレスポンス仕様（#11 チェックアウト連絡フォームは撤去済みのため欠番）。これらは HP 側コードからは確定できない。
 
 ---
 

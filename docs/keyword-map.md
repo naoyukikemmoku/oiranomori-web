@@ -24,7 +24,7 @@
 | 区分 | ページ |
 |---|---|
 | ピラー（取引近接） | `/`（Light本体）, `/deep/`, `/light-guide/`, `/deep-guide/` |
-| 機能・実用 | `/firewood/`, `/rental/`, `/shop/`, `/passport/`, `/faq/`, `/access/`, `/map/`, `/reservation-guide/`, `/checkout/` |
+| 機能・実用 | `/firewood/`, `/rental/`, `/shop/`, `/passport/`, `/faq/`, `/access/`, `/map/`, `/reservation-guide/` |
 | 情報・読み物 | `/now/`, `/forest-daily/`, `/news/`, `/residents/`, `/oiras/`, `/media/`, `/about/` |
 | 外部（予約） | proX `489pro-x.com/.../oiranomori/`（planlist / search / member） |
 | 自動taxonomy（要監査） | `/properties_features/<term>/`（hammock-available, ソロ, 野営, グル 等） |
