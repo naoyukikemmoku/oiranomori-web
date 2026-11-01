@@ -13,11 +13,7 @@ export default defineConfig({
 			filter: (page) => {
 				const pathname = new URL(page).pathname;
 				// /sites/ とその客層ページ5件は index 対象のため除外しない。
-				return (
-					pathname !== "/404/" &&
-					!pathname.startsWith("/checkout/") &&
-					!pathname.includes("/thanks/")
-				);
+				return pathname !== "/404/" && !pathname.includes("/thanks/");
 			},
 			// <lastmod> は src/data/lastmod.json（手動更新の正本）から引く。
 			// ビルド時刻を使わないため、無関係なページの lastmod はビルドごとに変化しない。

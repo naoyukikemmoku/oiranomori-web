@@ -25,9 +25,9 @@
 
 
 # ---------- 3. /oiranomori/ 系（チェックアウト・お問い合わせ） ----------
-/oiranomori/checkout-procedure/           /checkout/                                              301
-/oiranomori/checkingout_check/            /checkout/                                              301
-/oiranomori/thanks/                       /checkout/thanks/                                       301
+/oiranomori/checkout-procedure/           /s/portal                                               301
+/oiranomori/checkingout_check/            /s/portal                                               301
+/oiranomori/thanks/                       /s/portal                                               301
 /oiranomori/contacts/                     /contact/                                               301
 
 
@@ -165,3 +165,11 @@
 # 杭に印刷する QR は https://oiranomori.jp/s/{code} 固定。転送先は App 側の置き場所に追従させる。
 # 302 にする: 301 はブラウザに記憶され、将来の転送先変更が効かなくなるため。
 /s/*                                      https://oiranomori.com/app/s/:splat                     302
+
+
+# ---------- 12. 旧チェックアウトフォーム → ここキャン地 ----------
+# /checkout/ フォームは撤去（受け口の submit.php は 2026-10-14 停止）。チェックアウトはここキャン地から案内する。
+/checkout/                                /s/portal                                               301
+/checkout                                 /s/portal                                               301
+/checkout/thanks/                         /s/portal                                               301
+/checkout/thanks                          /s/portal                                               301
