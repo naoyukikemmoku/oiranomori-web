@@ -90,6 +90,9 @@ for (const r of rules) {
 
 	// --- 2. チェーン ---
 	const next = matchRule(r.to);
+	// 転送先が 302 のルール（/s/* の中継点など）に当たる場合は多段として数えない。
+	// 302 の先は付け替える前提のため、最終URLへ直接向けるとその意味が失われる。
+	if (next && next.status === 302) continue;
 	if (next && next.from !== r.from) {
 		errors.push(
 			`L${r.line}: チェーン: ${r.from} → ${r.to} → ${next.to} (L${next.line}) ` +
