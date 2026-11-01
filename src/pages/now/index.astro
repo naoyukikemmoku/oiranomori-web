@@ -955,6 +955,7 @@ const DESCRIPTION =
     let livecamFailTimer: number | undefined;
     let livecamWatchTimer: number | undefined;
     let hlsJsLoader: Promise<any> | null = null;
+    let livecamStillFailed: string | null = null; // 読めなかった静止画の URL（同じ URL は出し直さない）
 
     // "H:MM"（JST）。日の出の再開時刻の表記用。
     function fmtHmJst(iso: string): string {
@@ -982,7 +983,8 @@ const DESCRIPTION =
       const isNight = data?.is_night === true;
       const s = data?.still;
       const takenMs = s?.taken_at ? new Date(s.taken_at).getTime() : Number.NaN;
-      const hasStill = !!s && typeof s.url === "string" && /^https:\/\//.test(s.url) && !Number.isNaN(takenMs);
+      const hasStill = !!s && typeof s.url === "string" && /^https:\/\//.test(s.url) && !Number.isNaN(takenMs)
+        && s.url !== livecamStillFailed;
       const ageS = hasStill ? Math.max(0, (Date.now() - takenMs) / 1000) : null;
       // 昼で1時間を超えたら止まった扱い：古い静止画を「最新」に見せない（A4 の停止中と同じ作法）
       const stopped = hasStill && !isNight && ageS != null && ageS > STALE_DOWN_S;
@@ -1136,8 +1138,12 @@ const DESCRIPTION =
       video.addEventListener("pause", () => { if (livecamState === "playing") livecamHls?.stopLoad(); });
       video.addEventListener("play", () => { if (livecamState === "playing") livecamHls?.startLoad(); });
 
-      // 静止画が読めなければ代わりの表示（暗い枠＋再生ボタン）のまま
-      still?.addEventListener("error", () => { still.hidden = true; });
+      // 静止画が読めなければ代わりの表示（暗い枠＋再生ボタン）にし、撮影時刻も消す
+      still?.addEventListener("error", () => {
+        livecamStillFailed = still.getAttribute("src");
+        if (livecamState === "idle") renderLivecamPoster(getEl("livecam-play-label")?.textContent ?? LIVECAM_PLAY_LABEL);
+        else still.hidden = true;
+      });
 
       // タブが裏に回ったら止める。戻っても、再生ボタンを押すまで再開しない
       document.addEventListener("visibilitychange", () => {
