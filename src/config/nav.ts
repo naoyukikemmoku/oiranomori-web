@@ -103,7 +103,7 @@ export const siteNav: SiteNavGroup[] = [
 			},
 			// 会員の入口は App の会員ページ（中にログインと proX の新規登録への導線がある）。同じタブで開く
 			{ label: "会員ページ", href: APP_MEMBER_URL },
-			{ label: "チェックアウトの連絡", href: "/checkout/" },
+			{ label: "ここキャン地", href: "/s/portal" },
 			{ label: "キャンセルポリシー", href: "/policy/#cancel", menu: false },
 		],
 	},
