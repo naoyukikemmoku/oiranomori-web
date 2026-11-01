@@ -1,7 +1,7 @@
 // /now/（森の今の天気）のデータ層。サーバー（ビルド時）とクライアント共用。
 // 公開read API（GET限定・無認証・読取専用）から取得する。
-// livecam.php だけは対象外＝ビルド時に取らない（配信の videoID を焼き込むと
-// 配信を作り直した際に埋め込みが切れるため。実行時のみ取得する）。
+// livecam.php だけは対象外＝ビルド時に取らない（静止画の撮影時刻・夜間の判定は
+// 開いた時点のものが要るため。実行時のみ取得する）。
 
 export const NOW_API = {
 	current: "https://oiranomori.com/app/weather/api/public/current.php",
