@@ -617,7 +617,7 @@ HP（oiranomori.jp）は、OirasApp 本体（**別リポ・別ホスティング
 | 4 | `https://oiranomori.com/app/weather/api/public/warning.php` | GET | クライアント fetch（init・更新ボタン）。HTTP キャッシュ 300s 想定 | `src/pages/now/index.astro`（API.warning） | `ok` / `warnings[]`（`level`(emergency/warning/advisory)・`name`・`text`・`code`） | `/now/` A3「警報・注意報」バッジ |
 | 5 | `https://oiranomori.com/app/weather/api/public/advisory.php` | GET | クライアント fetch（init・更新ボタン） | `src/pages/now/index.astro`（API.advisory） | `ok` / `current.body`（解説テキスト）/ `weekly.body` / `weekly.target_date` | `/now/` A1「おいらの天気解説」「おいらの週間天気解説」 |
 | 6 | `https://oiranomori.com/app/weather/api/public/timeseries.php?range={range}` | GET | クライアント fetch（A5 初回ロード・range ボタン押下で再取得）。range 既定 `1w` | `src/pages/now/index.astro`（API.timeseries・`loadTrend`） | `ok` / 時系列データ（`drawTrend` に渡すグラフ用系列。詳細フィールドは**不明**＝OirasApp 側スキーマ参照） | `/now/` A5「気温トレンド」グラフ |
-| 7 | `https://oiranomori.com/app/weather/api/public/livecam.php` | GET | クライアント fetch（init・更新ボタン）。`ok` を前提しない専用フェッチ | `src/pages/now/index.astro`（API.livecam） | `is_live` / `video_id` / `checked_at` / `stale` | `/now/` ライブカメラ枠（YouTube 埋め込み or プレースホルダ） |
+| 7 | `https://oiranomori.com/app/weather/api/public/livecam.php` | GET | クライアント fetch（init・更新ボタン）。`ok` を前提しない専用フェッチ | `src/pages/now/index.astro`（API.livecam） | `hls_url` / `still`（`url`・`taken_at`。無ければ `null`）/ `is_night` / `next_sunrise` / `generated_at` | `/now/` ライブカメラ枠（静止画 or 代わりの表示 → タップで HLS の映像。§12.3） |
 | 8 | `https://oiranomori.com/app/weather/api/public/satellite.php?hours=72` | GET | クライアント fetch（A6 衛星タブ初期化時） | `src/pages/now/index.astro`（SAT_API） | `ok` / `frames[]`（`datetime`・`url`）/ `latest` | `/now/` A6「衛星」タブ（コマ送り画像） |
 | 9 | `https://oiranomori.com/app/camp/api/congestion.php?from=YYYY-MM-DD&days=N` | GET | クライアント fetch（コンポーネント可視時）。`from` 省略=当日JST／`days` 省略=120（1〜366クランプ）。CORS は本番で oiranomori.jp 許可済み（GET/OPTIONS, max-age=300） | `src/lib/availability.ts`（`buildCongestionUrl`）→ `src/components/CongestionMatrix.astro` / `src/components/SilenceCalendar.astro` | `ok` / `range{from,days}` / `areas`（`auto`/`kukaku`/`deep`/`dogrun` 各 `capacity`・`days[]{date,remain,label,closed}`・`sizes?`〔`days[]{date,remain,closed}`〕。`closed`＝売り止めの日（OirasApp の stop_sells・proX を含む行）で、remain・label より優先して「休み」と出す。SilenceCalendar は休みの日を静かな日に数えない） | トップ AVAILABILITY 節（CongestionMatrix）・`/deep/` Silence（SilenceCalendar） |
 | 10 | `https://oiranomori.com/app/weather/icons/{icon_key}.svg` | GET（画像/SVG） | クライアント実行時に `icon_key` から URL 組み立て（自前天気アイコン） | `src/lib/weatherIcon.ts`（`iconUrl`） | （SVG 画像アセット。`currentColor` 単色・viewBox 0 0 128 128） | ヘッダー・`/now/` の各天気アイコン |
@@ -626,11 +626,30 @@ HP（oiranomori.jp）は、OirasApp 本体（**別リポ・別ホスティング
 ### 12.2 補足・前提
 
 - **取得タイミングは全件クライアント fetch**。動的データ（気象・混雑・ライブ）のためビルド時には取り込まない。フェッチ頻度は HTTP キャッシュに委ね、HP 側は追加ポーリングしない（`/now/` の current=60s / forecast=warning=300s はコメント上の想定値）。
-- **鮮度判定は HP 側**。API レスポンスの `age_seconds`（current）・`checked_at`+`stale`（livecam）・`latest`（satellite）を使い、閾値超で警告色・停止中表示・プレースホルダ落としに縮退する（`/now/`: STALE_WARN_S=1200 / STALE_DOWN_S=3600、LIVECAM_STALE_MAX_S=3600）。
+- **鮮度判定は HP 側**。API レスポンスの `age_seconds`（current）・`still.taken_at`（livecam）・`latest`（satellite）を使い、閾値超で警告色・停止中表示・代わりの表示に縮退する（`/now/`: STALE_WARN_S=1200 / STALE_DOWN_S=3600）。
 - **環境変数**：OirasApp 連携は**いずれも環境変数を使わない**（公開 API・URL ハードコード・APIキー不要）。HP 側で関連する `.env` 変数はない。
 - **ホスト**：API・アイコンは `oiranomori.com/app/`、フォーム送信は `form.oiranomori.com/app/`（サブドメイン）。いずれも OirasApp 本体（別リポ・別ホスティング）。
 - **§2 補助 API（Open-Meteo / Google Maps）・§5 microCMS とは別系統**。本節はそれらを再掲しない。
 - **「不明」項目**（後日 OirasApp 側スキーマで補完）：#6 timeseries の詳細レスポンスフィールド、#12 フォーム submit のレスポンス仕様（#11 チェックアウト連絡フォームは撤去済みのため欠番）。これらは HP 側コードからは確定できない。
+
+### 12.3 ライブカメラ（`/now/` `#livecam`）の見せ方
+
+映像は OirasApp の VPS が中継し、HLS（`hls_url`）で配る。見られている間だけカメラから取りに行く作りのため、**ページを開いただけでは映像を読み込まない**。YouTube ライブの埋め込みは 2026-11 に廃止（トップの JSON-LD `sameAs` とフッターの YouTube チャンネルは公式 SNS として残す）。
+
+- **最初の表示**：livecam.php を実行時に読む（ビルド時には取らない）。
+  - `still` があれば静止画と撮影時刻（「○分前（M/D HH:MM 撮影）」）を出す。昼（`is_night`=false）は撮影から20分超で警告色、1時間超で止まった扱い（静止画を出さず「静止画の更新が止まっています」）。
+  - 夜（`is_night`=true）は古さを判定せず「夜間は静止画を更新していません（日の出 H:MM ごろ再開）」。`next_sunrise` が `null` なら時刻を省く。
+  - `still` が `null`・livecam.php が読めない・静止画が読めないときは、暗い枠に再生ボタンと「タップでライブ映像を再生」（代わりの表示）。既存の写真を「最新の様子」に見える形で置かない。
+  - どの場合も枠の中に再生ボタンを出す。枠は 4:3。
+- **タップしたら**：`video`（`muted`・`playsinline`・`controls`・`preload="none"`・autoplay なし）で再生する。
+  - 選び方は hls.js が先：`Hls.isSupported()` → hls.js、だめなときだけ `canPlayType('application/vnd.apple.mpegurl')` でブラウザの再生、どちらも無理なら「このブラウザでは再生できません」。
+  - hls.js はタップしたときに初めて読み込む（cdnjs・版固定・SRI。版は App の確認用ページに合わせる）。npm の依存にはしない。
+  - 映像が出るまで「読み込み中」。20秒で出なければ「映像を読み込めませんでした」と最初の表示に戻し、もう一度押せば再試行できる。
+- **見ていないときに読み込み続けない**：
+  - タブが裏に回ったら（visibilitychange）止める。戻っても、再生ボタン（「続けて見る」）を押すまで再開しない。
+  - 再生を始めてから5分で止め、「続けて見る」を出す。
+  - 止めるときは hls.js を破棄し、`video` の src を外す。一時停止中は hls.js の読み込みも止める。
+- 「配信は機器メンテナンス等で一時停止する場合があります」の注記を枠の下に置く。`#livecam` は /now/ の最下部、ページ内ナビには入れない。
 
 ---
 
