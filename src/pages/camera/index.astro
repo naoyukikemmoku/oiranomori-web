@@ -1,0 +1,773 @@
+---
+import FloatingNav from "../../components/FloatingNav.astro";
+import Header from "../../components/Header.astro";
+import LiveCam from "../../components/LiveCam.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { TABS } from "../../lib/camera";
+
+// 場内カメラの記録。写真とタイムラプスは camera.php、今の様子は livecam.php を実行時に読む
+// （どちらもビルド時には取らない）。選んだタブと条件はクエリに持たせ、リンクで共有できる。
+// 手本は環境省「インターネット自然研究所」。
+
+const TITLE = "場内カメラの記録｜森の写真とタイムラプス | 里山パークおいらの森";
+const DESCRIPTION =
+	"おいらの森の場内カメラが昼のあいだ15分おきに撮る森の写真と、1日・1週間・1か月のタイムラプス。今日の様子、日付ごとの写真、毎日・毎月・毎年の同じ時刻の写真を並べて見比べられます。";
+
+const tabRows = [TABS.slice(0, 3), TABS.slice(3)];
+---
+
+<BaseLayout
+  title={TITLE}
+  description={DESCRIPTION}
+  lastUpdated="2026年11月"
+>
+
+  <script slot="head" is:inline type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": TITLE,
+    "description": DESCRIPTION,
+    "url": "https://oiranomori.jp/camera/",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "里山パークおいらの森",
+      "url": "https://oiranomori.jp"
+    }
+  })} />
+
+  <Header />
+  <FloatingNav />
+
+  <main class="pb-16 pt-[var(--header-offset)]">
+
+    {/* ページヘッダー（/now/ と同じ組み方） */}
+    <div class="border-b border-zinc-200 bg-white px-5 py-5">
+      <div class="mx-auto max-w-6xl">
+        <p class="text-[11px] tracking-[0.28em] text-zinc-400 uppercase">Camera Archive</p>
+        <h1 class="mt-1 text-3xl font-semibold tracking-tight text-zinc-900">場内カメラの記録</h1>
+        <div class="mt-3 max-w-3xl space-y-1.5 text-sm leading-relaxed text-zinc-600">
+          <p>場内のカメラが、昼のあいだ15分おきに森を撮っています。日の出の少し前から、日が沈んだ少し後まで。</p>
+          <p>1日の写真はその日の夜に、1週間と1か月の写真は次の週・次の月のはじめに、タイムラプスになります。</p>
+          <p>同じ時刻の写真を日ごと・月ごと・年ごとに並べると、森の移り変わりが見えてきます。</p>
+        </div>
+        <a
+          href="/now/"
+          class="mt-2 inline-flex items-center gap-1 text-xs tracking-[0.08em] text-zinc-600 underline underline-offset-4 transition hover:text-zinc-900"
+        >森のいま（天気・気温）→</a>
+      </div>
+    </div>
+
+    {/* タブ（2段）。リンクなので JS が無くても開ける。JS は押されたら画面を差し替える */}
+    <nav aria-label="記録の見方" class="border-b border-zinc-200 bg-white">
+      <div class="mx-auto max-w-6xl px-5">
+        {tabRows.map((row, i) => (
+          <ul class:list={["grid grid-cols-3", i > 0 && "border-t border-zinc-100"]}>
+            {row.map((t) => (
+              <li>
+                <a
+                  href={t.id === "today" ? "/camera/" : `/camera/?tab=${t.id}`}
+                  data-tab={t.id}
+                  class="cam-tab block border-b-2 border-transparent py-3 text-center text-sm tracking-[0.1em] text-zinc-500 transition hover:text-zinc-900"
+                >{t.label}</a>
+              </li>
+            ))}
+          </ul>
+        ))}
+      </div>
+    </nav>
+
+    <div class="mx-auto max-w-6xl px-5">
+
+      {/* 今日：頭に今の様子（#livecam の部品）。他のタブでは隠す（タブが決まるまでは隠しておく） */}
+      <div id="cam-today" hidden>
+        <LiveCam eyebrow="Now" heading="今の様子" class="py-6" />
+      </div>
+
+      {/* 各タブの中身（JS が描く） */}
+      <div id="cam-panel" aria-live="polite">
+        <noscript>
+          <p class="py-8 text-sm text-zinc-500">写真とタイムラプスの一覧を見るには JavaScript を有効にしてください。</p>
+        </noscript>
+      </div>
+    </div>
+
+    {/* 大きく表示（写真は縮小版・原寸も開ける／週のタイムラプス） */}
+    <dialog
+      id="cam-viewer"
+      aria-label="写真を大きく表示"
+      class="m-auto w-[calc(100%-2rem)] max-w-5xl bg-transparent p-0 text-zinc-100 backdrop:bg-black/85"
+    >
+      <div id="cam-viewer-media" class="relative aspect-[4/3] w-full bg-black"></div>
+      <div class="mt-2 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 text-sm">
+        <p id="cam-viewer-caption" class="tracking-[0.06em]"></p>
+        <p class="flex items-center gap-5">
+          <a id="cam-viewer-full" href="#" target="_blank" rel="noopener" class="text-zinc-300 underline underline-offset-4 hover:text-white">原寸で開く</a>
+          <button id="cam-viewer-close" type="button" class="tracking-[0.1em] text-zinc-300 underline underline-offset-4 hover:text-white">閉じる</button>
+        </p>
+      </div>
+    </dialog>
+  </main>
+
+  <script>
+    import {
+      addDays,
+      addMonths,
+      DAILY_MAX_DAYS,
+      dayOfWeek,
+      daysBetween,
+      DOW,
+      fetchByMonth,
+      fetchByYear,
+      fetchDay,
+      fetchDays,
+      fetchMonth,
+      fetchRange,
+      fetchTime,
+      fmtMd,
+      fmtTime,
+      fmtYm,
+      fmtYmd,
+      fmtYmdDow,
+      HOURS,
+      parseState,
+      RECORD_START,
+      type State,
+      type Still,
+      stateToQuery,
+      type Tab,
+      todayJst,
+      type Video,
+    } from "../../lib/camera";
+    import { fetchLivecam, initLivecam, LIVECAM_API, renderLivecam } from "../../lib/livecam";
+
+    const getEl = (id: string) => document.getElementById(id);
+    const panel = getEl("cam-panel") as HTMLElement;
+    const todayBox = getEl("cam-today") as HTMLElement;
+
+    const today = todayJst();
+    let first = RECORD_START; // range.first_date（読めたら差し替える）
+    let state: State = { tab: "today" };
+    let renderToken = 0; // 古い描画の結果を捨てるための番号
+    let stopPlayer: (() => void) | null = null; // 日ごとのパラパラ再生を止める
+    let livecamLoaded = false;
+
+    // ── 小さな部品 ──────────────────────────────────────────────
+
+    const esc = (s: string) =>
+      s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c] as string);
+
+    const RECORD_NOTE = `記録は${fmtYmd(RECORD_START)}から。たまるとここに並びます`;
+    const note = (text: string) => `<p class="py-6 text-sm leading-relaxed text-zinc-500">${esc(text)}</p>`;
+    const LOADING = `<p class="py-8 text-sm text-zinc-400">読み込み中…</p>`;
+    const FAILED = note("写真の一覧を読み込めませんでした。時間をおいて開き直してください。");
+
+    // 大きく表示する写真の一覧（data-still の番号で引く）
+    let stills: { still: Still; caption: string }[] = [];
+    let videos: { video: Video; caption: string }[] = [];
+
+    function photoHtml(still: Still, caption: string): string {
+      const i = stills.push({ still, caption }) - 1;
+      return `<button type="button" data-still="${i}" class="block w-full cursor-zoom-in focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-700">
+        <img src="${esc(still.thumb_url)}" alt="${esc(caption)}の場内の写真" width="320" height="240" loading="lazy" decoding="async" class="aspect-[4/3] w-full bg-zinc-100 object-cover" />
+      </button>`;
+    }
+
+    // 写真の無い枠。埋めずに「欠け」と出す
+    const gapHtml = (text = "欠け") =>
+      `<div class="flex aspect-[4/3] w-full items-center justify-center bg-zinc-100 px-1 text-center text-[11px] leading-tight text-zinc-400">${esc(text)}</div>`;
+
+    function sectionHead(eyebrow: string, title: string): string {
+      return `<p class="text-[11px] tracking-[0.24em] text-zinc-400 uppercase">${esc(eyebrow)}</p>
+        <h2 class="mt-1 mb-3 text-lg font-semibold text-zinc-800">${esc(title)}</h2>`;
+    }
+
+    // タイムラプス（表紙つき・押すと再生・先に読み込まない）。無ければ同じ大きさの枠に一言
+    function videoFrame(video: Video | null, emptyText: string): string {
+      const inner = video
+        ? `<video class="absolute inset-0 h-full w-full object-contain" controls playsinline preload="none" poster="${esc(video.cover_url)}" src="${esc(video.url)}"></video>`
+        : `<p class="absolute inset-0 flex items-center justify-center px-6 text-center text-sm leading-relaxed text-zinc-300">${esc(emptyText)}</p>`;
+      return `<div class="relative aspect-[4/3] w-full max-w-3xl overflow-hidden border border-zinc-200 bg-zinc-900">${inner}</div>
+        ${video ? `<p class="mt-2 text-xs text-zinc-500">${Math.round(video.duration_s)}秒・写真${video.frames}枚</p>` : ""}`;
+    }
+
+    function timeSelect(id: string, value: string): string {
+      return `<label class="flex items-center gap-2 text-sm text-zinc-600">
+        <span>時刻</span>
+        <select id="${id}" class="border-b border-zinc-300 bg-transparent py-1 pr-1 text-zinc-800">
+          ${HOURS.map((h) => {
+            const t = `${String(h).padStart(2, "0")}:00`;
+            return `<option value="${t}"${t === value ? " selected" : ""}>${fmtTime(t)}</option>`;
+          }).join("")}
+        </select>
+      </label>`;
+    }
+
+    const dateInput = (id: string, label: string, value: string, min: string, max: string) =>
+      `<label class="flex items-center gap-2 text-sm text-zinc-600">
+        <span>${esc(label)}</span>
+        <input id="${id}" type="date" value="${value}" min="${min}" max="${max}" required class="border-b border-zinc-300 bg-transparent py-1 text-zinc-800" />
+      </label>`;
+
+    function yearOptions(fromYear: number, toYear: number, value: number): string {
+      let s = "";
+      for (let y = fromYear; y <= toYear; y++) s += `<option value="${y}"${y === value ? " selected" : ""}>${y}年</option>`;
+      return s;
+    }
+
+    // 文字だけの送りボタン（箱にしない）
+    const stepBtn = (id: string, label: string, disabled: boolean) =>
+      `<button id="${id}" type="button" ${disabled ? "disabled" : ""} class="whitespace-nowrap py-2 text-sm tracking-[0.08em] text-zinc-700 underline-offset-4 hover:underline disabled:cursor-default disabled:text-zinc-300 disabled:no-underline">${label}</button>`;
+
+    const formRow = (inner: string) =>
+      `<div class="flex flex-wrap items-center gap-x-6 gap-y-3 border-b border-zinc-200 py-4">${inner}</div>`;
+
+    // ── 画面の切り替え ──────────────────────────────────────────
+
+    function go(next: State, push = true): void {
+      // 時間別で今日を選んだら今日のタブへ
+      if (next.tab === "hourly" && next.date >= today) next = { tab: "today" };
+      const url = `/camera/${stateToQuery(next)}`;
+      if (push) history.pushState(null, "", url);
+      else history.replaceState(null, "", url);
+      state = next;
+      render();
+    }
+
+    function syncTabs(): void {
+      for (const a of document.querySelectorAll<HTMLAnchorElement>(".cam-tab")) {
+        const on = a.dataset.tab === state.tab;
+        a.classList.toggle("text-zinc-900", on);
+        a.classList.toggle("font-semibold", on);
+        a.classList.toggle("border-zinc-800", on);
+        a.classList.toggle("text-zinc-500", !on);
+        a.classList.toggle("border-transparent", !on);
+        if (on) a.setAttribute("aria-current", "page");
+        else a.removeAttribute("aria-current");
+      }
+    }
+
+    // タブを押したときの初めの状態（時刻は今の画面から引き継ぐ）
+    function tabDefault(tab: Tab): State {
+      const q = new URLSearchParams({ tab });
+      if ("time" in state) q.set("time", state.time);
+      return parseState(q, today, first);
+    }
+
+    function render(): void {
+      const token = ++renderToken;
+      stopPlayer?.();
+      stopPlayer = null;
+      stills = [];
+      videos = [];
+      syncTabs();
+
+      const onToday = state.tab === "today";
+      todayBox.hidden = !onToday;
+      if (onToday) {
+        if (!livecamLoaded) {
+          livecamLoaded = true;
+          fetchLivecam(LIVECAM_API).then(renderLivecam, () => renderLivecam(null));
+        }
+      } else {
+        // 見えないところで映像を流し続けない（一時停止すると部品が読み込みも止める）
+        (getEl("livecam-video") as HTMLVideoElement | null)?.pause();
+      }
+
+      panel.innerHTML = LOADING;
+      const done = (html: string) => { if (token === renderToken) panel.innerHTML = html; };
+      const fail = () => done(FAILED);
+      const s = state;
+      switch (s.tab) {
+        case "today":
+          fetchDay(today).then((d) => { done(dayHtml(d, true)); if (token === renderToken) bindDay(today, true); }, fail);
+          break;
+        case "hourly":
+          fetchDay(s.date).then((d) => { done(dayHtml(d, false)); if (token === renderToken) bindDay(s.date, false); }, fail);
+          break;
+        case "calendar":
+          Promise.all([fetchMonth(s.month), fetchTime(s.month, s.time)]).then(([m, t]) => {
+            done(calendarHtml(s, m, t));
+            if (token === renderToken) bindCalendar(s);
+          }, fail);
+          break;
+        case "daily":
+          fetchDays(s.from, s.to, s.time).then((days) => {
+            done(dailyHtml(s, days));
+            if (token === renderToken) bindDaily(s, days);
+          }, fail);
+          break;
+        case "monthly": {
+          const toYear = Number(s.to.slice(0, 4));
+          const fromYear = Math.max(Number(s.from.slice(0, 4)), toYear - 19); // API は20年まで
+          fetchByMonth(fromYear, toYear, s.from.slice(8, 10), s.time).then((d) => {
+            done(monthlyHtml(s, d.months));
+            if (token === renderToken) bindMonthly(s);
+          }, fail);
+          break;
+        }
+        case "yearly": {
+          const fromYear = Math.max(Number(s.from.slice(0, 4)), s.to - 19);
+          fetchByYear(fromYear, s.to, s.from.slice(5), s.time).then((d) => {
+            done(yearlyHtml(s, d.years));
+            if (token === renderToken) bindYearly(s);
+          }, fail);
+          break;
+        }
+      }
+    }
+
+    // ── 今日・時間別 ────────────────────────────────────────────
+
+    function dayHtml(d: Awaited<ReturnType<typeof fetchDay>>, isToday: boolean): string {
+      const date = d.date;
+      let head = "";
+      if (isToday) {
+        head = d.video
+          ? `<section class="border-t border-zinc-200 py-6">${sectionHead("Timelapse", `${fmtMd(date)}のタイムラプス`)}${videoFrame(d.video, "")}</section>`
+          : `<p class="border-t border-zinc-200 py-4 text-sm text-zinc-500">今日のタイムラプスは 21:30 ごろにできます</p>`;
+      } else {
+        head = `${dateBar(date)}
+          <section class="py-6">${sectionHead("Timelapse", `${fmtMd(date)}のタイムラプス`)}${videoFrame(d.video, "この日のタイムラプスはありません")}</section>`;
+      }
+
+      // 1時間ごとの行に :00・:15・:30・:45 の4枚。区切りが無い（撮っていない・まだ来ていない）位置は枠を出さない
+      const bySlot = new Map(d.slots.map((x) => [x.slot, x.still]));
+      const hours = [...new Set(d.slots.map((x) => Number(x.slot.slice(0, 2))))];
+      let rows = "";
+      for (const h of hours) {
+        const hh = String(h).padStart(2, "0");
+        const cells = ["00", "15", "30", "45"].map((mm) => {
+          const key = `${hh}:${mm}`;
+          if (!bySlot.has(key)) return `<div aria-hidden="true"></div>`;
+          const still = bySlot.get(key);
+          const label = `${h}:${mm}`;
+          return `<figure>${still ? photoHtml(still, `${fmtYmd(date)} ${label}`) : gapHtml()}
+            <figcaption class="mt-1 text-[11px] text-zinc-500">${label}</figcaption></figure>`;
+        });
+        rows += `<div class="flex gap-3 py-2">
+          <p class="w-9 shrink-0 pt-1 text-xs text-zinc-500">${h}時</p>
+          <div class="grid flex-1 grid-cols-4 gap-2 sm:gap-3">${cells.join("")}</div>
+        </div>`;
+      }
+
+      let photos: string;
+      if (d.slots.length > 0) {
+        photos = `<div class="max-w-4xl">${rows}</div>`;
+      } else if (date < RECORD_START) {
+        photos = note(RECORD_NOTE);
+      } else if (isToday) {
+        photos = note("今日の写真は、日の出の少し前から並びます");
+      } else {
+        photos = note("この日の写真はありません");
+      }
+
+      const prev = date > first
+        ? `<p class="py-6"><button id="cam-day-prev" type="button" class="text-sm tracking-[0.08em] text-zinc-700 underline underline-offset-4 hover:text-zinc-900">← 前の日の写真を見る</button></p>`
+        : "";
+
+      return `${head}
+        <section class="${isToday ? "" : "border-t border-zinc-200 "}py-6">
+          ${sectionHead("Photos", `${fmtMd(date)}の写真`)}
+          <p class="-mt-1 mb-2 text-xs text-zinc-500">15分おき。押すと大きく表示します。</p>
+          ${photos}
+        </section>
+        ${isToday ? prev : ""}`;
+    }
+
+    // 日付のバー：前の日・押すとカレンダーが開く日付・次の日・今日に戻る
+    function dateBar(date: string): string {
+      return `<div class="border-b border-zinc-200 py-3">
+        <div class="flex items-center justify-between gap-2">
+          ${stepBtn("cam-day-prev", "← 前の日", date <= first)}
+          <span class="relative">
+            <button id="cam-date-open" type="button" class="py-2 text-base tracking-[0.06em] text-zinc-900 underline decoration-zinc-300 underline-offset-8">${esc(fmtYmdDow(date))}</button>
+            <input id="cam-date-input" type="date" value="${date}" min="${first}" max="${today}" aria-label="日付を選ぶ" class="absolute inset-0 h-full w-full cursor-pointer opacity-0" />
+          </span>
+          ${stepBtn("cam-day-next", "次の日 →", false)}
+        </div>
+        <p class="mt-1 text-center"><a href="/camera/" id="cam-back-today" class="text-xs tracking-[0.08em] text-zinc-500 underline underline-offset-4 hover:text-zinc-900">今日に戻る</a></p>
+      </div>`;
+    }
+
+    function bindDay(date: string, isToday: boolean): void {
+      getEl("cam-day-prev")?.addEventListener("click", () => go({ tab: "hourly", date: addDays(date, -1) }));
+      if (isToday) return;
+      getEl("cam-day-next")?.addEventListener("click", () => go({ tab: "hourly", date: addDays(date, 1) }));
+      getEl("cam-back-today")?.addEventListener("click", (e) => { e.preventDefault(); go({ tab: "today" }); });
+      const input = getEl("cam-date-input") as HTMLInputElement | null;
+      input?.addEventListener("click", () => { try { input.showPicker(); } catch { /* 開けないブラウザはそのまま入力 */ } });
+      input?.addEventListener("change", () => {
+        const v = input.value;
+        if (v && v >= first && v <= today) go({ tab: "hourly", date: v });
+      });
+    }
+
+    // ── カレンダー ──────────────────────────────────────────────
+
+    function calendarHtml(
+      s: Extract<State, { tab: "calendar" }>,
+      m: Awaited<ReturnType<typeof fetchMonth>>,
+      t: Awaited<ReturnType<typeof fetchTime>>,
+    ): string {
+      const [y, mo] = s.month.split("-").map(Number);
+      const nextFirst = `${addMonths(s.month, 1)}-01`;
+      // 翌月1日の未明にできる。それまでは「できます」、過ぎても無ければ「ありません」
+      const monthlyEmpty = today <= nextFirst
+        ? `${mo}月のタイムラプスは${Number(nextFirst.slice(5, 7))}月1日にできます。それまでお待ちください。`
+        : `${mo}月のタイムラプスはありません`;
+      const head = `<section class="py-6">${sectionHead("Timelapse", `${mo}月のタイムラプス`)}${videoFrame(m.monthly, monthlyEmpty)}</section>`;
+
+      const nav = `<div class="flex items-center justify-between gap-2 border-y border-zinc-200 py-3">
+        ${stepBtn("cam-month-prev", "← 前の月", s.month <= first.slice(0, 7))}
+        <p class="text-base tracking-[0.06em] text-zinc-900">${esc(fmtYm(s.month))}</p>
+        ${stepBtn("cam-month-next", "次の月 →", s.month >= today.slice(0, 7))}
+      </div>`;
+      const controls = formRow(`<label class="flex items-center gap-2 text-sm text-zinc-600"><span>並べる写真の時刻</span>
+        <select id="cam-cal-time" class="border-b border-zinc-300 bg-transparent py-1 pr-1 text-zinc-800">
+          ${HOURS.map((h) => { const v = `${String(h).padStart(2, "0")}:00`; return `<option value="${v}"${v === s.time ? " selected" : ""}>${fmtTime(v)}</option>`; }).join("")}
+        </select></label>`);
+
+      const stillOf = new Map(t.days.map((d) => [d.date, d.still]));
+      const weekly = new Map(m.weekly.map((v) => [v.period_start, v]));
+      const firstDay = `${s.month}-01`;
+      const daysInMonth = m.days.length || new Date(Date.UTC(y, mo, 0)).getUTCDate();
+      let cursor = addDays(firstDay, -dayOfWeek(firstDay)); // その週の日曜
+      const lastDay = `${s.month}-${String(daysInMonth).padStart(2, "0")}`;
+
+      let rows = "";
+      while (cursor <= lastDay) {
+        const sunday = cursor;
+        let cells = "";
+        for (let i = 0; i < 7; i++) {
+          const date = addDays(sunday, i);
+          if (!date.startsWith(s.month)) { cells += `<div></div>`; continue; }
+          const dayNum = Number(date.slice(8));
+          const dow = dayOfWeek(date);
+          const numCls = dow === 0 ? "text-rose-700" : dow === 6 ? "text-sky-700" : "text-zinc-700";
+          if (date > today) {
+            cells += `<div class="min-w-0"><p class="text-[11px] ${numCls} opacity-40">${dayNum}</p></div>`;
+            continue;
+          }
+          const still = stillOf.get(date) ?? null;
+          const inner = still
+            ? `<img src="${esc(still.thumb_url)}" alt="" width="320" height="240" loading="lazy" decoding="async" class="aspect-[4/3] w-full bg-zinc-100 object-cover" />`
+            : gapHtml("写真なし");
+          const selectable = date >= first;
+          cells += selectable
+            ? `<button type="button" data-date="${date}" aria-label="${esc(fmtYmd(date))}の写真を見る" class="block min-w-0 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-700">
+                <p class="text-[11px] ${numCls}${date === today ? " font-semibold underline underline-offset-2" : ""}">${dayNum}</p>${inner}</button>`
+            : `<div class="min-w-0"><p class="text-[11px] ${numCls} opacity-60">${dayNum}</p>${inner}</div>`;
+        }
+        const wv = weekly.get(sunday);
+        let weekCell = `<div></div>`;
+        if (wv) {
+          const i = videos.push({ video: wv, caption: `${fmtMd(wv.period_start)}〜${fmtMd(wv.period_end)}のタイムラプス` }) - 1;
+          weekCell = `<button type="button" data-video="${i}" aria-label="${esc(videos[i].caption)}を再生" class="relative block min-w-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-700">
+            <p class="text-[11px] text-zinc-500">週</p>
+            <span class="relative block">
+              <img src="${esc(wv.cover_url)}" alt="" width="320" height="240" loading="lazy" decoding="async" class="aspect-[4/3] w-full bg-zinc-900 object-cover" />
+              <span class="absolute inset-0 flex items-center justify-center text-white" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="filter:drop-shadow(0 1px 2px rgba(0,0,0,.8))"><path d="M8 5.5v13l10.5-6.5z"/></svg></span>
+            </span></button>`;
+        }
+        rows += `<div class="grid grid-cols-8 gap-1 sm:gap-2">${cells}${weekCell}</div>`;
+        cursor = addDays(sunday, 7);
+      }
+
+      const dowHead = `<div class="grid grid-cols-8 gap-1 pb-1 text-center text-[11px] text-zinc-500 sm:gap-2">
+        ${DOW.map((d, i) => `<p class="${i === 0 ? "text-rose-700" : i === 6 ? "text-sky-700" : ""}">${d}</p>`).join("")}
+        <p>週</p></div>`;
+
+      const noPhotos = t.count === 0 && s.month <= first.slice(0, 7) ? note(RECORD_NOTE) : "";
+      return `${head}${nav}${controls}
+        <section class="py-4" aria-label="${esc(fmtYm(s.month))}のカレンダー">
+          ${dowHead}<div class="space-y-2">${rows}</div>
+          <p class="mt-3 text-xs text-zinc-500">日付を押すと、その日の写真を時間別に見られます。右端は日曜〜土曜の1週間のタイムラプス（次の日曜の未明にできます）。</p>
+          ${noPhotos}
+        </section>`;
+    }
+
+    function bindCalendar(s: Extract<State, { tab: "calendar" }>): void {
+      getEl("cam-month-prev")?.addEventListener("click", () => go({ ...s, month: addMonths(s.month, -1) }));
+      getEl("cam-month-next")?.addEventListener("click", () => go({ ...s, month: addMonths(s.month, 1) }));
+      getEl("cam-cal-time")?.addEventListener("change", (e) => go({ ...s, time: (e.target as HTMLSelectElement).value }));
+      for (const b of panel.querySelectorAll<HTMLElement>("[data-date]")) {
+        b.addEventListener("click", () => go({ tab: "hourly", date: b.dataset.date as string }));
+      }
+    }
+
+    // ── 日ごと（毎日同じ時刻） ───────────────────────────────────
+
+    const THUMB_CHUNK = 48;
+
+    function dailyHtml(s: Extract<State, { tab: "daily" }>, days: { date: string; still: Still | null }[]): string {
+      const form = formRow(`${dateInput("cam-from", "いつから", s.from, first, today)}
+        ${dateInput("cam-to", "いつまで", s.to, first, today)}
+        ${timeSelect("cam-time", s.time)}
+        <p class="text-xs text-zinc-400">最長1年</p>`);
+      if (!days.some((d) => d.still)) return `${form}${note(RECORD_NOTE)}`;
+
+      const player = `<section class="py-6">
+        ${sectionHead("Day by Day", `毎日 ${fmtTime(s.time)} の森`)}
+        <div class="max-w-3xl">
+          <div id="cam-play-frame" class="relative aspect-[4/3] w-full overflow-hidden bg-zinc-900">
+            <img id="cam-play-img" alt="" width="1280" height="960" decoding="async" class="absolute inset-0 h-full w-full object-cover" />
+            <p id="cam-play-gap" class="absolute inset-0 flex items-center justify-center text-sm text-zinc-300" hidden>欠け</p>
+            <p class="absolute left-0 top-0 flex items-baseline gap-3 bg-black/45 px-3 py-1.5 text-sm text-white">
+              <span id="cam-play-date"></span><span id="cam-play-count" class="text-xs text-zinc-200"></span>
+            </p>
+          </div>
+          <div class="mt-3 flex items-center gap-4">
+            <button id="cam-play" type="button" aria-label="再生" class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-zinc-800 text-white hover:bg-zinc-700">
+              <svg id="cam-play-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z"/></svg>
+            </button>
+            <input id="cam-play-range" type="range" min="0" max="${days.length - 1}" value="0" step="1" aria-label="日付を送る" class="w-full accent-zinc-700" />
+          </div>
+        </div>
+      </section>`;
+
+      return `${form}${player}
+        <section class="border-t border-zinc-200 py-6">
+          ${sectionHead("Photos", "並べて見る")}
+          <div id="cam-thumbs" class="grid grid-cols-3 gap-2 sm:grid-cols-5 lg:grid-cols-7"></div>
+          <div id="cam-thumbs-more" class="h-8"></div>
+        </section>`;
+    }
+
+    function bindDaily(s: Extract<State, { tab: "daily" }>, days: { date: string; still: Still | null }[]): void {
+      const from = getEl("cam-from") as HTMLInputElement;
+      const to = getEl("cam-to") as HTMLInputElement;
+      const apply = () => {
+        let f = from.value || s.from;
+        let t = to.value || s.to;
+        if (t > today) t = today;
+        if (f > t) [f, t] = [t, f];
+        if (daysBetween(f, t) >= DAILY_MAX_DAYS) f = addDays(t, -(DAILY_MAX_DAYS - 1));
+        go({ ...s, from: f, to: t });
+      };
+      from.addEventListener("change", apply);
+      to.addEventListener("change", apply);
+      getEl("cam-time")?.addEventListener("change", (e) => go({ ...s, time: (e.target as HTMLSelectElement).value }));
+      if (!days.some((d) => d.still)) return;
+
+      // パラパラ再生：1枚の枠で1日ずつ差し替える
+      const img = getEl("cam-play-img") as HTMLImageElement;
+      const gap = getEl("cam-play-gap") as HTMLElement;
+      const range = getEl("cam-play-range") as HTMLInputElement;
+      const btn = getEl("cam-play") as HTMLButtonElement;
+      const icon = getEl("cam-play-icon") as unknown as SVGElement;
+      let idx = 0;
+      let timer: number | undefined;
+      const preload = (i: number) => { const st = days[i]?.still; if (st) new Image().src = st.medium_url; };
+      const show = (i: number) => {
+        idx = i;
+        const d = days[i];
+        range.value = String(i);
+        (getEl("cam-play-date") as HTMLElement).textContent = fmtYmdDow(d.date);
+        (getEl("cam-play-count") as HTMLElement).textContent = `${i + 1} / ${days.length}日目`;
+        if (d.still) {
+          img.src = d.still.medium_url;
+          img.alt = `${fmtYmd(d.date)} ${fmtTime(s.time)}の場内の写真`;
+          img.hidden = false;
+          gap.hidden = true;
+        } else {
+          img.hidden = true;
+          gap.hidden = false;
+        }
+        preload(i + 1);
+        preload(i + 2);
+      };
+      const setPlaying = (on: boolean) => {
+        btn.setAttribute("aria-label", on ? "止める" : "再生");
+        icon.innerHTML = on ? `<path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/>` : `<path d="M8 5.5v13l10.5-6.5z"/>`;
+      };
+      const stop = () => { window.clearInterval(timer); timer = undefined; setPlaying(false); };
+      btn.addEventListener("click", () => {
+        if (timer !== undefined) { stop(); return; }
+        if (idx >= days.length - 1) show(0);
+        setPlaying(true);
+        timer = window.setInterval(() => {
+          if (idx >= days.length - 1) { stop(); return; }
+          show(idx + 1);
+        }, 600);
+      });
+      range.addEventListener("input", () => { stop(); show(Number(range.value)); });
+      stopPlayer = stop;
+      show(0);
+
+      // サムネイル：下へ送ると続きを読む
+      const grid = getEl("cam-thumbs") as HTMLElement;
+      const more = getEl("cam-thumbs-more") as HTMLElement;
+      let shown = 0;
+      const addChunk = () => {
+        const part = days.slice(shown, shown + THUMB_CHUNK);
+        grid.insertAdjacentHTML("beforeend", part.map((d) => `<figure>
+          ${d.still ? photoHtml(d.still, `${fmtYmd(d.date)} ${fmtTime(s.time)}`) : gapHtml()}
+          <figcaption class="mt-1 text-[11px] text-zinc-500">${esc(fmtMd(d.date))}（${DOW[dayOfWeek(d.date)]}）</figcaption></figure>`).join(""));
+        shown += part.length;
+        if (shown >= days.length) { io.disconnect(); more.remove(); }
+      };
+      const io = new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) addChunk(); }, { rootMargin: "400px" });
+      addChunk();
+      if (shown < days.length) io.observe(more);
+    }
+
+    // ── 月ごと・年ごと ──────────────────────────────────────────
+
+    function cardsHtml(items: { label: string; body: string }[]): string {
+      return `<div class="grid grid-cols-2 gap-x-3 gap-y-5 sm:grid-cols-3 lg:grid-cols-4">
+        ${items.map((it) => `<figure>${it.body}<figcaption class="mt-1 text-xs text-zinc-600">${esc(it.label)}</figcaption></figure>`).join("")}
+      </div>`;
+    }
+
+    function monthlyHtml(s: Extract<State, { tab: "monthly" }>, months: Awaited<ReturnType<typeof fetchByMonth>>["months"]): string {
+      const firstYear = Number(first.slice(0, 4));
+      const thisYear = Number(today.slice(0, 4));
+      const [toY, toM] = s.to.split("-").map(Number);
+      const monthOpts = Array.from({ length: 12 }, (_, i) => i + 1)
+        .map((m) => `<option value="${m}"${m === toM ? " selected" : ""}${toY === thisYear && m > Number(today.slice(5, 7)) ? " disabled" : ""}>${m}月</option>`).join("");
+      const form = formRow(`${dateInput("cam-from", "いつから", s.from, first, today)}
+        <label class="flex items-center gap-2 text-sm text-zinc-600"><span>何年何月まで</span>
+          <select id="cam-to-year" class="border-b border-zinc-300 bg-transparent py-1 text-zinc-800">${yearOptions(Math.min(firstYear, Number(s.from.slice(0, 4))), thisYear, toY)}</select>
+          <select id="cam-to-month" class="border-b border-zinc-300 bg-transparent py-1 text-zinc-800">${monthOpts}</select>
+        </label>
+        ${timeSelect("cam-time", s.time)}`);
+
+      const day = Number(s.from.slice(8, 10));
+      const list = months.filter((m) => m.month >= s.from.slice(0, 7) && m.month <= s.to && !(m.date && m.date > today));
+      const items = list.map((m) => {
+        const label = m.exists && m.date ? fmtYmd(m.date) : fmtYm(m.month);
+        const body = !m.exists ? gapHtml("この月には無い日") : m.still ? photoHtml(m.still, `${label} ${fmtTime(s.time)}`) : gapHtml();
+        return { label, body };
+      });
+      return `${form}<section class="py-6">
+        ${sectionHead("Month by Month", `毎月${day}日 ${fmtTime(s.time)} の森`)}
+        ${cardsHtml(items)}
+        ${list.filter((m) => m.still).length < 2 ? note(RECORD_NOTE) : ""}
+      </section>`;
+    }
+
+    function bindMonthly(s: Extract<State, { tab: "monthly" }>): void {
+      const from = getEl("cam-from") as HTMLInputElement;
+      const y = getEl("cam-to-year") as HTMLSelectElement;
+      const m = getEl("cam-to-month") as HTMLSelectElement;
+      const apply = () => {
+        const params = new URLSearchParams({
+          tab: "monthly",
+          from: from.value || s.from,
+          to: `${y.value}-${m.value.padStart(2, "0")}`,
+          time: s.time,
+        });
+        go(parseState(params, today, first));
+      };
+      from.addEventListener("change", apply);
+      y.addEventListener("change", apply);
+      m.addEventListener("change", apply);
+      getEl("cam-time")?.addEventListener("change", (e) => go({ ...s, time: (e.target as HTMLSelectElement).value }));
+    }
+
+    function yearlyHtml(s: Extract<State, { tab: "yearly" }>, years: Awaited<ReturnType<typeof fetchByYear>>["years"]): string {
+      const thisYear = Number(today.slice(0, 4));
+      const form = formRow(`${dateInput("cam-from", "いつから", s.from, first, today)}
+        <label class="flex items-center gap-2 text-sm text-zinc-600"><span>何年まで</span>
+          <select id="cam-to-year" class="border-b border-zinc-300 bg-transparent py-1 text-zinc-800">${yearOptions(Number(s.from.slice(0, 4)), thisYear, s.to)}</select>
+        </label>
+        ${timeSelect("cam-time", s.time)}`);
+
+      const md = s.from.slice(5);
+      const mdLabel = fmtMd(`2000-${md}`);
+      const list = years.filter((y) => !(y.date && y.date > today));
+      const items = list.map((y) => {
+        const label = y.exists ? `${y.year}年${mdLabel}` : `${y.year}年`;
+        const body = !y.exists ? gapHtml("この年には無い日") : y.still ? photoHtml(y.still, `${label} ${fmtTime(s.time)}`) : gapHtml();
+        return { label, body };
+      });
+      return `${form}<section class="py-6">
+        ${sectionHead("Year by Year", `毎年${mdLabel} ${fmtTime(s.time)} の森`)}
+        ${cardsHtml(items)}
+        ${list.filter((y) => y.still).length < 2 ? note(RECORD_NOTE) : ""}
+      </section>`;
+    }
+
+    function bindYearly(s: Extract<State, { tab: "yearly" }>): void {
+      const from = getEl("cam-from") as HTMLInputElement;
+      const y = getEl("cam-to-year") as HTMLSelectElement;
+      const apply = () => {
+        const params = new URLSearchParams({ tab: "yearly", from: from.value || s.from, to: y.value, time: s.time });
+        go(parseState(params, today, first));
+      };
+      from.addEventListener("change", apply);
+      y.addEventListener("change", apply);
+      getEl("cam-time")?.addEventListener("change", (e) => go({ ...s, time: (e.target as HTMLSelectElement).value }));
+    }
+
+    // ── 大きく表示 ──────────────────────────────────────────────
+
+    const viewer = getEl("cam-viewer") as HTMLDialogElement;
+    const viewerMedia = getEl("cam-viewer-media") as HTMLElement;
+    const viewerFull = getEl("cam-viewer-full") as HTMLAnchorElement;
+
+    function openViewer(html: string, caption: string, fullUrl: string | null): void {
+      viewerMedia.innerHTML = html;
+      (getEl("cam-viewer-caption") as HTMLElement).textContent = caption;
+      viewerFull.hidden = !fullUrl;
+      if (fullUrl) viewerFull.href = fullUrl;
+      viewer.showModal();
+    }
+    viewer.addEventListener("close", () => { viewerMedia.innerHTML = ""; });
+    // 枠の外（背景）を押したら閉じる
+    viewer.addEventListener("click", (e) => { if (e.target === viewer) viewer.close(); });
+    getEl("cam-viewer-close")?.addEventListener("click", () => viewer.close());
+
+    panel.addEventListener("click", (e) => {
+      const el = (e.target as HTMLElement).closest<HTMLElement>("[data-still],[data-video]");
+      if (!el) return;
+      if (el.dataset.still) {
+        const it = stills[Number(el.dataset.still)];
+        if (!it) return;
+        openViewer(
+          `<img src="${esc(it.still.medium_url)}" alt="${esc(it.caption)}の場内の写真" width="1280" height="960" class="absolute inset-0 h-full w-full object-contain" />`,
+          it.caption,
+          it.still.url,
+        );
+      } else if (el.dataset.video) {
+        const it = videos[Number(el.dataset.video)];
+        if (!it) return;
+        openViewer(
+          `<video class="absolute inset-0 h-full w-full object-contain" controls playsinline preload="none" poster="${esc(it.video.cover_url)}" src="${esc(it.video.url)}"></video>`,
+          it.caption,
+          null,
+        );
+      }
+    });
+
+    // ── はじめ ──────────────────────────────────────────────────
+
+    // タブはリンクのまま（新しいタブで開ける）。ふつうに押したときだけ画面を差し替える
+    for (const a of document.querySelectorAll<HTMLAnchorElement>(".cam-tab")) {
+      a.addEventListener("click", (e) => {
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+        e.preventDefault();
+        const tab = a.dataset.tab as Tab;
+        if (tab !== state.tab) go(tabDefault(tab));
+      });
+    }
+
+    window.addEventListener("popstate", () => {
+      state = parseState(new URLSearchParams(location.search), today, first);
+      render();
+    });
+
+    // 隠れている間に映像が出始めたら止める
+    const lcVideo = getEl("livecam-video") as HTMLVideoElement | null;
+    lcVideo?.addEventListener("playing", () => { if (todayBox.hidden) lcVideo.pause(); });
+
+    initLivecam();
+    fetchRange()
+      .then((r) => { if (r.first_date) first = r.first_date; }, () => {})
+      .finally(() => {
+        state = parseState(new URLSearchParams(location.search), today, first);
+        // 直した値でクエリを書き直す（共有したリンクが今の画面と同じになるように）
+        go(state, false);
+      });
+  </script>
+</BaseLayout>
