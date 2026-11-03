@@ -223,6 +223,7 @@ LP・全幅レイアウト用。BaseLayout をラップし、以下を追加す�
 | `OshiraseList.astro` | microCMS から取得したお知らせを表示。ホームでは最新3件。日付・カテゴリバッジ・タイトル・サブタイトルを表示。 |
 | `SeasonSlider.astro` | 4枚の森の四季画像カルーセル。6秒間隔で自動回転。前後ボタンとプログレスバーあり。 |
 | `Footer.astro` | 4カラムナビゲーション + SNS リンク + コピーライト。`lastUpdated` prop を受け取り表示。 |
+| `LiveCam.astro` | ライブカメラの枠（`#livecam`）。`/now/` から切り出し、`/now/` と `/camera/` の今日のタブで使う。動きは `src/lib/livecam.ts`（読み込みは使う側のページが呼ぶ）。見出しと外側の class だけ props で変えられる。1ページに1つ（§12.3）。 |
 
 ### フッターナビゲーション構成（4グループ）
 
@@ -301,7 +302,8 @@ LP・全幅レイアウト用。BaseLayout をラップし、以下を追加す�
 | `/about/` | PageLayout | 運営会社・関連組織 |
 | `/residents/` | BaseLayout（直接使用） | 森の住人（おいら・おかみの紹介） |
 | `/oiras/` | LpLayout | OIRAS（ボランティア・活動参加者向け） |
-| `/now/` | BaseLayout（直接使用） | 森のいま |
+| `/now/` | BaseLayout（直接使用） | 森のいま。ライブカメラ（`#livecam`）の下に `/camera/` へのリンク |
+| `/camera/` | BaseLayout（直接使用） | 場内カメラの記録。場内カメラの写真とタイムラプスを6つのタブで見せる（§12.4） |
 | `/media/` | PageLayout | メディア掲載・ロケ地。ロケ地・撮影利用（撮れる景色 `#location`・受け入れ条件・設備・アクセス・撮影までの流れ・問い合わせ時に伝える項目）とメディア掲載実績。団体貸し切りの案内は `/sites/group/#charter` へ移設 |
 | `/forest-day/` | BaseLayout（直接使用） | 何もしない贅沢を森の中で。日帰りで森で過ごす時間を伝える読み物。料金と予約導線は最後の節「森へ行ってみる」だけに置き、画面下に固定の「予約する」（ReserveCTA）を出さないため PageLayout を使わず Header・FloatingNav を直接組む |
 
@@ -395,6 +397,7 @@ description?: string
 | `/` | `LocalBusiness`, `Campground`, `PostalAddress`, `GeoCoordinates`, `OpeningHoursSpecification` |
 | `/about/` | `Organization`, `PostalAddress` |
 | `/access/` | `Place`, `PostalAddress`, `GeoCoordinates` |
+| `/camera/` | `WebPage`, `WebSite` |
 | `/contact/` | `ContactPage`, `WebSite`, `Organization` |
 | `/deep/` | `TouristAttraction`, `Campground` |
 | `/deep-guide/` | `WebPage`, `WebSite` |
@@ -617,11 +620,12 @@ HP（oiranomori.jp）は、OirasApp 本体（**別リポ・別ホスティング
 | 4 | `https://oiranomori.com/app/weather/api/public/warning.php` | GET | クライアント fetch（init・更新ボタン）。HTTP キャッシュ 300s 想定 | `src/pages/now/index.astro`（API.warning） | `ok` / `warnings[]`（`level`(emergency/warning/advisory)・`name`・`text`・`code`） | `/now/` A3「警報・注意報」バッジ |
 | 5 | `https://oiranomori.com/app/weather/api/public/advisory.php` | GET | クライアント fetch（init・更新ボタン） | `src/pages/now/index.astro`（API.advisory） | `ok` / `current.body`（解説テキスト）/ `weekly.body` / `weekly.target_date` | `/now/` A1「おいらの天気解説」「おいらの週間天気解説」 |
 | 6 | `https://oiranomori.com/app/weather/api/public/timeseries.php?range={range}` | GET | クライアント fetch（A5 初回ロード・range ボタン押下で再取得）。range 既定 `1w` | `src/pages/now/index.astro`（API.timeseries・`loadTrend`） | `ok` / 時系列データ（`drawTrend` に渡すグラフ用系列。詳細フィールドは**不明**＝OirasApp 側スキーマ参照） | `/now/` A5「気温トレンド」グラフ |
-| 7 | `https://oiranomori.com/app/weather/api/public/livecam.php` | GET | クライアント fetch（init・更新ボタン）。`ok` を前提しない専用フェッチ | `src/pages/now/index.astro`（API.livecam） | `hls_url` / `still`（`url`・`taken_at`。無ければ `null`）/ `is_night` / `next_sunrise` / `generated_at` | `/now/` ライブカメラ枠（静止画 or 代わりの表示 → タップで HLS の映像。§12.3） |
+| 7 | `https://oiranomori.com/app/weather/api/public/livecam.php` | GET | クライアント fetch（/now/ は init・更新ボタン、/camera/ は今日のタブを最初に開いたとき）。`ok` を前提しない専用フェッチ | `src/lib/livecam.ts`（`LIVECAM_API`・`fetchLivecam`）。呼ぶのは `src/pages/now/index.astro` と `src/pages/camera/index.astro` | `hls_url` / `still`（`url`・`taken_at`。無ければ `null`）/ `is_night` / `next_sunrise` / `generated_at` | `/now/`・`/camera/` のライブカメラ枠（静止画 or 代わりの表示 → タップで HLS の映像。§12.3） |
 | 8 | `https://oiranomori.com/app/weather/api/public/satellite.php?hours=72` | GET | クライアント fetch（A6 衛星タブ初期化時） | `src/pages/now/index.astro`（SAT_API） | `ok` / `frames[]`（`datetime`・`url`）/ `latest` | `/now/` A6「衛星」タブ（コマ送り画像） |
 | 9 | `https://oiranomori.com/app/camp/api/congestion.php?from=YYYY-MM-DD&days=N` | GET | クライアント fetch（コンポーネント可視時）。`from` 省略=当日JST／`days` 省略=120（1〜366クランプ）。CORS は本番で oiranomori.jp 許可済み（GET/OPTIONS, max-age=300） | `src/lib/availability.ts`（`buildCongestionUrl`）→ `src/components/CongestionMatrix.astro` / `src/components/SilenceCalendar.astro` | `ok` / `range{from,days}` / `areas`（`auto`/`kukaku`/`deep`/`dogrun` 各 `capacity`・`days[]{date,remain,label,closed}`・`sizes?`〔`days[]{date,remain,closed}`〕。`closed`＝売り止めの日（OirasApp の stop_sells・proX を含む行）で、remain・label より優先して「休み」と出す。SilenceCalendar は休みの日を静かな日に数えない） | トップ AVAILABILITY 節（CongestionMatrix）・`/deep/` Silence（SilenceCalendar） |
 | 10 | `https://oiranomori.com/app/weather/icons/{icon_key}.svg` | GET（画像/SVG） | クライアント実行時に `icon_key` から URL 組み立て（自前天気アイコン） | `src/lib/weatherIcon.ts`（`iconUrl`） | （SVG 画像アセット。`currentColor` 単色・viewBox 0 0 128 128） | ヘッダー・`/now/` の各天気アイコン |
 | 12 | `https://form.oiranomori.com/app/contact/submit.php` | POST（HTML form） | フォーム送信時（ユーザー操作） | `src/pages/contact/index.astro` | （リクエスト＝お問い合わせフォーム入力値。レスポンス仕様は**不明**＝OirasApp 側参照） | `/contact/` フォーム送信先 |
+| 13 | `https://oiranomori.com/app/weather/api/public/camera.php?view=…` | GET | クライアント fetch（/camera/ のタブ・条件を変えたとき）。HTTP キャッシュ 300s | `src/lib/camera.ts`（`CAMERA_API`）→ `src/pages/camera/index.astro` | `ok` / `range{first_date,last_date}` / view ごとに `slots`・`days`・`weekly`・`monthly`・`months`・`years`。写真 `still{taken_at,url,medium_url,thumb_url}`・動画 `video{url,cover_url,duration_s,frames}`。写真・動画の実体は `https://media.oiranomori.jp`（R2）を `<img>`・`<video>` で直接読む | `/camera/` 全タブ（§12.4） |
 
 ### 12.2 補足・前提
 
@@ -632,7 +636,7 @@ HP（oiranomori.jp）は、OirasApp 本体（**別リポ・別ホスティング
 - **§2 補助 API（Open-Meteo / Google Maps）・§5 microCMS とは別系統**。本節はそれらを再掲しない。
 - **「不明」項目**（後日 OirasApp 側スキーマで補完）：#6 timeseries の詳細レスポンスフィールド、#12 フォーム submit のレスポンス仕様（#11 チェックアウト連絡フォームは撤去済みのため欠番）。これらは HP 側コードからは確定できない。
 
-### 12.3 ライブカメラ（`/now/` `#livecam`）の見せ方
+### 12.3 ライブカメラ（`#livecam`・`/now/` と `/camera/`）の見せ方
 
 映像は OirasApp の VPS が中継し、HLS（`hls_url`）で配る。見られている間だけカメラから取りに行く作りのため、**ページを開いただけでは映像を読み込まない**。YouTube ライブの埋め込みは 2026-11 に廃止（トップの JSON-LD `sameAs` とフッターの YouTube チャンネルは公式 SNS として残す）。
 
@@ -649,7 +653,39 @@ HP（oiranomori.jp）は、OirasApp 本体（**別リポ・別ホスティング
   - タブが裏に回ったら（visibilitychange）止める。戻っても、再生ボタン（「続けて見る」）を押すまで再開しない。
   - 再生を始めてから5分で止め、「続けて見る」を出す。
   - 止めるときは hls.js を破棄し、`video` の src を外す。一時停止中は hls.js の読み込みも止める。
-- 「配信は機器メンテナンス等で一時停止する場合があります」の注記を枠の下に置く。`#livecam` は /now/ の最下部、ページ内ナビには入れない。
+- 「配信は機器メンテナンス等で一時停止する場合があります」の注記を枠の下に置く。`#livecam` は /now/ の最下部、ページ内ナビには入れない。その下に `/camera/` へのリンク。
+- **部品**：枠は `src/components/LiveCam.astro`、動きは `src/lib/livecam.ts`（2026-11 に /now/ から中身を変えずに切り出した）。読み込み（`fetchLivecam` → `renderLivecam`）と `initLivecam` は使う側のページが呼ぶ。/now/ は他の API と同じ `Promise.allSettled` の中で読む。/camera/ は今日のタブで使い、他のタブに移るときは映像を一時停止する（一時停止で hls.js の読み込みも止まる）。
+
+### 12.4 場内カメラの記録（`/camera/`）
+
+場内カメラの写真とタイムラプスを公開するページ。手本は環境省「インターネット自然研究所」。材料は camera.php（§12.1 #13・契約の正本は OirasApp の `docs/spec_weather.md`「一覧の公開 API（camera.php）」）と livecam.php（#7）。どちらも実行時に読み、ビルド時には取らない。写真は 2026-11-02 から、昼（日の出の15分前〜日没の15分後）の15分おき。
+
+- **タブは2段**（横に送る形にしない）。上の段：今日・時間別・カレンダー、下の段：日ごと・月ごと・年ごと。タブはリンクで、JS は押されたら画面を差し替える。
+- **クエリ**（選んだタブと条件。リンクで共有できる。開いたときに直した値でクエリを書き直す）：
+
+  | タブ | クエリ |
+  |---|---|
+  | 今日 | なし |
+  | 時間別 | `tab=hourly&date=YYYY-MM-DD` |
+  | カレンダー | `tab=calendar&month=YYYY-MM&time=HH:00` |
+  | 日ごと | `tab=daily&from=YYYY-MM-DD&to=YYYY-MM-DD&time=HH:00` |
+  | 月ごと | `tab=monthly&from=YYYY-MM-DD&to=YYYY-MM&time=HH:00`（from の日を毎月並べる） |
+  | 年ごと | `tab=yearly&from=YYYY-MM-DD&to=YYYY&time=HH:00`（from の月日を毎年並べる） |
+
+  - 時刻は1時間刻み（5:00〜19:00）・初めは 12:00。タブを移っても時刻は引き継ぐ。
+  - 日付は `range.first_date`（読めなければ 2026-11-02）から今日まで。今日より先・形の違う値は今日・既定に直す。時間別で今日を選んだら今日のタブにする。
+- **今日**：頭に今の様子（`LiveCam`）。今日のタイムラプスが無い間は「今日のタイムラプスは 21:30 ごろにできます」、できたら「○月○日のタイムラプス」。その下に今日の写真（1時間ごとの行に :00・:15・:30・:45 の4枚。押して開く仕組みは使わない）。まだ来ていない時刻・撮っていない時刻（日の出前など）の枠は出さない。最後に「前の日の写真を見る」（時間別の前の日へ）。
+- **時間別**：今日と同じ並び。頭は「○月○日のタイムラプス」（無い日は同じ大きさの枠に「この日のタイムラプスはありません」）。日付のバー：前の日・押すとカレンダーが開く日付・次の日・「今日に戻る」。
+- **カレンダー**：頭に「○月のタイムラプス」（無い月は翌月1日まで「○月のタイムラプスは○月1日にできます。それまでお待ちください。」、過ぎても無ければ「○月のタイムラプスはありません」）。月を送る（記録の最初の月〜今月）。並べる写真の時刻を選ぶ。日曜始まりで、各日のマスに選んだ時刻の写真（無い日は「写真なし」、今日より先の日は日付だけで押せない）。日付を押すとその日の時間別へ。各週の行の右端に、その週（日曜〜土曜）のタイムラプスの表紙（押すと大きく表示して再生）。無い週は空ける。
+- **日ごと**：いつから・いつまで（最長1年・366日）・時刻。1枚の枠で毎日の同じ時刻の写真を1日ずつ差し替える（再生ボタン・日付を送るつまみ・枠に日付と「○ / ○日目」）。その下にサムネイル（48枚ずつ、下へ送ると続きを読む）。期間で返す view が App 側にできるまでは、`view=time` を月ごとに呼んでつなぐ（`fetchDays`）。
+- **月ごと**：いつから（その日付の日を毎月）・何年何月まで（今月まで）・時刻。`view=by_month`（20年まで）。その月に無い日は「この月には無い日」。
+- **年ごと**：いつから（その月日を毎年）・何年まで（今年まで）・時刻。`view=by_year`（20年まで）。
+- **共通**：
+  - 写真を押すと大きく表示（縮小版 `medium_url`）。そこから原寸（`url`）を新しいタブで開ける。Esc・背景・「閉じる」で閉じる。
+  - 写真が無い枠は「欠け」（埋めない）。材料がまだ無い・少ない画面は空にせず「記録は2026年11月2日から。たまるとここに並びます」。
+  - タイムラプスは `<video>` に表紙を `poster` で付け、`preload="none"`。
+  - 並びの写真はサムネイル（`thumb_url`・幅 320）で `loading="lazy"`、画面に入った分から読む。
+  - 読めなかったときは「写真の一覧を読み込めませんでした。時間をおいて開き直してください。」
 
 ---
 

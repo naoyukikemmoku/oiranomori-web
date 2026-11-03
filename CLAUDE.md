@@ -1,6 +1,6 @@
 # 里山パークおいらの森 HP — Claude Code 向け開発ガイド（運用フェーズ）
 
-> **Version: 1.20**（変更履歴は本ファイル末尾「変更履歴」章を参照）
+> **Version: 1.21**（変更履歴は本ファイル末尾「変更履歴」章を参照）
 
 ---
 
@@ -338,3 +338,4 @@ Codeから計測データを取得する手段はない。施策評価が必要�
 | 1.18 | 2026-10-29 | spec に /forest-day/（何もしない贅沢を森の中で）を追記：§3 フッターナビ「おいらと森と」に「何もしない贅沢」、§4 ページ一覧（コンテンツ・関係者系、BaseLayout 直接使用・固定の「予約する」を出さない）、§6 JSON-LD 実装状況（`WebPage`, `WebSite`）。 |
 | 1.19 | 2026-11-01 | spec を /checkout/ 撤去に同期：§3 フッターナビの「チェックアウトの連絡」を「ここキャン地（`/s/portal`）」に、§4 ページ一覧から /checkout/・/checkout/thanks/ を削除、§7 転送表の /oiranomori/ 系の転送先を /s/portal に変え、旧チェックアウトフォーム（/checkout/・/checkout/thanks/ → /s/portal 301）の行を追加、§8 ビルド除外パスから /checkout/ を削除、§12.1 から #11 checkout submit.php を削除（欠番）。keyword-map の機能・実用から /checkout/ を削除。 |
 | 1.20 | 2026-11-01 | spec を /now/ ライブカメラの作り替えに同期：§12.1 #7 livecam.php の項目を新しい取り決め（`hls_url`・`still`・`is_night`・`next_sunrise`・`generated_at`）に、§12.2 の鮮度判定から LIVECAM_STALE_MAX_S を削除、§12.3「ライブカメラの見せ方」を新設（最初は静止画・タップで HLS・20秒で失敗・5分で止める・裏に回ったら止める・YouTube 埋め込みは廃止）。 |
+| 1.21 | 2026-11-03 | spec に /camera/（場内カメラの記録）を追記：§3 共通コンポーネントに `LiveCam.astro`（/now/ の `#livecam` を中身を変えずに切り出し・動きは `src/lib/livecam.ts`）、§4 ページ一覧に /camera/ と /now/ からのリンク、§6 JSON-LD（`WebPage`, `WebSite`）、§12.1 #7 livecam.php の呼び出し元を lib に・#13 camera.php を追加、§12.3 に部品と /camera/ での使い方、§12.4「場内カメラの記録（/camera/）」を新設（6つのタブ・クエリ・出し分け）。 |
