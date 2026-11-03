@@ -112,9 +112,7 @@ const tabRows = [TABS.slice(0, 3), TABS.slice(3)];
     import {
       addDays,
       addMonths,
-      DAILY_MAX_DAYS,
       dayOfWeek,
-      daysBetween,
       DOW,
       fetchByMonth,
       fetchByYear,
@@ -504,15 +502,17 @@ const tabRows = [TABS.slice(0, 3), TABS.slice(3)];
         ${dateInput("cam-to", "いつまで", s.to, first, today)}
         ${timeSelect("cam-time", s.time)}
         <p class="text-xs text-zinc-400">最長1年</p>`);
-      if (!days.some((d) => d.still)) return `${form}${note(RECORD_NOTE)}`;
+      if (days.length === 0) return `${form}${note(RECORD_NOTE)}`;
 
       const player = `<section class="py-6">
         ${sectionHead("Day by Day", `毎日 ${fmtTime(s.time)} の森`)}
         <div class="max-w-3xl">
           <div id="cam-play-frame" class="relative aspect-[4/3] w-full overflow-hidden bg-zinc-900">
-            <img id="cam-play-img" alt="" width="1280" height="960" decoding="async" class="absolute inset-0 h-full w-full object-cover" />
-            <p id="cam-play-gap" class="absolute inset-0 flex items-center justify-center text-sm text-zinc-300" hidden>欠け</p>
-            <p class="absolute left-0 top-0 flex items-baseline gap-3 bg-black/45 px-3 py-1.5 text-sm text-white">
+            <button id="cam-play-open" type="button" aria-label="この日の写真を大きく表示" class="absolute inset-0 block cursor-zoom-in disabled:cursor-default focus-visible:outline-2 focus-visible:outline-offset-[-4px] focus-visible:outline-zinc-100">
+              <img id="cam-play-img" alt="" width="1280" height="960" decoding="async" class="absolute inset-0 h-full w-full object-cover" />
+            </button>
+            <p id="cam-play-gap" class="pointer-events-none absolute inset-0 flex items-center justify-center text-sm text-zinc-300" hidden>欠け</p>
+            <p class="pointer-events-none absolute left-0 top-0 flex items-baseline gap-3 bg-black/45 px-3 py-1.5 text-sm text-white">
               <span id="cam-play-date"></span><span id="cam-play-count" class="text-xs text-zinc-200"></span>
             </p>
           </div>
@@ -525,7 +525,8 @@ const tabRows = [TABS.slice(0, 3), TABS.slice(3)];
         </div>
       </section>`;
 
-      return `${form}${player}
+      const fewNote = days.filter((d) => d.still).length < 2 ? note(RECORD_NOTE) : "";
+      return `${form}${player}${fewNote}
         <section class="border-t border-zinc-200 py-6">
           ${sectionHead("Photos", "並べて見る")}
           <div id="cam-thumbs" class="grid grid-cols-3 gap-2 sm:grid-cols-5 lg:grid-cols-7"></div>
@@ -536,18 +537,15 @@ const tabRows = [TABS.slice(0, 3), TABS.slice(3)];
     function bindDaily(s: Extract<State, { tab: "daily" }>, days: { date: string; still: Still | null }[]): void {
       const from = getEl("cam-from") as HTMLInputElement;
       const to = getEl("cam-to") as HTMLInputElement;
+      // 手入力の値もクエリと同じ直し方（記録の最初の日〜今日・最長1年）を通す
       const apply = () => {
-        let f = from.value || s.from;
-        let t = to.value || s.to;
-        if (t > today) t = today;
-        if (f > t) [f, t] = [t, f];
-        if (daysBetween(f, t) >= DAILY_MAX_DAYS) f = addDays(t, -(DAILY_MAX_DAYS - 1));
-        go({ ...s, from: f, to: t });
+        const params = new URLSearchParams({ tab: "daily", from: from.value || s.from, to: to.value || s.to, time: s.time });
+        go(parseState(params, today, first));
       };
       from.addEventListener("change", apply);
       to.addEventListener("change", apply);
       getEl("cam-time")?.addEventListener("change", (e) => go({ ...s, time: (e.target as HTMLSelectElement).value }));
-      if (!days.some((d) => d.still)) return;
+      if (days.length === 0) return;
 
       // パラパラ再生：1枚の枠で1日ずつ差し替える
       const img = getEl("cam-play-img") as HTMLImageElement;
@@ -555,6 +553,7 @@ const tabRows = [TABS.slice(0, 3), TABS.slice(3)];
       const range = getEl("cam-play-range") as HTMLInputElement;
       const btn = getEl("cam-play") as HTMLButtonElement;
       const icon = getEl("cam-play-icon") as unknown as SVGElement;
+      const open = getEl("cam-play-open") as HTMLButtonElement;
       let idx = 0;
       let timer: number | undefined;
       const preload = (i: number) => { const st = days[i]?.still; if (st) new Image().src = st.medium_url; };
@@ -569,9 +568,11 @@ const tabRows = [TABS.slice(0, 3), TABS.slice(3)];
           img.alt = `${fmtYmd(d.date)} ${fmtTime(s.time)}の場内の写真`;
           img.hidden = false;
           gap.hidden = true;
+          open.disabled = false;
         } else {
           img.hidden = true;
           gap.hidden = false;
+          open.disabled = true;
         }
         preload(i + 1);
         preload(i + 2);
@@ -591,6 +592,18 @@ const tabRows = [TABS.slice(0, 3), TABS.slice(3)];
         }, 600);
       });
       range.addEventListener("input", () => { stop(); show(Number(range.value)); });
+      // 枠の写真を押すと大きく表示（再生は止める）
+      open.addEventListener("click", () => {
+        const d = days[idx];
+        if (!d?.still) return;
+        stop();
+        const caption = `${fmtYmd(d.date)} ${fmtTime(s.time)}`;
+        openViewer(
+          `<img src="${esc(d.still.medium_url)}" alt="${esc(caption)}の場内の写真" width="1280" height="960" class="absolute inset-0 h-full w-full object-contain" />`,
+          caption,
+          d.still.url,
+        );
+      });
       stopPlayer = stop;
       show(0);
 
