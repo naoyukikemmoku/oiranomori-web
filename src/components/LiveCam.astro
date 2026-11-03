@@ -1,0 +1,66 @@
+---
+// ライブカメラの枠（#livecam）。/now/ から切り出したもの（マークアップは /now/ にあったときと同じ）。
+// 最初は最新の静止画（無ければ代わりの表示）、タップで HLS の映像に切り替える。
+// 映像はカメラから取りに行くため、ページを開いただけでは読み込まない。
+// livecam.php は実行時のみ取得（ビルド時 fetch 禁止）。ナビ項目化はしない。
+// 動きは lib/livecam.ts。使う側のページが fetchLivecam → renderLivecam と initLivecam を呼ぶ。
+// 1ページに1つだけ置く（id 固定）。
+interface Props {
+	eyebrow?: string;
+	heading?: string;
+	class?: string;
+}
+const {
+	eyebrow = "Live Camera",
+	heading = "ライブカメラ",
+	class: cls = "border-t border-zinc-200 py-6",
+} = Astro.props;
+---
+<section id="livecam" class={cls}>
+  <p class="text-[11px] tracking-[0.24em] text-zinc-400 uppercase">{eyebrow}</p>
+  <h2 class="mt-1 mb-3 text-lg font-semibold text-zinc-800">{heading}</h2>
+
+  {/* 映像枠（4:3）。静止画・映像・再生ボタンを重ねて JS が出し分ける */}
+  <div id="livecam-box" class="relative aspect-[4/3] w-full max-w-3xl overflow-hidden border border-zinc-200 bg-zinc-900">
+    <img
+      id="livecam-still"
+      alt="ライブカメラの最新の静止画"
+      width="2560"
+      height="1920"
+      loading="lazy"
+      decoding="async"
+      class="absolute inset-0 h-full w-full object-cover"
+      hidden
+    />
+    <video
+      id="livecam-video"
+      class="absolute inset-0 h-full w-full bg-black object-contain"
+      muted
+      playsinline
+      controls
+      preload="none"
+      hidden
+    ></video>
+    <button
+      id="livecam-play"
+      type="button"
+      class="absolute inset-0 flex flex-col items-center justify-center gap-3 px-5 text-center text-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-[-4px] focus-visible:outline-zinc-100"
+    >
+      <span class="flex h-16 w-16 items-center justify-center rounded-full bg-black/55" aria-hidden="true">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l10.5-6.5z" /></svg>
+      </span>
+      <span id="livecam-play-label" class="text-sm tracking-[0.08em]" style="text-shadow:0 1px 4px rgba(0,0,0,.85)">タップでライブ映像を再生</span>
+    </button>
+    <p
+      id="livecam-loading"
+      class="absolute inset-0 flex items-center justify-center bg-black/45 px-5 text-center text-sm text-zinc-200"
+      hidden
+    >読み込み中…（映像が出るまで十数秒かかることがあります）</p>
+  </div>
+
+  <div class="mt-2 flex max-w-3xl flex-wrap items-center justify-between gap-x-4 gap-y-1">
+    {/* 静止画の撮影時刻・夜間・停止中の注記（JS が出し分ける） */}
+    <p id="livecam-meta" class="text-xs text-zinc-500" aria-live="polite"></p>
+    <p class="text-xs text-zinc-500">配信は機器メンテナンス等で一時停止する場合があります</p>
+  </div>
+</section>
