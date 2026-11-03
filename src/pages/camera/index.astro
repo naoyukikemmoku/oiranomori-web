@@ -136,7 +136,7 @@ const tabRows = [TABS.slice(0, 3), TABS.slice(3)];
       todayJst,
       type Video,
     } from "../../lib/camera";
-    import { fetchLivecam, initLivecam, LIVECAM_API, renderLivecam } from "../../lib/livecam";
+    import { fetchLivecam, initLivecam, LIVECAM_API, renderLivecam, stopLivecamTo } from "../../lib/livecam";
 
     const getEl = (id: string) => document.getElementById(id);
     const panel = getEl("cam-panel") as HTMLElement;
@@ -267,8 +267,9 @@ const tabRows = [TABS.slice(0, 3), TABS.slice(3)];
           fetchLivecam(LIVECAM_API).then(renderLivecam, () => renderLivecam(null));
         }
       } else {
-        // 見えないところで映像を流し続けない（一時停止すると部品が読み込みも止める）
-        (getEl("livecam-video") as HTMLVideoElement | null)?.pause();
+        // 見えないところで映像を流し続けない。読み込み中・再生中（再生ボタンが隠れている）なら、
+        // タブが裏に回ったときと同じ止め方をする（hls.js を破棄し、戻ったら「続けて見る」）
+        if (getEl("livecam-play")?.hidden) stopLivecamTo("続けて見る");
       }
 
       panel.innerHTML = LOADING;
@@ -447,13 +448,11 @@ const tabRows = [TABS.slice(0, 3), TABS.slice(3)];
             continue;
           }
           const still = stillOf.get(date) ?? null;
-          const inner = still
-            ? `<img src="${esc(still.thumb_url)}" alt="" width="320" height="240" loading="lazy" decoding="async" class="aspect-[4/3] w-full bg-zinc-100 object-cover" />`
-            : gapHtml("写真なし");
+          // 日付を押すと時間別へ、写真を押すと大きく表示（押す場所を分ける）
+          const inner = still ? photoHtml(still, `${fmtYmd(date)} ${fmtTime(s.time)}`) : gapHtml("写真なし");
           const selectable = date >= first;
           cells += selectable
-            ? `<button type="button" data-date="${date}" aria-label="${esc(fmtYmd(date))}の写真を見る" class="block min-w-0 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-700">
-                <p class="text-[11px] ${numCls}${date === today ? " font-semibold underline underline-offset-2" : ""}">${dayNum}</p>${inner}</button>`
+            ? `<div class="min-w-0"><button type="button" data-date="${date}" aria-label="${esc(fmtYmd(date))}の写真を時間別に見る" class="block w-full text-left text-[11px] ${numCls}${date === today ? " font-semibold" : ""} underline decoration-zinc-300 underline-offset-2 hover:decoration-current focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-zinc-700">${dayNum}</button>${inner}</div>`
             : `<div class="min-w-0"><p class="text-[11px] ${numCls} opacity-60">${dayNum}</p>${inner}</div>`;
         }
         const wv = weekly.get(sunday);
@@ -479,7 +478,7 @@ const tabRows = [TABS.slice(0, 3), TABS.slice(3)];
       return `${head}${nav}${controls}
         <section class="py-4" aria-label="${esc(fmtYm(s.month))}のカレンダー">
           ${dowHead}<div class="space-y-2">${rows}</div>
-          <p class="mt-3 text-xs text-zinc-500">日付を押すと、その日の写真を時間別に見られます。右端は日曜〜土曜の1週間のタイムラプス（次の日曜の未明にできます）。</p>
+          <p class="mt-3 text-xs text-zinc-500">日付の数字を押すと、その日の写真を時間別に見られます。写真を押すと大きく表示します。右端は日曜〜土曜の1週間のタイムラプス（次の日曜の未明にできます）。</p>
           ${noPhotos}
         </section>`;
     }
@@ -769,10 +768,6 @@ const tabRows = [TABS.slice(0, 3), TABS.slice(3)];
       state = parseState(new URLSearchParams(location.search), today, first);
       render();
     });
-
-    // 隠れている間に映像が出始めたら止める
-    const lcVideo = getEl("livecam-video") as HTMLVideoElement | null;
-    lcVideo?.addEventListener("playing", () => { if (todayBox.hidden) lcVideo.pause(); });
 
     initLivecam();
     fetchRange()

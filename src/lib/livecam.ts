@@ -158,7 +158,8 @@ function stopLivecam(): void {
 	if (loading) loading.hidden = true;
 }
 
-function stopLivecamTo(label: string): void {
+// 止めて最初の表示に戻す。/camera/ はタブを移るときにも呼ぶ
+export function stopLivecamTo(label: string): void {
 	stopLivecam();
 	renderLivecamPoster(label);
 }
