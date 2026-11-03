@@ -289,8 +289,10 @@ export function parseState(
 		case "yearly": {
 			const from = clampDate(q.get("from"), first);
 			const thisYear = Number(today.slice(0, 4));
-			const t = Number(q.get("to"));
-			let to = Number.isInteger(t) && t <= thisYear ? t : thisYear;
+			// 省略・形の違う値は今年（Number(null) は 0 になるので先に形を見る）
+			const raw = q.get("to");
+			const t = raw && /^\d{4}$/.test(raw) ? Number(raw) : thisYear;
+			let to = t <= thisYear ? t : thisYear;
 			if (to < Number(from.slice(0, 4))) to = Number(from.slice(0, 4));
 			return { tab, from, to, time };
 		}
