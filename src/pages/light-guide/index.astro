@@ -138,13 +138,32 @@ const scheduleNotes = [
 	},
 ];
 
+// 到着からお帰りまで。前日確認メールと同じ順・同じ言い方にそろえる。
+const arrivalSteps = [
+	{
+		title: "受付",
+		body: "到着後は、まず受付でご精算いただきます。場内の利用ルールやおすすめのサイト、ご滞在中に使うポータルサイトについてご案内します。受付には、スマートフォンをお持ちください。",
+	},
+	{
+		title: "サイトイン",
+		body: "サイトは、空いているところから先着順でお選びいただけます。サイトに着いたら、ポータルサイトで杭のQRコードを読み取ってサイトインします。",
+	},
+	{
+		title: "チェックアウト",
+		body: "チェックアウトは6:00〜12:00です。ポータルサイトから行えるため、受付に寄る必要はありません。",
+	},
+];
+
 // ルール。禁止の並べ立てではなく、理由と代替を添えて柔らかく。
 //   photo: true で「準備中」の写真枠を出す（写真は別途）
 const rules = [
 	{
 		title: "チェックアウト",
-		body: "受付に寄る必要はありません。ここキャン地からオンラインで手続きしてください。",
-		links: [{ href: "/s/portal", text: "ここキャン地" }],
+		body: "6:00〜12:00。ポータルサイトから行えるため、受付に寄る必要はありません。",
+		links: [
+			{ href: "#arrival", text: "到着からお帰りまで" },
+			{ href: "/s/portal", text: "ポータルサイト" },
+		],
 	},
 	{
 		title: "ゴミ",
@@ -230,6 +249,7 @@ const rules = [
         { href: "#facility", label: "設備" },
         { href: "#ac-power", label: "AC電源について" },
         { href: "#schedule", label: "ご利用の時間割" },
+        { href: "#arrival",  label: "到着からお帰りまで" },
         { href: "#sites",    label: "サイトの種類" },
         { href: "#rules",    label: "利用ルール" },
         { href: "#insects",  label: "昆虫採集" },
@@ -372,6 +392,22 @@ const rules = [
         <span aria-hidden="true">→</span>
       </a>
     </p>
+  </section>
+
+  {/* 到着からお帰りまで。前日確認メールの案内と同じ流れ */}
+  <section id="arrival" class="mb-16">
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">到着からお帰りまで</h2>
+    <ol class="divide-y divide-zinc-100 border-y border-zinc-200 text-sm">
+      {arrivalSteps.map((step, i) => (
+        <li class="grid grid-cols-[2rem_1fr] gap-4 py-5">
+          <span class="font-semibold tabular-nums text-[color:var(--light-accent)]">{i + 1}</span>
+          <div>
+            <h3 class="font-semibold text-zinc-800">{step.title}</h3>
+            <p class="mt-2 leading-loose text-zinc-600">{step.body}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
   </section>
 
   {/* サイトの種類。広さ・比較は /sites/ が正本のため、ここは入口だけ */}

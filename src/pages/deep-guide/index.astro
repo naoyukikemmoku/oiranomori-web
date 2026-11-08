@@ -57,7 +57,7 @@ const facilities = [
 <PageLayout
   title="ディープフォレスト 利用案内 | 里山パークおいらの森"
   description="ディープフォレストの利用案内。18歳以上限定フィールドのチェックイン時間・場内設備・禁止事項・基本4鉄則を、来場前に確認してください。"
-  lastUpdated="2026年10月"
+  lastUpdated="2026年11月"
 >
   <Fragment slot="head">
     <script is:inline type="application/ld+json" set:html={JSON.stringify({
@@ -160,12 +160,39 @@ const facilities = [
   {/* チェックイン */}
   <section id="checkin" class="mb-14">
     <h2 class="mb-5 text-xl font-semibold text-white">チェックイン</h2>
-    <dl class="divide-y divide-zinc-800 border-y border-zinc-700 text-sm">
+    <p class="text-sm leading-loose text-zinc-300">
+      受付はライトフォレストです。（年間・半年パスポートをお持ちの方は、受付を通らず直接入場することもできます）
+    </p>
+    <ol class="mt-5 divide-y divide-zinc-800 border-y border-zinc-700 text-sm">
       {[
-        { label: "通常チェックイン",    value: "12:00〜17:00。受付場所はライトフォレスト管理棟。管理棟にて支払いと利用説明を受け、手続き完了となります。" },
+        { title: "受付", body: "ご精算のあと、ディープフォレストの場所と利用方法、ポータルサイトについてご案内し、その場でサイトインします。受付には、スマートフォンをお持ちください。" },
+        { title: "ディープフォレストへ", body: "受付から車で約7分です。" },
+      ].map((step, i) => (
+        <li class="grid grid-cols-[2rem_1fr] gap-4 py-5">
+          <span class="font-semibold tabular-nums text-zinc-500">{i + 1}</span>
+          <div>
+            <h3 class="font-semibold text-white">{step.title}</h3>
+            <p class="mt-2 leading-loose text-zinc-300">{step.body}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+    <div class="mt-6 border-l-2 border-zinc-600 pl-5">
+      <h3 class="text-sm font-semibold text-white">到着の目安</h3>
+      <p class="mt-2 text-sm leading-loose text-zinc-400">
+        ディープフォレストは灯りのない森です。設営を明るいうちに終えられるよう、設営に慣れていない方は日没の2時間前、慣れている方でも1時間前を目安に受付へお越しください。
+      </p>
+      <p class="mt-2 text-sm leading-loose text-zinc-400">
+        初めての方で、目安の時刻を過ぎてからのご到着の場合は、ライトフォレストのオートサイトへご案内することがあります。
+      </p>
+      <p class="mt-2 text-sm leading-loose text-zinc-400">
+        ディープフォレストでは、テントのレンタルはご利用いただけません。
+      </p>
+    </div>
+    <dl class="mt-6 divide-y divide-zinc-800 border-y border-zinc-700 text-sm">
+      {[
         { label: "アーリーチェックイン", value: "9:00〜。無料。エリアに余裕がある場合に限り可能。前日までに電話または問い合わせフォームより要連絡。" },
         { label: "チェックインリミット", value: "17:00（厳守）。超過時は入場不可。連絡なき場合は無断キャンセル扱いとし、キャンセル料を請求します。遅れる場合は必ず連絡してください。" },
-        { label: "直接入場特例",        value: "年間半年パスポート保持者のみ、管理棟を通らず直接入場可能です。" },
         { label: "入出場・外出門限",    value: "日中の入出場は自由です。外出門限は18:00（日帰りのチェックアウトも18:00）。門限以降はひろばに車で入れません。" },
       ].map((item) => (
         <div class="grid grid-cols-[10rem_1fr] gap-4 py-5 sm:grid-cols-[14rem_1fr]">
@@ -179,10 +206,12 @@ const facilities = [
   {/* チェックアウト */}
   <section id="checkout" class="mb-14">
     <h2 class="mb-5 text-xl font-semibold text-white">チェックアウト・延長</h2>
-    <dl class="divide-y divide-zinc-800 border-y border-zinc-700 text-sm">
+    <p class="text-sm leading-loose text-zinc-300">
+      チェックアウトは6:00〜12:00です。ポータルサイトから行えるため、受付に寄る必要はありません。
+    </p>
+    <dl class="mt-5 divide-y divide-zinc-800 border-y border-zinc-700 text-sm">
       {[
-        { label: "通常チェックアウト", value: "12:00。専用のチェックアウトフォーム（HPアイコンクリック）より手続きを行ってください。管理棟へ寄る必要はありませんが、薪袋・バケツ等はライトフォレストへ返却してください。" },
-        { label: "早朝出発",          value: "07:00前にチェックアウトする場合は事前にお知らせください。" },
+        { label: "レンタル品の返却",   value: "薪袋・バケツ等はライトフォレストへ返却してください。" },
         { label: "チェックアウト延長", value: "エリアに余裕がある場合に限り、17:00まで無料で滞在可能です。12:00前までにお知らせください。ライトフォレストとルールが異なるため混同しないよう注意してください。" },
       ].map((item) => (
         <div class="grid grid-cols-[10rem_1fr] gap-4 py-5 sm:grid-cols-[14rem_1fr]">
@@ -223,7 +252,7 @@ const facilities = [
     <div class="mt-6 border-l-2 border-zinc-600 pl-5">
       <p class="text-sm font-semibold text-white">車両乗り入れについて</p>
       <p class="mt-2 text-sm leading-loose text-zinc-400">
-        日没（18:00）以降の広場への車両乗り入れ、車の移動、エンジン始動は禁止です。ドアの開け閉めや音の鳴るドアロックも極力控えてください。
+        日没以降の広場への車両乗り入れ、車の移動、エンジン始動は禁止です。ドアの開け閉めや音の鳴るドアロックも極力控えてください。
         ヘッドライトは点灯せず、オートライトはOFFに。懐中電灯や明るいランタンで他のサイトや森を照らさないでください。
         場内は徐行でお願いします。広場から先は車両進入禁止。傾斜がありキャリーカーの使用は困難なため、バックパックが便利です。
         車両進入禁止の看板を越えた場所での事故やスタックは、救助費用・現場修繕費用など実費（3〜5万円程度）を請求いたします。
