@@ -68,7 +68,7 @@ import LpLayout from "../../layouts/LpLayout.astro";
       <p class="text-xs tracking-[0.28em] text-zinc-500 uppercase">Missions</p>
       <h2 class="mt-4 text-3xl font-semibold text-white md:text-4xl">活動の3本柱</h2>
       <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-400">
-        オイラーズの活動は、単なるボランティアではなく、対価を伴う「真剣な作業（労働）」です。
+        オイラーズの活動は、単なるボランティアではなく、対価を伴う「真剣な作業」です。
         キャンプ場を共に盛り上げるパートナーとして、以下のミッションを担っていただきます。
       </p>
 
@@ -152,10 +152,6 @@ import LpLayout from "../../layouts/LpLayout.astro";
               </li>
             ))}
           </ul>
-          <p class="mt-6 border-t border-zinc-300 pt-5 text-sm leading-loose text-zinc-600">
-            <strong class="text-zinc-800">具体例：</strong>
-            3時間の作業で「薪券30kg ＋ 近隣温泉入浴券 ＋ 缶ビール1本」相当。
-          </p>
         </div>
       </div>
     </div>
@@ -217,7 +213,7 @@ import LpLayout from "../../layouts/LpLayout.astro";
         {[
           { label: "動力機材は許可制",   value: "チェーンソー等は使い方を共有してから。事故を起こさないことが最優先です。" },
           { label: "報連相を大事に",     value: "挨拶、安全確認、進捗共有。一緒に動く以上、当たり前のコミュニケーションは大切にしてください。" },
-          { label: "仕事として取り組む", value: "レクリエーションではなく、キャンプ場を共に育てる仕事です。報酬を伴うのもそのため。" },
+          { label: "真剣に取り組む", value: "半分は体験ですが、遊びとは違います。キャンプ場をいっしょに育てる作業なので、ポイントでお礼をしています。" },
         ].map((item) => (
           <div class="grid grid-cols-[7rem_1fr] gap-4 py-5">
             <dt class="text-zinc-500">{item.label}</dt>
@@ -251,7 +247,7 @@ import LpLayout from "../../layouts/LpLayout.astro";
           {
             no: "3",
             title: "Interview",
-            desc: "オーナーと少し話して、マッチすれば採用。オイラーズ限定の公式LINEグループへ招待します。",
+            desc: "オーナーと少し話して、お互いに一緒にやれそうだと思えたら、オイラーズ限定のLINEオープンチャットにご招待します。",
           },
         ].map((step) => (
           <div class="border-t border-zinc-700 pt-6">
