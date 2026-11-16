@@ -26,7 +26,7 @@ const stars = (n: number) => "★".repeat(n) + "☆".repeat(5 - n);
 
 <LpLayout
   title="こだわりの薪販売 | 里山パークおいらの森"
-  description="自家生産の広葉樹の薪を販売中。クヌギ・コナラ中心、含水率15%以下まで乾燥済み。セルフ量り売り・パッキング済みの2種類から選べます。"
+  description="自家生産の広葉樹の薪を販売中。クヌギ・コナラ中心、含水率15%以下まで乾燥済み。セルフ量り売り・おいらチョイス・樹種別ネット売りの3つの買い方から選べます。"
   ogImage="https://oiranomori.jp/images/bonfire.jpg"
   lastUpdated="2026年11月"
 >
@@ -84,7 +84,7 @@ const stars = (n: number) => "★".repeat(n) + "☆".repeat(5 - n);
   <section id="sales" class="bg-[#f4f4f5] py-20 md:py-28">
     <div class="mx-auto max-w-6xl px-5">
       <p class="text-xs tracking-[0.32em] text-zinc-400">HOW TO BUY</p>
-      <h2 class="mt-4 text-3xl font-semibold text-zinc-800 md:text-4xl">販売している薪の種類</h2>
+      <h2 class="mt-4 text-3xl font-semibold text-zinc-800 md:text-4xl">薪の買い方</h2>
       <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-600">
         キャンプのスタイルに合わせて、3つの買い方をご用意しています。
       </p>
@@ -113,7 +113,7 @@ const stars = (n: number) => "★".repeat(n) + "☆".repeat(5 - n);
             subtitle: "おまかせブレンド",
             price: "予約時オプション",
             note: "当日現地での変更も可",
-            desc: "その日の薪の状態を見て、おいらが最高の組み合わせをセレクトします。予約時に必要量を選択いただき、当日現地での変更も可能です。",
+            desc: "予約のときに、オプションで希望の重さを入れた方だけが選べます。薪の好みや、使う焚き火台・薪ストーブを聞いたうえで、おいらが選んで用意します。",
             img: null,
           },
           {
@@ -217,46 +217,6 @@ const stars = (n: number) => "★".repeat(n) + "☆".repeat(5 - n);
             </div>
           </div>
         ))}
-      </div>
-
-      <!-- 組み合わせ提案 -->
-      <div class="mt-20">
-        <p class="text-xs tracking-[0.32em] text-zinc-400">RECOMMENDED COMBINATION</p>
-        <h3 class="mt-4 text-2xl font-semibold text-zinc-800">失敗しない「黄金比率」</h3>
-        <p class="mt-4 text-sm leading-loose text-zinc-600">
-          薪は「混ぜる」ことで真価を発揮します。スギで素早く火を熾し、丸枝を挟んで、最後にクヌギへ繋ぐ。
-          これで焚き火が途切れることはありません。
-        </p>
-        <div class="mt-8 grid gap-3">
-          {[
-            { label: "太めクヌギ", pct: 60 },
-            { label: "中太丸枝",   pct: 20 },
-            { label: "スギ",       pct: 20 },
-          ].map((item) => (
-            <div class="flex items-center gap-5 text-sm">
-              <span class="w-24 shrink-0 text-zinc-500">{item.label}</span>
-              <div class="relative h-2 flex-1 bg-zinc-300">
-                <div class="absolute inset-y-0 left-0 bg-zinc-700" style={`width:${item.pct}%`}></div>
-              </div>
-              <span class="w-8 text-right font-semibold text-zinc-800">{item.pct}%</span>
-            </div>
-          ))}
-        </div>
-
-        <div class="mt-14 grid gap-4 sm:grid-cols-3">
-          {[
-            { title: "着火セット",          items: ["スギ（黄袋）", "＋ 小割り針葉樹（透明袋）"] },
-            { title: "一晩じっくりセット",  items: ["セルフ量り売り 10kg", "＋ クヌギ（緑袋）"] },
-            { title: "香りと灯りのセット",  items: ["ヤマザクラ（赤袋）", "＋ コナラ（青袋）"] },
-          ].map((combo) => (
-            <div class="border-t border-zinc-300 pt-5">
-              <h3 class="text-sm font-semibold text-zinc-800">{combo.title}</h3>
-              {combo.items.map((item) => (
-                <p class="mt-2 text-sm text-zinc-600">{item}</p>
-              ))}
-            </div>
-          ))}
-        </div>
       </div>
     </div>
   </section>
@@ -379,7 +339,7 @@ const stars = (n: number) => "★".repeat(n) + "☆".repeat(5 - n);
           },
           {
             q: "初めてで、どの薪を選べばいい？",
-            a: "迷ったらセルフ量り売り（広葉樹ミックス）がおすすめです。好きな樹種を選びながら、必要な量だけ買えます。黄金比率（クヌギ60%・中太丸枝20%・スギ20%）を参考にしてみてください。",
+            a: "迷ったらセルフ量り売り（広葉樹ミックス）がおすすめです。好きな樹種を選びながら、必要な量だけ買えます。",
           },
           {
             q: "スウェーデントーチはありますか？",
