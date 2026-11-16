@@ -114,7 +114,7 @@ const ROUTE_URL =
           ※ライトフォレスト入り口には看板がありません。案内図を事前に保存しておくと迷いません。
         </p>
         <p class="mt-5 text-sm leading-loose text-zinc-600">
-          全長6m以上のお車、トレーラーでお越しの場合は、事前にご確認ください。<br />
+          全長6mまでは問題なく入れます。それより長い車やトレーラーは、事前にご確認ください。<br />
           バリアフリーには対応していません（段差・未舗装路があります）。
         </p>
       </div>
@@ -128,7 +128,7 @@ const ROUTE_URL =
       <p class="text-xs tracking-[0.32em] text-zinc-400 uppercase">By Train</p>
       <h2 class="mt-4 text-3xl font-semibold text-zinc-800 md:text-4xl">電車で行けるキャンプ場（烏山線・鴻野山駅から送迎）</h2>
       <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-600">
-        駅から徒歩30〜50分以上かかります。荷物がある場合は「電車プラン」の予約を強くお勧めします。
+        駅から徒歩30〜50分以上かかります。荷物がある場合は「電車キャンパー歓迎プラン」の予約を強くお勧めします。
       </p>
 
       {/* JR烏山線の注意 */}
@@ -154,10 +154,10 @@ const ROUTE_URL =
       <div class="mt-12 grid gap-4 md:grid-cols-3">
         {[
           {
-            method: "送迎（電車プラン専用）",
+            method: "送迎（電車キャンパー歓迎プラン専用）",
             station: "烏山線【鴻野山駅】下車",
             detail: "鴻野山駅に次の時刻に着く列車に対応します。\n8:38\n11:01（混雑時不可）\n13:01（混雑時不可）\n15:02\n15:51\n混雑時ワンオペのため時刻厳守。",
-            note: "送迎をご希望の場合は、必ず「電車プラン」でお申し込みください。車両オプションで「送迎」を選択して予約してください。",
+            note: "送迎をご希望の場合は、必ず「電車キャンパー歓迎プラン」でお申し込みください。車両オプションで「送迎」を選択して予約してください。",
           },
           {
             method: "タクシー",
@@ -229,7 +229,7 @@ const ROUTE_URL =
             <h3 class="text-lg font-semibold text-zinc-800">古いカーナビ・住所検索では正しく案内されません</h3>
           </div>
           <p class="text-sm leading-loose text-zinc-600">
-            地図データが古いカーナビや住所検索では<strong class="text-zinc-800">別の場所に案内されます</strong>。最新のカーナビなら「おいらの森」で出てきます。
+            カーナビでは、施設名「おいらの森」か電話番号（050-3647-1047）で調べてください。<strong class="text-zinc-800">住所で調べると、別の場所に案内されます</strong>。カーナビで出てこないときは、Google マップなどの地図アプリで「おいらの森」と調べてください。
           </p>
           <div class="mt-5 bg-zinc-50 p-4">
             <p class="mb-2 text-xs tracking-[0.16em] text-zinc-400">正しい方法</p>
