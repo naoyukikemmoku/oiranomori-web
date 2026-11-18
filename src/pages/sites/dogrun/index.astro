@@ -7,9 +7,9 @@ import { proxPlanUrl } from "../../../config/nav";
 import PageLayout from "../../../layouts/PageLayout.astro";
 
 const TITLE =
-	"貸切ドッグランサイト｜400㎡・1日1組、愛犬とノーリードでキャンプ｜里山パークおいらの森（栃木）";
+	"犬連れ・ドッグラン付きキャンプ｜貸切ドッグランサイト400㎡、全サイトペット歓迎｜里山パークおいらの森（栃木）";
 const DESC =
-	"栃木県那須烏山市・里山パークおいらの森の貸切ドッグランサイト。柵で囲まれた約400㎡のドッグランの中でキャンプでき、車もそのまま入れます。1日1組限定。ライトフォレストは全サイト犬連れOKで、犬の頭数・大きさの制限はなく料金もかかりません。";
+	"栃木県那須烏山市の里山パークおいらの森は、ペット歓迎のキャンプ場です。貸切ドッグランサイトは、柵で囲まれた約400㎡のドッグランの中でキャンプでき、車もそのまま入れます。1日1組限定。ライトフォレストは全サイト犬連れOKで、犬の頭数・大きさの制限はなく料金もかかりません。";
 const URL = "https://oiranomori.jp/sites/dogrun/";
 const OG_IMAGE = new globalThis.URL(dogrunHero.src, Astro.site).href;
 
@@ -65,6 +65,9 @@ const linkClass =
     </p>
     <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-700">
       栃木県那須烏山市の里山パークおいらの森で、愛犬と一緒に一泊してみませんか。
+    </p>
+    <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-700">
+      おいらの森はペット歓迎です。ライトフォレストは全サイト犬連れで利用でき、犬の頭数・大きさ・犬種の制限はなく、料金もかかりません。
     </p>
     <div class="mt-6">
       <a href={proxPlanUrl(7)} target="_blank" rel="noopener noreferrer" class={reserveClass} data-cta="reserve" data-cta-field="light">
