@@ -24,17 +24,21 @@ export type ForestDaily = {
 const API_BASE = "https://oiranomori.com/app/sns/api/forest_daily.php";
 
 // 一覧取得。ok:false / 取得失敗時は呼び出し側で縮退できるよう throw する。
-// 任意で year(YYYY)/month(1..12) を渡すと API の ?year=&month= フィルタを付ける
+// 任意で year(YYYY) を渡すと ?year=、さらに month(1..12) も渡すと ?year=&month= を付ける
 // （month は MM ゼロ埋めで送る。不正値は API 側が安全側＝全件にフォールバック）。
+// limit は API 側で 50 件までに抑えられる。続きは offset で取る。
 export async function fetchForestDailyList(
 	limit = 10,
 	offset = 0,
 	opts?: { year?: number; month?: number },
 ): Promise<{ contents: ForestDaily[]; totalCount: number }> {
 	let url = `${API_BASE}?limit=${limit}&offset=${offset}`;
-	if (opts?.year && opts?.month) {
-		const mm = String(opts.month).padStart(2, "0");
-		url += `&year=${opts.year}&month=${mm}`;
+	if (opts?.year) {
+		url += `&year=${opts.year}`;
+		if (opts.month) {
+			const mm = String(opts.month).padStart(2, "0");
+			url += `&month=${mm}`;
+		}
 	}
 	const r = await fetch(url, { cache: "default" });
 	if (!r.ok) throw new Error(`http:${r.status}`);

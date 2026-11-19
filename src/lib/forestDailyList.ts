@@ -76,10 +76,16 @@ export function listRowHtml(item: ForestDaily): string {
 }
 
 // 一覧本体（ul＋件数表示）。0件時は空状態メッセージ。
-export function listHtml(items: ForestDaily[]): string {
+// total を渡し、表示中より多いときは「total件のうち、N件を表示しています」にする
+// （年だけを選び、続きがあるとき）。渡さなければ従来どおり「N件を表示しています」。
+export function listHtml(items: ForestDaily[], total?: number): string {
 	if (items.length === 0) {
 		return `<p class="py-8 text-sm text-zinc-500">この期間の記録はまだありません。</p>`;
 	}
 	const rows = items.map(listRowHtml).join("");
-	return `<ul class="divide-y divide-zinc-300 border-t border-zinc-300">${rows}</ul><p class="mt-8 text-xs text-zinc-400">${items.length}件を表示しています</p>`;
+	const count =
+		total !== undefined && total > items.length
+			? `${total}件のうち、${items.length}件を表示しています`
+			: `${items.length}件を表示しています`;
+	return `<ul class="divide-y divide-zinc-300 border-t border-zinc-300">${rows}</ul><p class="mt-8 text-xs text-zinc-400">${count}</p>`;
 }

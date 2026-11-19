@@ -201,8 +201,19 @@ const webPageSchema = {
       month: number | null;
       week: number; // 0 = 全週、1..N = 月内の週（週フィルタは月選択時のみ有効）
       monthItems: ForestDaily[]; // 現在の年月で取得済みの全件（週割り元）
+      total: number; // 選んだ範囲の件数（API の totalCount。年だけを選んだときの続きの判定に使う）
     };
-    const listState: ListState = { year: null, month: null, week: 0, monthItems: [] };
+    const listState: ListState = {
+      year: null,
+      month: null,
+      week: 0,
+      monthItems: [],
+      total: 0,
+    };
+
+    // 取得の世代。選び直すたびに増やし、古い選択の応答で画面を上書きしないようにする。
+    let loadSeq = 0;
+    let loadingMore = false;
 
     // dates 由来の利用可能な年月オプション（降順）。初期化時に1度だけ算出。
     let ymOptions: { y: number; m: number }[] = [];
@@ -243,29 +254,103 @@ const webPageSchema = {
       return items;
     }
 
+    // 年だけを選んでいるか（このときだけ、その年の続きを 50 件ずつ読み足せる）
+    function isYearOnly(): boolean {
+      return listState.year !== null && listState.month === null;
+    }
+
+    // 今の選択に合わせた API の絞り込み
+    function currentOpts(): { year: number; month?: number } | undefined {
+      if (!listState.year) return undefined;
+      return listState.month
+        ? { year: listState.year, month: listState.month }
+        : { year: listState.year };
+    }
+
     // 一覧本体（リスト DOM）だけを再描画する
     function paintList(): void {
       if (!app) return;
       app.dataset.state = "ready";
       // ビルド時と同一の描画関数（listHtml）で組み立てる＝サーバー/クライアント差分なし。
       // API 由来テキストは listHtml 内で escapeHtml 済み。
-      app.innerHTML = listHtml(visibleItems());
+      // 年だけのときは、選んだ年の件数（total）と合わせて「total件のうち、N件」と出す。
+      const yearOnly = isYearOnly();
+      app.innerHTML = listHtml(
+        visibleItems(),
+        yearOnly ? listState.total : undefined,
+      );
+      if (yearOnly && listState.monthItems.length < listState.total) {
+        app.appendChild(moreControl());
+      }
+    }
+
+    // 「続きを見る」。年だけを選び、その年にまだ読んでいない記事があるときだけ出す。
+    function moreControl(): HTMLElement {
+      const wrap = el("div", "mt-3");
+      const rest = listState.total - listState.monthItems.length;
+      const b = el(
+        "button",
+        "text-sm text-zinc-600 underline decoration-zinc-400 underline-offset-4 transition hover:text-zinc-900",
+        `続きを見る（残り${rest}件）`,
+      ) as HTMLButtonElement;
+      b.type = "button";
+      b.addEventListener("click", () => {
+        void loadMore(b);
+      });
+      wrap.appendChild(b);
+      return wrap;
+    }
+
+    // その年の続き（次の 50 件）を読み足して、一覧の下に足す
+    async function loadMore(button: HTMLButtonElement): Promise<void> {
+      if (!app || loadingMore) return;
+      loadingMore = true;
+      const seq = loadSeq;
+      const before = listState.monthItems.length;
+      button.disabled = true;
+      button.textContent = "読み込み中…";
+      try {
+        const data = await fetchForestDailyList(
+          LIST_LIMIT,
+          before,
+          currentOpts(),
+        );
+        if (seq !== loadSeq) return; // 読み込み中に選び直された
+        listState.monthItems = listState.monthItems.concat(data.contents);
+        listState.total = data.totalCount;
+        // 続きが返らなかったときは、取れた分を全件とみなす（ボタンが残り続けないように）
+        if (data.contents.length === 0) {
+          listState.total = listState.monthItems.length;
+        }
+      } catch (e) {
+        if (seq !== loadSeq) return;
+        console.warn("[forest-daily] 続きの取得失敗", e);
+        button.disabled = false;
+        button.textContent = "読み込めませんでした。もう一度試す";
+        return;
+      } finally {
+        loadingMore = false;
+      }
+      paintList();
+      // キーボードで押した人が迷わないよう、足した最初の記事へ移る
+      const links = app.querySelectorAll<HTMLAnchorElement>("ul > li > a");
+      links[before]?.focus({ preventScroll: true });
     }
 
     // 年月の取得（API再取得）→ monthItems 更新 → 週UI更新 → リスト再描画
     async function loadAndPaint(): Promise<void> {
       if (!app) return;
+      const seq = ++loadSeq;
       app.dataset.state = "loading";
       app.replaceChildren();
       app.appendChild(el("p", "py-8 text-sm text-zinc-400", "読み込み中…"));
       try {
-        const opts =
-          listState.year && listState.month
-            ? { year: listState.year, month: listState.month }
-            : undefined;
-        const data = await fetchForestDailyList(LIST_LIMIT, 0, opts);
+        const data = await fetchForestDailyList(LIST_LIMIT, 0, currentOpts());
+        if (seq !== loadSeq) return; // 読み込み中に選び直された
         listState.monthItems = data.contents;
+        listState.total = data.totalCount;
       } catch (e) {
+        if (seq !== loadSeq) return;
         console.warn("[forest-daily] 一覧取得失敗", e);
         showPlaceholder("いまは読み込めません。時間をおいてお試しください。");
         return;
@@ -323,7 +408,8 @@ const webPageSchema = {
           listState.year ? String(listState.year) : "",
           (v) => {
             listState.year = v ? Number(v) : null;
-            // 年だけ選んで月未選択は「全期間」と同義に倒す（API は year+month 同時のみ）
+            // 年だけを選んだら、その年の記事（?year=）を新しい順に出す。
+            // 「すべて」に戻したら月も外して全期間に戻す。
             if (!listState.year) {
               listState.month = null;
             }
