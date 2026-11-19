@@ -166,8 +166,8 @@
 /s/*                                      https://oiranomori.com/app/s/:splat                     302
 
 
-# ---------- 12. 旧チェックアウトフォーム → ここキャン地 ----------
-# /checkout/ フォームは撤去（受け口の submit.php は 2026-10-14 停止）。チェックアウトはここキャン地から案内する。
+# ---------- 12. 旧チェックアウトフォーム → ポータル ----------
+# /checkout/ フォームは撤去（受け口の submit.php は 2026-10-14 停止）。チェックアウトはポータルから案内する。
 /checkout/                                /s/portal                                               301
 /checkout                                 /s/portal                                               301
 /checkout/thanks/                         /s/portal                                               301
