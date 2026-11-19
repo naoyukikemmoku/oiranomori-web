@@ -5,24 +5,28 @@ const slides = [
 		label: "春",
 		caption: "新緑の芽吹き",
 		src: "/images/seasons/spring.jpg",
+		href: "/seasons/#spring",
 	},
 	{
 		season: "SUMMER",
 		label: "夏",
 		caption: "木陰の涼しさ",
 		src: "/images/seasons/summer.jpg",
+		href: "/seasons/#summer",
 	},
 	{
 		season: "AUTUMN",
 		label: "秋",
 		caption: "落葉広葉樹の紅葉",
 		src: "/images/seasons/autumn.jpg",
+		href: "/seasons/#autumn",
 	},
 	{
 		season: "WINTER",
 		label: "冬",
 		caption: "陽だまりの暖かさ",
 		src: "/images/seasons/winter.jpg",
+		href: "/seasons/#winter",
 	},
 ];
 ---
@@ -35,18 +39,28 @@ const slides = [
   </div>
   <div class="ss-track" id="ssTrack">
     {slides.map((s, i) => (
-      <div class:list={["ss-slide", i === 0 && "is-active"]} data-index={i}>
-        <img
-          class="ss-img"
-          src={s.src}
-          alt={`${s.label}の森`}
-          loading={i === 0 ? "eager" : "lazy"}
-        />
-        <div class="ss-overlay"></div>
-        <div class="ss-caption">
-          <span class="ss-season">{s.season}</span>
-          <span class="ss-text">{s.caption}</span>
-        </div>
+      <div class:list={["ss-slide", i === 0 && "is-active"]} data-index={i} aria-hidden={i === 0 ? undefined : "true"}>
+        {/* スライド全体が /seasons/ の該当の季節へのリンク。見えていないスライドはタブで止まらない */}
+        <a
+          class="ss-link"
+          href={s.href}
+          tabindex={i === 0 ? undefined : -1}
+          aria-label={`${s.label}の森を見る（おいらの森の四季）`}
+          data-cta="season-slider"
+          data-cta-target={s.href}
+        >
+          <img
+            class="ss-img"
+            src={s.src}
+            alt={`${s.label}の森`}
+            loading={i === 0 ? "eager" : "lazy"}
+          />
+          <div class="ss-overlay"></div>
+          <div class="ss-caption">
+            <span class="ss-season">{s.season}</span>
+            <span class="ss-text">{s.caption}<span class="ss-arrow" aria-hidden="true">→</span></span>
+          </div>
+        </a>
       </div>
     ))}
   </div>
@@ -84,6 +98,7 @@ const slides = [
     top: 0;
     left: 0;
     z-index: 3;
+    pointer-events: none;
     padding: 1.75rem 1.5rem;
     max-width: 90%;
   }
@@ -133,6 +148,22 @@ const slides = [
   .ss-slide.is-active {
     opacity: 1;
     pointer-events: auto;
+  }
+
+  .ss-link {
+    position: absolute;
+    inset: 0;
+    display: block;
+    color: inherit;
+  }
+
+  .ss-link:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: -6px;
+  }
+
+  .ss-arrow {
+    margin-left: 0.6em;
   }
 
   .ss-img {
@@ -246,10 +277,24 @@ const slides = [
   let timer: ReturnType<typeof setTimeout> | null = null;
   let progTimer: ReturnType<typeof setTimeout> | null = null;
 
+  // 見えているスライドだけを読み上げ・タブの対象にする
+  function setActive(i: number, on: boolean) {
+    const slide = slides[i];
+    slide.classList.toggle("is-active", on);
+    const link = slide.querySelector<HTMLAnchorElement>(".ss-link");
+    if (on) {
+      slide.removeAttribute("aria-hidden");
+      link?.removeAttribute("tabindex");
+    } else {
+      slide.setAttribute("aria-hidden", "true");
+      link?.setAttribute("tabindex", "-1");
+    }
+  }
+
   function goTo(index: number) {
-    slides[current].classList.remove("is-active");
+    setActive(current, false);
     current = (index + slides.length) % slides.length;
-    slides[current].classList.add("is-active");
+    setActive(current, true);
     resetProgress();
   }
 
@@ -277,6 +322,23 @@ const slides = [
 
   nextBtn?.addEventListener("click", () => {
     goTo(current + 1);
+    startAutoPlay();
+  });
+
+  // リンクにフォーカスがある間は送らない（読んでいる途中のスライドを隠さない）
+  const wrap = document.getElementById("season");
+  wrap?.addEventListener("focusin", (e) => {
+    if (!(e.target instanceof Element) || !e.target.closest(".ss-link")) return;
+    if (timer) clearInterval(timer);
+    timer = null;
+    if (progressBar) {
+      progressBar.style.transition = "none";
+      progressBar.style.width = "0%";
+    }
+  });
+  wrap?.addEventListener("focusout", (e) => {
+    if (!(e.target instanceof Element) || !e.target.closest(".ss-link")) return;
+    if (e.relatedTarget instanceof Element && e.relatedTarget.closest(".ss-link")) return;
     startAutoPlay();
   });
 

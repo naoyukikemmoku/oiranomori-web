@@ -255,8 +255,25 @@ const plans: Array<{
     </div>
   </section>
 
-  {/* 3. 森の四季スライダー。見出しはスライダー内（左上）に重ねている。 */}
+  {/* 3. 森の四季スライダー。見出しはスライダー内（左上）に重ねている。
+      各スライドは /seasons/ の該当の季節へ。下の帯は /seasons/ 全体へのリンク（スライダーと同じ地の色でつなぐ）。 */}
   <SeasonSlider />
+  <div class="bg-[#1a2118]">
+    <div class="mx-auto max-w-6xl px-6 py-5 md:px-10">
+      <a
+        href="/seasons/"
+        class="inline-flex items-center gap-2 text-sm tracking-[0.14em] text-zinc-200 underline decoration-white/40 underline-offset-4 transition hover:text-white hover:decoration-white"
+        data-cta="top-to-seasons"
+        data-cta-target="/seasons/"
+      >
+        四季のおいらの森を見る
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M5 12h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          <path d="M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+  </div>
 
   {/* 4. 焚火セクション */}
   <section
