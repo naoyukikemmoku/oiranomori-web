@@ -442,7 +442,7 @@ description?: string
 | /event/ 系 | 過去イベント | `/news/` |
 | /category/ 系 | カテゴリアーカイブ | 各対応ページまたは `/news/` |
 | /tag/ 系 | タグアーカイブ（新サイトに機能なし） | `/` |
-| ブログ記事群 | `/todays-oiranomori/*` 等 | `/news/` または note.com |
+| ブログ記事群 | `/pioneer-diary/*`・`/wildlife-diary/*`・`/agri/*`・`/events-report/*`・`/our-news/*` | `/news/` または note.com（`/todays-oiranomori/*` は転送しない＝404。旧WPの記事は `/forest-daily/` に載せる。`/category/todays-oiranomori/` は `/forest-daily/` へ） |
 | サイトマップ転送 | `/sitemap.xml` 等 | `/sitemap-index.xml` |
 
 評価は上から順。具体的なパスをワイルドカードより先に記述する原則。

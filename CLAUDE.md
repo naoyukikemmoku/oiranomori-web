@@ -1,6 +1,6 @@
 # 里山パークおいらの森 HP — Claude Code 向け開発ガイド（運用フェーズ）
 
-> **Version: 1.21**（変更履歴は本ファイル末尾「変更履歴」章を参照）
+> **Version: 1.22**（変更履歴は本ファイル末尾「変更履歴」章を参照）
 
 ---
 
@@ -291,10 +291,11 @@ Codeから計測データを取得する手段はない。施策評価が必要�
 - **取得方式**: クライアントfetch（鮮度widget。ビルド時SSGから移行し、リビルドなしで最新反映）。一覧 `fetchForestDailyList(limit, offset)`、個別 `fetchForestDailyDetail(id)`
 - **書き込み主体**: HP側は read のみ。投稿は OirasApp 側で完結し、HP は read API を叩くだけ（App 側のデータストア構成・投稿方式はHPソースの範囲外）
 - **コンテンツID規則**: daily=`YYYY-MM-DD`、seasonal/special=`YYYY-MM-DD-<type>`
-- **フィールド**（`ForestDaily` 型）: id / title / body / postDate / postType(string[]) / imageUrl? / tempC? / maxTempC? / minTempC? / humidity? / condition? / url?
+- **フィールド**（`ForestDaily` 型）: id / title / body / postDate / postType(string[]) / imageUrl? / images?(string[]) / videoUrl? / tempC? / maxTempC? / minTempC? / humidity? / condition? / url?
 - **body**: プレーンテキスト。`bodyToParagraphs()` で改行→`<p>`変換はHP側が担う
-- **postType判定**: `.includes()` ベース（配列複数選択対応）
-- **imageUrl欠落時**: デフォルト hero にフォールバック（videoUrl は API 非提供のためサムネイル分岐は廃止）
+- **postType判定**: `.includes()` ベース（配列複数選択対応）。値は daily / seasonal / special / legacy（旧WPの「今日のおいらの森」）。legacy も一覧・カレンダー・個別で今の記事と同じに扱い、HP 側で postType による絞り込みはしない
+- **imageUrl欠落時**: デフォルト hero にフォールバック（videoUrl があってもサムネイルは作らない）
+- **個別ページの写真と動画**: images が2枚以上のときだけ、本文の下に2枚目以降を並べる（`extraImages()`）。videoUrl が YouTube の URL のときだけ、本文の下に埋め込む（`youtubeVideoId()`・youtube-nocookie.com）。YouTube 以外の URL は出さない
 - **気象表示**: 各フィールド個別ガードで縮退対応。`flex flex-wrap` で部分欠落時もレイアウト崩れなし
 
 ---
@@ -339,3 +340,4 @@ Codeから計測データを取得する手段はない。施策評価が必要�
 | 1.19 | 2026-11-01 | spec を /checkout/ 撤去に同期：§3 フッターナビの「チェックアウトの連絡」を「ここキャン地（`/s/portal`）」に、§4 ページ一覧から /checkout/・/checkout/thanks/ を削除、§7 転送表の /oiranomori/ 系の転送先を /s/portal に変え、旧チェックアウトフォーム（/checkout/・/checkout/thanks/ → /s/portal 301）の行を追加、§8 ビルド除外パスから /checkout/ を削除、§12.1 から #11 checkout submit.php を削除（欠番）。keyword-map の機能・実用から /checkout/ を削除。 |
 | 1.20 | 2026-11-01 | spec を /now/ ライブカメラの作り替えに同期：§12.1 #7 livecam.php の項目を新しい取り決め（`hls_url`・`still`・`is_night`・`next_sunrise`・`generated_at`）に、§12.2 の鮮度判定から LIVECAM_STALE_MAX_S を削除、§12.3「ライブカメラの見せ方」を新設（最初は静止画・タップで HLS・20秒で失敗・5分で止める・裏に回ったら止める・YouTube 埋め込みは廃止）。 |
 | 1.21 | 2026-11-03 | spec に /camera/（場内カメラの記録）を追記：§3 共通コンポーネントに `LiveCam.astro`（/now/ の `#livecam` を中身を変えずに切り出し・動きは `src/lib/livecam.ts`）、§4 ページ一覧に /camera/ と /now/ からのリンク、§6 JSON-LD（`WebPage`, `WebSite`）、§12.1 #7 livecam.php の呼び出し元を lib に・#13 camera.php を追加、§12.3 に部品と /camera/ での使い方、§12.4「場内カメラの記録（/camera/）」を新設（6つのタブ・クエリ・出し分け）。 |
+| 1.22 | 2026-11-19 | 旧WP「今日のおいらの森」（post_type legacy）の取り込みに同期：spec §7 リダイレクトのグループ概要のブログ記事群の行を直す（`/todays-oiranomori/*` は転送しない＝404・`/category/todays-oiranomori/` は `/forest-daily/` へ）。§11 forest-daily に images?・videoUrl?・postType の legacy、個別ページの写真の2枚目以降と YouTube の埋め込みを追記。 |
