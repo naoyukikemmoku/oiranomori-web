@@ -31,12 +31,6 @@ const sizeGuide = [
 	},
 ];
 
-const insectSeasons = [
-	{ season: "6月下旬〜7月中旬", insect: "クワガタムシ" },
-	{ season: "7月下旬〜8月", insect: "カブトムシ" },
-	{ season: "9月下旬", insect: "クワガタムシ" },
-];
-
 const linkClass =
 	"underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80";
 const reserveClass =
@@ -87,27 +81,13 @@ const reserveClass =
 
   <section class="mb-14">
     <h2 class="mb-5 text-xl font-semibold text-zinc-800">子どもの一番人気は、虫とり</h2>
-    <p class="mb-5 max-w-2xl text-sm leading-loose text-zinc-600">
+    <p class="max-w-2xl text-sm leading-loose text-zinc-600">
       小学生くらいまでの子どもたちが、いちばん夢中になるのは昆虫採集です。
     </p>
-    <div class="max-w-2xl border-y border-zinc-200">
-      <table class="w-full text-sm">
-        <thead>
-          <tr class="border-b border-zinc-200 bg-zinc-50">
-            <th scope="col" class="px-4 py-3 text-left font-medium text-zinc-600">時期</th>
-            <th scope="col" class="px-4 py-3 text-left font-medium text-zinc-600">出会える虫</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-zinc-100">
-          {insectSeasons.map((r) => (
-            <tr>
-              <td class="px-4 py-3 text-zinc-700">{r.season}</td>
-              <td class="px-4 py-3 text-zinc-600">{r.insect}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    {/* 虫の時期の正本は /seasons/（spec §14.4）。ここには時期を書かずにリンクする */}
+    <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-600">
+      どの時期にどの虫が採れるかは、「おいらの森の四季」の夏の森にまとめています。<a href="/seasons/#summer" class={`ml-1 ${linkClass}`}>→ 虫の時期を見る</a>
+    </p>
     <p class="mt-5 max-w-2xl text-sm leading-loose text-zinc-600">
       ノコギリクワガタやコクワガタ、カナブン、タマムシ、カミキリムシ、カマキリ、バッタ、セミ。オニヤンマやギンヤンマなどのトンボ、オオムラサキなどのチョウ、ナナフシ、きれいなフンコロガシも。<br />
       運がよければミヤマクワガタ、ごくまれにタガメに出会えることも。ホタルや、ムササビ・リスも暮らしています。とにかく、いろんなのがいます。

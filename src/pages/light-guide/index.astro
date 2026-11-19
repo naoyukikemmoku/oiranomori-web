@@ -494,9 +494,17 @@ const rules = [
   {/* 昆虫採集。売りとして独立させる */}
   <section id="insects" class="mb-16">
     <h2 class="mb-2 text-xl font-semibold text-zinc-800">昆虫採集</h2>
-    <p class="mb-6 max-w-2xl text-sm leading-loose text-zinc-600">
-      広葉樹の里山なので、夏はカブトムシやクワガタに会えます。夜、灯りの周りや樹液の出る木を探してみてください。
+    {/* 虫の時期と種類の正本は /seasons/（spec §14.4）。ここは持ち帰りの決まりの正本 */}
+    <p class="max-w-2xl text-sm leading-loose text-zinc-600">
+      虫を探すなら、夜は灯りの周りや樹液の出る木を見てみてください。
       朝早く起きて森を歩くのも、いい出会いがあります。
+    </p>
+    <p class="mb-6 mt-2 max-w-2xl text-sm leading-loose text-zinc-600">
+      どの時期にどんな虫が採れるかは、「おいらの森の四季」の夏の森にまとめています。
+      <a href="/seasons/#summer" class="ml-1 inline-flex items-center gap-1.5 text-[color:var(--light-accent)] underline underline-offset-4 transition hover:opacity-80">
+        虫の時期を見る
+        <span aria-hidden="true">→</span>
+      </a>
     </p>
     <div class="grid grid-cols-2 gap-3 sm:gap-5">
       <Picture
