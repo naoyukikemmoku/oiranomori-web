@@ -7,8 +7,10 @@ export type ForestDaily = {
 	title: string;
 	body: string;
 	postDate: string;
-	postType: string[];
+	postType: string[]; // daily / seasonal / special / legacy（旧WPの「今日のおいらの森」）
 	imageUrl?: string;
+	images?: string[]; // 写真の URL（1枚目＝imageUrl と同じ。2枚目以降は個別ページの本文の下に並べる）
+	videoUrl?: string; // YouTube の URL（あるときだけ）
 	tempC?: number;
 	maxTempC?: number;
 	minTempC?: number;
@@ -74,9 +76,43 @@ export async function fetchForestDailyDetail(
 	return (d.content as ForestDaily) ?? null;
 }
 
-// imageUrl 欠落時は hero にフォールバック（videoUrl は API 非提供のため分岐なし）。
+// imageUrl 欠落時は hero にフォールバック（videoUrl があってもサムネイルは作らない）。
 export function getOgImage(item: Pick<ForestDaily, "imageUrl">): string {
 	return item.imageUrl ?? "https://oiranomori.jp/images/lp/hero.jpg";
+}
+
+// 本文の下に並べる写真＝images の2枚目以降（2枚以上あるときだけ中身がある）。
+// http(s) の URL でないものは落とす。
+export function extraImages(item: Pick<ForestDaily, "images">): string[] {
+	const list = Array.isArray(item.images) ? item.images : [];
+	return list
+		.slice(1)
+		.filter((s) => typeof s === "string" && /^https?:\/\//.test(s));
+}
+
+// YouTube の URL から動画の ID を取り出す。YouTube 以外・形の違うものは null（埋め込まない）。
+// 受ける形：watch?v= / youtu.be/ / embed/ / shorts/ / live/
+export function youtubeVideoId(url: string): string | null {
+	let u: URL;
+	try {
+		u = new URL(url);
+	} catch {
+		return null;
+	}
+	if (u.protocol !== "https:" && u.protocol !== "http:") return null;
+	const host = u.hostname.replace(/^(www\.|m\.)/, "");
+	let id: string | null = null;
+	if (host === "youtu.be") {
+		id = u.pathname.split("/")[1] ?? null;
+	} else if (host === "youtube.com" || host === "youtube-nocookie.com") {
+		if (u.pathname === "/watch") {
+			id = u.searchParams.get("v");
+		} else {
+			const m = u.pathname.match(/^\/(?:embed|shorts|live)\/([^/]+)/);
+			id = m ? m[1] : null;
+		}
+	}
+	return id && /^[A-Za-z0-9_-]{11}$/.test(id) ? id : null;
 }
 
 export function formatPostDate(str: string): string {

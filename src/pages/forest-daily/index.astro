@@ -124,6 +124,7 @@ const webPageSchema = {
   <script>
     import {
       bodyToParagraphs,
+      extraImages,
       fetchForestDailyDates,
       fetchForestDailyDetail,
       fetchForestDailyList,
@@ -132,6 +133,7 @@ const webPageSchema = {
       formatPostDateShort,
       isDailyId,
       type ForestDaily,
+      youtubeVideoId,
     } from "../../lib/forestDaily";
     import {
       bodySnippet,
@@ -801,6 +803,43 @@ const webPageSchema = {
         bodyWrap.appendChild(el("p", "text-sm leading-[2.1] text-zinc-700", p));
       }
       articleEl.appendChild(bodyWrap);
+
+      // 本文の下：写真の2枚目以降（images が2枚以上のときだけ）。
+      // 縦長の写真も切らずに見せる（高さは画面の8割まで）。
+      const extras = extraImages(article);
+      if (extras.length > 0) {
+        const gallery = el("div", "mb-12 space-y-6");
+        const dateLabel = formatPostDate(article.postDate);
+        extras.forEach((src, i) => {
+          const img = document.createElement("img");
+          img.src = src;
+          img.alt = `${dateLabel}のおいらの森（${i + 2}枚目）`;
+          img.width = 720;
+          img.height = 480;
+          img.loading = "lazy";
+          img.decoding = "async";
+          img.className = "mx-auto block h-auto max-h-[80vh] w-auto max-w-full";
+          gallery.appendChild(img);
+        });
+        articleEl.appendChild(gallery);
+      }
+
+      // 本文の下：動画（videoUrl が YouTube のときだけ）。サムネイルは作らず、そのまま埋め込む。
+      const videoId = article.videoUrl ? youtubeVideoId(article.videoUrl) : null;
+      if (videoId) {
+        const frameWrap = el("div", "mb-12 aspect-video w-full bg-zinc-900");
+        const iframe = document.createElement("iframe");
+        iframe.src = `https://www.youtube-nocookie.com/embed/${videoId}`;
+        iframe.title = `${formatPostDateJa(article.postDate)}の動画`;
+        iframe.loading = "lazy";
+        iframe.allow =
+          "accelerometer; encrypted-media; gyroscope; picture-in-picture; web-share";
+        iframe.allowFullscreen = true;
+        iframe.referrerPolicy = "strict-origin-when-cross-origin";
+        iframe.className = "h-full w-full border-0";
+        frameWrap.appendChild(iframe);
+        articleEl.appendChild(frameWrap);
+      }
 
       // 本文の下：おいらの天気解説（daily のみ・morning slot・取得できなければ非表示のまま）
       if (daily) {

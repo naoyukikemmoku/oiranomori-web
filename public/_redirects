@@ -128,7 +128,7 @@
 /category/oiras/                          /oiras/                                                 301
 /category/our-news/                       /news/                                                  301
 /category/events-report/                  /news/                                                  301
-/category/todays-oiranomori/              /news/                                                  301
+/category/todays-oiranomori/              /forest-daily/                                          301
 /category/sales/                          /news/                                                  301
 /category/*                               /news/                                                  301
 
@@ -138,8 +138,7 @@
 
 
 # ---------- 8. ブログ記事（post-sitemap 698件をカテゴリ単位で一括） ----------
-/todays-oiranomori/*                      /news/                                                  301
-/todays-oiranomori/                       /news/                                                  301
+# /todays-oiranomori/* は転送しない（旧WPの記事は /forest-daily/ に載せる。旧URLは 404）。
 /pioneer-diary/*                          https://note.com/oiranomori                             301
 /wildlife-diary/*                         https://note.com/oiranomori                             301
 /agri/*                                   https://note.com/oiranomori                             301
