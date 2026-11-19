@@ -1,0 +1,548 @@
+---
+import type { ImageMetadata } from "astro";
+import { Picture } from "astro:assets";
+import aboutHero from "../../assets/images/about_hero.jpg";
+import kuwagata from "../../assets/images/lightguide_kuwagata.jpg";
+import lightguideNight from "../../assets/images/lightguide_night.jpg";
+import rentalWinter from "../../assets/images/rental_winter.jpg";
+import autumnHero from "../../assets/images/seasons_autumn.jpg";
+import autumnCold from "../../assets/images/seasons_autumn_cold.jpg";
+import autumnHolidays from "../../assets/images/seasons_autumn_holidays.jpg";
+import autumnKoyo from "../../assets/images/seasons_autumn_koyo.jpg";
+import autumnLeaffall from "../../assets/images/seasons_autumn_leaffall.jpg";
+import springHero from "../../assets/images/seasons_spring.jpg";
+import springGw from "../../assets/images/seasons_spring_gw.jpg";
+import springShinryoku from "../../assets/images/seasons_spring_shinryoku.jpg";
+import summerHero from "../../assets/images/seasons_summer.jpg";
+import winterHero from "../../assets/images/seasons_winter.jpg";
+import winterCold from "../../assets/images/seasons_winter_cold.jpg";
+import winterSnow from "../../assets/images/seasons_winter_snow.jpg";
+import sitesDogrunHero from "../../assets/images/sites_dogrun_hero.jpg";
+import sitesFamilySpace from "../../assets/images/sites_family_space.jpg";
+import sitesGearMulti from "../../assets/images/sites_gear_multi.jpg";
+import sitesHero from "../../assets/images/sites_hero.jpg";
+import sitesThumbDuo from "../../assets/images/sites_thumb_duo.jpg";
+import slAft4 from "../../assets/images/sl_aft_4.jpg";
+import slEve3 from "../../assets/images/sl_eve_3.jpg";
+import slEve4 from "../../assets/images/sl_eve_4.jpg";
+import slEve5 from "../../assets/images/sl_eve_5.jpg";
+import { PROX_SEARCH_URL } from "../../config/nav";
+import PageLayout from "../../layouts/PageLayout.astro";
+
+const TITLE =
+	"おいらの森の四季｜那須烏山の林間キャンプ場で過ごす春夏秋冬｜里山パークおいらの森";
+const DESC =
+	"春はヤマザクラと新緑、夏は木陰とホタル、カブトムシ・クワガタ、秋は紅葉と焚き火、冬は薪ストーブと年越しキャンプ。栃木県那須烏山市の林間キャンプ場、里山パークおいらの森の春夏秋冬と、花や虫の時期を紹介します。";
+const URL = "https://oiranomori.jp/seasons/";
+const OG_IMAGE = new globalThis.URL(springHero.src, Astro.site).href;
+
+// ライトフォレストの春夏秋冬。虫・生き物の時期の正本（spec §14.4）。
+// 選ぶページのため、禁止事項・例外・細かい価格は書かない（spec §14.3）。決まりは利用案内へリンクする。
+// 行事は「毎年やっている」と書かず、記録と「開く年はお知らせで案内する」を組みにして /news/ へ。
+// 写真はすべて仮。差し替えは docs/photo-workflow-handoff.md の手順（CSV が正本）で、
+// slot（差し替え用の識別名）ごとに img と alt を入れ替える。alt に「直火」の語を入れない（CLAUDE.md §2）。
+type Row = { term: string; when: string; note?: string };
+type Card = {
+	slot: string;
+	title: string;
+	img: ImageMetadata;
+	alt: string;
+	body: string[];
+	rows?: Row[];
+	links?: { href: string; text: string }[];
+};
+type Season = {
+	id: string;
+	en: string;
+	heading: string;
+	slot: string;
+	img: ImageMetadata;
+	alt: string;
+	/** 横長に切り抜くとき（PC）に見せる位置。写真を差し替えたら見直す */
+	pos?: string;
+	lead: string[];
+	cards: Card[];
+	note?: { text: string; href: string; linkText: string };
+};
+
+const seasons: Season[] = [
+	{
+		id: "spring",
+		en: "SPRING",
+		heading: "春の森",
+		slot: "seasons-spring-hero",
+		img: springHero,
+		alt: "新緑の広葉樹林と、木立の奥に張られたテント",
+		lead: [
+			"2月の終わりにウメが咲き、コブシ、ヤマザクラと花が続きます。4月に新緑が始まり、5月には森の緑が濃くなります。",
+		],
+		cards: [
+			{
+				slot: "seasons-spring-flowers",
+				title: "春の花とヤマザクラの見頃",
+				img: sitesHero,
+				alt: "新緑の林の中に、テントとタープが点々と張られたライトフォレスト",
+				body: ["花は、ウメ、コブシ、ヤマザクラの順に咲きます。"],
+				rows: [
+					{
+						term: "ウメ",
+						when: "2月下旬",
+						note: "開花は2023年が2月20日、2025年が2月27日でした。",
+					},
+					{
+						term: "コブシ",
+						when: "3月中旬〜下旬",
+						note: "2023年は3月15日に2分咲き、3月20日に満開間近でした。",
+					},
+					{
+						term: "ヤマザクラ",
+						when: "4月初め〜中旬",
+						note: "2023年は4月1〜2日にほぼ満開になりました。2024年は前の年より10日ほど遅く、4月10日ごろが見頃でした。",
+					},
+				],
+			},
+			{
+				slot: "seasons-spring-shinryoku",
+				title: "新緑の見頃",
+				img: springShinryoku,
+				alt: "木々の間から光の筋が差し込む新緑の森",
+				body: [
+					"新緑が始まるのは4月です。2023年は4月2日、2024年は4月16日ごろに始まりました。",
+					"5月になると緑が濃くなり、日差しが強くなっても、森の中はひんやりしています。",
+				],
+			},
+			{
+				slot: "seasons-spring-birds",
+				title: "春の野鳥とカエルの声",
+				img: sitesThumbDuo,
+				alt: "若葉の木立の中に張ったテントとハンモック",
+				body: [
+					"春の森には、ウグイス、シジュウカラ、ヤマガラ、コゲラがいます。アマガエルは、3月中旬に鳴き始めます。",
+				],
+			},
+			{
+				slot: "seasons-spring-evening",
+				title: "春キャンプの服装と、夜の冷え込み",
+				img: slEve3,
+				alt: "日が暮れたあと、灯りのともるテントと横に停めた車",
+				body: [
+					"日が沈むと10℃を下回るので、上着があると安心です。4月は、まだ蚊や蛾を気にせずに過ごせます。",
+				],
+			},
+			{
+				slot: "seasons-spring-gw",
+				title: "GWと、GW明けの空いている時期",
+				img: springGw,
+				alt: "新緑の木立の間に張られたテントと、奥に停めた車",
+				body: [
+					"GWは、にぎわう時期です。2024年のGWは、開業以来いちばん多くの方が来ました。",
+					"GWが明けた5月中旬〜6月は、いちばん空いている時期です。新緑も濃くなっています。",
+				],
+			},
+			{
+				slot: "seasons-spring-events",
+				title: "お花見会と筍掘り",
+				img: slEve5,
+				alt: "炭火の網の上で焼ける厚切りの肉",
+				body: [
+					"これまで、ヤマザクラの下でライトアップと BBQ を楽しむお花見会と、筍掘りを開いてきました（どちらも2023年・2024年）。筍は、4月の初め〜中旬に出始めます。",
+					"どちらも、人が集まる年に開いています。開く年は、お知らせで案内します。",
+				],
+				links: [{ href: "/news/", text: "お知らせを見る" }],
+			},
+		],
+	},
+	{
+		id: "summer",
+		en: "SUMMER",
+		heading: "夏の森",
+		slot: "seasons-summer-hero",
+		img: summerHero,
+		alt: "緑の濃い夏の広葉樹林と、木陰の中の道",
+		lead: [
+			"夏は、木陰のサイトで過ごす季節です。6月にはホタルが飛び、カブトムシやクワガタが採れる時期が続きます。",
+		],
+		cards: [
+			{
+				slot: "seasons-summer-shade",
+				title: "木陰で過ごす夏",
+				img: sitesFamilySpace,
+				alt: "木漏れ日が差す林間サイトと、木陰に張られたテント",
+				body: [
+					"直射日光が入るのはオートXLだけで、ほかのサイトはすべて木陰です。高原ほどではありませんが、下界より涼しく過ごせます。日中は30℃を超える日もあります。",
+				],
+			},
+			{
+				slot: "seasons-summer-firefly",
+				title: "ホタルが見られる時期",
+				img: sitesDogrunHero,
+				alt: "夕焼けの空と、木立に囲まれた草地",
+				body: [
+					"キャンプサイトから歩いて5分ほどの谷で、ゲンジボタルが見られます。月明かりがなく、風のない蒸し暑い夜によく飛びます。",
+					"谷の水路は、冬のあいだに落ち葉をかいて手入れをしています。2023年は、例年より多く飛びました。",
+				],
+				rows: [
+					{ term: "出始め", when: "6月上旬" },
+					{
+						term: "最盛期",
+						when: "6月中旬〜下旬",
+						note: "2023年は6月18〜19日、2024年は6月21日ごろでした。",
+					},
+					{ term: "終わり", when: "6月末" },
+					{ term: "見頃の時間", when: "19時半〜21時ごろ" },
+				],
+			},
+			{
+				slot: "seasons-summer-kuwagata",
+				title: "クワガタが採れる時期",
+				img: kuwagata,
+				alt: "落ち葉の上を歩くノコギリクワガタ",
+				body: ["ミヤマクワガタに出会えるのは、まれです。"],
+				rows: [
+					{
+						term: "出始め",
+						when: "5月下旬",
+						note: "2023年は、コクワガタが5月28日、ノコギリクワガタが5月31日でした。",
+					},
+					{ term: "たくさん採れる", when: "6月下旬〜7月中旬" },
+					{ term: "もう一度", when: "9月下旬" },
+				],
+			},
+			{
+				slot: "seasons-summer-kabuto",
+				title: "カブトムシが採れる時期",
+				img: slAft4,
+				alt: "木の幹にたくさん集まったカブトムシと、虫をつまむ子どもの手",
+				body: [],
+				rows: [
+					{
+						term: "出始め",
+						when: "6月下旬",
+						note: "2023年は6月22日で、例年より早く出ました。",
+					},
+					{ term: "たくさん採れる", when: "7月下旬〜8月" },
+				],
+			},
+			{
+				slot: "seasons-summer-insects",
+				title: "トンボやチョウと、夏の虫の声",
+				img: aboutHero,
+				alt: "緑の濃い広葉樹林と、木漏れ日の落ちる道",
+				body: [
+					"カブトムシやクワガタのほかに、オニヤンマやギンヤンマなどのトンボ、オオムラサキ、ナナフシもいます。",
+					"7月はセミが鳴き、8月の終わりからは、コオロギ、キリギリス、スズムシの声に変わります。",
+				],
+			},
+			{
+				slot: "seasons-summer-night",
+				title: "夏の夜とシュラフ",
+				img: lightguideNight,
+				alt: "夜、木立の奥に点々とともるサイトの灯り",
+				body: [
+					"夜に15℃を切らなくなると、夏用のシュラフで過ごせます。お盆を過ぎると、夜はぐっと涼しくなります。",
+				],
+			},
+		],
+		note: {
+			text: "虫とりの決まり（持ち帰りなど）は、ライトフォレストの利用案内にまとめています。",
+			href: "/light-guide/#insects",
+			linkText: "虫とりの決まりを見る",
+		},
+	},
+	{
+		id: "autumn",
+		en: "AUTUMN",
+		heading: "秋の森",
+		slot: "seasons-autumn-hero",
+		img: autumnHero,
+		alt: "黄色く色づいた木々の下に、石垣の区画とテント",
+		lead: [
+			"10月の中ごろから森が色づき始め、11月に紅葉の見頃を迎えます。朝晩は冷え込むようになります。",
+		],
+		cards: [
+			{
+				slot: "seasons-autumn-koyo",
+				title: "紅葉の見頃",
+				img: autumnKoyo,
+				alt: "黄色く色づいた木々と、落ち葉の積もった林に差す秋の日差し",
+				body: [
+					"紅葉の時期は、年によって10日ほど違います。イチョウも黄色くなります。",
+				],
+				rows: [
+					{ term: "色づき始め", when: "10月中旬〜下旬" },
+					{
+						term: "見頃",
+						when: "11月上旬〜下旬",
+						note: "2022年は11月8〜9日、2023年は11月20〜24日でした。",
+					},
+					{ term: "終わり", when: "11月末〜12月初め" },
+				],
+			},
+			{
+				slot: "seasons-autumn-leaffall",
+				title: "落葉のあとの明るい森",
+				img: autumnLeaffall,
+				alt: "葉を落とした木々と、落ち葉に覆われた林床",
+				body: ["葉が落ちると、日差しの入る明るく静かな森になります。"],
+			},
+			{
+				slot: "seasons-autumn-cold",
+				title: "秋キャンプの服装と、朝晩の冷え込み",
+				img: autumnCold,
+				alt: "色づいた木々の間から、田んぼの広がる谷を見下ろす人と犬",
+				body: [
+					"9月下旬になると、夏用のシュラフでは寒くなります。3シーズン用のシュラフと、長袖や上着があると安心です。10月に入ると、蚊が減ります。",
+					"霜が降りるのは11月中旬〜下旬です（2023年は谷津田で11月21日）。10月の終わりは、16時45分ごろに日が沈みます。",
+				],
+			},
+			{
+				slot: "seasons-autumn-holidays",
+				title: "秋の連休",
+				img: autumnHolidays,
+				alt: "傾いた日差しが木々の間から差し込む林",
+				body: [
+					"秋の連休は混み合います。2024年10月の三連休は、GW並みのにぎわいでした。",
+				],
+			},
+			{
+				slot: "seasons-autumn-fire",
+				title: "焚き火が気持ちいい季節",
+				img: slEve4,
+				alt: "日暮れどき、焚き火台の火のまわりに並べたチェア",
+				body: [
+					"朝晩が冷え込むようになると、朝夕の焚き火が気持ちよくなります。",
+				],
+				links: [{ href: "/firewood/", text: "おいらの薪" }],
+			},
+		],
+	},
+	{
+		id: "winter",
+		en: "WINTER",
+		heading: "冬の森",
+		slot: "seasons-winter-hero",
+		img: winterHero,
+		alt: "雪の積もった林床と、葉を落とした冬の木立",
+		pos: "object-[50%_80%]",
+		lead: [
+			"冬も営業しています。管理人が常駐していて、年末年始も泊まれます。11月の下旬からは予約が減り、森は静かになります。",
+		],
+		cards: [
+			{
+				slot: "seasons-winter-stove",
+				title: "冬キャンプと薪ストーブ",
+				img: rentalWinter,
+				alt: "テントの中で火が入った薪ストーブと、上にのせたポット",
+				body: [
+					"薪ストーブの季節は、10月下旬〜3月下旬です。薪ストーブと石油ストーブは、レンタルがあります。",
+					"AC電源の使えるサイトなら、ホットカーペットでも冬を過ごせます。",
+				],
+				links: [
+					{ href: "/rental/", text: "レンタルを見る" },
+					{ href: "/light-guide/#ac-power", text: "AC電源について" },
+				],
+			},
+			{
+				slot: "seasons-winter-cold",
+				title: "冬の朝の冷え込みと風",
+				img: winterCold,
+				alt: "葉を落とした冬の木立と、落ち葉の上に張られたテントとタープ",
+				body: [
+					"冷え込んだ朝は、−5℃前後になります。いちばん冷えた記録は−10℃です（2023年1月26日、手元の温度計）。",
+					"森の中は風が弱く、強い風の日でも、テントが壊れるようなことはありませんでした。",
+				],
+			},
+			{
+				slot: "seasons-winter-snow",
+				title: "雪の日のキャンプ",
+				img: winterSnow,
+				alt: "葉を落とした木の枝と、冬の青空",
+				body: [
+					"雪が積もるのは冬に数回で、量は数cm〜10cmほどです。2023年1月25日と2025年3月9日に約3cm、多い冬で8〜10cm積もりました。たいてい、その日のうちに解けます。",
+					"雪の日も営業しています。",
+				],
+				links: [{ href: "/faq/#studless", text: "冬のタイヤについて" }],
+			},
+			{
+				slot: "seasons-winter-newyear",
+				title: "年越しキャンプ",
+				img: sitesGearMulti,
+				alt: "夜、ランタンの灯るサイトと、火の入った小さな薪ストーブ",
+				body: [
+					"年末年始も営業しています。2021年から2024年までは、大晦日に年越しのキャンプファイヤーを焚いてきました。夕方に火を入れ、芋煮と地元の酒をふるまい、消灯を夜中の1時まで延ばしました。元日に初日の出が見られた年もあります（2023年・2025年）。",
+					"キャンプファイヤーは、人が集まる年に開いています。開く年は、お知らせで案内します。",
+				],
+				links: [{ href: "/news/", text: "お知らせを見る" }],
+			},
+		],
+	},
+];
+
+const linkClass =
+	"inline-flex items-center gap-1.5 text-sm text-[color:var(--light-accent)] underline underline-offset-4 transition hover:opacity-80";
+---
+
+{/* ライトフォレストの春夏秋冬から、泊まりたい季節を選ぶページ（spec §4・§14）。
+    ディープフォレストの内容は書かない。白いカードUI・枠線・影は使わない（禁忌事項）。
+    写真と文章は地の上に並べ、区切りは余白と字組みでつくる。 */}
+<PageLayout title={TITLE} description={DESC} ogImage={OG_IMAGE} lastUpdated="2026年11月">
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": TITLE,
+      "description": DESC,
+      "url": URL,
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "里山パークおいらの森",
+        "url": "https://oiranomori.jp"
+      }
+    })} />
+  </Fragment>
+
+  {/* ページ見出し */}
+  <div class="mb-10 border-b border-zinc-200 pb-8">
+    <p class="text-xs tracking-[0.26em] text-zinc-500 uppercase">Four Seasons</p>
+    <h1 class="mt-3 text-3xl font-semibold leading-snug text-zinc-800 md:text-4xl">おいらの森の四季</h1>
+    <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-600">
+      おいらの森は、一年を通して営業している林間キャンプ場です。春は花と新緑、夏は木陰と虫、秋は紅葉と焚き火、冬は薪ストーブと、季節ごとに森の過ごし方が変わります。
+    </p>
+    <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-600">
+      このページでは、ライトフォレストの春夏秋冬を紹介します。花や虫の時期は年によって前後するので、日付はこれまでの記録として添えています。
+    </p>
+
+    {/* 季節へのページ内リンク */}
+    <nav class="mt-7" aria-label="季節を選ぶ">
+      <ul class="flex flex-wrap gap-x-7 gap-y-3 text-sm">
+        {seasons.map((s) => (
+          <li>
+            <a href={`#${s.id}`} class="inline-flex items-center gap-1.5 text-zinc-700 underline decoration-zinc-300 underline-offset-4 transition hover:text-[color:var(--light-accent)] hover:decoration-current">
+              {s.heading}
+              <span aria-hidden="true">↓</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+
+  {seasons.map((s, si) => (
+    <section id={s.id} class="mb-20 scroll-mt-24 md:mb-28" aria-labelledby={`${s.id}-heading`}>
+      {/* 季節の最初の写真（全幅）。見出しは写真の左下に重ねる */}
+      <div class="full-bleed relative" data-photo-slot={s.slot}>
+        <Picture
+          src={s.img}
+          formats={["avif", "webp"]}
+          alt={s.alt}
+          loading={si === 0 ? "eager" : "lazy"}
+          fetchpriority={si === 0 ? "high" : undefined}
+          widths={[768, 1280, 1920]}
+          sizes="100vw"
+          class={`block aspect-[4/3] w-full object-cover sm:aspect-[16/9] lg:aspect-[12/5] ${s.pos ?? ""}`}
+        />
+        <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/65 via-black/15 to-transparent" aria-hidden="true"></div>
+        <div class="absolute inset-x-0 bottom-0">
+          <div class="mx-auto max-w-6xl pb-6 pl-[1.625rem] pr-4 sm:pl-4 md:pb-10">
+            <p class="text-xs tracking-[0.32em] text-zinc-200 [text-shadow:0_1px_8px_rgba(0,0,0,0.7)]">{s.en}</p>
+            <h2 id={`${s.id}-heading`} class="mt-2 text-3xl font-semibold leading-snug text-white [text-shadow:0_1px_10px_rgba(0,0,0,0.75)] md:text-4xl">{s.heading}</h2>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-8 max-w-2xl">
+        {s.lead.map((p) => (
+          <p class="text-base leading-loose text-zinc-700">{p}</p>
+        ))}
+      </div>
+
+      {/* 季節の見どころ。写真と短い文章を並べる（枚数は季節ごとに違う） */}
+      <div class="mt-10 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+        {s.cards.map((c) => (
+          <div data-photo-slot={c.slot}>
+            <Picture
+              src={c.img}
+              formats={["avif", "webp"]}
+              alt={c.alt}
+              loading="lazy"
+              widths={[480, 800, 1200]}
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 23rem"
+              class="aspect-[4/3] w-full object-cover"
+            />
+            <h3 class="mt-4 text-base font-semibold leading-snug text-zinc-800">{c.title}</h3>
+            {c.body.map((p) => (
+              <p class="mt-2 text-sm leading-loose text-zinc-600">{p}</p>
+            ))}
+            {c.rows && (
+              <dl class="mt-3 divide-y divide-zinc-100 border-y border-zinc-200 text-sm">
+                {c.rows.map((r) => (
+                  <div class="grid grid-cols-[6.5rem_1fr] gap-3 py-2.5">
+                    <dt class="text-zinc-500">{r.term}</dt>
+                    <dd class="text-zinc-800">
+                      {r.when}
+                      {r.note && <span class="mt-1 block text-xs leading-relaxed text-zinc-500">{r.note}</span>}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            )}
+            {c.links && (
+              <p class="mt-3 flex flex-wrap gap-x-5 gap-y-1">
+                {c.links.map((l) => (
+                  <a href={l.href} class={linkClass}>
+                    {l.text}
+                    <span aria-hidden="true">→</span>
+                  </a>
+                ))}
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {s.note && (
+        <p class="mt-10 max-w-2xl text-sm leading-loose text-zinc-600">
+          {s.note.text}
+          <a href={s.note.href} class={`ml-1 ${linkClass}`}>
+            {s.note.linkText}
+            <span aria-hidden="true">→</span>
+          </a>
+        </p>
+      )}
+    </section>
+  ))}
+
+  {/* 泊まる季節を決めたあと。条件・料金はそれぞれの正本ページへ */}
+  <section class="mb-14 border-t border-zinc-200 pt-10">
+    <h2 class="mb-2 text-xl font-semibold text-zinc-800">泊まる季節が決まったら</h2>
+    <p class="mb-6 max-w-2xl text-sm leading-loose text-zinc-600">
+      サイトの広さや設備、利用の決まりは、それぞれのページにまとめています。
+    </p>
+    <div class="flex flex-wrap items-center gap-x-8 gap-y-4">
+      <a
+        href={PROX_SEARCH_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center justify-center rounded-full bg-[color:var(--forest-600)] px-7 py-3 text-sm text-white shadow-sm transition hover:bg-[color:var(--forest-700)]"
+        data-cta="reserve"
+        data-cta-field="light"
+      >
+        空き状況と料金を確認する ↗
+      </a>
+      <a
+        href="/sites/"
+        class="text-sm underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80"
+        data-cta="seasons-to-sites"
+        data-cta-target="/sites/"
+      >
+        自分に合うサイトを選ぶ →
+      </a>
+      <a href="/stay-light/" class="text-sm text-zinc-600 underline underline-offset-2 transition hover:text-zinc-800">
+        ライトフォレストで過ごす一泊 →
+      </a>
+      <a href="/light-guide/" class="text-sm text-zinc-600 underline underline-offset-2 transition hover:text-zinc-800">
+        設備・利用時間・ルールを見る →
+      </a>
+    </div>
+  </section>
+</PageLayout>
