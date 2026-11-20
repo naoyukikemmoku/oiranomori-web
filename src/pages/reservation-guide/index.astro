@@ -104,23 +104,29 @@ const steps = [
       おいらの森は公式予約サイトを通じてネット予約を受け付けています。
       会員登録をすると、宿泊実績やポイントを次回以降のご利用にあてられます。
     </p>
+    {/* すでに予約している人は、ここから変更・キャンセルの節へ（予約の確認はその次の節） */}
+    <p class="mt-5 text-sm">
+      <a href="#change" class="inline-flex items-center gap-1.5 text-[color:var(--light-accent)] underline underline-offset-4 transition hover:opacity-80">
+        すでに予約している方：予約の確認・変更・キャンセルはこちら
+        <span aria-hidden="true">↓</span>
+      </a>
+    </p>
+    {/* 目次は節の並び（初めて予約する人が上から読める順）と同じ */}
     <nav class="mt-6 flex flex-wrap gap-3 text-sm">
       {[
-        { href: "#change", label: "キャンセル・変更のやり方", accent: true },
-        { href: "#account", label: "ログイン・予約確認" },
         { href: "#steps",  label: "予約の手順" },
         { href: "#price",  label: "料金の決まり方" },
         { href: "#phone",  label: "電話予約について" },
         { href: "#merit",  label: "公式予約のメリット" },
+        { href: "#change", label: "キャンセル・変更のやり方" },
+        { href: "#account", label: "ログイン・予約確認" },
         { href: "#member", label: "会員制度・ポイント" },
         { href: "#online", label: "ネット予約の特徴" },
         { href: "#rakuten", label: "楽天トラベルキャンプ" },
       ].map((item) => (
         <a
           href={item.href}
-          class={item.accent
-            ? "rounded-full border border-[color:var(--light-accent)] bg-[color:var(--light-accent)] px-4 py-1.5 text-white transition hover:opacity-90"
-            : "rounded-full border border-zinc-300 px-4 py-1.5 text-zinc-600 transition hover:border-zinc-500 hover:text-zinc-800"}
+          class="rounded-full border border-zinc-300 px-4 py-1.5 text-zinc-600 transition hover:border-zinc-500 hover:text-zinc-800"
         >
           {item.label}
         </a>
@@ -128,45 +134,10 @@ const steps = [
     </nav>
   </div>
 
-  {/* 会員の方・予約を確認したい方（会員/予約確認のハブ） */}
-  <section id="account" class="mb-16 scroll-mt-24 border-t border-zinc-300 pt-10">
-    <p class="text-xs tracking-[0.2em] text-zinc-400">
-      <span class="text-[color:var(--light-accent)]">01</span>
-      <span class="ml-2">ログイン・予約確認</span>
-    </p>
-    <h2 class="mt-2 mb-5 text-xl font-semibold text-zinc-800">会員の方・予約を確認したい方</h2>
-    <div class="flex flex-wrap gap-3">
-      <a
-        href={PROX_MEMBER_SIGNUP_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        class="inline-flex items-center justify-center rounded-full bg-[color:var(--forest-600)] px-6 py-2.5 text-sm text-white shadow-sm transition hover:bg-[color:var(--forest-700)]"
-      >
-        新規会員登録 ↗
-      </a>
-      <a
-        href={PROX_MEMBER_LOGIN_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        class="inline-flex items-center justify-center rounded-full border border-zinc-400 px-6 py-2.5 text-sm text-zinc-700 transition hover:border-zinc-600"
-      >
-        ログイン ↗
-      </a>
-      <a
-        href={PROX_BOOKING_LOOKUP_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        class="inline-flex items-center justify-center rounded-full border border-zinc-400 px-6 py-2.5 text-sm text-zinc-700 transition hover:border-zinc-600"
-      >
-        予約確認（マイページ） ↗
-      </a>
-    </div>
-  </section>
-
   {/* 予約の基本ステップ */}
   <section id="steps" class="mb-16 scroll-mt-24 border-t border-zinc-300 pt-10">
     <p class="text-xs tracking-[0.2em] text-zinc-400">
-      <span class="text-[color:var(--light-accent)]">02</span>
+      <span class="text-[color:var(--light-accent)]">01</span>
       <span class="ml-2">予約の手順</span>
     </p>
     <h2 class="mt-2 mb-5 text-xl font-semibold text-zinc-800">予約の基本ステップ</h2>
@@ -229,7 +200,7 @@ const steps = [
   {/* 料金の仕組み。/sites/ から詳細を移設し、ここを正本とする。 */}
   <section id="price" class="mb-16 scroll-mt-24 border-t border-zinc-300 pt-10">
     <p class="text-xs tracking-[0.2em] text-zinc-400">
-      <span class="text-[color:var(--light-accent)]">03</span>
+      <span class="text-[color:var(--light-accent)]">02</span>
       <span class="ml-2">料金</span>
     </p>
     <h2 class="mt-2 mb-5 text-xl font-semibold text-zinc-800">料金の決まり方</h2>
@@ -287,7 +258,7 @@ const steps = [
   {/* 電話予約 */}
   <section id="phone" class="mb-16 scroll-mt-24 border-t border-zinc-300 pt-10">
     <p class="text-xs tracking-[0.2em] text-zinc-400">
-      <span class="text-[color:var(--light-accent)]">04</span>
+      <span class="text-[color:var(--light-accent)]">03</span>
       <span class="ml-2">電話予約</span>
     </p>
     <h2 class="mt-2 mb-5 text-xl font-semibold text-zinc-800">電話予約・当日予約について</h2>
@@ -304,6 +275,38 @@ const steps = [
         },
       ].map((item) => (
         <div class="border-t border-zinc-200 pt-5">
+          <h3 class="font-semibold text-zinc-800">{item.title}</h3>
+          <p class="mt-3 text-sm leading-loose text-zinc-600">{item.desc}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  {/* 公式予約のメリット */}
+  <section id="merit" class="mb-16 scroll-mt-24 border-t border-zinc-300 pt-10">
+    <p class="text-xs tracking-[0.2em] text-zinc-400">
+      <span class="text-[color:var(--light-accent)]">04</span>
+      <span class="ml-2">公式予約のメリット</span>
+    </p>
+    <h2 class="mt-2 mb-5 text-xl font-semibold text-zinc-800">公式予約のメリット</h2>
+
+    <div class="mb-8 border-l-4 border-[color:var(--light-accent)] bg-[color:var(--forest-100)] px-6 py-5">
+      <p class="text-lg font-semibold text-zinc-800">公式サイトからの予約が、いちばんおトクです</p>
+      <p class="mt-2 text-sm leading-loose text-zinc-600">外部サイト経由より料金が安く、会員登録すればポイントも貯まります。</p>
+    </div>
+
+    <div class="grid gap-6 sm:grid-cols-2">
+      {[
+        {
+          title: "宿泊回数で上がる「会員ランク」",
+          desc: "会員登録してマイページを作成すると、宿泊回数に応じて会員ランクが上がります。ランクアップに伴い予約時のポイント付与率もアップ。リピーターほど優遇される仕組みです。",
+        },
+        {
+          title: "賢く貯まる「ポイント制度」",
+          desc: "ご予約時の利用金額に応じてポイントが貯まります。貯まったポイントは「1ポイント＝1円」として次回予約代金に充当可能です。オイラーズ活動への参加でも貯まります。",
+        },
+      ].map((item) => (
+        <div class="border-t-2 border-[color:var(--light-accent)] pt-5">
           <h3 class="font-semibold text-zinc-800">{item.title}</h3>
           <p class="mt-3 text-sm leading-loose text-zinc-600">{item.desc}</p>
         </div>
@@ -391,35 +394,38 @@ const steps = [
     </dl>
   </section>
 
-  {/* 公式予約のメリット */}
-  <section id="merit" class="mb-16 scroll-mt-24 border-t border-zinc-300 pt-10">
+  {/* 会員の方・予約を確認したい方（会員/予約確認のハブ） */}
+  <section id="account" class="mb-16 scroll-mt-24 border-t border-zinc-300 pt-10">
     <p class="text-xs tracking-[0.2em] text-zinc-400">
       <span class="text-[color:var(--light-accent)]">06</span>
-      <span class="ml-2">公式予約のメリット</span>
+      <span class="ml-2">ログイン・予約確認</span>
     </p>
-    <h2 class="mt-2 mb-5 text-xl font-semibold text-zinc-800">公式予約のメリット</h2>
-
-    <div class="mb-8 border-l-4 border-[color:var(--light-accent)] bg-[color:var(--forest-100)] px-6 py-5">
-      <p class="text-lg font-semibold text-zinc-800">公式サイトからの予約が、いちばんおトクです</p>
-      <p class="mt-2 text-sm leading-loose text-zinc-600">外部サイト経由より料金が安く、会員登録すればポイントも貯まります。</p>
-    </div>
-
-    <div class="grid gap-6 sm:grid-cols-2">
-      {[
-        {
-          title: "宿泊回数で上がる「会員ランク」",
-          desc: "会員登録してマイページを作成すると、宿泊回数に応じて会員ランクが上がります。ランクアップに伴い予約時のポイント付与率もアップ。リピーターほど優遇される仕組みです。",
-        },
-        {
-          title: "賢く貯まる「ポイント制度」",
-          desc: "ご予約時の利用金額に応じてポイントが貯まります。貯まったポイントは「1ポイント＝1円」として次回予約代金に充当可能です。オイラーズ活動への参加でも貯まります。",
-        },
-      ].map((item) => (
-        <div class="border-t-2 border-[color:var(--light-accent)] pt-5">
-          <h3 class="font-semibold text-zinc-800">{item.title}</h3>
-          <p class="mt-3 text-sm leading-loose text-zinc-600">{item.desc}</p>
-        </div>
-      ))}
+    <h2 class="mt-2 mb-5 text-xl font-semibold text-zinc-800">会員の方・予約を確認したい方</h2>
+    <div class="flex flex-wrap gap-3">
+      <a
+        href={PROX_MEMBER_SIGNUP_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center justify-center rounded-full bg-[color:var(--forest-600)] px-6 py-2.5 text-sm text-white shadow-sm transition hover:bg-[color:var(--forest-700)]"
+      >
+        新規会員登録 ↗
+      </a>
+      <a
+        href={PROX_MEMBER_LOGIN_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center justify-center rounded-full border border-zinc-400 px-6 py-2.5 text-sm text-zinc-700 transition hover:border-zinc-600"
+      >
+        ログイン ↗
+      </a>
+      <a
+        href={PROX_BOOKING_LOOKUP_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center justify-center rounded-full border border-zinc-400 px-6 py-2.5 text-sm text-zinc-700 transition hover:border-zinc-600"
+      >
+        予約確認（マイページ） ↗
+      </a>
     </div>
   </section>
 
