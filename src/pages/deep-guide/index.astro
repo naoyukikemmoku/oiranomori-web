@@ -7,7 +7,20 @@ import deepguideLightsout from "../../assets/images/deepguide_lightsout.jpg";
 import { DEEP_RESERVE_LABEL, PROX_DEEP_RESERVE_URL } from "../../config/nav";
 import PageLayout from "../../layouts/PageLayout.astro";
 
+// 来る前に知っておくこと。このページの下の節にある事実だけから取った要点（新しい事実は足さない）。
+const beforeYouCome = [
+	"18歳以上のみ、1グループ3名までのフィールドです。入場時に年齢確認書類を見せてください。",
+	"受付はライトフォレストです（チェックイン 12:00〜17:00）。場所は受付で案内します。ライトフォレストから車で約7分です。",
+	"灯りのない森です。設営に慣れていない方は日没の2時間前、慣れている方でも1時間前を目安に受付へお越しください。",
+	"テントのレンタルはご利用いただけません。テントはご自身でお持ちください。",
+	"水道はありません。飲み水はライトフォレストで汲んでから向かってください。",
+	"ゴミはすべて持ち帰りです。灰は入れ物（火消し壺・灰入れバケツ・袋など）に入れて持ち帰り、ライトフォレストの灰捨て場へ。",
+	"日没後は車を動かせません。お風呂や買い物は日没前に済ませてください。",
+	"22:00に消灯です。",
+];
+
 // 利用規定・基本情報。/deep/ から移設（このページを正本とする）。
+// 下の節に詳しい説明がある条件は、ここでは短く書いてその節へリンクする（同じ説明を2回書かない）。
 const specs = [
 	{ label: "利用制限", value: "18歳以上のみ（入場時に年齢確認書類を提示）" },
 	{ label: "定員", value: "1〜3名（4名以上のグループ利用は不可）" },
@@ -18,21 +31,32 @@ const specs = [
 	},
 	{
 		label: "チェックアウト",
-		value: "6:00〜12:00。空きがある場合は、17:00まで（日没が早い時期は日没まで）無料で延長できます。",
+		value: "6:00〜12:00。空きがあれば無料で延長できます。",
+		href: "#checkout",
+		linkText: "チェックアウト・延長",
 	},
 	{
 		label: "直火・焚き火",
-		value: "可（落葉・落枝はご自由に。木についている枯れ枝や積んである丸太は燃やさないでください）",
+		value: "可",
+		href: "#facility",
+		linkText: "設備・スペック",
 	},
 	{
 		label: "灰",
-		value: "ご自身で持ち帰り（ディープに灰捨て場はありません）。入れて運べる入れ物（火消し壺・灰入れバケツ・袋など）を持参。お持ちでない方は受付でレンタル（500円）",
+		value: "ご自身で持ち帰り",
+		href: "#facility",
+		linkText: "設備・スペック",
 	},
-	{ label: "ゴミ", value: "全て持ち帰り（灰はライトフォレストの灰捨て場の黒ペール缶で引き取り）" },
+	{
+		label: "ゴミ",
+		value: "全て持ち帰り",
+		href: "#facility",
+		linkText: "設備・スペック",
+	},
 	{ label: "発電機・スピーカー", value: "禁止" },
 	{
 		label: "場所",
-		value: "非公開。受付にて案内（ライトフォレストから車で約7分）",
+		value: "非公開。受付にて案内（ライトフォレストから車で約7分の、別の尾根）",
 	},
 ];
 
@@ -108,13 +132,8 @@ const facilities = [
     </p>
 
     <p class="mt-5 max-w-2xl text-base leading-loose text-zinc-400">
-      ディープフォレストは18歳以上限定のフィールド。<br />
-      1グループ3名まで（4名以上のグループ利用は不可）。<br />
       樹齢80年以上のスギ・ヒノキが立ち並ぶ深い針葉樹林。直火、ブッシュクラフト、圧倒的な静寂。<br />
       整備された快適さよりも、自然との真剣な対話を求める方のためのフィールドです。
-    </p>
-    <p class="mt-3 max-w-2xl text-sm leading-loose text-zinc-500">
-      ライトフォレストから「車で約7分」の、別の尾根にあります。場所は受付で案内を受けてください。
     </p>
 
     <nav class="mt-6 flex flex-wrap gap-3 text-sm">
@@ -137,6 +156,19 @@ const facilities = [
     </nav>
   </div>
 
+  {/* 来る前に知っておくこと。短い要点だけ。詳しい説明は下の各節 */}
+  <section id="before" class="mb-14 border-l-2 border-zinc-600 pl-5">
+    <h2 class="text-xl font-semibold text-white">来る前に知っておくこと</h2>
+    <ul class="mt-4 space-y-2 text-sm leading-loose text-zinc-300">
+      {beforeYouCome.map((t) => (
+        <li class="flex items-start gap-2">
+          <span class="mt-3 h-1 w-1 shrink-0 rounded-full bg-zinc-500"></span>
+          <span>{t}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+
   {/* 利用規定・基本情報。/deep/ から移設し、このページを正本とする。 */}
   <section id="specs" class="mb-14">
     <h2 class="mb-5 text-xl font-semibold text-white">利用規定・基本情報</h2>
@@ -144,7 +176,14 @@ const facilities = [
       {specs.map((item) => (
         <div class="grid grid-cols-[9rem_1fr] gap-4 py-4 sm:grid-cols-[12rem_1fr]">
           <dt class="text-zinc-500">{item.label}</dt>
-          <dd class="text-zinc-300">{item.value}</dd>
+          <dd class="text-zinc-300">
+            {item.value}
+            {item.href && (
+              <a href={item.href} class="ml-2 text-xs text-zinc-400 underline underline-offset-2 transition hover:text-zinc-200">
+                {item.linkText} →
+              </a>
+            )}
+          </dd>
         </div>
       ))}
     </dl>
@@ -196,11 +235,18 @@ const facilities = [
       {[
         { label: "アーリーチェックイン", value: "アーリーチェックインは無料です。サイトの空き状況によりますが、9時からご利用いただけます。アーリーチェックインご希望の方は、ご予約の際に到着予定時刻を12時より前にしてください。前日の夕方にお送りするメールで、アーリーチェックインの可否をご連絡します。" },
         { label: "チェックインリミット", value: "17:00（厳守）。超過時は入場不可。連絡なき場合は無断キャンセル扱いとし、キャンセル料を請求します。遅れる場合は必ず連絡してください。" },
-        { label: "入出場",              value: "日中の入出場は自由です。日没以降は、ひろばへの車両乗り入れ・車の移動・エンジン始動・ヘッドライトの点灯はできません。お風呂や買い物は日没前に済ませてください。" },
+        { label: "入出場",              value: "日中の入出場は自由です。日没以降は車を動かせません。お風呂や買い物は日没前に済ませてください。", href: "#vehicles", linkText: "車両乗り入れについて" },
       ].map((item) => (
         <div class="grid grid-cols-[10rem_1fr] gap-4 py-5 sm:grid-cols-[14rem_1fr]">
           <dt class="text-zinc-500">{item.label}</dt>
-          <dd class="text-zinc-300">{item.value}</dd>
+          <dd class="text-zinc-300">
+            {item.value}
+            {item.href && (
+              <a href={item.href} class="ml-2 text-xs text-zinc-400 underline underline-offset-2 transition hover:text-zinc-200">
+                {item.linkText} →
+              </a>
+            )}
+          </dd>
         </div>
       ))}
     </dl>
@@ -252,12 +298,13 @@ const facilities = [
       ))}
     </dl>
 
-    <div class="mt-6 border-l-2 border-zinc-600 pl-5">
+    {/* 日没後の車の決まりの詳しい説明はここ1か所（チェックインの「入出場」からリンク） */}
+    <div id="vehicles" class="mt-6 border-l-2 border-zinc-600 pl-5">
       <p class="text-sm font-semibold text-white">車両乗り入れについて</p>
       <p class="mt-2 text-sm leading-loose text-zinc-400">
         日没以降の広場への車両乗り入れ、車の移動、エンジン始動は禁止です。ドアの開け閉めや音の鳴るドアロックも極力控えてください。
         ヘッドライトは点灯せず、オートライトはOFFに。懐中電灯や明るいランタンで他のサイトや森を照らさないでください。
-        場内は徐行でお願いします。広場から先は車両進入禁止。傾斜がありキャリーカーの使用は困難なため、バックパックが便利です。
+        場内は徐行でお願いします。広場から先は車両進入禁止。
         車両進入禁止の看板を越えた場所での事故やスタックは、救助費用・現場修繕費用など実費（3〜5万円程度）を請求いたします。
       </p>
     </div>
@@ -354,8 +401,8 @@ const facilities = [
     <ul class="divide-y divide-zinc-800 border-y border-zinc-700">
       {[
         { title: "装備で完結する準備を",  desc: "ここで揃えられるものは限られます。下見しておくと安心です。" },
-        { title: "管理人は常駐しません",  desc: "受付はライトフォレストです。困ったときはお問い合わせください。" },
-        { title: "静かに過ごす場所",      desc: "賑やかに過ごしたい日は、", linkHref: "/", linkText: "ライトフォレストへ" },
+        { title: "管理人は常駐しません",  desc: "困ったときの連絡先は、", linkHref: "#facility", linkText: "設備・スペックの「管理人・連絡先」へ" },
+        { title: "静かに過ごす場所",      desc: "賑やかに過ごしたい日は、", linkHref: "/", linkText: "ライトフォレストへ", cta: "deep-to-light" },
         { title: "足元の備え",            desc: "雨後はぬかるみやすいので、長靴の携行を推奨します。" },
         { title: "装備の運び方",          desc: "広場から先は傾斜があるため、キャリーカーは使いにくい場所です。大容量のバックパックをお持ちになるか、何度か往復して運んでください。" },
       ].map((item) => (
@@ -367,7 +414,7 @@ const facilities = [
               <a
                 href={item.linkHref}
                 class="underline underline-offset-2 text-zinc-400 transition hover:text-zinc-200"
-                data-cta="deep-to-light"
+                data-cta={item.cta}
               >{item.linkText} →</a>
             )}
           </span>
