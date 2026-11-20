@@ -223,7 +223,7 @@ LP・全幅レイアウト用。BaseLayout をラップし、以下を追加す�
 | `FloatingNav.astro` | 右端フローティングタブ。ライトフォレスト / ディープフォレストの利用案内へコンテキストアウェアにリンク。 |
 | `ReserveCTA.astro` | 画面下部固定の予約 CTA ボタン。外部予約サイト（489pro-x.com）へリンク。 |
 | `OshiraseList.astro` | microCMS から取得したお知らせを表示。ホームでは最新3件。日付・カテゴリバッジ・タイトル・サブタイトルを表示。 |
-| `SeasonSlider.astro` | 4枚の森の四季画像カルーセル。6秒間隔で自動回転。前後ボタンとプログレスバーあり。 |
+| `SeasonSlider.astro` | 4枚の森の四季画像カルーセル。6秒間隔で自動回転。前後ボタンとプログレスバーあり。各スライドから `/seasons/` の該当の季節（`#spring`・`#summer`・`#autumn`・`#winter`）へリンクする。 |
 | `Footer.astro` | 4カラムナビゲーション + SNS リンク + コピーライト。`lastUpdated` prop を受け取り表示。 |
 | `LiveCam.astro` | ライブカメラの枠（`#livecam`）。`/now/` から切り出し、`/now/` と `/camera/` の今日のタブで使う。動きは `src/lib/livecam.ts`（読み込みは使う側のページが呼ぶ）。見出しと外側の class だけ props で変えられる。1ページに1つ（§12.3）。 |
 
@@ -418,6 +418,7 @@ description?: string
 | `/rental/` | `ItemList`, `ListItem`, `Product`, `Offer`, `Organization` |
 | `/reservation-guide/` | `WebPage`, `WebSite`, `HowTo` |
 | `/residents/` | `Person`（おいら）、`Person`（橋本佳子）、`Organization` |
+| `/seasons/` | `WebPage`, `WebSite` |
 | `/shop/` | `ItemList`, `ListItem`, `Product`, `Offer`, `Organization` |
 
 個別 JSON-LD が未実装のページは現在なし。
