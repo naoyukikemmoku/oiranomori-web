@@ -113,13 +113,11 @@
 
 | API | 認証 | 用途 | 使用箇所 |
 |---|---|---|---|
-| Open-Meteo | 不要 | 現在気温・天気コード取得 | `src/components/Header.astro` |
 | Google Maps JavaScript API | `PUBLIC_GMAPS_API_KEY` | 場内・周辺マップ | `src/pages/map/index.astro` |
 
 OirasApp 公開 API 群（混雑・気象アドバイザリ等）は §12 参照。
 
-Open-Meteo エンドポイント:  
-`https://api.open-meteo.com/v1/forecast?latitude=36.647&longitude=140.062&current=temperature_2m,weather_code&timezone=Asia%2FTokyo`
+ヘッダーの天気・気温は、OirasApp の `current.php`（`https://oiranomori.com/app/weather/api/public/current.php`）から取る（§12.1 #2）。
 
 Google Maps は WMO 天気コード（0〜99）を SVG アイコンにマッピングして Header に表示している。Advanced Markers 対応のためには `PUBLIC_GMAPS_MAP_ID` も必要（未設定時はコンソール警告を出力）。
 
@@ -645,7 +643,7 @@ HP（oiranomori.jp）は、OirasApp 本体（**別リポ・別ホスティング
 - **鮮度判定は HP 側**。API レスポンスの `age_seconds`（current）・`still.taken_at`（livecam）・`latest`（satellite）を使い、閾値超で警告色・停止中表示・代わりの表示に縮退する（`/now/`: STALE_WARN_S=1200 / STALE_DOWN_S=3600）。
 - **環境変数**：OirasApp 連携は**いずれも環境変数を使わない**（公開 API・URL ハードコード・APIキー不要）。HP 側で関連する `.env` 変数はない。
 - **ホスト**：API・アイコンは `oiranomori.com/app/`、フォーム送信は `form.oiranomori.com/app/`（サブドメイン）。いずれも OirasApp 本体（別リポ・別ホスティング）。
-- **§2 補助 API（Open-Meteo / Google Maps）・§5 microCMS とは別系統**。本節はそれらを再掲しない。
+- **§2 補助 API（Google Maps）・§5 microCMS とは別系統**。本節はそれらを再掲しない。
 - **「不明」項目**（後日 OirasApp 側スキーマで補完）：#6 timeseries の詳細レスポンスフィールド、#12 フォーム submit のレスポンス仕様（#11 チェックアウト連絡フォームは撤去済みのため欠番）。これらは HP 側コードからは確定できない。
 
 ### 12.3 ライブカメラ（`#livecam`・`/now/` と `/camera/`）の見せ方
@@ -773,7 +771,7 @@ HP改修（2026-11）で決めた方針。各ページの改修は本節を参�
 | 条件 | 正本ページ |
 |---|---|
 | アーリーチェックインの例外（連休の中日、場内に1つだけのサイトなど） | `/light-guide/` |
-| 臨時休業・当日予約の電話 | `/light-guide/` |
+| 臨時休業・当日予約の電話 | `/policy/#terms`（利用規約 第6条。両方の森に共通） |
 | 携帯の電波状況 | `/light-guide/` |
 | ライトの設備（シャワーの有無など） | `/light-guide/` |
 | ディープの受付と、年間パスポートの方の直行の例外 | `/deep-guide/` |
