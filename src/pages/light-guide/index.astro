@@ -114,7 +114,8 @@ const scheduleNotes = [
 	{
 		id: "n-early",
 		title: "アーリーチェックイン（9:00〜12:00）",
-		body: "アーリーチェックインは無料です。サイトの空き状況によりますが、9時からご利用いただけます。アーリーチェックインご希望の方は、ご予約の際に到着予定時刻を12時より前にしてください。前日の夕方にお送りするメールで、アーリーチェックインの可否をご連絡します。",
+		// 例外（連休の中日・場内に1つだけのサイト）の正本はここ（spec §14.4）。文言はトップの冬・アーリーの節と同じ
+		body: "アーリーチェックインは無料です。サイトの空き状況によりますが、9時からご利用いただけます。アーリーチェックインご希望の方は、ご予約の際に到着予定時刻を12時より前にしてください。前日の夕方にお送りするメールで、アーリーチェックインの可否をご連絡します。連休の中日や、ドッグランサイト・区画Cのように場内に1つしかないサイトは、前の利用者の関係でお受けできない日があります。それ以外はほぼ毎日ご利用いただけます。",
 	},
 	{
 		id: "n-limit",
@@ -365,6 +366,14 @@ const rules = [
         </div>
       ))}
     </dl>
+
+    {/* 臨時休業・当日予約の正本は /policy/ の利用規約 第6条（spec §14.4）。ここには書かずリンクだけ置く */}
+    <p class="mt-4 text-sm">
+      <a href="/policy/#terms" class="inline-flex items-center gap-1.5 text-[color:var(--light-accent)] underline underline-offset-4 transition hover:opacity-80">
+        臨時休業と当日のご予約について（利用規約 第6条）
+        <span aria-hidden="true">→</span>
+      </a>
+    </p>
 
     {/* 補足。時間割からアンカーで飛ぶ。ページに沈まないよう、見出し付きの枠で囲む */}
     <div id="schedule-notes" class="mt-8 border-l-4 border-[color:var(--light-accent)] bg-[color:var(--forest-100)] px-6 py-6">
