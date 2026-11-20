@@ -1,6 +1,6 @@
 ---
-import type { ImageMetadata } from "astro";
 import { Picture } from "astro:assets";
+import type { ImageMetadata } from "astro";
 import aboutHero from "../../assets/images/about_hero.jpg";
 import kuwagata from "../../assets/images/lightguide_kuwagata.jpg";
 import lightguideNight from "../../assets/images/lightguide_night.jpg";
@@ -11,21 +11,21 @@ import autumnHolidays from "../../assets/images/seasons_autumn_holidays.jpg";
 import autumnKoyo from "../../assets/images/seasons_autumn_koyo.jpg";
 import autumnLeaffall from "../../assets/images/seasons_autumn_leaffall.jpg";
 import springHero from "../../assets/images/seasons_spring.jpg";
+import springBirds from "../../assets/images/seasons_spring_birds.jpg";
+import springEvents from "../../assets/images/seasons_spring_events.jpg";
+import springFlowers from "../../assets/images/seasons_spring_flowers.jpg";
 import springShinryoku from "../../assets/images/seasons_spring_shinryoku.jpg";
 import summerHero from "../../assets/images/seasons_summer.jpg";
+import summerFirefly from "../../assets/images/seasons_summer_firefly.jpg";
 import winterHero from "../../assets/images/seasons_winter.jpg";
 import winterCold from "../../assets/images/seasons_winter_cold.jpg";
+import winterNewyear from "../../assets/images/seasons_winter_newyear.jpg";
 import winterSnow from "../../assets/images/seasons_winter_snow.jpg";
-import sitesDogrunHero from "../../assets/images/sites_dogrun_hero.jpg";
 import sitesFamilySpace from "../../assets/images/sites_family_space.jpg";
-import sitesGearMulti from "../../assets/images/sites_gear_multi.jpg";
 import sitesGroupSize from "../../assets/images/sites_group_size.jpg";
-import sitesHero from "../../assets/images/sites_hero.jpg";
-import sitesThumbDuo from "../../assets/images/sites_thumb_duo.jpg";
 import slAft4 from "../../assets/images/sl_aft_4.jpg";
 import slEve3 from "../../assets/images/sl_eve_3.jpg";
 import slEve4 from "../../assets/images/sl_eve_4.jpg";
-import slEve5 from "../../assets/images/sl_eve_5.jpg";
 import { PROX_SEARCH_URL } from "../../config/nav";
 import PageLayout from "../../layouts/PageLayout.astro";
 
@@ -80,8 +80,8 @@ const seasons: Season[] = [
 			{
 				slot: "seasons-spring-flowers",
 				title: "春の花とヤマザクラの見頃",
-				img: sitesHero,
-				alt: "新緑の林の中に、テントとタープが点々と張られたライトフォレスト",
+				img: springFlowers,
+				alt: "青空に白い花を広げるヤマザクラの大木",
 				body: ["花は、ウメ、コブシ、ヤマザクラの順に咲きます。"],
 				rows: [
 					{
@@ -114,8 +114,8 @@ const seasons: Season[] = [
 			{
 				slot: "seasons-spring-birds",
 				title: "春の野鳥とカエルの声",
-				img: sitesThumbDuo,
-				alt: "若葉の木立の中に張ったテントとハンモック",
+				img: springBirds,
+				alt: "葉のない枝にとまるシジュウカラと、青空",
 				body: [
 					"春の森には、ウグイス、シジュウカラ、ヤマガラ、コゲラがいます。アマガエルは、3月中旬に鳴き始めます。",
 				],
@@ -142,8 +142,8 @@ const seasons: Season[] = [
 			{
 				slot: "seasons-spring-events",
 				title: "お花見会と筍掘り",
-				img: slEve5,
-				alt: "炭火の網の上で焼ける厚切りの肉",
+				img: springEvents,
+				alt: "夜、ライトアップされて白く浮かぶヤマザクラ",
 				body: [
 					"これまで、ヤマザクラの下でライトアップと BBQ を楽しむお花見会と、筍掘りを開いてきました（どちらも2023年・2024年）。筍は、4月の初め〜中旬に出始めます。",
 					"どちらも、人が集まる年に開いています。開く年は、お知らせで案内します。",
@@ -175,8 +175,8 @@ const seasons: Season[] = [
 			{
 				slot: "seasons-summer-firefly",
 				title: "ホタルが見られる時期",
-				img: sitesDogrunHero,
-				alt: "夕焼けの空と、木立に囲まれた草地",
+				img: summerFirefly,
+				alt: "夜の畑と木立のまわりに、黄緑色の光の筋を描いて飛ぶホタル",
 				body: [
 					"キャンプサイトから歩いて5分ほどの谷で、ゲンジボタルが見られます。月明かりがなく、風のない蒸し暑い夜によく飛びます。",
 					"谷の水路は、冬のあいだに落ち葉をかいて手入れをしています。2023年は、例年より多く飛びました。",
@@ -299,7 +299,7 @@ const seasons: Season[] = [
 				slot: "seasons-autumn-holidays",
 				title: "秋の連休",
 				img: autumnHolidays,
-				alt: "傾いた日差しが木々の間から差し込む林",
+				alt: "色づいた木々に囲まれた、日差しの入る広い地面",
 				body: [
 					"秋の連休は混み合います。2024年10月の三連休は、GW並みのにぎわいでした。",
 				],
@@ -322,8 +322,7 @@ const seasons: Season[] = [
 		heading: "冬の森",
 		slot: "seasons-winter-hero",
 		img: winterHero,
-		alt: "雪の積もった林床と、葉を落とした冬の木立",
-		pos: "object-[50%_80%]",
+		alt: "葉を落とした冬の木立と、落ち葉の上に張られたテントとタープ",
 		lead: [
 			"冬も営業しています。管理人が常駐していて、年末年始も泊まれます。11月の下旬からは予約が減り、森は静かになります。",
 		],
@@ -346,7 +345,7 @@ const seasons: Season[] = [
 				slot: "seasons-winter-cold",
 				title: "冬の朝の冷え込みと風",
 				img: winterCold,
-				alt: "葉を落とした冬の木立と、落ち葉の上に張られたテントとタープ",
+				alt: "葉を落とした木の枝と、冬の青空",
 				body: [
 					"冷え込んだ朝は、−5℃前後になります。いちばん冷えた記録は−10℃です（2023年1月26日、手元の温度計）。",
 					"森の中は風が弱く、強い風の日でも、テントが壊れるようなことはありませんでした。",
@@ -356,7 +355,7 @@ const seasons: Season[] = [
 				slot: "seasons-winter-snow",
 				title: "雪の日のキャンプ",
 				img: winterSnow,
-				alt: "葉を落とした木の枝と、冬の青空",
+				alt: "雪の積もった林床と、葉を落とした冬の木立",
 				body: [
 					"雪が積もるのは冬に数回で、量は数cm〜10cmほどです。2023年1月25日と2025年3月9日に約3cm、多い冬で8〜10cm積もりました。たいてい、その日のうちに解けます。",
 					"雪の日も営業しています。",
@@ -366,8 +365,8 @@ const seasons: Season[] = [
 			{
 				slot: "seasons-winter-newyear",
 				title: "年越しキャンプ",
-				img: sitesGearMulti,
-				alt: "夜、ランタンの灯るサイトと、火の入った小さな薪ストーブ",
+				img: winterNewyear,
+				alt: "夕暮れの林の中で、大きな炎を上げるキャンプファイヤー",
 				body: [
 					"年末年始も営業しています。2021年から2024年までは、大晦日に年越しのキャンプファイヤーを焚いてきました。夕方に火を入れ、芋煮と地元の酒をふるまい、消灯を夜中の1時まで延ばしました。元日に初日の出が見られた年もあります（2023年・2025年）。",
 					"キャンプファイヤーは、人が集まる年に開いています。開く年は、お知らせで案内します。",
