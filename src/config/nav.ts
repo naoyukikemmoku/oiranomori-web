@@ -43,7 +43,36 @@ export const PROX_DEEP_RESERVE_URL = `${PROX_BASE}/search/?nights=1&r_num=1&num=
 /** ディープフォレストの予約CTA文言（全ページ統一）。 */
 export const DEEP_RESERVE_LABEL = "ディープフォレストの空きを確認する";
 
-/** ディープのページ。固定の「予約する」（ReserveCTA）の行き先を PROX_DEEP_RESERVE_URL にする。 */
+// ───────────────────────────────────────────────────────────────
+//  ライトのページとディープのページの一覧
+//
+//  上部のフィールド切替（Header）は、ライトの一覧にあるページで「ライトフォレスト」を、
+//  ディープの一覧にあるページで「ディープフォレスト」を選んだ状態にする。
+//  片方の森だけのページはその森を選んだ状態にし、両方の森に共通のページ
+//  （/forest-day/・/firewood/・/residents/・/faq/・/reservation-guide/ など）は
+//  どちらの一覧にも入れず、どちらも選ばない（spec §14.1 の「今どちらの森を見ているか」）。
+//  パスは末尾の / まで書く。
+// ───────────────────────────────────────────────────────────────
+
+/** ライトのページ。上部の切替で「ライトフォレスト」を選んだ状態にする。 */
+export const LIGHT_PAGE_PATHS = [
+	"/",
+	"/stay-light/",
+	"/light-guide/",
+	"/lightforest-map/",
+	"/seasons/",
+	"/sites/",
+	"/sites/solo/",
+	"/sites/duo/",
+	"/sites/family/",
+	"/sites/group/",
+	"/sites/dogrun/",
+];
+
+/**
+ * ディープのページ。上部の切替で「ディープフォレスト」を選んだ状態にし、
+ * 固定の「予約する」（ReserveCTA）の行き先を PROX_DEEP_RESERVE_URL にする。
+ */
 export const DEEP_PAGE_PATHS = ["/deep/", "/deep-guide/", "/stay-deep/"];
 
 /** 会員・予約確認まわり（補助導線）。予約の主導線は PROX_SEARCH_URL。 */
