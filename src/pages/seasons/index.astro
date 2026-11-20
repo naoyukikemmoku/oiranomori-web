@@ -2,6 +2,7 @@
 import { Picture } from "astro:assets";
 import type { ImageMetadata } from "astro";
 import aboutHero from "../../assets/images/about_hero.jpg";
+import firewoodFelling from "../../assets/images/firewood_felling.jpg";
 import kuwagata from "../../assets/images/lightguide_kuwagata.jpg";
 import lightguideNight from "../../assets/images/lightguide_night.jpg";
 import rentalWinter from "../../assets/images/rental_winter.jpg";
@@ -49,6 +50,8 @@ type Card = {
 	alt: string;
 	body: string[];
 	rows?: Row[];
+	/** 表のあとに置く文 */
+	after?: string[];
 	links?: { href: string; text: string }[];
 };
 type Season = {
@@ -86,19 +89,23 @@ const seasons: Season[] = [
 				rows: [
 					{
 						term: "ウメ",
-						when: "2月下旬",
-						note: "開花は2023年が2月20日、2025年が2月27日でした。",
+						when: "2月中旬〜3月上旬",
+						note: "開花は2021年が2月22日、2022年が3月7日、2023年が2月20日、2025年が2月27日でした。年によって幅があります。",
 					},
 					{
 						term: "コブシ",
 						when: "3月中旬〜下旬",
-						note: "2023年は3月15日に2分咲き、3月20日に満開間近でした。",
+						note: "2021年は3月14日、2024年は3月18日に咲き始めました。2023年は3月15日に2分咲き、3月20日に満開間近でした。",
 					},
 					{
 						term: "ヤマザクラ",
 						when: "4月初め〜中旬",
 						note: "2023年は4月1〜2日にほぼ満開になりました。2024年は前の年より10日ほど遅く、4月10日ごろが見頃でした。",
 					},
+				],
+				after: [
+					"早春の足元には、オオイヌノフグリ、カントウタンポポ、スミレが咲きます。2021年は、タンポポが3月9日、スミレが3月中旬に見頃でした。",
+					"5月の初めごろには、森の中でキンランが咲きます（2024年は5月上旬）。",
 				],
 			},
 			{
@@ -292,7 +299,7 @@ const seasons: Season[] = [
 				alt: "色づいた木々の間から、田んぼの広がる谷を見下ろす人と犬",
 				body: [
 					"9月下旬になると、夏用のシュラフでは寒くなります。3シーズン用のシュラフと、長袖や上着があると安心です。10月に入ると、蚊が減ります。",
-					"霜が降りるのは11月中旬〜下旬です（2023年は谷津田で11月21日）。10月の終わりは、16時45分ごろに日が沈みます。",
+					"霜が降りるのは11月中旬〜下旬です（2023年は森の下の谷の田んぼで11月21日）。10月の終わりは、16時45分ごろに日が沈みます。",
 				],
 			},
 			{
@@ -368,10 +375,22 @@ const seasons: Season[] = [
 				img: winterNewyear,
 				alt: "夕暮れの林の中で、大きな炎を上げるキャンプファイヤー",
 				body: [
-					"年末年始も営業しています。2021年から2024年までは、大晦日に年越しのキャンプファイヤーを焚いてきました。夕方に火を入れ、芋煮と地元の酒をふるまい、消灯を夜中の1時まで延ばしました。元日に初日の出が見られた年もあります（2023年・2025年）。",
+					"2021年から2024年までは、大晦日に年越しのキャンプファイヤーを焚いてきました。夕方に火を入れ、芋煮と地元の酒をふるまい、消灯を夜中の1時まで延ばしました。元日に初日の出が見られた年もあります（2023年・2025年）。",
+					"2021年は20名近くが集まりました。ソロの方が多く、焚き火を前に交流が生まれました。2022年は、約30名が集まりました。",
+					"準備は11月から始め、サイトを作ったときに出た伐根を積み上げて、キャンプファイヤーを組みました。90ℓの寸胴で作った50人前の芋煮が、すぐに空になりました。",
 					"キャンプファイヤーは、人が集まる年に開いています。開く年は、お知らせで案内します。",
 				],
 				links: [{ href: "/news/", text: "お知らせを見る" }],
+			},
+			{
+				slot: "seasons-winter-forestwork",
+				title: "冬の森の手入れ",
+				img: firewoodFelling,
+				alt: "林の中で、倒した木をチェーンソーで切り分ける人と、そばを歩く犬",
+				body: [
+					"冬のあいだは、下草刈りや間伐、薪作りをして、森の手入れをしています。",
+				],
+				links: [{ href: "/residents/", text: "森をつくる二人のこと" }],
 			},
 		],
 	},
@@ -485,6 +504,9 @@ const linkClass =
                 ))}
               </dl>
             )}
+            {c.after?.map((p) => (
+              <p class="mt-3 text-sm leading-loose text-zinc-600">{p}</p>
+            ))}
             {c.links && (
               <p class="mt-3 flex flex-wrap gap-x-5 gap-y-1">
                 {c.links.map((l) => (
