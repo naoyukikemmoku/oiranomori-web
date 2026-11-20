@@ -218,7 +218,7 @@ LP・全幅レイアウト用。BaseLayout をラップし、以下を追加す�
 
 | ファイル | 役割 |
 |---|---|
-| `Header.astro` | スティッキーヘッダー。ロゴ、ライト/ディープ切替（PC のみ）、Open-Meteo 天気表示、ハンバーガーメニュー呼び出し。スクロールダウンで自動非表示。 |
+| `Header.astro` | スティッキーヘッダー。ロゴ、ライト/ディープ切替（PC はロゴと同じ段の中央、スマホはその下の段に横幅いっぱい）、Open-Meteo 天気表示、ハンバーガーメニュー呼び出し。スクロールダウンで自動非表示。切替でどちらの森を選んだ状態にするかは、`src/config/nav.ts` のページの一覧で決める：ライトの一覧（`LIGHT_PAGE_PATHS`：`/`・`/stay-light/`・`/light-guide/`・`/lightforest-map/`・`/seasons/`・`/sites/` と `/sites/` 配下の客層ページ）では「ライトフォレスト」、ディープの一覧（`DEEP_PAGE_PATHS`：`/deep/`・`/deep-guide/`・`/stay-deep/`）では「ディープフォレスト」。片方の森だけのページはその森を選んだ状態にし、両方の森に共通のページ（`/forest-day/`・`/firewood/`・`/residents/`・`/faq/`・`/reservation-guide/` など）はどちらの一覧にも入れず、どちらも選ばない（§14.1 の「今どちらの森を見ているか」）。 |
 | `HamburgerMenu.astro` | 右スライドアウトのサイドメニュー。4グループのナビゲーション。オーバーレイクリック・ESC キーで閉じる。 |
 | `FloatingNav.astro` | 右端フローティングタブ。ライトフォレスト / ディープフォレストの利用案内へコンテキストアウェアにリンク。 |
 | `ReserveCTA.astro` | 画面下部固定の予約 CTA ボタン。外部予約サイト（489pro-x.com）へリンク。 |
