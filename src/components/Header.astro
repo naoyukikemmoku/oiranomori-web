@@ -38,7 +38,8 @@ const ariaCurrent = (href: string) =>
           class={`header-switch__item ${item.href === "/" ? "is-light" : "is-deep"} ${isActive(item.href) ? "is-active" : ""}`}
           aria-current={ariaCurrent(item.href)}
         >
-          {item.label}
+          {/* 名前と一言の間の空白は、読み上げで「ライトフォレスト 林間キャンプ場」と続けて読ませるため */}
+          <span>{item.label}</span> <span class="header-switch__tagline">{item.tagline}</span>
         </a>
       ))}
     </nav>
@@ -74,7 +75,7 @@ const ariaCurrent = (href: string) =>
         class={`header-switch-mobile__item ${item.href === "/" ? "is-light" : "is-deep"} ${isActive(item.href) ? "is-active" : ""}`}
         aria-current={ariaCurrent(item.href)}
       >
-        {item.label}
+        <span>{item.label}</span> <span class="header-switch-mobile__tagline">{item.tagline}</span>
       </a>
     ))}
   </nav>

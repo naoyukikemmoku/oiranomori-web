@@ -4,9 +4,10 @@ export type NavItem = {
 	desc?: string;
 };
 
+// 上部のフィールド切替。tagline は名前に添える一言（spec §10.4 の第一案）。
 export const topSwitch = [
-	{ label: "ライトフォレスト", href: "/" },
-	{ label: "ディープフォレスト", href: "/deep/" },
+	{ label: "ライトフォレスト", tagline: "林間キャンプ場", href: "/" },
+	{ label: "ディープフォレスト", tagline: "大人だけの野営地", href: "/deep/" },
 ] as const;
 
 export const floatingNav: NavItem[] = [

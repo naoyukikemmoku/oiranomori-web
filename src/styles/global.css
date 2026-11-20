@@ -7,7 +7,7 @@
   --light-accent: #488B37;       /* ライトフォレスト テーマカラー */
   --light-accent-hover: #3d7a2e;
   --light-accent-text: #ffffff;
-  --header-height: 82px; /* mobile: 2-row */
+  --header-height: 94px; /* mobile: 2-row（切替に一言の2行目が入った分 +12px） */
   --header-offset: calc(var(--header-height) + 10px);
 }
 
@@ -87,7 +87,19 @@
   }
 
   .header-switch__item {
-    @apply min-w-[106px] px-3 py-2 text-center text-xs sm:text-sm font-medium transition bg-zinc-100/80 text-zinc-400;
+    @apply min-w-[106px] px-3 py-2 text-center text-xs sm:text-sm font-medium whitespace-nowrap transition bg-zinc-100/80 text-zinc-400;
+  }
+
+  /* 名前に添える一言。名前より小さい字で、同じ行に並べる（ヘッダーの高さは変えない）。
+     1024px 未満は段に入りきらないので画面からは隠す。読み上げには残す。 */
+  .header-switch__tagline {
+    @apply ml-0.5 text-[11px] font-normal leading-none;
+  }
+
+  @media (max-width: 1023px) {
+    .header-switch__tagline {
+      @apply sr-only;
+    }
   }
 
   .header-switch__item.is-light.is-active {
@@ -127,6 +139,11 @@
 
   .header-switch-mobile__item {
     @apply block py-2 px-2 text-center text-xs font-medium tracking-wide leading-snug text-zinc-400 bg-zinc-100/70 transition;
+  }
+
+  /* 名前に添える一言。名前の下の2行目に、名前より小さい字で出す */
+  .header-switch-mobile__tagline {
+    @apply block text-[10px] font-normal leading-tight;
   }
 
   .header-switch-mobile__item.is-light.is-active {
