@@ -4,6 +4,31 @@ import { PROX_SEARCH_URL, siteNav } from "../config/nav";
 const { lastUpdated } = Astro.props;
 // フッターは siteNav の全項目を描画（menu フラグは無視）。
 const footerGroups = siteNav;
+
+// スマホの2列で、長い項目名が言葉の途中で切れないようにする。
+// リンクの字は空白と、ここに書いた区切り（|）の位置でだけ折り返す（break-keep と <wbr>）。
+// 文言は siteNav のまま。ここに書くのは区切りの位置だけ。
+// 「〜フォレスト|で」は、320px で「ディープフォレストで」が1行に入らないとき、
+// 名前を切らずに「で」から次の行へ送るため（入るときは「で」の後で折り返す）。
+const LABEL_BREAKS = [
+	"ライトの|サイト・|区画を|選ぶ",
+	"ライトフォレスト|で|過ごす|一泊",
+	"ディープフォレスト|で|過ごす|一泊",
+	"滞在中の|方の|ポータル",
+	"キャンセル|ポリシー",
+	"場内マップ|（ライト）",
+	"年間パスポート・|回数券",
+	"よくある質問|（FAQ）",
+	"運営会社・|関連組織",
+	"プライバシー|ポリシー",
+];
+const labelBreaks = new Map(LABEL_BREAKS.map((b) => [b.replaceAll("|", ""), b.split("|")]));
+// 項目名を変えたのに区切りを直し忘れたら、ビルドを止めて知らせる
+const navLabels = new Set(siteNav.flatMap((group) => group.items.map((item) => item.label)));
+for (const label of labelBreaks.keys()) {
+	if (!navLabels.has(label)) throw new Error(`Footer: LABEL_BREAKS の「${label}」が siteNav にありません`);
+}
+const phrases = (label: string) => labelBreaks.get(label) ?? [label];
 ---
 
 <footer class="lp-footer">
@@ -32,11 +57,11 @@ const footerGroups = siteNav;
             {group.items.map((item) => (
               <li>
                 {item.active !== false ? (
-                  <a href={item.href} class="footer-link" target={item.external ? "_blank" : undefined} rel={item.external ? "noopener noreferrer" : undefined} data-cta={item.href === PROX_SEARCH_URL ? "reserve" : undefined} data-cta-place={item.href === PROX_SEARCH_URL ? "footer" : undefined}>
-                    {item.label}
+                  <a href={item.href} class="footer-link break-keep wrap-break-word" target={item.external ? "_blank" : undefined} rel={item.external ? "noopener noreferrer" : undefined} data-cta={item.href === PROX_SEARCH_URL ? "reserve" : undefined} data-cta-place={item.href === PROX_SEARCH_URL ? "footer" : undefined}>
+                    {phrases(item.label).map((p, i) => (<Fragment>{i > 0 && <wbr />}{p}</Fragment>))}
                   </a>
                 ) : (
-                  <span class="footer-link pointer-events-none opacity-40">{item.label}</span>
+                  <span class="footer-link break-keep wrap-break-word pointer-events-none opacity-40">{phrases(item.label).map((p, i) => (<Fragment>{i > 0 && <wbr />}{p}</Fragment>))}</span>
                 )}
               </li>
             ))}
