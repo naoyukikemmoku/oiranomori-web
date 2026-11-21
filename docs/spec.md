@@ -119,7 +119,7 @@ OirasApp 公開 API 群（混雑・気象アドバイザリ等）は §12 参照
 
 ヘッダーの天気・気温は、OirasApp の `current.php`（`https://oiranomori.com/app/weather/api/public/current.php`）から取る（§12.1 #2）。
 
-Google Maps は WMO 天気コード（0〜99）を SVG アイコンにマッピングして Header に表示している。Advanced Markers 対応のためには `PUBLIC_GMAPS_MAP_ID` も必要（未設定時はコンソール警告を出力）。
+ヘッダーの天気アイコンは、`current.php` が返す OpenWeather のアイコンコード（`weather.icon`。例：`04d`）から、OpenWeather のアイコン画像（`https://openweathermap.org/img/wn/{icon}@2x.png`）を表示している。Google Maps の Advanced Markers 対応のためには `PUBLIC_GMAPS_MAP_ID` も必要（未設定時はコンソール警告を出力）。
 
 ### リンター / フォーマッター
 
@@ -771,7 +771,7 @@ HP改修（2026-11）で決めた方針。各ページの改修は本節を参�
 | 条件 | 正本ページ |
 |---|---|
 | アーリーチェックインの例外（連休の中日、場内に1つだけのサイトなど） | `/light-guide/` |
-| 臨時休業・当日予約の電話 | `/policy/#terms`（利用規約 第6条。両方の森に共通） |
+| 臨時休業・当日予約の電話 | `/policy/#terms-6`（利用規約 第6条。両方の森に共通） |
 | 携帯の電波状況 | `/light-guide/` |
 | ライトの設備（シャワーの有無など） | `/light-guide/` |
 | ディープの受付と、年間パスポートの方の直行の例外 | `/deep-guide/` |
