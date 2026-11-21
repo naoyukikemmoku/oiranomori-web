@@ -18,7 +18,13 @@ const details = [
 	{ label: "利用", value: "1日1組限定の貸切（場内に1区画のみ）" },
 	{ label: "設営場所", value: "柵内に2か所整備。地形によりレイアウトはある程度限られます" },
 	{ label: "車", value: "ドッグラン内に乗り入れ可能" },
-	{ label: "電源", value: "AC電源あり。有料・要予約、600Wまで" },
+	// AC電源の詳しいこと（容量など）の正本は /light-guide/#ac-power（spec §14.3）
+	{
+		label: "電源",
+		value: "AC電源あり（有料オプション・要予約）",
+		href: "/light-guide/#ac-power",
+		linkText: "AC電源について",
+	},
 	{ label: "犬の頭数・大きさ・犬種", value: "制限なし" },
 	{ label: "犬の料金", value: "無料" },
 ];
@@ -129,7 +135,12 @@ const linkClass =
           {details.map((d) => (
             <tr>
               <th scope="row" class="px-4 py-3 text-left align-top font-medium text-zinc-700 sm:w-56">{d.label}</th>
-              <td class="px-4 py-3 leading-loose text-zinc-600">{d.value}</td>
+              <td class="px-4 py-3 leading-loose text-zinc-600">
+                {d.value}
+                {d.href && (
+                  <a href={d.href} class="ml-1 underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80">{d.linkText} →</a>
+                )}
+              </td>
             </tr>
           ))}
         </tbody>
