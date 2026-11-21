@@ -183,7 +183,7 @@ const chapters = [
 
   {/* ファーストビュー */}
   <section class="bg-[color:var(--forest-700)] py-20 md:py-28">
-    <div class="mx-auto max-w-6xl px-5">
+    <div class="mx-auto max-w-6xl px-5 md:floating-tab-gutter [--tab-gutter-base:1.25rem]">
       <p class="text-xs tracking-[0.32em] text-zinc-500 uppercase">A Night in the Deep Forest</p>
       <h1 class="mt-5 text-3xl font-semibold leading-tight text-white md:text-5xl">
         ディープフォレストで過ごす一泊
@@ -208,7 +208,7 @@ const chapters = [
   {/* 時間軸本編。スマホで上から自然に読める1カラムの縦の流れ。
       md 以上でのみ時刻を左カラムへ寄せる。 */}
   <section class="bg-[color:var(--forest-700)] pb-20 md:pb-28">
-    <div class="mx-auto max-w-6xl px-5">
+    <div class="mx-auto max-w-6xl px-5 md:floating-tab-gutter [--tab-gutter-base:1.25rem]">
       <div class="divide-y divide-zinc-700 border-t border-b border-zinc-700">
         {chapters.map((c) => (
           <div id={c.id} class="py-9 md:grid md:grid-cols-[9rem_1fr] md:gap-10">
@@ -252,7 +252,7 @@ const chapters = [
 
   {/* 条件を理解してから予約する */}
   <section class="bg-[color:var(--forest-700)] pb-20 md:pb-28">
-    <div class="mx-auto max-w-6xl px-5">
+    <div class="mx-auto max-w-6xl px-5 md:floating-tab-gutter [--tab-gutter-base:1.25rem]">
       <h2 class="text-2xl font-semibold text-white md:text-3xl">条件を理解してから予約する</h2>
       <p class="mt-5 max-w-2xl text-sm leading-loose text-zinc-400">
         ディープフォレストは、18歳以上の1〜3名が、設備のない森で静かに過ごすためのフィールドです。

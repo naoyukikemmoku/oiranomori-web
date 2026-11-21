@@ -36,7 +36,7 @@ import LpLayout from "../../layouts/LpLayout.astro";
     style="background-image:url('/images/lp/oiras-hero.jpg');"
   >
     <div class="absolute inset-0 bg-black/65"></div>
-    <div class="relative z-10 mx-auto max-w-6xl px-5 py-24">
+    <div class="relative z-10 mx-auto max-w-6xl px-5 py-24 md:floating-tab-gutter [--tab-gutter-base:1.25rem]">
       <p class="text-xs tracking-[0.32em] text-zinc-400 uppercase">Oiras</p>
       <h1 class="mt-5 text-5xl font-semibold tracking-widest text-white md:text-7xl">OIRAS</h1>
       <p class="mt-4 text-lg font-semibold tracking-widest text-zinc-300 md:text-xl">森を創り、経営を遊ぶ。</p>
@@ -64,7 +64,7 @@ import LpLayout from "../../layouts/LpLayout.astro";
 
   {/* Missions */}
   <section id="missions" class="bg-[color:var(--forest-700)] py-16 md:py-24">
-    <div class="mx-auto max-w-6xl px-5">
+    <div class="mx-auto max-w-6xl px-5 md:floating-tab-gutter [--tab-gutter-base:1.25rem]">
       <p class="text-xs tracking-[0.28em] text-zinc-500 uppercase">Missions</p>
       <h2 class="mt-4 text-3xl font-semibold text-white md:text-4xl">活動の3本柱</h2>
       <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-400">
@@ -125,7 +125,7 @@ import LpLayout from "../../layouts/LpLayout.astro";
 
   {/* Reward */}
   <section class="bg-[#f4f4f5] py-16 md:py-24">
-    <div class="mx-auto max-w-6xl px-5">
+    <div class="mx-auto max-w-6xl px-5 md:floating-tab-gutter [--tab-gutter-base:1.25rem]">
       <p class="text-xs tracking-[0.28em] text-zinc-400">Reward</p>
       <h2 class="mt-4 text-3xl font-semibold text-zinc-800 md:text-4xl">報酬</h2>
       <p class="mt-4 max-w-2xl text-sm leading-loose text-zinc-600">
@@ -159,7 +159,7 @@ import LpLayout from "../../layouts/LpLayout.astro";
 
   {/* Internship */}
   <section class="bg-[color:var(--forest-700)] py-16 md:py-24">
-    <div class="mx-auto max-w-6xl px-5">
+    <div class="mx-auto max-w-6xl px-5 md:floating-tab-gutter [--tab-gutter-base:1.25rem]">
       <p class="text-xs tracking-[0.28em] text-zinc-500 uppercase">Internship</p>
       <h2 class="mt-4 text-3xl font-semibold text-white md:text-4xl">キャンプ場 インターンシップ</h2>
       <p class="mt-5 max-w-2xl text-sm leading-loose text-zinc-400">
@@ -208,7 +208,7 @@ import LpLayout from "../../layouts/LpLayout.astro";
 
   {/* Safety & Rules */}
   <section class="bg-[color:var(--forest-600)] py-16">
-    <div class="mx-auto max-w-6xl px-5">
+    <div class="mx-auto max-w-6xl px-5 md:floating-tab-gutter [--tab-gutter-base:1.25rem]">
       <p class="text-xs tracking-[0.28em] text-zinc-500 uppercase">Safety & Working Style</p>
       <h2 class="mt-4 text-2xl font-semibold text-white">安全と進め方</h2>
 
@@ -229,7 +229,8 @@ import LpLayout from "../../layouts/LpLayout.astro";
 
   {/* Join Flow */}
   <section id="join" class="bg-[color:var(--forest-700)] py-20 md:py-28">
-    <div class="mx-auto max-w-3xl px-5 text-center">
+    {/* 幅 768px 前後で3列目の字が縦タブにかかるため、ほかの枠と同じ部品で右の余白を広げる（floating-tab-gutter・global.css） */}
+    <div class="mx-auto max-w-3xl px-5 text-center md:floating-tab-gutter [--tab-gutter-base:1.25rem]">
       <p class="text-xs tracking-[0.28em] text-zinc-600 uppercase">Join Us</p>
       <h2 class="mt-5 text-3xl font-semibold text-white md:text-4xl">
         興味があれば、<br />まずひと声を。
