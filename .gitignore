@@ -31,3 +31,6 @@ desktop.ini
 .wrangler/
 .claude-drafts/
 .claude/worktrees/
+
+# Google ドライブの同期が作る一時フォルダ（どの階層でも無視する）
+.tmp.driveupload/
