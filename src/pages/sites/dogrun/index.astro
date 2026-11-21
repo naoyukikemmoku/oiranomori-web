@@ -16,7 +16,10 @@ const OG_IMAGE = new globalThis.URL(dogrunHero.src, Astro.site).href;
 const details = [
 	{ label: "広さ", value: "約400㎡・柵で囲まれたドッグラン" },
 	{ label: "利用", value: "1日1組限定の貸切（場内に1区画のみ）" },
-	{ label: "設営場所", value: "柵内に2か所整備。地形によりレイアウトはある程度限られます" },
+	{
+		label: "設営場所",
+		value: "柵内に2か所整備。地形によりレイアウトはある程度限られます",
+	},
 	{ label: "車", value: "ドッグラン内に乗り入れ可能" },
 	// AC電源の詳しいこと（容量など）の正本は /light-guide/#ac-power（spec §14.3）
 	{
