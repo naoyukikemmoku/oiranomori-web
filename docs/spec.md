@@ -217,20 +217,23 @@ LP・全幅レイアウト用。BaseLayout をラップし、以下を追加す�
 | ファイル | 役割 |
 |---|---|
 | `Header.astro` | スティッキーヘッダー。ロゴ、ライト/ディープ切替（PC はロゴと同じ段の中央、スマホはその下の段に横幅いっぱい）、天気・気温の表示（OirasApp の `current.php`・§12.1 #2）、ハンバーガーメニュー呼び出し。スクロールダウンで自動非表示。切替の名前には一言を添える（ライトフォレスト「林間キャンプ場」・ディープフォレスト「大人だけの野営地」。文言は `src/config/nav.ts` の `topSwitch`）。一言は名前より小さい字で、リンクの中に入れる。PC は名前と同じ行に並べ、ヘッダーの高さを変えない（1024px 未満は入りきらないので画面からは隠し、読み上げには残す）。スマホは名前の下の2行目に出し、その分だけヘッダーが高くなるので `--header-height`（`src/styles/global.css`）を合わせる。読み上げでは「ライトフォレスト 林間キャンプ場」のように続けて読まれる。切替でどちらの森を選んだ状態にするかは、`src/config/nav.ts` のページの一覧で決める：ライトの一覧（`LIGHT_PAGE_PATHS`：`/`・`/stay-light/`・`/light-guide/`・`/lightforest-map/`・`/seasons/`・`/sites/` と `/sites/` 配下の客層ページ）では「ライトフォレスト」、ディープの一覧（`DEEP_PAGE_PATHS`：`/deep/`・`/deep-guide/`・`/stay-deep/`）では「ディープフォレスト」。片方の森だけのページはその森を選んだ状態にし、両方の森に共通のページ（`/forest-day/`・`/firewood/`・`/residents/`・`/faq/`・`/reservation-guide/` など）はどちらの一覧にも入れず、どちらも選ばない（§14.1 の「今どちらの森を見ているか」）。 |
-| `HamburgerMenu.astro` | 右スライドアウトのサイドメニュー。4グループのナビゲーション。オーバーレイクリック・ESC キーで閉じる。 |
+| `HamburgerMenu.astro` | 右スライドアウトのサイドメニュー。5グループのナビゲーション（項目は `src/config/nav.ts` の `siteNav`。`menu: false` の項目はフッターだけに出す）。オーバーレイクリック・ESC キーで閉じる。 |
 | `FloatingNav.astro` | 右端フローティングタブ。ライトフォレスト / ディープフォレストの利用案内へコンテキストアウェアにリンク。 |
 | `ReserveCTA.astro` | 画面下部固定の予約 CTA ボタン。外部予約サイト（489pro-x.com）へリンク。 |
 | `OshiraseList.astro` | microCMS から取得したお知らせを表示。ホームでは最新3件。日付・カテゴリバッジ・タイトル・サブタイトルを表示。 |
 | `SeasonSlider.astro` | 4枚の森の四季画像カルーセル。6秒間隔で自動回転。前後ボタンとプログレスバーあり。各スライドから `/seasons/` の該当の季節（`#spring`・`#summer`・`#autumn`・`#winter`）へリンクする。 |
-| `Footer.astro` | 4カラムナビゲーション + SNS リンク + コピーライト。`lastUpdated` prop を受け取り表示。 |
+| `Footer.astro` | 5グループのナビゲーション（`siteNav` の全項目。PC は1行に横並び、スマホは2列） + SNS リンク + コピーライト。`lastUpdated` prop を受け取り表示。 |
 | `LiveCam.astro` | ライブカメラの枠（`#livecam`）。`/now/` から切り出し、`/now/` と `/camera/` の今日のタブで使う。動きは `src/lib/livecam.ts`（読み込みは使う側のページが呼ぶ）。見出しと外側の class だけ props で変えられる。1ページに1つ（§12.3）。 |
 
-### フッターナビゲーション構成（4グループ）
+### フッターナビゲーション構成（5グループ）
+
+キャンプのページは §14.2 のページの役割で「キャンプ場を選ぶ」（選ぶページ）と「泊まる前に読む」（利用案内）に分ける。メニューも同じ構成。
 
 | グループ | 主な項目 |
 |---|---|
-| 予約・会員 | 予約する（外部）、予約ガイド、ご予約確認（外部）、会員ページ（App・同じタブ）、ポータル（`/s/portal`）、キャンセルポリシー |
-| おいらの森でキャンプする | ライトフォレスト 利用案内、ディープフォレスト 利用案内、場内マップ（ライト）、おいらの薪、レンタル、売店、年間パスポート・回数券、よくある質問 |
+| 予約・会員 | 予約する（外部）、予約ガイド、ご予約確認（外部）、会員ページ（App・同じタブ）、滞在中の方のポータル（`/s/portal`）、キャンセルポリシー |
+| キャンプ場を選ぶ | ライトのサイト・区画を選ぶ、ライトフォレストで過ごす一泊、ディープフォレストで過ごす一泊、場内マップ（ライト）、おいらの森の四季、おいらの薪 |
+| 泊まる前に読む | ライトフォレスト 利用案内、ディープフォレスト 利用案内、レンタル、売店、年間パスポート・回数券、よくある質問（FAQ） |
 | おいらの森 | アクセス、周辺案内、森のいま、お知らせ、お問い合わせ |
 | おいらと森と | 森の住人、オイラーズ、何もしない贅沢（/forest-day/）、The 森 Chronicles（外部: note.com）、メディア・ロケ地、運営会社・関連組織、利用規約、プライバシーポリシー |
 
@@ -322,7 +325,7 @@ LP・全幅レイアウト用。BaseLayout をラップし、以下を追加す�
 
 ### spots.json（`src/data/spots.json`）
 
-場内マップ（`/map/`）で使用するスポットデータ。座標系は WGS84。
+周辺案内（`/map/`）で使用するスポットデータ。座標系は WGS84。`/map/` が使うのは `home` と周辺のカテゴリ（`food`・`bath`・`shopping`・`sightseeing`・`emergency`）だけで、場内のカテゴリ（`light`・`auto`・`block`・`solo`・`facility_power`）は使っていない（ファイルには残している）。場内マップ（`/lightforest-map/`）は spots.json を使わない。
 
 **カテゴリ一覧**
 
@@ -399,27 +402,27 @@ description?: string
 | `/about/` | `Organization`, `PostalAddress` |
 | `/access/` | `Place`, `PostalAddress`, `GeoCoordinates` |
 | `/camera/` | `WebPage`, `WebSite` |
-| `/contact/` | `ContactPage`, `WebSite`, `Organization` |
+| `/contact/` | `ContactPage`, `WebSite`, `Organization`, `PostalAddress` |
 | `/deep/` | `TouristAttraction`, `Campground` |
 | `/deep-guide/` | `WebPage`, `WebSite` |
 | `/faq/` | `FAQPage`, `Question`, `Answer` |
 | `/forest-daily/` | `WebPage`, `WebSite` |
 | `/forest-day/` | `WebPage`, `WebSite` |
-| `/firewood/` | `ItemList`, `ListItem`, `Product`, `Offer`, `Organization` |
+| `/firewood/` | `ItemList`, `ListItem` |
 | `/light-guide/` | `WebPage`, `WebSite` |
 | `/lightforest-map/` | `TouristAttraction`, `Place`, `GeoCoordinates`, `PostalAddress`, `AdministrativeArea` |
 | `/map/` | `TouristAttraction`, `Place`, `GeoCoordinates`, `PostalAddress`, `AdministrativeArea` |
-| `/media/` | `WebPage`, `WebSite`, `ItemList` |
+| `/media/` | `WebPage`, `WebSite`, `ItemList`, `ListItem` |
 | `/news/[id]/` | `Article`, `Organization`, `WebPage` |
 | `/now/` | `WebPage`, `WebSite` |
 | `/oiras/` | `VolunteerOpportunity`, `Organization`, `Place`, `PostalAddress` |
-| `/passport/` | `ItemList`, `ListItem`, `Product`, `Offer`, `Organization` |
+| `/passport/` | `ItemList`, `ListItem` |
 | `/policy/` | `WebPage`, `WebSite` |
-| `/rental/` | `ItemList`, `ListItem`, `Product`, `Offer`, `Organization` |
-| `/reservation-guide/` | `WebPage`, `WebSite`, `HowTo` |
+| `/rental/` | `ItemList`, `ListItem` |
+| `/reservation-guide/` | `WebPage`, `WebSite`, `HowTo`, `HowToStep` |
 | `/residents/` | `Person`（おいら）、`Person`（橋本佳子）、`Organization` |
 | `/seasons/` | `WebPage`, `WebSite` |
-| `/shop/` | `ItemList`, `ListItem`, `Product`, `Offer`, `Organization` |
+| `/shop/` | `ItemList`, `ListItem` |
 | `/sites/` | `WebPage`, `WebSite` |
 | `/sites/dogrun/` | `WebPage`, `WebSite` |
 | `/sites/duo/` | `WebPage`, `WebSite` |
@@ -429,7 +432,7 @@ description?: string
 | `/stay-deep/` | `WebPage`, `WebSite` |
 | `/stay-light/` | `WebPage`, `WebSite` |
 
-個別 JSON-LD が未実装のページは現在なし。
+個別 JSON-LD を持たないページ：`/news/`（一覧）、`/contact/thanks/`、404。どれも BaseLayout の `BreadcrumbList` だけを持つ。
 
 ---
 

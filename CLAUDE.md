@@ -1,6 +1,6 @@
 # 里山パークおいらの森 HP — Claude Code 向け開発ガイド（運用フェーズ）
 
-> **Version: 1.32**（変更履歴は本ファイル末尾「変更履歴」章を参照）
+> **Version: 1.33**（変更履歴は本ファイル末尾「変更履歴」章を参照）
 
 ---
 
@@ -354,3 +354,4 @@ Codeから計測データを取得する手段はない。施策評価が必要�
 | 1.30 | 2026-11-21 | spec §2 の「Google Maps は WMO 天気コード（0〜99）を SVG アイコンにマッピングして Header に表示している」を、今の実物（`current.php` の OpenWeather のアイコンコード `weather.icon` から OpenWeather のアイコン画像を表示）に直した。spec §14.4 の「臨時休業・当日予約の電話」の正本を `/policy/#terms-6`（利用規約 第6条に付けた目印）に変更。 |
 | 1.31 | 2026-11-21 | 「炊事場」を「洗い場」に（炊事場はない）。tone_guide §5 の例文「コンビニも整備された炊事場もない」を「洗い場」に（ナオ承認）、spec §5 の `spots.json` の `light` の説明「シンク」を「洗い場」にそろえた。 |
 | 1.32 | 2026-11-21 | spec §10.4 に「ディープフォレストの場内マップ（ポータル用に作ったものを応用する案。別チャットで検討中）」を追加（場内マップの画像と案内用紙 PDF の廃止に伴う）。spec §12.1 #10 を実物に合わせて直した（`/now/` は HP 同梱の SVG を `icon_key` で引いて埋め込む・App のアイコン URL と `iconUrl` は使わない・ヘッダーは OpenWeather の画像）。spec §6 の JSON-LD の表に、ビルド出力で JSON-LD を持つのに載っていなかった `/forest-daily/`・`/lightforest-map/`・`/sites/` と客層ページ5つ・`/stay-deep/`・`/stay-light/` を追加。 |
+| 1.33 | 2026-11-21 | spec §3 をメニューとフッターの組み直しに同期：「おいらの森でキャンプする」を §14.2 の役割で「キャンプ場を選ぶ」（/sites/・/stay-light/・/stay-deep/・/lightforest-map/・/seasons/・/firewood/）と「泊まる前に読む」（/light-guide/・/deep-guide/・/rental/・/shop/・/passport/・/faq/）に分けて5グループにし、「ポータル」を「滞在中の方のポータル」に、Footer は PC で1行に横並びとした。spec §6 の /firewood/・/passport/・/rental/・/shop/ を実物の `ItemList`・`ListItem` に直し、/contact/ に `PostalAddress`、/media/ に `ListItem`、/reservation-guide/ に `HowToStep` を足し、「個別 JSON-LD が未実装のページは現在なし」を実物（/news/ の一覧・/contact/thanks/・404 は持たない）に直した。spec §5 の spots.json を「周辺案内（`/map/`）で使用」に直し、/map/ が使うカテゴリを書いた。 |
