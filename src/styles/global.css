@@ -233,6 +233,13 @@
     @apply h-4 w-4;
   }
 
+  /* 画面下に固定の「予約する」（ReserveCTA）があるページでは、ページのいちばん下の中身
+     （フッターの最後の行など）がボタンに隠れないよう、フッターの下に余白を足す。
+     ボタンは画面の下から 16px（bottom-4）に、高さ 44px で出る。 */
+  body:has(.reserve-cta) .lp-footer {
+    padding-bottom: 3rem;
+  }
+
   .lp-hero {
     @apply relative flex min-h-[88vh] items-center bg-cover bg-center;
   }
