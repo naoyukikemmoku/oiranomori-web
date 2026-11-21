@@ -234,7 +234,11 @@ const repeatPrices = [
         },
         {
           title: "ディープフォレスト直接チェックイン",
-          desc: "ディープフォレストへの直接チェックインが可能（要事前連絡）。",
+          // 受付とサイトインの決まりの正本はディープ利用案内のチェックイン（spec §14.4）。ここは短い一言とリンクにとどめる
+          desc: "現地でのお支払いが無いご予約は、受付に寄らずにディープフォレストへ直接お越しいただけます。",
+          href: "/deep-guide/#checkin",
+          linkText: "受付とサイトインのしかた（ディープフォレスト 利用案内）",
+          cta: "passport-to-deep-guide",
           positive: true,
         },
         {
@@ -258,6 +262,16 @@ const repeatPrices = [
             {item.positive ? "✓ " : ""}{item.title}
           </p>
           <p class="text-sm leading-relaxed text-zinc-600">{item.desc}</p>
+          {item.href && (
+            <a
+              href={item.href}
+              class="mt-2 inline-block text-sm text-zinc-600 underline underline-offset-2 transition hover:text-zinc-800"
+              data-cta={item.cta}
+              data-cta-target={item.href}
+            >
+              {item.linkText} →
+            </a>
+          )}
         </div>
       ))}
     </div>
