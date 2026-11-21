@@ -540,26 +540,20 @@ const rules = [
   {/* 場内マップ。ページ末尾に置く */}
   <section id="map" class="mb-16">
     <h2 class="mb-5 text-xl font-semibold text-zinc-800">場内マップ</h2>
-    <img
-      src="/images/light-field-map.png"
-      alt="ライトフォレスト 場内マップ"
-      width="842"
-      height="595"
-      class="w-full border border-zinc-200"
-      loading="lazy"
-      decoding="async"
-    />
+    {/* 場内の地図は /lightforest-map/（App のデータから描く）だけにする。画像と PDF は廃止 */}
+    <p class="text-sm">
+      <a
+        href="/lightforest-map/"
+        class="inline-flex items-center gap-1.5 text-[color:var(--light-accent)] underline underline-offset-4 transition hover:opacity-80"
+        data-cta="light-guide-to-lightforest-map"
+        data-cta-target="/lightforest-map/"
+      >
+        場内マップで、区画ごとの広さや設備を見る
+        <span aria-hidden="true">→</span>
+      </a>
+    </p>
     <p class="mt-3 text-xs text-zinc-400">場内の詳細マップは受付時にもお渡しします。</p>
     <div class="mt-5 flex flex-wrap gap-x-8 gap-y-3 text-sm">
-      <a
-        href="/pdf/light-field-map.pdf"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="inline-flex items-center gap-1.5 text-zinc-700 underline underline-offset-4 transition hover:text-zinc-900"
-      >
-        利用案内PDFをダウンロード
-        <span aria-hidden="true">↗</span>
-      </a>
       <a
         href="/faq/#nature"
         class="inline-flex items-center gap-1.5 text-zinc-700 underline underline-offset-4 transition hover:text-[color:var(--light-accent)]"

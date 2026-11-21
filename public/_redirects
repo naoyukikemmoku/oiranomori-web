@@ -172,3 +172,9 @@
 /checkout                                 /s/portal                                               301
 /checkout/thanks/                         /s/portal                                               301
 /checkout/thanks                          /s/portal                                               301
+
+
+# ---------- 13. 場内マップの画像と案内用紙 PDF の廃止 → 場内マップのページ ----------
+# 場内の地図は /lightforest-map/（App のデータから描く）だけにした（2026-11-21）。ディープの場内マップは別に検討中のため、利用案内へ。
+/pdf/light-field-map.pdf                  /lightforest-map/                                       301
+/pdf/deep-field-map.pdf                   /deep-guide/                                            301

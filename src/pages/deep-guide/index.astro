@@ -144,7 +144,7 @@ const facilities = [
         { href: "#facility",   label: "設備・スペック" },
         { href: "#rules",      label: "禁止事項" },
         { href: "#principles", label: "基本4鉄則" },
-        { href: "#map",        label: "場内マップ" },
+        { href: "#map",        label: "場内の案内" },
       ].map((item) => (
         <a
           href={item.href}
@@ -436,28 +436,11 @@ const facilities = [
     </p>
   </section>
 
-  {/* 場内マップ */}
+  {/* 場内の案内 */}
   <section id="map" class="mb-14">
-    <h2 class="mb-5 text-xl font-semibold text-white">場内マップ</h2>
-    <div class="overflow-hidden border border-zinc-700">
-      <img
-        src="/images/deep-field-map.jpg"
-        alt="ディープフォレスト場内マップ"
-        class="w-full"
-        loading="lazy"
-        onerror="this.parentElement.style.display='none'"
-      />
-    </div>
-    <p class="mt-4 text-right text-sm">
-      <a
-        href="/pdf/deep-field-map.pdf"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="text-zinc-500 underline underline-offset-2 transition hover:text-zinc-300"
-      >
-        PDFをダウンロード →
-      </a>
-    </p>
+    <h2 class="mb-5 text-xl font-semibold text-white">場内の案内</h2>
+    {/* 場内マップの画像と PDF は廃止。ディープの場内マップは別に検討中（spec §10.4） */}
+    <p class="text-sm leading-loose text-zinc-300">ディープフォレストの場所と場内の案内は、受付でお伝えします。</p>
   </section>
 
   {/* 予約CTA */}
