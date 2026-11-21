@@ -138,9 +138,9 @@ const conditions = [
 	{
 		label: "車を横付けしたい",
 		body: "オートサイトなら区画内に車を乗り入れ・横付けできます。全37区画。サイト料金に車両1台分が含まれます。",
-		// サイト種別の説明は本ページと往復になるため、位置確認に意味のある場内マップへ送る。
-		href: "/light-guide/#map",
-		linkText: "場内マップで位置を見る",
+		// サイト種別の説明は本ページと往復になるため、区画ごとの位置・広さ・設備が見られる場内マップへ送る。
+		href: "/lightforest-map/",
+		linkText: "場内マップで区画ごとに見る",
 	},
 	{
 		label: "ハンモックを使いたい",
@@ -157,8 +157,8 @@ const conditions = [
 	{
 		label: "トイレとの距離を重視したい",
 		body: "水洗・洋式、男女各2室（新築）。近い区画は場内マップで位置関係を確認できます。",
-		href: "/light-guide/#map",
-		linkText: "場内マップで見る",
+		href: "/lightforest-map/",
+		linkText: "場内マップで区画ごとに見る",
 	},
 	{
 		label: "大型テントを設営したい",
@@ -412,7 +412,7 @@ const sizeGuide = [
       トイレや炊事場までの距離、隣接区画との関係、車の進入方向も、使い勝手を左右します。候補のサイズが決まったら、場内マップで位置を確認してください。
     </p>
     <a
-      href="/light-guide/#map"
+      href="/lightforest-map/"
       class="group block"
       data-cta="sites-map"
     >
@@ -426,7 +426,7 @@ const sizeGuide = [
         class="w-full border border-zinc-200 transition group-hover:opacity-90"
       />
       <span class="mt-3 inline-flex items-center gap-1.5 text-sm text-[color:var(--light-accent)] underline underline-offset-4 transition group-hover:opacity-80">
-        利用案内の場内マップを見る
+        場内マップで、区画ごとの広さと設備を見る
         <span aria-hidden="true">→</span>
       </span>
     </a>
@@ -459,14 +459,10 @@ const sizeGuide = [
     </p>
   </section>
 
-  {/* 7. 料金の仕組み。総額の代表例は子ども料金・対象日のサイト料金確定後に追加する。
+  {/* 7. 料金の仕組み。計算式の1行だけを置き、詳しい説明は予約ガイドの「料金の決まり方」（正本・spec §14.4）へ。
       推測値は載せない。 */}
   <section id="price" class="mb-16 scroll-mt-24">
-    <h2 class="mb-2 text-xl font-semibold text-zinc-800">料金は、人数とサイトで決まります</h2>
-    <p class="mb-5 max-w-2xl text-sm leading-loose text-zinc-500">
-      宿泊料金は、利用人数に応じた料金と、日付・サイトサイズによって変わるサイト料金の合計です。
-      追加の車両やAC電源などを使う場合は、オプション料金が加わります。
-    </p>
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">料金は、人数とサイトで決まります</h2>
     <p class="border-y border-zinc-200 py-5 text-sm leading-loose text-zinc-700">
       人数料金　＋　日付・サイズ別のサイト料金　＋　追加車両・電源等のオプション
     </p>
