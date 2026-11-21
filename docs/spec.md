@@ -403,9 +403,11 @@ description?: string
 | `/deep/` | `TouristAttraction`, `Campground` |
 | `/deep-guide/` | `WebPage`, `WebSite` |
 | `/faq/` | `FAQPage`, `Question`, `Answer` |
+| `/forest-daily/` | `WebPage`, `WebSite` |
 | `/forest-day/` | `WebPage`, `WebSite` |
 | `/firewood/` | `ItemList`, `ListItem`, `Product`, `Offer`, `Organization` |
 | `/light-guide/` | `WebPage`, `WebSite` |
+| `/lightforest-map/` | `TouristAttraction`, `Place`, `GeoCoordinates`, `PostalAddress`, `AdministrativeArea` |
 | `/map/` | `TouristAttraction`, `Place`, `GeoCoordinates`, `PostalAddress`, `AdministrativeArea` |
 | `/media/` | `WebPage`, `WebSite`, `ItemList` |
 | `/news/[id]/` | `Article`, `Organization`, `WebPage` |
@@ -418,6 +420,14 @@ description?: string
 | `/residents/` | `Person`（おいら）、`Person`（橋本佳子）、`Organization` |
 | `/seasons/` | `WebPage`, `WebSite` |
 | `/shop/` | `ItemList`, `ListItem`, `Product`, `Offer`, `Organization` |
+| `/sites/` | `WebPage`, `WebSite` |
+| `/sites/dogrun/` | `WebPage`, `WebSite` |
+| `/sites/duo/` | `WebPage`, `WebSite` |
+| `/sites/family/` | `WebPage`, `WebSite` |
+| `/sites/group/` | `WebPage`, `WebSite` |
+| `/sites/solo/` | `WebPage`, `WebSite` |
+| `/stay-deep/` | `WebPage`, `WebSite` |
+| `/stay-light/` | `WebPage`, `WebSite` |
 
 個別 JSON-LD が未実装のページは現在なし。
 
@@ -561,6 +571,7 @@ description?: string
 - `/seasons/`（おいらの森の四季）の新設：実装済み（写真は仮）。ページの内容は §4。写真の差し替えは `docs/photo-workflow-handoff.md` の手順で行う。
 - 上部のフィールド切替に一言を添える（第一案）：実装済み（スマホでの見え方はナオが実機で確認中）。一言と見せ方は §3 の `Header.astro`。
 - トップの組み直し（§4.1 は実装時に書き換える）
+- ディープフォレストの場内マップ（ポータル用に作ったものを応用する案。別チャットで検討中）
 
 ---
 
@@ -633,7 +644,7 @@ HP（oiranomori.jp）は、OirasApp 本体（**別リポ・別ホスティング
 | 7 | `https://oiranomori.com/app/weather/api/public/livecam.php` | GET | クライアント fetch（/now/ は init・更新ボタン、/camera/ は今日のタブを最初に開いたとき）。`ok` を前提しない専用フェッチ | `src/lib/livecam.ts`（`LIVECAM_API`・`fetchLivecam`）。呼ぶのは `src/pages/now/index.astro` と `src/pages/camera/index.astro` | `hls_url` / `still`（`url`・`taken_at`。無ければ `null`）/ `is_night` / `next_sunrise` / `generated_at` | `/now/`・`/camera/` のライブカメラ枠（静止画 or 代わりの表示 → タップで HLS の映像。§12.3） |
 | 8 | `https://oiranomori.com/app/weather/api/public/satellite.php?hours=72` | GET | クライアント fetch（A6 衛星タブ初期化時） | `src/pages/now/index.astro`（SAT_API） | `ok` / `frames[]`（`datetime`・`url`）/ `latest` | `/now/` A6「衛星」タブ（コマ送り画像） |
 | 9 | `https://oiranomori.com/app/camp/api/congestion.php?from=YYYY-MM-DD&days=N` | GET | クライアント fetch（コンポーネント可視時）。`from` 省略=当日JST／`days` 省略=120（1〜366クランプ）。CORS は本番で oiranomori.jp 許可済み（GET/OPTIONS, max-age=300） | `src/lib/availability.ts`（`buildCongestionUrl`）→ `src/components/CongestionMatrix.astro` / `src/components/SilenceCalendar.astro` | `ok` / `range{from,days}` / `areas`（`auto`/`kukaku`/`deep`/`dogrun` 各 `capacity`・`days[]{date,remain,label,closed}`・`sizes?`〔`days[]{date,remain,closed}`〕。`closed`＝売り止めの日（OirasApp の stop_sells・proX を含む行）で、remain・label より優先して「休み」と出す。SilenceCalendar は休みの日を静かな日に数えない） | トップ AVAILABILITY 節（CongestionMatrix）・`/deep/` Silence（SilenceCalendar） |
-| 10 | `https://oiranomori.com/app/weather/icons/{icon_key}.svg` | GET（画像/SVG） | クライアント実行時に `icon_key` から URL 組み立て（自前天気アイコン） | `src/lib/weatherIcon.ts`（`iconUrl`） | （SVG 画像アセット。`currentColor` 単色・viewBox 0 0 128 128） | ヘッダー・`/now/` の各天気アイコン |
+| 10 | （App からは取らない。HP 同梱の `src/icons/weather/*.svg`） | —（ビルド時に同梱） | ビルド時に SVG を文字列で取り込み、表示時に API の `icon_key`（例 `jma_201`・`now_cloudy`）で引いて埋め込む。URL を返す `iconUrl` は廃止 | `src/lib/weatherIcon.ts`（`iconSvg`・`iconColor`）→ `src/lib/nowRender.ts`（`iconHtml`）・`src/pages/now/index.astro` | （SVG。`currentColor` 単色・viewBox 0 0 128 128） | `/now/` の各天気アイコン。ヘッダーの天気アイコンはこれを使わず、OpenWeather の画像（§2） |
 | 12 | `https://form.oiranomori.com/app/contact/submit.php` | POST（HTML form） | フォーム送信時（ユーザー操作） | `src/pages/contact/index.astro` | （リクエスト＝お問い合わせフォーム入力値。レスポンス仕様は**不明**＝OirasApp 側参照） | `/contact/` フォーム送信先 |
 | 13 | `https://oiranomori.com/app/weather/api/public/camera.php?view=…` | GET | クライアント fetch（/camera/ のタブ・条件を変えたとき）。HTTP キャッシュ 300s | `src/lib/camera.ts`（`CAMERA_API`）→ `src/pages/camera/index.astro` | `ok` / `range{first_date,last_date}` / view ごとに `slots`・`days`・`weekly`・`monthly`・`months`・`years`。写真 `still{taken_at,url,medium_url,thumb_url}`・動画 `video{url,cover_url,duration_s,frames}`。写真・動画の実体は `https://media.oiranomori.jp`（R2）を `<img>`・`<video>` で直接読む | `/camera/` 全タブ（§12.4） |
 
