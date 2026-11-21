@@ -59,9 +59,15 @@ const chapters = [
 		time: "受付",
 		heading: "まず、ライトフォレストへ",
 		body: [
-			"ディープフォレストへ直接向かうことはできません。（年間パスポートをお持ちの方は、来る前にご連絡いただければ、受付を通らず直接入場することもできます。当日の「着いた」「帰る」の連絡は、ポータルの［ここをキャンプ地とする］とチェックアウトで行います）はじめにライトフォレストの受付で、年齢確認と当日の案内を受けます。場所は受付後に案内します。",
+			"ディープフォレストへ直接向かうことはできません。はじめにライトフォレストの受付で、年齢確認と当日の案内を受けます。場所は受付後に案内します。",
 			"受付からディープフォレストまでは、車で約7分です。案内に従って移動してください。",
 		],
+		// 受付の例外（年間パスポートの方の直行）の正本はディープ利用案内のチェックイン（spec §14.4）
+		link: {
+			href: "/deep-guide/#checkin",
+			text: "受付とチェックインの決まり（ディープフォレスト 利用案内）",
+			cta: "stay-deep-to-deep-guide",
+		},
 		img: sdReception,
 		alt: "木立に囲まれたライトフォレストの受付と薪置き場",
 		photo:
@@ -146,7 +152,7 @@ const chapters = [
     所在地・経路を特定できる情報（地図・分岐・看板）は本ページに載せない。
     予約CTAは PROX_DEEP_RESERVE_URL / DEEP_RESERVE_LABEL 定数を使う
     （scripts/check-deep-cta.mjs が文言とクエリを検証する）。 */}
-<LpLayout title={TITLE} description={DESC} ogType="article" ogImage="https://oiranomori.jp/images/lp/scene-01.jpg">
+<LpLayout title={TITLE} description={DESC} ogType="article" ogImage="https://oiranomori.jp/images/lp/scene-01.jpg" lastUpdated="2026年11月">
   <Fragment slot="head">
     <script is:inline type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
