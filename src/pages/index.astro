@@ -192,7 +192,7 @@ const plans: Array<{
   {/* 2. 今日のおいらの森（client-fetch widget。取得失敗・0件時は JS でセクションごと非表示） */}
   {/* 背景は bg-white。前後の #f4f5f2 セクションと背景リズムで視覚分離する */}
   <section id="forest-daily-widget" class="py-10 md:py-14 bg-white" hidden>
-    <div class="mx-auto max-w-6xl px-4">
+    <div class="mx-auto max-w-6xl px-4 md:floating-tab-gutter">
       <p class="text-xs tracking-[0.32em] text-zinc-400">FOREST DAILY</p>
       <h2 class="mt-3 text-2xl font-semibold leading-snug text-zinc-800 md:text-3xl">
         今日のおいらの森
@@ -215,7 +215,7 @@ const plans: Array<{
 
   {/* 3. お知らせ */}
   <section id="news" class="py-12 md:py-16 bg-[#f4f5f2]">
-    <div class="mx-auto max-w-6xl px-4">
+    <div class="mx-auto max-w-6xl px-4 md:floating-tab-gutter">
       <OshiraseList items={contents} />
     </div>
   </section>
@@ -224,7 +224,7 @@ const plans: Array<{
       お知らせ・今日のおいらの森と同じ構成（狭い上下余白／見出し＋リンク列）に
       揃え、3セクションで同一感を出す。写真は置かない。 */}
   <section id="forest-now" class="py-10 md:py-14 bg-white">
-    <div class="mx-auto max-w-6xl px-4">
+    <div class="mx-auto max-w-6xl px-4 md:floating-tab-gutter">
       <p class="text-xs tracking-[0.32em] text-zinc-400">FOREST WEATHER</p>
       <h2 class="mt-3 text-2xl font-semibold leading-snug text-zinc-800 md:text-3xl">
         おいらの森の天気と気象

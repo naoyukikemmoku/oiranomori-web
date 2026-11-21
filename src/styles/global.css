@@ -305,3 +305,13 @@
     @apply rounded-full border border-zinc-700 px-4 py-2 text-xs tracking-[0.12em] text-zinc-400 transition hover:border-zinc-500 hover:text-zinc-200;
   }
 }
+
+/* 縦タブ（FloatingNav。幅 30px・画面の右端に固定・768px 以上で出す）をよける、本文の右の余白。
+   本文の枠（max-w-6xl＝1152px・左右の余白 16px）の右端がタブにかかる幅のときだけ、右の余白を 16px + 30px にする。
+   かかるのは、外側の余白（(幅 − 1152px) ÷ 2）と 16px を足しても 30px に届かない幅＝1180px 未満（測って決めた境目）。
+   幅は画面の幅ではなく、スクロールバーを除いた中の幅で比べる（100% は外側の枠の幅）。PC のスクロールバー（約15px）が
+   あると、画面の幅が 1180px でも中は 1165px で、タブが本文にかかるため。clamp の中の × 1000 は、1180px を境に
+   30px と 0 を切り替えるためのもの。付け方：md:floating-tab-gutter（768px 未満は縦タブを出さないので付けない）。 */
+@utility floating-tab-gutter {
+  padding-right: calc(1rem + clamp(0px, (1180px - 100%) * 1000, 30px));
+}

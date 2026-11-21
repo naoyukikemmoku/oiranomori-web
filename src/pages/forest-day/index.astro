@@ -42,8 +42,9 @@ const linkClass =
   <Header />
   <FloatingNav />
 
-  {/* 縦タブ（FloatingNav）は 768px 未満では出さないので、スマホでも左右の余白は同じ 16px */}
-  <main class="mx-auto max-w-6xl px-4 pb-10 pt-[calc(var(--header-offset)+1.25rem)]">
+  {/* 縦タブ（FloatingNav）は 768px 未満では出さないので、スマホでも左右の余白は同じ 16px。
+      768px 以上で本文の右端がタブにかかる幅だけ、右の余白をタブの幅のぶん広げる（floating-tab-gutter・global.css） */}
+  <main class="mx-auto max-w-6xl px-4 pb-10 pt-[calc(var(--header-offset)+1.25rem)] md:floating-tab-gutter">
     <article class="max-w-2xl pb-6">
       {/* ファーストビュー */}
       <header class="pt-6 md:pt-12">
