@@ -59,7 +59,7 @@ const tabRows = [TABS.slice(0, 3), TABS.slice(3)];
 
     {/* タブ（2段）。リンクなので JS が無くても開ける。JS は押されたら画面を差し替える */}
     <nav aria-label="記録の見方" class="border-b border-zinc-200 bg-white">
-      <div class="mx-auto max-w-6xl px-5">
+      <div class="mx-auto max-w-6xl px-5 md:floating-tab-gutter [--tab-gutter-base:1.25rem]">
         {tabRows.map((row, i) => (
           <ul class:list={["grid grid-cols-3", i > 0 && "border-t border-zinc-100"]}>
             {row.map((t) => (
@@ -76,7 +76,7 @@ const tabRows = [TABS.slice(0, 3), TABS.slice(3)];
       </div>
     </nav>
 
-    <div class="mx-auto max-w-6xl px-5">
+    <div class="mx-auto max-w-6xl px-5 md:floating-tab-gutter [--tab-gutter-base:1.25rem]">
 
       {/* 今日：頭に今の様子（#livecam の部品）。他のタブでは隠す（タブが決まるまでは隠しておく） */}
       <div id="cam-today" hidden>

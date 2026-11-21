@@ -154,8 +154,10 @@ const DESCRIPTION =
       </div>
     </div>
 
-    {/* 更新ボタン（画面右下固定）。h1 ブロックと独立させ、モバイルでの改行増を防ぐ */}
-    <div class="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-1">
+    {/* 更新ボタン（画面右下固定）。h1 ブロックと独立させ、モバイルでの改行増を防ぐ。
+        768px 以上で本文の右端がタブにかかる幅だけ、本文と同じように縦タブの幅のぶん左へ寄せる
+        （floating-tab-gutter・global.css。この枠はもとの余白が無いので --tab-gutter-base は 0） */}
+    <div class="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-1 md:floating-tab-gutter [--tab-gutter-base:0px]">
       <button
         id="btn-refresh"
         class="border border-zinc-300 bg-white px-4 py-2 text-xs tracking-[0.14em] text-zinc-700 shadow-md transition hover:border-zinc-500 hover:text-zinc-900"
@@ -186,7 +188,7 @@ const DESCRIPTION =
       </div>
     </nav>
 
-    <div class="mx-auto max-w-6xl px-5">
+    <div class="mx-auto max-w-6xl px-5 md:floating-tab-gutter [--tab-gutter-base:1.25rem]">
 
       {/* ═══ A4：現地の今（センサーのみ。ライブカメラは最下部 #livecam へ分離） ═══ */}
       <section id="local" class="scroll-mt-[3.5rem] py-6">
