@@ -50,8 +50,9 @@ import { RESERVE_FALLBACK_URL } from "../lib/availability";
     </div>
 
     <div class="mt-8 hidden" data-congestion-state="ready">
-      <!-- 横スクロール領域（モバイル対応） -->
-      <div class="-mx-6 overflow-x-auto px-6 md:mx-0 md:px-0">
+      <!-- 横スクロール領域（モバイル対応）。relative は、表の中の読み上げ用の隠し文字（sr-only）の置き場所を
+           この枠の中に収めるため。無いとページ全体が基準になり、隠し文字が枠の外にはみ出してページの幅が広がる。 -->
+      <div class="relative -mx-6 overflow-x-auto px-6 md:mx-0 md:px-0">
         <table
           class="w-full min-w-[640px] border-separate border-spacing-y-1 text-left"
           data-congestion-table
