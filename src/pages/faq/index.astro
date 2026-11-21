@@ -667,8 +667,8 @@ const ldItems = categories
 
   <div class="faq-root" data-faq-root data-aliases={JSON.stringify(aliases)}>
     {/* カテゴリのバー（見出しの下に出て、スクロールしても上に残る。JS が動くときだけ使う）。
-        右の余白はスマホの縦タブ（FloatingNav）の逃げ（PageLayout の main と同じ） */}
-    <nav class="faq-bar sticky top-0 z-40 -ml-4 -mr-9 mb-8 border-b border-zinc-200 bg-white/95 pl-4 pr-9 backdrop-blur sm:mx-0 sm:px-0" aria-label="カテゴリ" data-faq-bar>
+        スマホでは画面の端まで広げる（左右の -mx-4・px-4 は PageLayout の main の余白と同じ 16px） */}
+    <nav class="faq-bar sticky top-0 z-40 -mx-4 mb-8 border-b border-zinc-200 bg-white/95 px-4 backdrop-blur sm:mx-0 sm:px-0" aria-label="カテゴリ" data-faq-bar>
       <button
         type="button"
         class="flex w-full items-center gap-2 py-2.5 text-left text-sm text-zinc-800"
@@ -681,7 +681,7 @@ const ldItems = categories
         <span class="faq-bar-caret text-xs text-zinc-500" aria-hidden="true">▼</span>
         <span class="sr-only">カテゴリを選ぶ</span>
       </button>
-      <ul id="faq-bar-list" class="absolute inset-x-0 top-full border-b border-zinc-200 bg-white/95 pb-3 pl-4 pr-9 backdrop-blur sm:px-0" hidden data-faq-bar-list>
+      <ul id="faq-bar-list" class="absolute inset-x-0 top-full border-b border-zinc-200 bg-white/95 pb-3 px-4 backdrop-blur sm:px-0" hidden data-faq-bar-list>
         {categories.map((cat) => (
           <li>
             <a

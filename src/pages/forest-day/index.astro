@@ -42,8 +42,8 @@ const linkClass =
   <Header />
   <FloatingNav />
 
-  {/* 右余白は縦タブ（FloatingNav）の逃げ。スマホで本文が隠れないようにする。 */}
-  <main class="mx-auto max-w-6xl px-4 pr-9 pb-10 pt-[calc(var(--header-offset)+1.25rem)] sm:pr-4">
+  {/* 縦タブ（FloatingNav）は 768px 未満では出さないので、スマホでも左右の余白は同じ 16px */}
+  <main class="mx-auto max-w-6xl px-4 pb-10 pt-[calc(var(--header-offset)+1.25rem)]">
     <article class="max-w-2xl pb-6">
       {/* ファーストビュー */}
       <header class="pt-6 md:pt-12">
