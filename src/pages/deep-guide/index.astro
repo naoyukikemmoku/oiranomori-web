@@ -202,13 +202,16 @@ const facilities = [
   {/* チェックイン */}
   <section id="checkin" class="mb-14">
     <h2 class="mb-5 text-xl font-semibold text-white">チェックイン</h2>
+    {/* サイトインの流れは App のポータル（public_app/checkin/index.php）・/app/s/DEEP の文に揃える（App spec_camp §6-6・§6-11、2026-11-21）。
+        ディープのサイトインはテントを張った場所の［ここをキャンプ地とする］1つ。QR は読まない。 */}
     <p class="text-sm leading-loose text-zinc-300">
-      受付はライトフォレストです。（年間パスポートをお持ちの方は、来る前にご連絡いただければ、受付を通らず直接入場することもできます。当日の「着いた」「帰る」の連絡は、ポータルの［ここをキャンプ地とする］とチェックアウトで行ってください）
+      受付はライトフォレストです。受付のあと、ディープフォレストへ移動し、テントを張った場所でサイトインします。
     </p>
     <ol class="mt-5 divide-y divide-zinc-800 border-y border-zinc-700 text-sm">
       {[
-        { title: "受付", body: "ご精算のあと、ディープフォレストの場所と利用方法、ポータルサイトについてご案内し、その場でサイトインします。受付には、スマートフォンをお持ちください。" },
+        { title: "受付", body: "現地払いのご予約は、受付でご精算いただきます。事前決済のご予約は、受付でスマートフォンをカードにかざします。ディープフォレストの場所と利用方法、ポータルサイトについてご案内します。受付には、スマートフォンをお持ちください。" },
         { title: "ディープフォレストへ", body: "受付から車で約7分です。" },
+        { title: "サイトイン", body: "テントを張った場所で、ポータルサイトの［ここをキャンプ地とする］を押すと、サイトインできます。押すと、サイトインと同時に、張った場所（おおよその位置）と時刻が受付に届きます。" },
       ].map((step, i) => (
         <li class="grid grid-cols-[2rem_1fr] gap-4 py-5">
           <span class="font-semibold tabular-nums text-zinc-500">{i + 1}</span>
@@ -219,6 +222,12 @@ const facilities = [
         </li>
       ))}
     </ol>
+    <p class="mt-5 text-sm leading-loose text-zinc-300">
+      ポータルサイトは、ご予約のお礼のメールと、ご来場の前日のメールにあるリンクから開きます。メールが見つからないときは、受付でカードにスマートフォンをかざすか、QR コードを読むと開けます。
+    </p>
+    <p class="mt-3 text-sm leading-loose text-zinc-300">
+      年間パスポートのご予約で、現地でのお支払いが無いときは、受付に寄らずにディープフォレストへ直接お越しください。テントを張った場所で［ここをキャンプ地とする］を押すと、サイトインできます。
+    </p>
     <div class="mt-6 border-l-2 border-zinc-600 pl-5">
       <h3 class="text-sm font-semibold text-white">到着の目安</h3>
       <p class="mt-2 text-sm leading-loose text-zinc-400">
