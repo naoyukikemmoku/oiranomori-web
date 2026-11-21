@@ -32,7 +32,8 @@ const phrases = (label: string) => labelBreaks.get(label) ?? [label];
 ---
 
 <footer class="lp-footer">
-  <div class="mx-auto max-w-6xl px-4 py-14">
+  {/* 768px 以上で右の端がタブにかかる幅だけ、右の余白を縦タブの幅のぶん広げる（floating-tab-gutter・global.css） */}
+  <div class="mx-auto max-w-6xl px-4 py-14 md:floating-tab-gutter">
     <div class="mb-10 flex flex-wrap items-end justify-between gap-6 border-b border-zinc-800 pb-8">
       <div>
         <img src="/images/logo/logo-w512.png" onerror="this.src='/logo.svg'" alt="おいらの森" width="506" height="159" loading="lazy" decoding="async" class="h-12 w-auto" style="filter: brightness(0) invert(1)" />
