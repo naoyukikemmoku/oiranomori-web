@@ -186,7 +186,7 @@ until curl -s -H "Cache-Control: no-cache" https://oiranomori.jp/<path>/ | grep 
 
 | ページ | 枠 | 場所 |
 |---|---|---|
-| `/light-guide/` | 水道・流し | `facilities` 配列 `id: "water"` の `img: null` |
+| `/light-guide/` | 水道・洗い場 | `facilities` 配列 `id: "water"` の `img: null` |
 | `/light-guide/` | 駐車 | `facilities` 配列 `id: "parking"` の `img: null` |
 | `/light-guide/` | 灰捨て場 | `rules` 配列 `photoLabel: "灰捨て場"`（`img` 未設定） |
 | `/light-guide/` | 昆虫採集の右側 | `#insects` セクションの2枚目（左は配置済み） |
