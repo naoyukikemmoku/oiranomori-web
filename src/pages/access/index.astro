@@ -212,10 +212,10 @@ const ROUTE_URL =
       <p class="text-xs tracking-[0.32em] text-zinc-500 uppercase">Important</p>
       <h2 class="mt-4 text-2xl font-semibold text-zinc-800 md:text-3xl">来場前に確認してください</h2>
 
-      {/* 電話番号 */}
-      <div class="mt-8 flex items-center gap-4 border border-zinc-300 bg-white px-7 py-5">
+      {/* 電話番号（入りきらない幅では番号を次の行へ送る。番号の途中では折り返さない） */}
+      <div class="mt-8 flex flex-wrap items-center gap-x-4 gap-y-1 border border-zinc-300 bg-white px-7 py-5">
         <span class="text-zinc-500 text-sm shrink-0">道に迷ったら・たどり着けない場合</span>
-        <a href="tel:05036471047" class="text-lg font-semibold tracking-wider text-zinc-800 transition hover:text-zinc-600">
+        <a href="tel:05036471047" class="whitespace-nowrap text-lg font-semibold tracking-wider text-zinc-800 transition hover:text-zinc-600">
           TEL 050-3647-1047
         </a>
       </div>

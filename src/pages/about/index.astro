@@ -101,7 +101,8 @@ const companies = [
       </div>
 
       <div class="overflow-x-auto border-y border-zinc-200">
-        <table class="w-full min-w-[300px] text-sm">
+        {/* 表は本文の幅に合わせる（320px の画面では本文の幅が 288px なので、最小幅を付けない） */}
+        <table class="w-full text-sm">
           <tbody class="divide-y divide-zinc-100">
             {org.rows.map((row) => (
               <tr class="transition hover:bg-zinc-50">
@@ -114,7 +115,8 @@ const companies = [
                       rel="noopener noreferrer"
                       class="underline underline-offset-2 transition hover:text-zinc-900"
                     >
-                      {row.value}
+                      {/* URL のような長い文字列は「/」の後で折り返せるようにする（狭い画面で端を越えないため） */}
+                      {row.value.split(/(?<=\/)(?!\/)/).map((part, i) => (<Fragment>{i > 0 && <wbr />}{part}</Fragment>))}
                     </a>
                   ) : (
                     row.value
