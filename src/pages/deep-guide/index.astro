@@ -144,7 +144,6 @@ const facilities = [
         { href: "#facility",   label: "設備・スペック" },
         { href: "#rules",      label: "禁止事項" },
         { href: "#principles", label: "基本4鉄則" },
-        { href: "#map",        label: "場内の案内" },
       ].map((item) => (
         <a
           href={item.href}
@@ -445,12 +444,7 @@ const facilities = [
     </p>
   </section>
 
-  {/* 場内の案内 */}
-  <section id="map" class="mb-14">
-    <h2 class="mb-5 text-xl font-semibold text-white">場内の案内</h2>
-    {/* 場内マップの画像と PDF は廃止。ディープの場内マップは別に検討中（spec §10.4） */}
-    <p class="text-sm leading-loose text-zinc-300">ディープフォレストの場所と場内の案内は、受付でお伝えします。</p>
-  </section>
+  {/* 場内マップの項はここに置く（動く地図を入れる・spec §10.4）。地図が入るまでは項ごと置かない */}
 
   {/* 予約CTA */}
   <div class="mt-12 border border-zinc-700 bg-[color:var(--forest-700)] px-8 py-10 text-center">
