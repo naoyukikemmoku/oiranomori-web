@@ -133,23 +133,31 @@ export const siteNav: SiteNavGroup[] = [
 			},
 			// 会員の入口は App の会員ページ（中にログインと proX の新規登録への導線がある）。同じタブで開く
 			{ label: "会員ページ", href: APP_MEMBER_URL },
-			{ label: "ポータル", href: "/s/portal" },
+			{ label: "滞在中の方のポータル", href: "/s/portal" },
 			{ label: "キャンセルポリシー", href: "/policy/#cancel", menu: false },
 		],
 	},
+	// キャンプのページは spec §14.2 のページの役割で2つに分ける：
+	// 選ぶページ（キャンプ場を選ぶ）と、泊まると決めた人が読む利用案内（泊まる前に読む）。
 	{
-		title: "おいらの森でキャンプする",
+		title: "キャンプ場を選ぶ",
 		items: [
 			// /sites/ はライトフォレスト専用ハブ。Deep を選べる誤解を避けるため
 			// ラベルに必ず「ライト」を明示する（Deep 用の同種リンクは作らない）。
 			{ label: "ライトのサイト・区画を選ぶ", href: "/sites/" },
-			// 「選ぶ → 過ごす → 調べる」の順。ライト／ディープは別商品として対で並べる。
+			// ライト／ディープは別商品として対で並べる。
 			{ label: "ライトフォレストで過ごす一泊", href: "/stay-light/" },
-			{ label: "ライトフォレスト 利用案内", href: "/light-guide/" },
 			{ label: "ディープフォレストで過ごす一泊", href: "/stay-deep/" },
-			{ label: "ディープフォレスト 利用案内", href: "/deep-guide/" },
 			{ label: "場内マップ（ライト）", href: "/lightforest-map/" },
+			{ label: "おいらの森の四季", href: "/seasons/" },
 			{ label: "おいらの薪", href: "/firewood/" },
+		],
+	},
+	{
+		title: "泊まる前に読む",
+		items: [
+			{ label: "ライトフォレスト 利用案内", href: "/light-guide/" },
+			{ label: "ディープフォレスト 利用案内", href: "/deep-guide/" },
 			{ label: "レンタル", href: "/rental/" },
 			{ label: "売店", href: "/shop/" },
 			{ label: "年間パスポート・回数券", href: "/passport/" },

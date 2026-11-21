@@ -23,7 +23,8 @@ const footerGroups = siteNav;
       </div>
     </div>
 
-    <div class="grid grid-cols-2 gap-6 lg:grid-cols-4">
+    {/* スマホは2列。PC はまとまり（5つ）を1行に並べ、列の幅は中身の長さに合わせる（項目名を折り返さないため） */}
+    <div class="grid grid-cols-2 gap-6 lg:flex lg:justify-between">
       {footerGroups.map((group) => (
         <div>
           <h3 class="mb-3 text-sm font-semibold tracking-[0.16em] text-zinc-400">{group.title}</h3>
