@@ -113,7 +113,7 @@
 
 | API | 認証 | 用途 | 使用箇所 |
 |---|---|---|---|
-| Google Maps JavaScript API | `PUBLIC_GMAPS_API_KEY` | 場内・周辺マップ | `src/pages/map/index.astro` |
+| Google Maps JavaScript API | `PUBLIC_GMAPS_API_KEY` | 周辺案内 | `src/pages/map/index.astro` |
 
 OirasApp 公開 API 群（混雑・気象アドバイザリ等）は §12 参照。
 
