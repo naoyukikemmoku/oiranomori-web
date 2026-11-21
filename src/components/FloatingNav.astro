@@ -16,7 +16,8 @@ const tabs = [
 ];
 ---
 
-<aside class="fixed right-0 top-1/2 -translate-y-1/2 z-50">
+{/* スマホの幅（768px 未満）では本文にかぶるため出さない。PC の幅だけ出す。 */}
+<aside class="fixed right-0 top-1/2 -translate-y-1/2 z-50 hidden md:block">
   <div class="flex flex-col items-end gap-2">
     {tabs.map((tab) => {
       const isActive = current === normalize(tab.href);

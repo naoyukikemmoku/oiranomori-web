@@ -202,18 +202,7 @@
     @apply inline-flex min-h-[84px] w-[30px] select-none items-center justify-center rounded-l-xl border border-zinc-200 bg-white/95 px-1 py-2 shadow-lg;
   }
 
-  /* スマホでは本文にかぶるため、縦タブを小さくして画面端へ寄せる。
-     タップ領域は 44px 以上を保つ（アクセシビリティ最低ライン）。 */
-  @media (max-width: 767px) {
-    .floating-tab {
-      @apply min-h-[62px] w-[26px] px-0.5 py-1.5;
-    }
-
-    .floating-tab__text {
-      @apply text-[10px];
-      letter-spacing: 0.06em;
-    }
-  }
+  /* 縦タブ（FloatingNav）はスマホの幅（768px 未満）では出さない（FloatingNav.astro の hidden md:block）。 */
 
   .floating-tab--active {
     @apply border-zinc-800 bg-zinc-800;
