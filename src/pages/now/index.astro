@@ -155,16 +155,18 @@ const DESCRIPTION =
     </div>
 
     {/* 更新ボタン（画面右下固定）。h1 ブロックと独立させ、モバイルでの改行増を防ぐ。
-        768px 以上で本文の右端がタブにかかる幅だけ、本文と同じように縦タブの幅のぶん左へ寄せる
-        （floating-tab-gutter・global.css。この枠はもとの余白が無いので --tab-gutter-base は 0） */}
-    <div class="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-1 md:floating-tab-gutter [--tab-gutter-base:0px]">
+        本文の右端がタブにかかる幅（1180px 未満）では、縦タブの幅のぶん左へ寄せる（floating-tab-gutter・global.css。
+        この枠はもとの余白が無いので --tab-gutter-base は 0）。本文と違い 767px 以下でも寄せる（スマホでは出ている縦タブの
+        「天気」と重なるため。右の端から 16px → 46px）。
+        寄せた分の余白は枠の中に残り、縦タブの上に乗るので、枠は指を受けず、ボタンと注意書きだけが受ける（pointer-events） */}
+    <div class="pointer-events-none fixed bottom-4 right-4 z-50 flex flex-col items-end gap-1 floating-tab-gutter [--tab-gutter-base:0px]">
       <button
         id="btn-refresh"
-        class="border border-zinc-300 bg-white px-4 py-2 text-xs tracking-[0.14em] text-zinc-700 shadow-md transition hover:border-zinc-500 hover:text-zinc-900"
+        class="pointer-events-auto border border-zinc-300 bg-white px-4 py-2 text-xs tracking-[0.14em] text-zinc-700 shadow-md transition hover:border-zinc-500 hover:text-zinc-900"
       >
         最新に更新
       </button>
-      <p class="text-[10px] text-zinc-500 drop-shadow-sm">ページを開いた時点の情報です</p>
+      <p class="pointer-events-auto text-[10px] text-zinc-500 drop-shadow-sm">ページを開いた時点の情報です</p>
     </div>
 
     {/* ── セクションナビ（ヘッダー直下に sticky） ────────────── */}
