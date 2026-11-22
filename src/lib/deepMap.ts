@@ -3,7 +3,7 @@
 // 地図の設定値（tiles・ズーム・bounds・corners・center・size・bearing）はここに書き写さない
 // （ナオが絵を描き直したとき、App 側の入れ替えだけで HP にも反映されるようにするため）。
 // 出すのは紙の絵とその日のテントだけ。背景の地図（地理院地図・OSM・航空写真など）と現在地は出さない。
-// 外へ出るリクエストは、Leaflet と leaflet-rotate の CDN・この取り口・/app/deepmap/ のタイルだけ。
+// 外へ出るリクエストは、Leaflet と leaflet-rotate の CDN・この取り口・/app/deepmap/ のタイル・テントの絵（App の tent.svg）だけ。
 // 取り口の形の正本は OirasApp の docs/spec_camp.md §6-11・docs/spec_geo.md。
 
 export const DEEPMAP_API = "https://oiranomori.com/app/camp/api/deepmap.php";
@@ -18,8 +18,10 @@ const ROTATE_JS =
 	"https://unpkg.com/leaflet-rotate@0.2.8/dist/leaflet-rotate.js";
 const ROTATE_JS_SRI = "sha256-Ta4E5oRGbcJDRqmfp6qbzK7uDvaQyR0yDOGP6Bi1Ng8=";
 
-// 今日のテントの丸印。ポータルの「ほかの組のテント」（App の assets/tent.svg）のオレンジ
-export const DEEPMAP_TENT_COLOR = "#EC5F32";
+// 今日のテントの絵。受付のサイネージ（App の /app/s/DEEP）と同じ App の tent.svg を毎回 App の URL から読む
+// （HP にはコピーしない。サイネージの絵を変えたとき、HP にもそのまま反映されるようにするため）
+export const DEEPMAP_TENT_ICON =
+	"https://oiranomori.com/app/checkin/assets/tent.svg";
 
 type LatLng = [number, number];
 type MapConfig = {
@@ -247,15 +249,18 @@ function render(
 		animate: false,
 	});
 
-	// 今日のテント（押しても何も出さない）
+	// 今日のテント。サイネージと同じ 26×26px・絵の真ん中を点の位置に合わせる。押しても何も出さない
+	const tentIcon = L.icon({
+		iconUrl: DEEPMAP_TENT_ICON,
+		iconSize: [26, 26],
+		iconAnchor: [13, 13],
+	});
 	for (const ll of data.tents) {
-		L.circleMarker(ll, {
-			radius: 7,
-			color: "#ffffff",
-			weight: 2,
-			fillColor: DEEPMAP_TENT_COLOR,
-			fillOpacity: 1,
+		L.marker(ll, {
+			icon: tentIcon,
+			alt: "",
 			interactive: false,
+			keyboard: false,
 		}).addTo(map);
 	}
 
