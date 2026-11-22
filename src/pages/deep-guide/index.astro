@@ -98,6 +98,9 @@ const facilities = [
   #map .leaflet-bar a:last-child { border-bottom: 0; }
   #map .leaflet-bar a:hover { background: #1f2a23; }
   #map .leaflet-bar a.leaflet-disabled { background: #111914; color: #52525b; }
+  /* 地図のテントの絵の白い縁取り。受付のサイネージ（App の campmap.js の .cm-dtent）と同じ値。
+     凡例の絵（地図の外・暗い背景）には付けない */
+  #map .leaflet-marker-icon { filter: drop-shadow(0 0 1px #fff) drop-shadow(0 0 2px #fff); }
 </style>
 
 <PageLayout
