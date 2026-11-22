@@ -162,6 +162,35 @@ function fitZoom(
 	);
 }
 
+// 点を紙（corners＝左上・右上・右下・左下）の中に収める関数を作る。紙の中なら null、外なら紙の端の点。
+// 狭い範囲なので平面の近似（左上を原点に、上の辺と左の辺を軸にした紙の上の位置 u・v を 0〜1 に収める）
+function paperClamp(
+	corners: LatLng[],
+): (lat: number, lng: number) => LatLng | null {
+	const [tl, tr, , bl] = corners;
+	const kx = 111320 * Math.cos((tl[0] * Math.PI) / 180);
+	const ky = 110540; // 1度あたりの m
+	const toXY = (lat: number, lng: number) => [
+		(lng - tl[1]) * kx,
+		(lat - tl[0]) * ky,
+	];
+	const [ax, ay] = toXY(tr[0], tr[1]); // 上の辺
+	const [bx, by] = toXY(bl[0], bl[1]); // 左の辺
+	const det = ax * by - ay * bx;
+	const eps = 1e-6;
+	return (lat, lng) => {
+		const [px, py] = toXY(lat, lng);
+		const u = (px * by - py * bx) / det;
+		const v = (ax * py - ay * px) / det;
+		if (u >= -eps && u <= 1 + eps && v >= -eps && v <= 1 + eps) return null;
+		const cu = Math.min(Math.max(u, 0), 1);
+		const cv = Math.min(Math.max(v, 0), 1);
+		const x = cu * ax + cv * bx;
+		const y = cu * ay + cv * by;
+		return [tl[0] + y / ky, tl[1] + x / kx];
+	};
+}
+
 function render(
 	L: any,
 	el: HTMLElement,
@@ -230,14 +259,31 @@ function render(
 		}).addTo(map);
 	}
 
-	// 紙の外へ大きく動かせないように、中心が紙の範囲（bounds）を出たら範囲の端まで戻す
-	const limit = L.latLngBounds(cfg.bounds);
+	// 紙の外へ大きく動かせないように、画面の中心を紙（四隅の四角形）の中に収める。
+	// マウスのドラッグ中は動かす前に止め（Leaflet が maxBounds で使う predrag と同じ仕組み）、
+	// 2本指・キーボード・ダブルタップで出たときは動き終わってから紙の端へ戻す
+	const toPaper = paperClamp(cfg.corners);
 	map.on("moveend", () => {
 		const c = map.getCenter();
-		if (limit.contains(c)) return;
-		const lat = Math.min(Math.max(c.lat, limit.getSouth()), limit.getNorth());
-		const lng = Math.min(Math.max(c.lng, limit.getWest()), limit.getEast());
-		map.panTo([lat, lng]);
+		const to = toPaper(c.lat, c.lng);
+		if (to) map.panTo(to);
+	});
+	map.on("dragstart", () => {
+		const dr = map.dragging._draggable;
+		if (!dr || dr._deepmapLimit) return;
+		dr._deepmapLimit = true;
+		const pane = map.getPane("mapPane");
+		dr.on("predrag", () => {
+			const cur = L.DomUtil.getPosition(pane);
+			const half = map.getSize().divideBy(2);
+			// このまま動かしたときに画面の中心へ来る位置
+			const next = map.containerPointToLatLng(
+				half.subtract(dr._newPos.subtract(cur)),
+			);
+			const to = toPaper(next.lat, next.lng);
+			if (!to) return;
+			dr._newPos = cur.add(half.subtract(map.latLngToContainerPoint(to)));
+		});
 	});
 
 	// ドラッグはマウスのときだけ。指（ペン）で触ったときは切る＝1本指のなぞりはページのスクロール、
