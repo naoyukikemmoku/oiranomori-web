@@ -8,7 +8,9 @@ const isDeep = DEEP_PAGE_PATHS.includes(path);
 const href = isDeep ? PROX_DEEP_RESERVE_URL : reserveCta.href;
 ---
 
-<div class="fixed bottom-4 left-1/2 z-40 -translate-x-1/2">
+{/* 767px 以下では、縦タブ（FloatingNav）と一緒にスクロールに合わせて出し入れする
+    （滑らせ方は global.css の .reserve-cta-dock、出し入れは src/lib/floatingReveal.ts）。768px 以上ではいつも出す。 */}
+<div class="reserve-cta-dock fixed bottom-4 left-1/2 z-40 -translate-x-1/2" data-float-reveal>
   <a class="reserve-cta" href={href} target="_blank" rel="noopener noreferrer" data-cta="reserve" data-cta-place="sticky" data-cta-field={isDeep ? "deep" : undefined}>
     <span>{reserveCta.label}</span>
     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -17,3 +19,9 @@ const href = isDeep ? PROX_DEEP_RESERVE_URL : reserveCta.href;
     </svg>
   </a>
 </div>
+
+<script>
+  import { initFloatingReveal } from "../lib/floatingReveal";
+
+  initFloatingReveal();
+</script>

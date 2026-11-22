@@ -16,8 +16,10 @@ const tabs = [
 ];
 ---
 
-{/* スマホの幅（768px 未満）では本文にかぶるため出さない。PC の幅だけ出す。 */}
-<aside class="fixed right-0 top-1/2 -translate-y-1/2 z-50 hidden md:block">
+{/* 768px 以上：画面の右端の上下の真ん中に、いつも出す。
+    767px 以下：ヘッダーの下に置き、スクロールに合わせて出し入れする（置き方と滑らせ方は global.css の .floating-nav、
+    出し入れは src/lib/floatingReveal.ts）。本文の右の余白は広げないので、出ている間は本文に重なる。 */}
+<aside class="floating-nav fixed right-0 z-50 md:top-1/2 md:block md:-translate-y-1/2" data-float-reveal>
   <div class="flex flex-col items-end gap-2">
     {tabs.map((tab) => {
       const isActive = current === normalize(tab.href);
@@ -37,3 +39,9 @@ const tabs = [
     })}
   </div>
 </aside>
+
+<script>
+  import { initFloatingReveal } from "../lib/floatingReveal";
+
+  initFloatingReveal();
+</script>

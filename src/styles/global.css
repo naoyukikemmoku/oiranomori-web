@@ -202,7 +202,52 @@
     @apply inline-flex min-h-[84px] w-[30px] select-none items-center justify-center rounded-l-xl border border-zinc-200 bg-white/95 px-1 py-2 shadow-lg;
   }
 
-  /* 縦タブ（FloatingNav）はスマホの幅（768px 未満）では出さない（FloatingNav.astro の hidden md:block）。 */
+  /* 縦タブ（FloatingNav）と画面下の「予約する」（ReserveCTA）の、スマホの幅（767px 以下）での置き方と出し入れ。
+     768px 以上では、ここは効かない（縦タブは FloatingNav.astro の md:top-1/2 で上下の真ん中に、いつも出す）。
+     - 縦タブは、ヘッダーの下から画面下の「予約する」や /now/ の更新ボタン（下から 72px まで）の上までの間の、
+       上下の真ん中に置く。間に入りきらない低い画面では、ヘッダーの下に付けて下へはみ出させる（中の div の
+       margin-block: auto。入りきらないときは 0 になる）。ヘッダーには重ねない（スマホのヘッダーは実際には
+       高さ 103px で --header-height の 94px より 9px 高いので、+1rem で 7px あける）。
+       置く場所の空いたところで本文を押せなくしないよう、押せるのはタブだけにする（pointer-events）。
+     - スクロールに合わせて src/lib/floatingReveal.ts が is-concealed を付け外しする。縦タブは右へ、予約ボタンは
+       下へ、影まで画面の外に出るぶん滑らせる。「動きを減らす」設定の端末では滑らせずにそのまま出し入れする。 */
+  @media (max-width: 767px) {
+    .floating-nav {
+      top: calc(var(--header-height) + 1rem);
+      bottom: 5rem;
+      display: flex;
+      flex-direction: column;
+      pointer-events: none;
+    }
+
+    .floating-nav > div {
+      margin-block: auto;
+    }
+
+    .floating-nav .floating-tab {
+      pointer-events: auto;
+    }
+
+    .floating-nav,
+    .reserve-cta-dock {
+      transition: transform 300ms ease;
+    }
+
+    .floating-nav.is-concealed {
+      transform: translateX(calc(100% + 1.5rem));
+    }
+
+    .reserve-cta-dock.is-concealed {
+      transform: translateY(calc(100% + 2.5rem));
+    }
+  }
+
+  @media (max-width: 767px) and (prefers-reduced-motion: reduce) {
+    .floating-nav,
+    .reserve-cta-dock {
+      transition: none;
+    }
+  }
 
   .floating-tab--active {
     @apply border-zinc-800 bg-zinc-800;
@@ -306,12 +351,13 @@
   }
 }
 
-/* 縦タブ（FloatingNav。幅 30px・画面の右端に固定・768px 以上で出す）をよける、本文の右の余白。
+/* 縦タブ（FloatingNav。幅 30px・画面の右端に固定）をよける、本文の右の余白（768px 以上）。
    本文の枠（max-w-6xl＝1152px・左右の余白 16px）の右端がタブにかかる幅のときだけ、右の余白を 16px + 30px にする。
    かかるのは、外側の余白（(幅 − 1152px) ÷ 2）と 16px を足しても 30px に届かない幅＝1180px 未満（測って決めた境目）。
    幅は画面の幅ではなく、スクロールバーを除いた中の幅で比べる（100% は外側の枠の幅）。PC のスクロールバー（約15px）が
    あると、画面の幅が 1180px でも中は 1165px で、タブが本文にかかるため。clamp の中の × 1000 は、1180px を境に
-   30px と 0 を切り替えるためのもの。付け方：md:floating-tab-gutter（768px 未満は縦タブを出さないので付けない）。
+   30px と 0 を切り替えるためのもの。付け方：md:floating-tab-gutter（767px 以下では本文の右の余白を広げないので付けない。縦タブは出し入れし、
+   出ている間は本文に重なる）。
    枠のもとの左右の余白が 16px でないときは、その値を --tab-gutter-base で渡す（例：px-5 の枠は
    [--tab-gutter-base:1.25rem]）。渡さないと、1180px 以上で右の余白が 16px に変わってしまう。
    20px の枠がタブにかかるのは 1172px 未満だが、境目は 1180px にそろえる（1172〜1179px は余白が広いだけ）。 */
