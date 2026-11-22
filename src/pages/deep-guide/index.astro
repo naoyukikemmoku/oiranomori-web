@@ -6,6 +6,7 @@ import deepguideHero from "../../assets/images/deepguide_hero.jpg";
 import deepguideLightsout from "../../assets/images/deepguide_lightsout.jpg";
 import { DEEP_RESERVE_LABEL, PROX_DEEP_RESERVE_URL } from "../../config/nav";
 import PageLayout from "../../layouts/PageLayout.astro";
+import { DEEPMAP_TENT_COLOR } from "../../lib/deepMap";
 
 // 来る前に知っておくこと。このページの下の節にある事実だけから取った要点（新しい事実は足さない）。
 const beforeYouCome = [
@@ -79,6 +80,23 @@ const facilities = [
 <style is:global>
   /* ディープフォレスト利用案内ページ専用：ダーク基調 */
   body { background-color: #111914; }
+
+  /* 場内マップ（#map）。Leaflet の CSS は後から読むので #map を付けて上書きする。
+     紙の外側は単色 #f4f2ea（ポータルの受付前の表示と同じ）。枠線・影は付けない */
+  #map .deepmap-canvas { height: min(78vh, 760px); min-height: 420px; background: #f4f2ea; }
+  #map .leaflet-container { background: #f4f2ea; font-family: inherit; }
+  #map .leaflet-bar { border: 0; border-radius: 0; box-shadow: none; }
+  #map .leaflet-bar a,
+  #map .leaflet-bar a:first-child,
+  #map .leaflet-bar a:last-child {
+    border-radius: 0;
+    border-bottom: 1px solid rgba(244, 242, 234, 0.18);
+    background: #111914;
+    color: #e4e4e7;
+  }
+  #map .leaflet-bar a:last-child { border-bottom: 0; }
+  #map .leaflet-bar a:hover { background: #1f2a23; }
+  #map .leaflet-bar a.leaflet-disabled { background: #111914; color: #52525b; }
 </style>
 
 <PageLayout
@@ -144,6 +162,7 @@ const facilities = [
         { href: "#facility",   label: "設備・スペック" },
         { href: "#rules",      label: "禁止事項" },
         { href: "#principles", label: "基本4鉄則" },
+        { href: "#map",        label: "場内マップ" },
       ].map((item) => (
         <a
           href={item.href}
@@ -444,7 +463,24 @@ const facilities = [
     </p>
   </section>
 
-  {/* 場内マップの項はここに置く（動く地図を入れる・spec §10.4）。地図が入るまでは項ごと置かない */}
+  {/* 場内マップ。紙の絵とその日のテントを App の公開の取り口から読んで描く（src/lib/deepMap.ts・spec §10.4）。
+      背景の地図と現在地は出さない。読めなかったときは「地図を読み込めませんでした。」だけを出す */}
+  <section id="map" class="mb-14" data-deepmap>
+    <h2 class="mb-5 text-xl font-semibold text-white">場内マップ</h2>
+    <div class="deepmap-canvas" data-deepmap-canvas role="region" aria-label="ディープフォレストの場内マップ"></div>
+    <p class="mt-3 flex items-center gap-2 text-sm text-zinc-400" data-deepmap-legend>
+      <span class="inline-block h-3 w-3 shrink-0 rounded-full border-2 border-white" style={`background:${DEEPMAP_TENT_COLOR}`} aria-hidden="true"></span>
+      今日のテント
+    </p>
+    <p class="text-sm text-zinc-400" data-deepmap-error hidden>地図を読み込めませんでした。</p>
+  </section>
+
+  <script>
+    import { mountDeepMap } from "../../lib/deepMap";
+
+    const root = document.querySelector<HTMLElement>("[data-deepmap]");
+    if (root) mountDeepMap(root);
+  </script>
 
   {/* 予約CTA */}
   <div class="mt-12 border border-zinc-700 bg-[color:var(--forest-700)] px-8 py-10 text-center">
