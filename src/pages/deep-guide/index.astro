@@ -83,7 +83,8 @@ const facilities = [
 
   /* 場内マップ（#map）。Leaflet の CSS は後から読むので #map を付けて上書きする。
      紙の外側は単色 #f4f2ea（ポータルの受付前の表示と同じ）。枠線・影は付けない */
-  #map .deepmap-canvas { height: min(78vh, 760px); min-height: 420px; background: #f4f2ea; }
+  /* Leaflet の pane・ボタンは z-index 400〜1000 を持つ。重なり順の文脈をここで閉じ、ヘッダー・メニューより手前に出さない */
+  #map .deepmap-canvas { height: min(78vh, 760px); min-height: 420px; background: #f4f2ea; isolation: isolate; }
   #map .leaflet-container { background: #f4f2ea; font-family: inherit; }
   #map .leaflet-bar { border: 0; border-radius: 0; box-shadow: none; }
   #map .leaflet-bar a,
