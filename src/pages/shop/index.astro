@@ -14,8 +14,13 @@ const shopCategories = [
     lines: [
       "ビール：生ビール、サッポロ黒ラベル、ハイネケン、コロナ、各種缶ビール",
       "生ビール　メガ 1,000円／大 800円／中 600円／小 400円",
-      // 生ビールの銘柄とプラカップでの販売（2026-11 にトップから移した）
-      "キリン一番搾り、または晴れ風。手ぶらでも大丈夫。プラカップでの販売もあります。",
+      // 生ビールの銘柄とプラカップでの販売（2026-11 にトップから移した）。
+      // マイグラスの量り売りは、下の「量り売り」（#bulk）へリンクする。値段はここに書かない（単位は g。spec §11.2）
+      {
+        text: "キリン一番搾り、または晴れ風。手ぶらでも大丈夫。プラカップでの販売もあります。マイグラスを持ってきた方には、",
+        link: { href: "#bulk", text: "重さで量り売り" },
+        after: "もしています。",
+      },
       "ハイボール・チューハイ：氷結、本絞り、翠ジンソーダ、ホワイトホース",
       "ノンアルコール：ゼロイチ",
       "ソフトドリンク：コカ・コーラ、ファンタ、アクエリアス、お〜いお茶、カルピス、ライフガード、龍門サイダー、タリーズコーヒー、炭酸水、ミネラルウォーター",
@@ -110,7 +115,13 @@ const bulkSales = [
           </h3>
           <div class="space-y-2">
             {cat.lines.map((line) => (
-              <p class="text-sm leading-loose text-zinc-600">{line}</p>
+              <p class="text-sm leading-loose text-zinc-600">
+                {typeof line === "string" ? (
+                  line
+                ) : (
+                  <>{line.text}<a href={line.link.href} class="underline underline-offset-4 transition hover:text-zinc-800">{line.link.text}</a>{line.after}</>
+                )}
+              </p>
             ))}
           </div>
           {cat.note && (
@@ -141,7 +152,9 @@ const bulkSales = [
 
   {/* 量り売り */}
   <section class="mb-14">
-    <h2 class="mb-1 text-xl font-semibold text-zinc-800">⚗️&nbsp;量り売り</h2>
+    {/* 上のドリンクの「重さで量り売り」から飛ぶ先。全体の CSS は section・div の id にしかヘッダーぶんの余白を付けないため、
+        この見出しにだけ同じ量（ヘッダーの高さ＋16px）を付ける */}
+    <h2 id="bulk" class="mb-1 scroll-mt-[calc(var(--header-height)+16px)] text-xl font-semibold text-zinc-800">⚗️&nbsp;量り売り</h2>
     <p class="mb-5 text-sm text-zinc-500">計量販売。必要な分だけを、余さず。</p>
     <div class="overflow-x-auto border-y border-zinc-200">
       <table class="w-full min-w-[320px] text-sm">
