@@ -35,7 +35,8 @@ import LpLayout from "../../layouts/LpLayout.astro";
     <div class="absolute inset-0 bg-black/65"></div>
     <div class="relative z-10 mx-auto max-w-6xl px-5 py-24 md:floating-tab-gutter [--tab-gutter-base:1.25rem]">
       <p class="text-xs tracking-[0.32em] text-zinc-400 uppercase">Oiras</p>
-      <h1 class="mt-5 text-5xl font-semibold tracking-widest text-white md:text-7xl">OIRAS</h1>
+      {/* 見出しをカタカナにしたので、字間は tracking-widest（0.1em）をやめ、このページのほかの日本語の大見出し（h2）と同じ全体の字間（0.06em・global.css）にする */}
+      <h1 class="mt-5 text-5xl font-semibold text-white md:text-7xl">オイラーズ</h1>
       {/* 初めて開いた人に何の団体かを伝える一行。写真の上で読めるよう、すぐ下の「森を創り、経営を遊ぶ。」（text-lg・md:text-xl）より
           一段小さい text-base・md:text-lg にし、色は白系の zinc-200 にする */}
       <p class="mt-3 text-base tracking-[0.16em] text-zinc-200 md:text-lg">おいらの森の運営チーム</p>
