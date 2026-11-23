@@ -8,17 +8,14 @@ import LpLayout from "../../layouts/LpLayout.astro";
   lastUpdated="2026年11月"
 >
   <Fragment slot="head">
+    {/* VolunteerOpportunity は外した（本文の「単なるボランティアではなく、対価を伴う『真剣な作業』」と食い違うため）。
+        募集の型（JobPosting など）には替えない。運営する団体と所在地だけを残す */}
     <script is:inline type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
-      "@type": "VolunteerOpportunity",
-      "name": "オイラーズ（OIRAS）— 里山キャンプ場の仲間",
-      "description": "おいらの森で森の整備・農業・運営を担う仲間を募集。インターンシップも受け入れ中。那須烏山で100年の森作りに関わってみませんか。",
-      "hiringOrganization": {
-        "@type": "Organization",
-        "name": "里山パークおいらの森",
-        "url": "https://oiranomori.jp"
-      },
-      "jobLocation": {
+      "@type": "Organization",
+      "name": "里山パークおいらの森",
+      "url": "https://oiranomori.jp",
+      "location": {
         "@type": "Place",
         "address": {
           "@type": "PostalAddress",
