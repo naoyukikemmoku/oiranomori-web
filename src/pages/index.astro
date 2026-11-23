@@ -145,7 +145,7 @@ const notes: Array<{
 	},
 	{
 		text: "トイレは水洗です。",
-		links: [{ href: "/light-guide/#shower", text: "設備" }],
+		links: [{ href: "/light-guide/#toilet", text: "設備" }],
 	},
 	{
 		text: "通年営業なので、冬キャンプも年越しキャンプもできます。",
@@ -314,7 +314,7 @@ const notes: Array<{
   </div>
 
   {/* 4. ライトの一泊。前の焚き火の段の写真と文に、前の「ライトフォレストで過ごす一泊」の段の文を合わせ、/stay-light/ へ案内する。
-      夜の写真をトップで使うのはこの段だけ。薪へのリンクは 8. おいらの森の、ここがいい に移した。
+      夜の写真をトップで使うのはこの段だけ。薪へのリンクは、見出しのすぐ下（おいらの薪）と 8. おいらの森の、ここがいい の両方にある。
       ディープの一泊は /deep/ 側で扱う（別商品として分離）。 */}
   <section
     id="bonfire"
@@ -331,6 +331,16 @@ const notes: Array<{
         <h2 class="mt-3 text-base font-medium text-zinc-200 md:text-lg">
           おいらの森から仕立てた最高の薪で、焚き火を満喫できるキャンプ場
         </h2>
+        <p class="mt-3 text-sm tracking-[0.14em] md:text-base">
+          <a
+            href="/firewood/"
+            class="text-zinc-100 underline decoration-white/50 underline-offset-4 transition hover:text-white hover:decoration-white"
+            data-cta="top-stay-to-firewood"
+            data-cta-target="/firewood/"
+          >
+            おいらの薪<span aria-hidden="true" class="link-arrow [--link-arrow-gap:0.5rem]">&nbsp;→</span>
+          </a>
+        </p>
         <p class="mt-3 text-sm tracking-[0.16em] text-zinc-300 md:text-base">
           焚き火をするためにキャンプする方も
         </p>
@@ -539,7 +549,7 @@ const notes: Array<{
         おいらの森の天気と気象
       </h2>
       <p class="mt-4 text-sm leading-loose text-zinc-600">
-        天気、雨雲、週間予報、那須烏山アメダス。予約の混雑状況やライブカメラも、ここで確認できます。
+        天気、雨雲、週間予報、那須烏山アメダス。ライブカメラも、ここで確認できます。
       </p>
       <ul class="mt-5 divide-y divide-zinc-200 border-t border-zinc-200">
         <li>
