@@ -25,7 +25,7 @@ const toc = [
 	{ href: "#gear", label: "設営するテントで選ぶ" },
 	{ href: "#conditions", label: "条件から選ぶ" },
 	{ href: "#size", label: "サイズ別の広さ" },
-	{ href: "#map", label: "場内マップで選ぶ" },
+	{ href: "#map", label: "場内マップで区画を見る" },
 	{ href: "#notes", label: "選ぶ前に知っておきたいこと" },
 	{ href: "#price", label: "料金の仕組み" },
 ];
@@ -410,6 +410,10 @@ const sizeGuide = [
     <h2 class="mb-2 text-xl font-semibold text-zinc-800">広さだけでなく、場所で選ぶ</h2>
     <p class="mb-6 max-w-2xl text-sm leading-loose text-zinc-500">
       トイレや洗い場までの距離、隣接区画との関係、車の進入方向も、使い勝手を左右します。候補のサイズが決まったら、場内マップで位置を確認してください。
+    </p>
+    {/* サイズ表のあとの文と同じ文（場内マップの冒頭とも同じ）。サイズ表のあとの文はそのまま残す */}
+    <p class="mb-6 max-w-2xl text-sm leading-loose text-zinc-600">
+      予約ではサイズを選びます。区画は、当日着いた順に選べます。
     </p>
     {/* 場内の地図は /lightforest-map/（App のデータから描く）だけにする。画像は置かない */}
     <a
