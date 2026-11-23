@@ -205,7 +205,8 @@ const steps = [
     <h2 class="mt-2 mb-5 text-xl font-semibold text-zinc-800">料金の決まり方</h2>
     <p class="mb-5 max-w-2xl text-sm leading-loose text-zinc-600">
       宿泊料金は、利用人数に応じた料金と、日付・サイトサイズによって変わるサイト料金を合計して計算します。
-      予約画面で表示される料金には車1台分が含まれ、2台目以降は追加車両料金がかかります。AC電源などを利用する場合は、オプション料金が加わります。
+      {/* 車2台分が含まれるのは proX の区分の Grand-A（ナオ 2026-11-21 決定）。区分の名前を HP にどう載せるかは別に決めるため、ここでは名前を出さない */}
+      予約画面で表示される料金には、車1台分が含まれます（一部のサイトは2台分。予約画面のプランの説明に書いてあります）。それより多い車は、追加車両料金がかかります。AC電源などを利用する場合は、オプション料金が加わります。
     </p>
 
     <p class="border-y border-zinc-200 py-5 text-sm leading-loose text-zinc-700">
@@ -215,7 +216,7 @@ const steps = [
     <dl class="mt-8 divide-y divide-zinc-100 border-y border-zinc-200 text-sm">
       <div class="grid grid-cols-[10rem_1fr] gap-4 py-5 sm:grid-cols-[14rem_1fr]">
         <dt class="text-zinc-500">追加車両</dt>
-        <dd class="text-zinc-700">2台目以降は普通車2,200円／バイク1,320円（現地精算）。予約画面で表示される料金には車1台分が含まれます。</dd>
+        <dd class="text-zinc-700">料金に含まれる台数より多い車は、1台につき普通車2,200円／バイク1,320円です。予約のときに、オプションの「追加車両」で入れてください。入れ忘れたときは、当日、受付で精算します。</dd>
       </div>
       <div class="grid grid-cols-[10rem_1fr] gap-4 py-5 sm:grid-cols-[14rem_1fr]">
         <dt class="text-zinc-500">駐車場</dt>
@@ -370,8 +371,15 @@ const steps = [
         <dd class="text-zinc-700">予約完了メールに記載のリンク、または会員の方はマイページから、日程を変更できます。楽天トラベルキャンプで予約した場合は、楽天側の画面で手続きしてください。</dd>
       </div>
       <div class="grid grid-cols-[10rem_1fr] gap-4 py-5 sm:grid-cols-[14rem_1fr]">
-        <dt class="text-zinc-500">人数・車の台数を変えたい</dt>
-        <dd class="text-zinc-700">オンラインでの操作は不要です。当日、現地の受付で清算します。</dd>
+        <dt class="text-zinc-500">人数を変えたい</dt>
+        <dd class="text-zinc-700">オンラインでの操作は不要です。当日、現地の受付で精算します。</dd>
+      </div>
+      <div class="grid grid-cols-[10rem_1fr] gap-4 py-5 sm:grid-cols-[14rem_1fr]">
+        <dt class="text-zinc-500">車の台数を増やしたい</dt>
+        <dd class="text-zinc-700">
+          追加の車は、予約のときにオプションの「追加車両」で入れます。入れ忘れたときは、当日、受付で精算します。
+          <a href="#price" class="ml-1 underline underline-offset-2 text-[color:var(--light-accent)] transition hover:opacity-80">追加車両の料金 →</a>
+        </dd>
       </div>
       <div class="grid grid-cols-[10rem_1fr] gap-4 py-5 sm:grid-cols-[14rem_1fr]">
         <dt class="text-zinc-500">サイトを追加したい</dt>
