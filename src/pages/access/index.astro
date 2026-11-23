@@ -142,7 +142,11 @@ const ROUTE_URL =
           </li>
           <li class="flex items-start gap-3">
             <span class="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-zinc-200 text-xs font-bold text-zinc-600">i</span>
-            <span>バスと同様に整理券を取り、着駅の改札で精算します。</span>
+            <span><strong class="text-zinc-800">乗るとき：</strong>ドア横の「あける」ボタンを押してドアを開け、ドアの発行機から乗車駅証明書を取ります。</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-zinc-200 text-xs font-bold text-zinc-600">i</span>
+            <span><strong class="text-zinc-800">降りるとき：</strong>鴻野山駅は無人駅で、改札はありません。一番前の車両の一番前のドア（運転士のすぐ後ろ）から降り、運転士の横の運賃箱に、切符か「乗車駅証明書＋運賃（現金）」を入れます。</span>
           </li>
           <li class="flex items-start gap-3">
             <span class="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-zinc-200 text-xs font-bold text-zinc-600">!</span>
@@ -158,7 +162,7 @@ const ROUTE_URL =
             method: "送迎（電車キャンパー歓迎プラン専用）",
             station: "烏山線【鴻野山駅】下車",
             detail: "鴻野山駅に次の時刻に着く列車に対応します。\n8:38\n11:01（混雑時不可）\n13:01（混雑時不可）\n15:02\n15:51\n混雑時ワンオペのため時刻厳守。",
-            note: "送迎をご希望の場合は、必ず「電車キャンパー歓迎プラン」でお申し込みください。車両オプションで「送迎」を選択して予約してください。",
+            note: "送迎が必要な方は、「電車キャンパー歓迎プラン」から予約してください。ディープフォレストへの送迎はしていません。",
           },
           {
             method: "タクシー",
@@ -184,8 +188,36 @@ const ROUTE_URL =
         ))}
       </div>
 
+      {/* 電車キャンパー歓迎プランの送迎。proX のプラン文はここ（/access/#train）へリンクする（2026-11-23 proX のプラン文から移した） */}
+      <div class="mt-12">
+        <h3 class="mb-4 text-lg font-semibold text-zinc-700">電車キャンパー歓迎プランの送迎</h3>
+        <dl class="divide-y divide-zinc-100 border-y border-zinc-200 text-sm">
+          {[
+            { label: "予約の締め切り", value: "宿泊日の5日前の0:00までです。" },
+            {
+              label: "着く列車の時刻",
+              value: "予約のときに「施設へのリクエスト」欄へ、鴻野山駅に着く列車の時刻を書いてください。書いていないと、駅でお待ちいただくことになります。予約の後でも、予約内容の変更から書き足せます。",
+            },
+            {
+              label: "帰りの送迎",
+              value: "鴻野山駅発 宇都宮方面行きの 9:59・11:59・13:59 の列車に合わせてお送りします。おいらの森を出るのは、それぞれの15分前です。",
+            },
+            { label: "途中のコンビニ", value: "送迎の途中で、コンビニ（ファミリーマート）に寄れます。" },
+            { label: "荷物", value: "バックパックやキャリーケースなど、一人で無理なく持ち運べる範囲でお願いします。" },
+          ].map((row) => (
+            <div class="grid grid-cols-[7rem_1fr] gap-4 py-4 sm:grid-cols-[12rem_1fr]">
+              <dt class="text-zinc-500">{row.label}</dt>
+              <dd class="leading-loose text-zinc-700">{row.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+
       {/* 烏山線の画像 */}
       <div class="mt-12 space-y-4">
+        <p class="max-w-2xl text-sm leading-loose text-zinc-600">
+          烏山線は、蓄電池で走る電車「ACCUM（アキューム）」が走るローカル線です。電車で来てもらうことが、この路線を残す支えにもなります。
+        </p>
         <div class="overflow-hidden rounded-2xl">
           <img
             src="/images/access/accum-1.JPEG"
