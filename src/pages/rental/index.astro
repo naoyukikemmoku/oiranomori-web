@@ -4,6 +4,7 @@ import { Picture } from "astro:assets";
 import rentalFurniture from "../../assets/images/rental_furniture.jpg";
 import rentalWinter from "../../assets/images/rental_winter.jpg";
 
+// after は、品目の表の下に書く一文（冬期限定の薪ストーブ対応テントの文は、2026-11 にトップから移した）
 const rentalCategories = [
   {
     emoji: "🏕",
@@ -83,6 +84,7 @@ const rentalCategories = [
       { name: "石油ストーブ", price: "¥1,100" },
     ],
     note: "冬期のみの取り扱いです",
+    after: "薪ストーブ対応テントのレンタルはないため、お持ちいただくか、テント外でご使用ください。",
   },
   {
     emoji: "🧊",
@@ -200,6 +202,9 @@ const returnRules: { title: string; body?: string; items?: string[] }[] = [
               </tbody>
             </table>
           </div>
+          {cat.after && (
+            <p class="mt-2 pb-2 text-sm leading-loose text-zinc-600">{cat.after}</p>
+          )}
         </div>
       ))}
       <div class="border-t border-zinc-200" />
