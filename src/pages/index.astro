@@ -217,46 +217,41 @@ const notes: Array<{
   <link rel="preload" as="image" href="/images/lp/hero.jpg" fetchpriority="high" slot="head" />
 
   {/* トップの並び（spec §4.1）。2トップ方針（spec §14.1）のとおり、ここはライトフォレストのトップ。
-      最初の写真と 2 の段は、写真を暗くせずにそのまま出し、文は写真のすぐ下の明るい地に置く（写真の上に文を載せない）。
-      暗い写真の上に白い字を載せるのは 3・4 の段だけ。夜の写真は 4 の段だけ。 */}
+      暗い写真の上に白い字を載せるのは、最初の写真のほかは 2・3・4 の段だけ。夜の写真は 4 の段だけ。 */}
 
-  {/* 1. 最初の写真。最初の画面いっぱいに出す。写真の上には Scroll の印だけを置き、すぐ下の文（#intro）へ */}
-  <section id="top">
-    <div class="lp-hero" style="background-image:url('/images/lp/hero.jpg');">
-      <a href="#intro" class="lp-scroll">Scroll</a>
-    </div>
-    <div id="intro" class="bg-[#f4f5f2]">
-      <div class="mx-auto max-w-6xl px-5 py-16 md:py-24">
-        <div class="max-w-3xl">
-          <p class="text-xs tracking-[0.32em] text-zinc-400">OI RA NO MORI</p>
-          <h1 class="mt-5 font-semibold leading-snug text-zinc-800">
-            <span class="block text-2xl md:text-3xl">里山パーク</span>
-            <span class="block text-5xl md:text-7xl">おいらの森</span>
-          </h1>
-          <p class="mt-8 max-w-2xl text-sm leading-[2] text-zinc-600 md:text-base">
-            里山パークおいらの森は栃木県那須烏山の里山にある静かな森のキャンプ場。<br />
-            森で遊び、森に泊まり、森を味わいに。<br />
-            焚き火を眺め、朝のコーヒーを淹れ、のんびりする時間を。<br />
-            明るい広葉樹林のライトフォレスト、深い針葉樹林のディープフォレスト、<br />
-            2つのフィールドでお待ちしております。
-          </p>
-          <p class="mt-10 text-sm tracking-[0.18em]">
-            <a
-              href="/residents/"
-              class="text-zinc-700 underline underline-offset-4 transition hover:text-[color:var(--light-accent)]"
-            >
-              この森をつくる人 — 森の住人<span aria-hidden="true" class="link-arrow [--link-arrow-gap:0.5rem]">&nbsp;→</span>
-            </a>
-          </p>
-        </div>
+  {/* 1. 最初の写真。Scroll は次の段（2. ライトの森の様子）へ */}
+  <section id="top" class="lp-hero" style="background-image:url('/images/lp/hero.jpg');">
+    <div class="lp-hero__overlay"></div>
+    <div class="mx-auto max-w-6xl px-5">
+      <div class="lp-hero__content">
+        <p class="text-xs tracking-[0.32em] text-zinc-400">OI RA NO MORI</p>
+        <h1 class="mt-5 font-semibold leading-snug text-white">
+          <span class="block text-2xl md:text-3xl">里山パーク</span>
+          <span class="block text-5xl md:text-7xl">おいらの森</span>
+        </h1>
+        <p class="mt-8 max-w-2xl text-sm leading-[2] text-zinc-200 md:text-base">
+          里山パークおいらの森は栃木県那須烏山の里山にある静かな森のキャンプ場。<br />
+          森で遊び、森に泊まり、森を味わいに。<br />
+          焚き火を眺め、朝のコーヒーを淹れ、のんびりする時間を。<br />
+          明るい広葉樹林のライトフォレスト、深い針葉樹林のディープフォレスト、<br />
+          2つのフィールドでお待ちしております。
+        </p>
+        <p class="mt-10 text-sm tracking-[0.18em]">
+          <a
+            href="/residents/"
+            class="text-white underline decoration-white/50 underline-offset-4 transition hover:decoration-white"
+          >
+            この森をつくる人 — 森の住人<span aria-hidden="true" class="link-arrow [--link-arrow-gap:0.5rem]">&nbsp;→</span>
+          </a>
+        </p>
       </div>
     </div>
+    <a href="#light-forest" class="lp-scroll">Scroll</a>
   </section>
 
   {/* 2. ライトの森の様子。前の「整えすぎず」と「森が、ちょうどよくしてくれる」の段を1つにまとめた。
-      文は2つの段にあった文から選んだ（新しい文は足していない）。写真は「森が、ちょうどよくしてくれる」の段のもの。
-      写真は暗くせずにそのまま出し、文は写真のすぐ下の明るい地に置く。写真の高さは、文を重ねていたときの段の高さ（PC で約700px）が目安 */}
-  <section id="light-forest">
+      文は2つの段にあった文から選んだ（新しい文は足していない）。写真は「森が、ちょうどよくしてくれる」の段のもの */}
+  <section id="light-forest" class="relative overflow-hidden py-24 md:py-32">
     <picture>
       <source type="image/avif" srcset="/images/lp/lp-in-the-forest-1200.avif 1200w, /images/lp/lp-in-the-forest.avif 2400w" sizes="100vw" />
       <source type="image/webp" srcset="/images/lp/lp-in-the-forest-1200.webp 1200w, /images/lp/lp-in-the-forest.webp 2400w" sizes="100vw" />
@@ -268,36 +263,35 @@ const notes: Array<{
         width="2365"
         height="1330"
         loading="lazy"
-        class="block h-[78vh] min-h-[420px] max-h-[820px] w-full object-cover"
+        class="absolute inset-0 h-full w-full object-cover"
       />
     </picture>
-    <div class="bg-[#f4f5f2]">
-      <div class="mx-auto max-w-6xl px-6 py-16 md:px-10 md:py-24">
-        <div class="max-w-2xl">
-          <p class="text-xs tracking-[0.32em] text-zinc-400">LIGHT FOREST</p>
-          <p class="mt-4 text-3xl font-semibold leading-snug text-zinc-800 md:text-4xl">
-            整えすぎず、けど、手は入っている。
-          </p>
-          <h2 class="mt-3 text-base font-medium text-zinc-700 md:text-lg">
-            夏は木陰、冬は風よけ。ハンモックを掛けやすい林間サイト
-          </h2>
-          <p class="mt-5 text-sm leading-loose text-zinc-600 md:text-base">
-            地面は土で、夜は暗く、虫も当たり前に暮らしています。<br />
-            その分、森本来の心地よさがそのままあります。
-          </p>
-          <p class="mt-4 text-sm leading-loose text-zinc-600 md:text-base">
-            高い木が強い風をいなして、地面はおだやか。<br />
-            夏は木陰、冬は北風よけ。森が勝手に整えてくれる。<br />
-            気に入った木にハンモックをかけて昼寝するのも、<br />
-            本を持って奥のほうに歩いていくのも、何もせずぼーっとするのも、ぜんぶ自由。
-          </p>
-          <p class="mt-4 text-sm leading-loose text-zinc-600 md:text-base">
-            下草まで手の入った歩きやすい森を、お好きにどうぞ。
-          </p>
-          <p class="mt-6 text-sm md:text-base">
-            <a href="/forest-day/" class="text-zinc-700 underline underline-offset-4 transition hover:text-[color:var(--light-accent)]">何もしない贅沢を森の中で →</a>
-          </p>
-        </div>
+    <div class="absolute inset-0 bg-black/60"></div>
+    <div class="relative z-10 mx-auto max-w-6xl px-6 md:px-10">
+      <div class="max-w-2xl">
+        <p class="text-xs tracking-[0.32em] text-zinc-400">LIGHT FOREST</p>
+        <p class="mt-4 text-3xl font-semibold leading-snug text-white md:text-4xl">
+          整えすぎず、けど、手は入っている。
+        </p>
+        <h2 class="mt-3 text-base font-medium text-zinc-200 md:text-lg">
+          夏は木陰、冬は風よけ。ハンモックを掛けやすい林間サイト
+        </h2>
+        <p class="mt-5 text-sm leading-loose text-zinc-200 md:text-base">
+          地面は土で、夜は暗く、虫も当たり前に暮らしています。<br />
+          その分、森本来の心地よさがそのままあります。
+        </p>
+        <p class="mt-4 text-sm leading-loose text-zinc-200 md:text-base">
+          高い木が強い風をいなして、地面はおだやか。<br />
+          夏は木陰、冬は北風よけ。森が勝手に整えてくれる。<br />
+          気に入った木にハンモックをかけて昼寝するのも、<br />
+          本を持って奥のほうに歩いていくのも、何もせずぼーっとするのも、ぜんぶ自由。
+        </p>
+        <p class="mt-4 text-sm leading-loose text-zinc-200 md:text-base">
+          下草まで手の入った歩きやすい森を、お好きにどうぞ。
+        </p>
+        <p class="mt-6 text-sm md:text-base">
+          <a href="/forest-day/" class="text-zinc-100 underline underline-offset-4 transition hover:text-white">何もしない贅沢を森の中で →</a>
+        </p>
       </div>
     </div>
   </section>
