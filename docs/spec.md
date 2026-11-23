@@ -414,7 +414,7 @@ description?: string
 | `/media/` | `WebPage`, `WebSite`, `ItemList`, `ListItem` |
 | `/news/[id]/` | `Article`, `Organization`, `WebPage` |
 | `/now/` | `WebPage`, `WebSite` |
-| `/oiras/` | `VolunteerOpportunity`, `Organization`, `Place`, `PostalAddress` |
+| `/oiras/` | `Organization`, `Place`, `PostalAddress` |
 | `/passport/` | `ItemList`, `ListItem` |
 | `/policy/` | `WebPage`, `WebSite` |
 | `/rental/` | `ItemList`, `ListItem` |
