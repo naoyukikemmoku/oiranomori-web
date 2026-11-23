@@ -55,7 +55,7 @@ const DEFAULT_ZOOM = 17;
 <BaseLayout
   title="場内マップ（ライトフォレスト）| 里山パークおいらの森"
   description="ライトフォレストの場内マップ。オートサイト・区画サイトの位置関係や各区画の広さ・設備を地図上でご確認いただけます。"
-  lastUpdated="2026年6月"
+  lastUpdated="2026年11月"
 >
   <Fragment slot="head">
     <link
@@ -94,6 +94,13 @@ const DEFAULT_ZOOM = 17;
   <h1 class="sr-only">場内マップ（ライトフォレスト）</h1>
 
   <main id="lfmap-main">
+    {/* 地図の上の案内文。地図を読み込む前の HTML に入れる（地図の作りは変えない）。
+        1文目の項目は、区画を押したときの popup の並び（サイズ・駐車スペース・カーサイドタープ・ペグ・水はけ）に合わせる。
+        2文目は /sites/ の文と同じ */}
+    <div id="lfmap-intro" class="shrink-0 px-4 py-3 text-sm leading-relaxed text-zinc-700 md:px-6">
+      <p>区画の番号を押すと、サイズ、駐車の位置、カーサイドタープ、ペグ、水はけが分かります。</p>
+      <p>予約ではサイズを選びます。区画は、当日着いた順に選べます。</p>
+    </div>
     <div id="lfmap-wrapper">
       <div id="lfmap-skeleton" aria-hidden="true">
         <svg class="spin-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
