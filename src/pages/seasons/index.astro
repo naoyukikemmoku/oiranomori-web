@@ -396,8 +396,9 @@ const seasons: Season[] = [
 	},
 ];
 
+// 矢印は字のすぐ後ろに link-arrow の span で付ける（下線を矢印の終わりまで1本にするため。global.css）
 const linkClass =
-	"inline-flex items-center gap-1.5 text-sm text-[color:var(--light-accent)] underline underline-offset-4 transition hover:opacity-80";
+	"text-sm text-[color:var(--light-accent)] underline underline-offset-4 transition hover:opacity-80";
 ---
 
 {/* ライトフォレストの春夏秋冬から、泊まりたい季節を選ぶページ（spec §4・§14）。
@@ -435,9 +436,8 @@ const linkClass =
       <ul class="flex flex-wrap gap-x-7 gap-y-3 text-sm">
         {seasons.map((s) => (
           <li>
-            <a href={`#${s.id}`} class="inline-flex items-center gap-1.5 text-zinc-700 underline decoration-zinc-300 underline-offset-4 transition hover:text-[color:var(--light-accent)] hover:decoration-current">
-              {s.heading}
-              <span aria-hidden="true">↓</span>
+            <a href={`#${s.id}`} class="text-zinc-700 underline decoration-zinc-300 underline-offset-4 transition hover:text-[color:var(--light-accent)] hover:decoration-current">
+              {s.heading}<span aria-hidden="true" class="link-arrow">&nbsp;↓</span>
             </a>
           </li>
         ))}
@@ -511,8 +511,7 @@ const linkClass =
               <p class="mt-3 flex flex-wrap gap-x-5 gap-y-1">
                 {c.links.map((l) => (
                   <a href={l.href} class={linkClass}>
-                    {l.text}
-                    <span aria-hidden="true">→</span>
+                    {l.text}<span aria-hidden="true" class="link-arrow">&nbsp;→</span>
                   </a>
                 ))}
               </p>
@@ -524,9 +523,8 @@ const linkClass =
       {s.note && (
         <p class="mt-10 max-w-2xl text-sm leading-loose text-zinc-600">
           {s.note.text}
-          <a href={s.note.href} class={`ml-1 ${linkClass}`}>
-            {s.note.linkText}
-            <span aria-hidden="true">→</span>
+          <a href={s.note.href} class={`ml-1 whitespace-nowrap ${linkClass}`}>
+            {s.note.linkText}<span aria-hidden="true" class="link-arrow">&nbsp;→</span>
           </a>
         </p>
       )}

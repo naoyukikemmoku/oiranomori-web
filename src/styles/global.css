@@ -364,3 +364,16 @@
 @utility floating-tab-gutter {
   padding-right: calc(var(--tab-gutter-base, 1rem) + clamp(0px, (1180px - 100%) * 1000, 30px));
 }
+
+/* 字の後ろに付けるリンクの矢印。書き方：<span aria-hidden="true" class="link-arrow">&nbsp;→</span> を、リンクの字の
+   すぐ後ろに空白を挟まずに続けて書く（リンクは inline-flex・gap で並べない）。
+   字と矢印を inline-flex と gap で並べると、下線が字と矢印のあいだで切れる（gap の部分には下線が引かれない）。
+   あいだを改行しない空白（&nbsp;）にすると、空白も字なので、下線が字の始まりから矢印の終わりまで1本につながる。
+   改行しない空白なので、矢印だけが次の行に送られることもない。
+   空白の幅は、word-spacing で gap と同じ幅にそろえる（空白そのものの幅が約 0.25em。字の間隔はこの中だけ 0 にして、
+   その分も含めてそろえる）。既定は 0.375rem（gap-1.5）。ほかの幅にするときは --link-arrow-gap で渡す
+   （例：gap-2 なら [--link-arrow-gap:0.5rem]、gap-1 なら [--link-arrow-gap:0.25rem]）。 */
+@utility link-arrow {
+  letter-spacing: 0;
+  word-spacing: calc(var(--link-arrow-gap, 0.375rem) - 0.25em);
+}

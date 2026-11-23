@@ -304,10 +304,9 @@ const rules = [
               {f.links.map((l) => (
                 <a
                   href={l.href}
-                  class="inline-flex items-center gap-1.5 text-sm text-[color:var(--light-accent)] underline underline-offset-4 transition hover:opacity-80"
+                  class="text-sm text-[color:var(--light-accent)] underline underline-offset-4 transition hover:opacity-80"
                 >
-                  {l.text}
-                  <span aria-hidden="true">→</span>
+                  {l.text}<span aria-hidden="true" class="link-arrow">&nbsp;→</span>
                 </a>
               ))}
             </p>
@@ -369,9 +368,8 @@ const rules = [
 
     {/* 臨時休業・当日予約の正本は /policy/ の利用規約 第6条（spec §14.4）。ここには書かずリンクだけ置く */}
     <p class="mt-4 text-sm">
-      <a href="/policy/#terms-6" class="inline-flex items-center gap-1.5 text-[color:var(--light-accent)] underline underline-offset-4 transition hover:opacity-80">
-        臨時休業と当日のご予約について（利用規約 第6条）
-        <span aria-hidden="true">→</span>
+      <a href="/policy/#terms-6" class="text-[color:var(--light-accent)] underline underline-offset-4 transition hover:opacity-80">
+        臨時休業と当日のご予約について（利用規約 第6条）<span aria-hidden="true" class="link-arrow">&nbsp;→</span>
       </a>
     </p>
 
@@ -393,12 +391,11 @@ const rules = [
     <p class="mt-6 text-sm">
       <a
         href="/stay-light/"
-        class="inline-flex items-center gap-1.5 text-[color:var(--light-accent)] underline underline-offset-4 transition hover:opacity-80"
+        class="text-[color:var(--light-accent)] underline underline-offset-4 transition hover:opacity-80"
         data-cta="light-guide-to-stay-light"
         data-cta-target="/stay-light/"
       >
-        この時間割を、一泊の体験として見る
-        <span aria-hidden="true">→</span>
+        この時間割を、一泊の体験として見る<span aria-hidden="true" class="link-arrow">&nbsp;→</span>
       </a>
     </p>
   </section>
@@ -429,11 +426,10 @@ const rules = [
     <p class="text-sm">
       <a
         href="/sites/"
-        class="inline-flex items-center gap-1.5 text-[color:var(--light-accent)] underline underline-offset-4 transition hover:opacity-80"
+        class="text-[color:var(--light-accent)] underline underline-offset-4 transition hover:opacity-80"
         data-cta="light-guide-to-sites"
       >
-        ライトのサイト・区画を選ぶ
-        <span aria-hidden="true">→</span>
+        ライトのサイト・区画を選ぶ<span aria-hidden="true" class="link-arrow">&nbsp;→</span>
       </a>
     </p>
     <div class="mt-6 border-l-4 border-[color:var(--light-accent)] pl-5">
@@ -483,10 +479,9 @@ const rules = [
               {rule.links.map((l) => (
                 <a
                   href={l.href}
-                  class="inline-flex items-center gap-1.5 text-sm text-[color:var(--light-accent)] underline underline-offset-4 transition hover:opacity-80"
+                  class="text-sm text-[color:var(--light-accent)] underline underline-offset-4 transition hover:opacity-80"
                 >
-                  {l.text}
-                  <span aria-hidden="true">→</span>
+                  {l.text}<span aria-hidden="true" class="link-arrow">&nbsp;→</span>
                 </a>
               ))}
             </p>
@@ -510,9 +505,8 @@ const rules = [
     </p>
     <p class="mb-6 mt-2 max-w-2xl text-sm leading-loose text-zinc-600">
       どの時期にどんな虫が採れるかは、「おいらの森の四季」の夏の森にまとめています。
-      <a href="/seasons/#summer" class="ml-1 inline-flex items-center gap-1.5 text-[color:var(--light-accent)] underline underline-offset-4 transition hover:opacity-80">
-        虫の時期を見る
-        <span aria-hidden="true">→</span>
+      <a href="/seasons/#summer" class="ml-1 whitespace-nowrap text-[color:var(--light-accent)] underline underline-offset-4 transition hover:opacity-80">
+        虫の時期を見る<span aria-hidden="true" class="link-arrow">&nbsp;→</span>
       </a>
     </p>
     <div class="grid grid-cols-2 gap-3 sm:gap-5">
@@ -544,22 +538,20 @@ const rules = [
     <p class="text-sm">
       <a
         href="/lightforest-map/"
-        class="inline-flex items-center gap-1.5 text-[color:var(--light-accent)] underline underline-offset-4 transition hover:opacity-80"
+        class="text-[color:var(--light-accent)] underline underline-offset-4 transition hover:opacity-80"
         data-cta="light-guide-to-lightforest-map"
         data-cta-target="/lightforest-map/"
       >
-        場内マップで、区画ごとの広さや設備を見る
-        <span aria-hidden="true">→</span>
+        場内マップで、区画ごとの広さや設備を見る<span aria-hidden="true" class="link-arrow">&nbsp;→</span>
       </a>
     </p>
     <p class="mt-3 text-xs text-zinc-400">場内の詳細マップは受付時にもお渡しします。</p>
     <div class="mt-5 flex flex-wrap gap-x-8 gap-y-3 text-sm">
       <a
         href="/faq/#nature"
-        class="inline-flex items-center gap-1.5 text-zinc-700 underline underline-offset-4 transition hover:text-[color:var(--light-accent)]"
+        class="text-zinc-700 underline underline-offset-4 transition hover:text-[color:var(--light-accent)]"
       >
-        危険動物・生き物と安全について
-        <span aria-hidden="true">→</span>
+        危険動物・生き物と安全について<span aria-hidden="true" class="link-arrow">&nbsp;→</span>
       </a>
     </div>
   </section>
@@ -572,21 +564,17 @@ const rules = [
       予約やキャンセルの手順は予約ガイドへ。
     </p>
     <div class="flex flex-wrap gap-x-8 gap-y-3 text-sm">
-      <a href="/faq/#facilities" class="inline-flex items-center gap-1.5 text-[color:var(--light-accent)] underline underline-offset-4 transition hover:opacity-80">
-        よくある質問（FAQ）設備・売店
-        <span aria-hidden="true">→</span>
+      <a href="/faq/#facilities" class="text-[color:var(--light-accent)] underline underline-offset-4 transition hover:opacity-80">
+        よくある質問（FAQ）設備・売店<span aria-hidden="true" class="link-arrow">&nbsp;→</span>
       </a>
-      <a href="/contact/" class="inline-flex items-center gap-1.5 text-[color:var(--light-accent)] underline underline-offset-4 transition hover:opacity-80">
-        問い合わせフォーム
-        <span aria-hidden="true">→</span>
+      <a href="/contact/" class="text-[color:var(--light-accent)] underline underline-offset-4 transition hover:opacity-80">
+        問い合わせフォーム<span aria-hidden="true" class="link-arrow">&nbsp;→</span>
       </a>
-      <a href="/reservation-guide/" class="inline-flex items-center gap-1.5 text-zinc-700 underline underline-offset-4 transition hover:text-zinc-900">
-        予約ガイド
-        <span aria-hidden="true">→</span>
+      <a href="/reservation-guide/" class="text-zinc-700 underline underline-offset-4 transition hover:text-zinc-900">
+        予約ガイド<span aria-hidden="true" class="link-arrow">&nbsp;→</span>
       </a>
-      <a href="/#plans" class="inline-flex items-center gap-1.5 text-zinc-700 underline underline-offset-4 transition hover:text-zinc-900">
-        プラン一覧
-        <span aria-hidden="true">→</span>
+      <a href="/#plans" class="text-zinc-700 underline underline-offset-4 transition hover:text-zinc-900">
+        プラン一覧<span aria-hidden="true" class="link-arrow">&nbsp;→</span>
       </a>
     </div>
   </section>
