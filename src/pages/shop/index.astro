@@ -2,9 +2,11 @@
 import PageLayout from "../../layouts/PageLayout.astro";
 
 const checkoutSteps = [
-  { step: "SCAN",    desc: "店頭商品横のQRコードを読み取る" },
-  { step: "SELECT",  desc: "表示されたオンラインストアで商品を選び、決済する" },
-  { step: "PICK UP", desc: "商品をお持ち帰りください" },
+  { step: "OPEN",    desc: "ポータルの「滞在」にある［セルフレジ］を押すと、カゴの画面が開きます。" },
+  { step: "SCAN",    desc: "［QR を読む］を押して、棚の値札の QR を読みます。1回読むと1つカゴに入ります（2袋なら2回読みます）。数はカゴの［−］［＋］でも変えられます。" },
+  { step: "WEIGH",   desc: "量り売りの薪（1kg 100円）は、秤で量ってから［薪量り売り］で秤の表示を撮ります。読み取った重さを確かめて［この重量で購入する］を押すと、カゴに入ります。重さは 0.01kg の桁を切り捨てて計算します。秤の使い方は、薪小屋の掲示でご案内しています。" },
+  { step: "PAY",     desc: "ライトフォレストの受付の前にある端末の前で、［カードで払う］［電子マネーで払う］［QR コードで払う］のどれかを押します。端末に金額が出たら、タッチするか、端末の QR コードを決済アプリで読み取るとお支払いが済みます。ほかのお客様がお会計中のときは、スマートフォンに順番が出ます。現金はお使いいただけません。" },
+  { step: "PICK UP", desc: "お支払いが済むと、スマートフォンに明細が出ます。商品はそのままお持ち帰りいただけます。" },
 ];
 
 const shopCategories = [
@@ -100,7 +102,7 @@ const bulkSales = [
       キャンプに必要なひと通りを揃えています。
     </p>
     <p class="mt-4 max-w-2xl text-base leading-loose text-zinc-600">
-      売店は受付にあります。営業時間は 9:00〜17:30 で、生ビールもこの時間にお出しします。イベントの日などは、時間外でもお出しすることがあります。
+      売店は受付にあります。営業時間は 9:00〜17:30 で、生ビールもこの時間にお出しします。イベントの日などは、時間外でもお出しすることがあります。セルフレジは 21:00 まで営業します（使い方は下の「セルフレジの使い方」をご覧ください）。
     </p>
   </div>
 
@@ -136,9 +138,12 @@ const bulkSales = [
     </p>
   </section>
 
-  {/* セルフ精算の流れ */}
+  {/* セルフレジの使い方 */}
   <section class="mb-14">
-    <h2 class="mb-5 text-xl font-semibold text-zinc-800">セルフ精算の流れ</h2>
+    <h2 class="mb-5 text-xl font-semibold text-zinc-800">セルフレジの使い方</h2>
+    <p class="mb-5 text-sm leading-loose text-zinc-600">
+      セルフレジは 6:00〜21:00 に営業します。受付の売店（9:00〜17:30）が閉まっている時間も、ご滞在中のお客様はスマートフォンで薪・着火剤・木炭などをお買い求めいただけます。セルフレジは、ご予約のお客様のポータルからお使いいただけます。お連れ様も、ポータルの QR を読めばお使いいただけます。
+    </p>
     <ol class="divide-y divide-zinc-100 border-y border-zinc-200">
       {checkoutSteps.map((s, i) => (
         <li class="grid grid-cols-[1.5rem_5rem_1fr] items-baseline gap-4 py-5 sm:grid-cols-[1.5rem_7rem_1fr]">
@@ -148,6 +153,12 @@ const bulkSales = [
         </li>
       ))}
     </ol>
+    <div class="mt-4 space-y-1">
+      <p class="text-xs leading-relaxed text-zinc-400">※値段は、カゴに入れた時点の金額で計算します。</p>
+      <p class="text-xs leading-relaxed text-zinc-400">※ご来場日の前・ご滞在の後・受付でのご精算の前・サイトインの前・営業時間の外は、［セルフレジ］が灰色になり、お使いいただけません。</p>
+      <p class="text-xs leading-relaxed text-zinc-400">※iPhone は、QR を読んだときに震えません。音と画面の表示でお知らせします（消音のときは音も鳴りません）。</p>
+      <p class="text-xs leading-relaxed text-zinc-400">※返品は、受付の営業時間（9:00〜17:30）に受付でお受けします。</p>
+    </div>
   </section>
 
   {/* 量り売り */}
