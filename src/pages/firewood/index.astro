@@ -90,9 +90,9 @@ const stars = (n: number) => "★".repeat(n) + "☆".repeat(5 - n);
       </p>
 
       <div class="mt-8 border-l-4 border-[color:var(--light-accent)] pl-5">
-        <p class="text-sm font-semibold text-zinc-700">セルフレジ対応 — 営業時間外でも購入できます</p>
+        <p class="text-sm font-semibold text-zinc-700">セルフレジ対応 — 21:00 まで営業します</p>
         <p class="mt-1 text-sm leading-loose text-zinc-600">
-          薪小屋のセルフレジは17:30以降も利用可能です。計量・精算をお一人で行えるので、チェックイン後でも安心してお買い求めいただけます。
+          受付の売店は 17:30 に営業を終えますが、セルフレジは 6:00〜21:00 に営業します。ご滞在中のお客様は、ポータルからスマートフォンでお買い求めいただけます。使い方は、売店ページの「<a href="/shop/#selfreg" class="underline underline-offset-4 transition hover:text-zinc-800">セルフレジの使い方</a>」でご案内しています。
         </p>
       </div>
 
@@ -103,7 +103,7 @@ const stars = (n: number) => "★".repeat(n) + "☆".repeat(5 - n);
             title: "セルフ量り売り",
             subtitle: "広葉樹ミックス",
             price: "¥100 / kg",
-            note: "100円未満切り捨て",
+            note: "10kg 以上は100円未満切り捨て",
             desc: "好きな薪を、必要な分だけ。少量からでもご購入いただけます。迷ったらこれが一番のおすすめです。薪棚から自分で選ぶ愉しみを。",
             img: null,
           },
@@ -202,18 +202,18 @@ const stars = (n: number) => "★".repeat(n) + "☆".repeat(5 - n);
 
       <div class="mt-10 divide-y divide-zinc-300 border-y border-zinc-300">
         {[
-          { no: "1", title: "道具の準備",   desc: "薪バッグまたはバケツを選び、秤（はかり）の電源を入れます。" },
-          { no: "2", title: "風袋引き",     desc: "空の容器を秤に乗せ「ゼロ設定」ボタンを押します。" },
-          { no: "3", title: "セレクト",     desc: "M1ボタンを押して単価（¥100/kg）をセット。好きな薪を棚から選び、容器に詰めます。" },
-          { no: "4", title: "記録",         desc: "金額が表示された画面をスマートフォンで撮影してください。" },
-          { no: "5", title: "精算",         desc: "ライトフォレストの受付で撮影画面をスタッフに提示し、お支払いください。17:30以降はセルフレジでのお支払いとなります。秤の電源オフにご協力ください。" },
-          { no: "6", title: "道具を元へ",   desc: "ご利用になられた薪バッグやバケツは、使用後はたたんで元の場所へお戻しください。" },
+          { no: "1", title: "準備",       desc: "秤（はかり）の電源を入れ（電源はディスプレイの右側にあります）、黄色のコンテナにある薪バッグを秤にのせます。" },
+          { no: "2", title: "風袋引き",   desc: "「風袋」ボタンを押し、秤のディスプレイの重量を0（ゼロ）にします。" },
+          { no: "3", title: "薪を選ぶ",   desc: "好きな薪を棚から選んで薪バッグに詰め、秤にのせます。" },
+          { no: "4", title: "計量",       desc: "ポータルのセルフレジを開き、［薪量り売り］で秤の表示を撮るとAIがディスプレイを読み取り重さを表示します。重さを確かめて［この重量で購入する］を押すと、カゴに入ります。" },
+          { no: "5", title: "精算",       desc: "受付の前にある端末でお支払いいただけます（カード・電子マネー・QR コード・会員ポイント。現金はお使いいただけません）。セルフレジは 6:00〜21:00 に営業します。くわしい使い方は、売店ページの「", link: { text: "セルフレジの使い方", href: "/shop/#selfreg" }, after: "」でご案内しています。" },
+          { no: "6", title: "薪バッグ",   desc: "薪バッグはお帰りまでにたたんで元の場所に戻してください。" },
         ].map((step) => (
           <div class="grid grid-cols-[2.5rem_1fr] gap-4 py-6">
             <p class="text-3xl font-semibold leading-none text-zinc-200">{step.no}</p>
             <div>
               <h3 class="font-semibold text-zinc-800">{step.title}</h3>
-              <p class="mt-2 text-sm leading-loose text-zinc-600">{step.desc}</p>
+              <p class="mt-2 text-sm leading-loose text-zinc-600">{step.desc}{step.link && <a href={step.link.href} class="underline underline-offset-4 transition hover:text-zinc-800">{step.link.text}</a>}{step.after}</p>
             </div>
           </div>
         ))}
@@ -347,7 +347,7 @@ const stars = (n: number) => "★".repeat(n) + "☆".repeat(5 - n);
           },
           {
             q: "受付・売店の時間は？",
-            a: "受付・売店は9:00〜17:30。薪のセルフレジは17:30以降も利用可能です。遅い到着予定の方もセルフで購入いただけます。",
+            a: "受付の売店は 9:00〜17:30 です。セルフレジは 6:00〜21:00 に営業します。遅く到着される方も、ご滞在中はセルフレジでお買い求めいただけます。",
           },
         ].map((item) => (
           <div class="py-6">
