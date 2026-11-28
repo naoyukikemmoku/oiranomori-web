@@ -141,4 +141,40 @@ const articleSchema = {
     height: auto;
     margin: 1.5rem 0;
   }
+  .prose-news :global(ul) {
+    list-style: disc;
+  }
+  .prose-news :global(ol) {
+    list-style: decimal;
+  }
+  .prose-news :global(figure) {
+    margin: 1.5rem 0;
+  }
+  .prose-news :global(figure img) {
+    margin: 0;
+  }
+  .prose-news :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 0 1.5rem;
+    line-height: 1.6;
+  }
+  .prose-news :global(th),
+  .prose-news :global(td) {
+    border-bottom: 1px solid #d4d4d8;
+    padding: 0.55rem 0.75rem 0.55rem 0;
+    text-align: left;
+    vertical-align: top;
+  }
+  .prose-news :global(tr:first-child th) {
+    border-bottom: 1px solid #71717a;
+    font-weight: 600;
+    color: #27272a;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+  }
+  .prose-news :global(th p),
+  .prose-news :global(td p) {
+    margin: 0;
+  }
 </style>
